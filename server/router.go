@@ -24,6 +24,7 @@ func NewRouter() *gin.Engine {
 		})
 	})
 
+	// TODO: handle different roles endpoints
 	authGroup := r.Group("/auth")
 	authGroup.GET("refresh_token", authMiddleware.RefreshHandler)
 	authGroup.Use(authMiddleware.MiddlewareFunc())
