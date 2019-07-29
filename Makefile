@@ -9,3 +9,5 @@ build:
 	$(GOBUILD) -o $(BINARY_NAME) -v
 run:
 	$(GORUN) main.go
+run_local:
+	$(GORUN) main.go -e local

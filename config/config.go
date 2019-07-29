@@ -2,12 +2,16 @@ package config
 
 import (
 	"log"
+	"os"
 
 	"github.com/joho/godotenv"
 )
 
 // Config contains configurable values
 type Config struct {
+	DatabaseHost string
+	DatabasePort string
+	DatabaseName string
 }
 
 var config *Config
@@ -29,10 +33,19 @@ func Init(env string) {
 
 	log.Printf("Load %v environment", env)
 
-	godotenv.Load(".env." + env)
+	err := godotenv.Load(".env." + env)
+	if err != nil {
+		log.Fatalf("Error loading .env file: %v", err.Error())
+	}
 	godotenv.Load()
 
-	config = &Config{} //TODO: provide api keys and etc.
+	config = &Config{
+		DatabaseHost: os.Getenv("DATABASE_HOST"),
+		DatabasePort: os.Getenv("DATABASE_PORT"),
+		DatabaseName: os.Getenv("DATABASE_NAME"),
+	}
+
+	log.Printf("%v", config.DatabasePort)
 }
 
 // GetConfig get shared configs

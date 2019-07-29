@@ -4,8 +4,8 @@ package models
 type Role string
 
 const (
-	// Company is company role
-	Company Role = "company"
-	// Employee is employee role
-	Employee Role = "employee"
+	// CompanyRole is company role
+	CompanyRole Role = "company"
+	// EmployeeRole is employee role
+	EmployeeRole Role = "employee"
 )

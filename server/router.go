@@ -3,6 +3,7 @@ package server
 import (
 	"log"
 	"persona/middlewares"
+	"persona/models"
 
 	"github.com/gin-gonic/gin"
 )
@@ -12,7 +13,7 @@ func NewRouter() *gin.Engine {
 	r.Use(gin.Logger())
 	r.Use(gin.Recovery())
 
-	authMiddleware, err := middlewares.AuthMiddleware()
+	authMiddleware, err := middlewares.AuthMiddleware([]models.Role{models.EmployeeRole})
 	if err != nil {
 		log.Fatalf("Auth middleware error: %v", err.Error())
 	}
