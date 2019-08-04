@@ -1,21 +1,24 @@
 package main
 
 import (
-	"flag"
-	"persona/config"
-	"persona/db"
-	"persona/server"
+	"log"
+
+	"personaapp/cmd"
+
+	"go.uber.org/zap"
 )
 
 func main() {
-	environment := flag.String("e", config.EnvironmentDev, "")
-	flag.Parse()
-	config.Init(*environment)
+	logger, _ := zap.NewProduction()
+	defer func() {
+		err := logger.Sync() // flushes buffer, if any
+		if err != nil {
+			log.Println(err) // todo think about errors mapper/parser service
+		}
+	}()
 
-	db.Init()
-
-	r := server.NewRouter()
-
-	// TODO: provide port and set TLS/non TLS based on environment(config)
-	r.Run()
+	sugar := logger.Sugar()
+	if err := cmd.Run(); err != nil {
+		sugar.Fatal(err)
+	}
 }

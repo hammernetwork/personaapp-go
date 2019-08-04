@@ -1,4 +1,4 @@
-.swp
-config/prod.yaml
-build/
-vendor/**/*
+.idea/
+
+# ignore build artifacts
+bin/
