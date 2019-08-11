@@ -7,7 +7,7 @@ import (
 	context "context"
 	fmt "fmt"
 	proto "github.com/golang/protobuf/proto"
-	_ "github.com/golang/protobuf/ptypes/timestamp"
+	timestamp "github.com/golang/protobuf/ptypes/timestamp"
 	grpc "google.golang.org/grpc"
 	codes "google.golang.org/grpc/codes"
 	status "google.golang.org/grpc/status"
@@ -25,103 +25,262 @@ var _ = math.Inf
 // proto package needs to be updated.
 const _ = proto.ProtoPackageIsVersion3 // please upgrade the proto package
 
-type PingRequest struct {
-	Ping                 string   `protobuf:"bytes,1,opt,name=ping,proto3" json:"ping,omitempty"`
-	XXX_NoUnkeyedLiteral struct{} `json:"-"`
-	XXX_unrecognized     []byte   `json:"-"`
-	XXX_sizecache        int32    `json:"-"`
+type Ping struct {
+	Key                  string               `protobuf:"bytes,1,opt,name=key,proto3" json:"key,omitempty"`
+	Value                string               `protobuf:"bytes,2,opt,name=value,proto3" json:"value,omitempty"`
+	CreatedAt            *timestamp.Timestamp `protobuf:"bytes,3,opt,name=created_at,json=createdAt,proto3" json:"created_at,omitempty"`
+	UpdatedAt            *timestamp.Timestamp `protobuf:"bytes,4,opt,name=updated_at,json=updatedAt,proto3" json:"updated_at,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}             `json:"-"`
+	XXX_unrecognized     []byte               `json:"-"`
+	XXX_sizecache        int32                `json:"-"`
 }
 
-func (m *PingRequest) Reset()         { *m = PingRequest{} }
-func (m *PingRequest) String() string { return proto.CompactTextString(m) }
-func (*PingRequest) ProtoMessage()    {}
-func (*PingRequest) Descriptor() ([]byte, []int) {
+func (m *Ping) Reset()         { *m = Ping{} }
+func (m *Ping) String() string { return proto.CompactTextString(m) }
+func (*Ping) ProtoMessage()    {}
+func (*Ping) Descriptor() ([]byte, []int) {
 	return fileDescriptor_a6083bb8799e537c, []int{0}
 }
 
-func (m *PingRequest) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_PingRequest.Unmarshal(m, b)
+func (m *Ping) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_Ping.Unmarshal(m, b)
 }
-func (m *PingRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_PingRequest.Marshal(b, m, deterministic)
+func (m *Ping) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_Ping.Marshal(b, m, deterministic)
 }
-func (m *PingRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_PingRequest.Merge(m, src)
+func (m *Ping) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_Ping.Merge(m, src)
 }
-func (m *PingRequest) XXX_Size() int {
-	return xxx_messageInfo_PingRequest.Size(m)
+func (m *Ping) XXX_Size() int {
+	return xxx_messageInfo_Ping.Size(m)
 }
-func (m *PingRequest) XXX_DiscardUnknown() {
-	xxx_messageInfo_PingRequest.DiscardUnknown(m)
+func (m *Ping) XXX_DiscardUnknown() {
+	xxx_messageInfo_Ping.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_PingRequest proto.InternalMessageInfo
+var xxx_messageInfo_Ping proto.InternalMessageInfo
 
-func (m *PingRequest) GetPing() string {
+func (m *Ping) GetKey() string {
 	if m != nil {
-		return m.Ping
+		return m.Key
 	}
 	return ""
 }
 
-type PingResponse struct {
-	Pong                 string   `protobuf:"bytes,1,opt,name=pong,proto3" json:"pong,omitempty"`
+func (m *Ping) GetValue() string {
+	if m != nil {
+		return m.Value
+	}
+	return ""
+}
+
+func (m *Ping) GetCreatedAt() *timestamp.Timestamp {
+	if m != nil {
+		return m.CreatedAt
+	}
+	return nil
+}
+
+func (m *Ping) GetUpdatedAt() *timestamp.Timestamp {
+	if m != nil {
+		return m.UpdatedAt
+	}
+	return nil
+}
+
+type SetPingRequest struct {
+	Key                  string   `protobuf:"bytes,1,opt,name=key,proto3" json:"key,omitempty"`
+	Value                string   `protobuf:"bytes,2,opt,name=value,proto3" json:"value,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *PingResponse) Reset()         { *m = PingResponse{} }
-func (m *PingResponse) String() string { return proto.CompactTextString(m) }
-func (*PingResponse) ProtoMessage()    {}
-func (*PingResponse) Descriptor() ([]byte, []int) {
+func (m *SetPingRequest) Reset()         { *m = SetPingRequest{} }
+func (m *SetPingRequest) String() string { return proto.CompactTextString(m) }
+func (*SetPingRequest) ProtoMessage()    {}
+func (*SetPingRequest) Descriptor() ([]byte, []int) {
 	return fileDescriptor_a6083bb8799e537c, []int{1}
 }
 
-func (m *PingResponse) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_PingResponse.Unmarshal(m, b)
+func (m *SetPingRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_SetPingRequest.Unmarshal(m, b)
 }
-func (m *PingResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_PingResponse.Marshal(b, m, deterministic)
+func (m *SetPingRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_SetPingRequest.Marshal(b, m, deterministic)
 }
-func (m *PingResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_PingResponse.Merge(m, src)
+func (m *SetPingRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_SetPingRequest.Merge(m, src)
 }
-func (m *PingResponse) XXX_Size() int {
-	return xxx_messageInfo_PingResponse.Size(m)
+func (m *SetPingRequest) XXX_Size() int {
+	return xxx_messageInfo_SetPingRequest.Size(m)
 }
-func (m *PingResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_PingResponse.DiscardUnknown(m)
+func (m *SetPingRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_SetPingRequest.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_PingResponse proto.InternalMessageInfo
+var xxx_messageInfo_SetPingRequest proto.InternalMessageInfo
 
-func (m *PingResponse) GetPong() string {
+func (m *SetPingRequest) GetKey() string {
 	if m != nil {
-		return m.Pong
+		return m.Key
 	}
 	return ""
 }
 
+func (m *SetPingRequest) GetValue() string {
+	if m != nil {
+		return m.Value
+	}
+	return ""
+}
+
+type SetPingResponse struct {
+	Ping                 *Ping    `protobuf:"bytes,1,opt,name=ping,proto3" json:"ping,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *SetPingResponse) Reset()         { *m = SetPingResponse{} }
+func (m *SetPingResponse) String() string { return proto.CompactTextString(m) }
+func (*SetPingResponse) ProtoMessage()    {}
+func (*SetPingResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_a6083bb8799e537c, []int{2}
+}
+
+func (m *SetPingResponse) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_SetPingResponse.Unmarshal(m, b)
+}
+func (m *SetPingResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_SetPingResponse.Marshal(b, m, deterministic)
+}
+func (m *SetPingResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_SetPingResponse.Merge(m, src)
+}
+func (m *SetPingResponse) XXX_Size() int {
+	return xxx_messageInfo_SetPingResponse.Size(m)
+}
+func (m *SetPingResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_SetPingResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_SetPingResponse proto.InternalMessageInfo
+
+func (m *SetPingResponse) GetPing() *Ping {
+	if m != nil {
+		return m.Ping
+	}
+	return nil
+}
+
+type GetPingRequest struct {
+	Key                  string   `protobuf:"bytes,1,opt,name=key,proto3" json:"key,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *GetPingRequest) Reset()         { *m = GetPingRequest{} }
+func (m *GetPingRequest) String() string { return proto.CompactTextString(m) }
+func (*GetPingRequest) ProtoMessage()    {}
+func (*GetPingRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_a6083bb8799e537c, []int{3}
+}
+
+func (m *GetPingRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetPingRequest.Unmarshal(m, b)
+}
+func (m *GetPingRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetPingRequest.Marshal(b, m, deterministic)
+}
+func (m *GetPingRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetPingRequest.Merge(m, src)
+}
+func (m *GetPingRequest) XXX_Size() int {
+	return xxx_messageInfo_GetPingRequest.Size(m)
+}
+func (m *GetPingRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetPingRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetPingRequest proto.InternalMessageInfo
+
+func (m *GetPingRequest) GetKey() string {
+	if m != nil {
+		return m.Key
+	}
+	return ""
+}
+
+type GetPingResponse struct {
+	Ping                 *Ping    `protobuf:"bytes,1,opt,name=ping,proto3" json:"ping,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *GetPingResponse) Reset()         { *m = GetPingResponse{} }
+func (m *GetPingResponse) String() string { return proto.CompactTextString(m) }
+func (*GetPingResponse) ProtoMessage()    {}
+func (*GetPingResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_a6083bb8799e537c, []int{4}
+}
+
+func (m *GetPingResponse) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetPingResponse.Unmarshal(m, b)
+}
+func (m *GetPingResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetPingResponse.Marshal(b, m, deterministic)
+}
+func (m *GetPingResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetPingResponse.Merge(m, src)
+}
+func (m *GetPingResponse) XXX_Size() int {
+	return xxx_messageInfo_GetPingResponse.Size(m)
+}
+func (m *GetPingResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetPingResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetPingResponse proto.InternalMessageInfo
+
+func (m *GetPingResponse) GetPing() *Ping {
+	if m != nil {
+		return m.Ping
+	}
+	return nil
+}
+
 func init() {
-	proto.RegisterType((*PingRequest)(nil), "personaappapi.PingRequest")
-	proto.RegisterType((*PingResponse)(nil), "personaappapi.PingResponse")
+	proto.RegisterType((*Ping)(nil), "personaappapi.Ping")
+	proto.RegisterType((*SetPingRequest)(nil), "personaappapi.SetPingRequest")
+	proto.RegisterType((*SetPingResponse)(nil), "personaappapi.SetPingResponse")
+	proto.RegisterType((*GetPingRequest)(nil), "personaappapi.GetPingRequest")
+	proto.RegisterType((*GetPingResponse)(nil), "personaappapi.GetPingResponse")
 }
 
 func init() { proto.RegisterFile("personaapp.proto", fileDescriptor_a6083bb8799e537c) }
 
 var fileDescriptor_a6083bb8799e537c = []byte{
-	// 162 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xe2, 0x12, 0x28, 0x48, 0x2d, 0x2a,
-	0xce, 0xcf, 0x4b, 0x4c, 0x2c, 0x28, 0xd0, 0x2b, 0x28, 0xca, 0x2f, 0xc9, 0x17, 0xe2, 0x45, 0x88,
-	0x24, 0x16, 0x64, 0x4a, 0xc9, 0xa7, 0xe7, 0xe7, 0xa7, 0xe7, 0xa4, 0xea, 0x83, 0x25, 0x93, 0x4a,
-	0xd3, 0xf4, 0x4b, 0x32, 0x73, 0x53, 0x8b, 0x4b, 0x12, 0x73, 0xa1, 0xea, 0x95, 0x14, 0xb9, 0xb8,
-	0x03, 0x32, 0xf3, 0xd2, 0x83, 0x52, 0x0b, 0x4b, 0x53, 0x8b, 0x4b, 0x84, 0x84, 0xb8, 0x58, 0x0a,
-	0x32, 0xf3, 0xd2, 0x25, 0x18, 0x15, 0x18, 0x35, 0x38, 0x83, 0xc0, 0x6c, 0x25, 0x25, 0x2e, 0x1e,
-	0x88, 0x92, 0xe2, 0x82, 0xfc, 0xbc, 0xe2, 0x54, 0xb0, 0x9a, 0x7c, 0x24, 0x35, 0xf9, 0x79, 0xe9,
-	0x46, 0xbe, 0x5c, 0x5c, 0x01, 0x10, 0x8b, 0x1d, 0x0b, 0x0a, 0x84, 0xec, 0xb9, 0x58, 0x40, 0x3a,
-	0x84, 0xa4, 0xf4, 0x50, 0x5c, 0xa3, 0x87, 0x64, 0x93, 0x94, 0x34, 0x56, 0x39, 0x88, 0x15, 0x49,
-	0x6c, 0x60, 0xc7, 0x19, 0x03, 0x02, 0x00, 0x00, 0xff, 0xff, 0xab, 0xec, 0xd7, 0x1d, 0xe0, 0x00,
+	// 274 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x9c, 0x51, 0x4f, 0x4b, 0xc3, 0x30,
+	0x14, 0x27, 0x6e, 0x3a, 0xf6, 0x86, 0x73, 0x44, 0x0f, 0xa5, 0xa0, 0x8e, 0x5c, 0xdc, 0x29, 0x83,
+	0x7a, 0x51, 0x6f, 0x3d, 0x75, 0xc7, 0x51, 0xbd, 0x4b, 0xe6, 0x9e, 0xa5, 0xb8, 0x35, 0xcf, 0x26,
+	0x15, 0xfc, 0x36, 0x1e, 0xfc, 0xa0, 0xd2, 0x34, 0x55, 0x36, 0x98, 0x13, 0x6f, 0xc9, 0xfb, 0xfd,
+	0x7d, 0x09, 0x8c, 0x08, 0x4b, 0xa3, 0x0b, 0xa5, 0x88, 0x24, 0x95, 0xda, 0x6a, 0x7e, 0xfc, 0x33,
+	0x51, 0x94, 0x87, 0x97, 0x99, 0xd6, 0xd9, 0x0a, 0xa7, 0x0e, 0x5c, 0x54, 0xcf, 0x53, 0x9b, 0xaf,
+	0xd1, 0x58, 0xb5, 0xf6, 0x7c, 0xf1, 0xc9, 0xa0, 0x3b, 0xcf, 0x8b, 0x8c, 0x8f, 0xa0, 0xf3, 0x82,
+	0xef, 0x01, 0x1b, 0xb3, 0x49, 0x3f, 0xad, 0x8f, 0xfc, 0x0c, 0x0e, 0xdf, 0xd4, 0xaa, 0xc2, 0xe0,
+	0xc0, 0xcd, 0x9a, 0x0b, 0xbf, 0x05, 0x78, 0x2a, 0x51, 0x59, 0x5c, 0x3e, 0x2a, 0x1b, 0x74, 0xc6,
+	0x6c, 0x32, 0x88, 0x42, 0xd9, 0xc4, 0xc8, 0x36, 0x46, 0x3e, 0xb4, 0x31, 0x69, 0xdf, 0xb3, 0x63,
+	0x5b, 0x4b, 0x2b, 0x5a, 0xb6, 0xd2, 0xee, 0x7e, 0xa9, 0x67, 0xc7, 0x56, 0xdc, 0xc0, 0xf0, 0x1e,
+	0x6d, 0x5d, 0x34, 0xc5, 0xd7, 0x0a, 0x8d, 0xfd, 0x6b, 0x5f, 0x71, 0x07, 0x27, 0xdf, 0x4a, 0x43,
+	0xba, 0x30, 0xc8, 0xaf, 0xa0, 0x4b, 0x79, 0x91, 0x39, 0xed, 0x20, 0x3a, 0x95, 0x1b, 0x4f, 0x26,
+	0x1d, 0xd5, 0x11, 0x84, 0x80, 0x61, 0xb2, 0x27, 0xb5, 0xf6, 0x4f, 0xfe, 0xe9, 0x1f, 0x7d, 0x30,
+	0x80, 0x79, 0x03, 0xc6, 0x44, 0x7c, 0x06, 0x3d, 0x5f, 0x95, 0x9f, 0x6f, 0x89, 0x36, 0x97, 0x0f,
+	0x2f, 0x76, 0xc1, 0xbe, 0xc1, 0x0c, 0x7a, 0xc9, 0x0e, 0xa7, 0xe4, 0x77, 0xa7, 0xad, 0x5d, 0x16,
+	0x47, 0xee, 0x5f, 0xae, 0xbf, 0x02, 0x00, 0x00, 0xff, 0xff, 0xd7, 0x9b, 0x6a, 0xa8, 0x6a, 0x02,
 	0x00, 0x00,
 }
 
@@ -137,7 +296,8 @@ const _ = grpc.SupportPackageIsVersion4
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type PersonaAppClient interface {
-	Ping(ctx context.Context, in *PingRequest, opts ...grpc.CallOption) (*PingResponse, error)
+	SetPing(ctx context.Context, in *SetPingRequest, opts ...grpc.CallOption) (*SetPingResponse, error)
+	GetPing(ctx context.Context, in *GetPingRequest, opts ...grpc.CallOption) (*GetPingResponse, error)
 }
 
 type personaAppClient struct {
@@ -148,9 +308,18 @@ func NewPersonaAppClient(cc *grpc.ClientConn) PersonaAppClient {
 	return &personaAppClient{cc}
 }
 
-func (c *personaAppClient) Ping(ctx context.Context, in *PingRequest, opts ...grpc.CallOption) (*PingResponse, error) {
-	out := new(PingResponse)
-	err := c.cc.Invoke(ctx, "/personaappapi.PersonaApp/Ping", in, out, opts...)
+func (c *personaAppClient) SetPing(ctx context.Context, in *SetPingRequest, opts ...grpc.CallOption) (*SetPingResponse, error) {
+	out := new(SetPingResponse)
+	err := c.cc.Invoke(ctx, "/personaappapi.PersonaApp/SetPing", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *personaAppClient) GetPing(ctx context.Context, in *GetPingRequest, opts ...grpc.CallOption) (*GetPingResponse, error) {
+	out := new(GetPingResponse)
+	err := c.cc.Invoke(ctx, "/personaappapi.PersonaApp/GetPing", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -159,35 +328,57 @@ func (c *personaAppClient) Ping(ctx context.Context, in *PingRequest, opts ...gr
 
 // PersonaAppServer is the server API for PersonaApp service.
 type PersonaAppServer interface {
-	Ping(context.Context, *PingRequest) (*PingResponse, error)
+	SetPing(context.Context, *SetPingRequest) (*SetPingResponse, error)
+	GetPing(context.Context, *GetPingRequest) (*GetPingResponse, error)
 }
 
 // UnimplementedPersonaAppServer can be embedded to have forward compatible implementations.
 type UnimplementedPersonaAppServer struct {
 }
 
-func (*UnimplementedPersonaAppServer) Ping(ctx context.Context, req *PingRequest) (*PingResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method Ping not implemented")
+func (*UnimplementedPersonaAppServer) SetPing(ctx context.Context, req *SetPingRequest) (*SetPingResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method SetPing not implemented")
+}
+func (*UnimplementedPersonaAppServer) GetPing(ctx context.Context, req *GetPingRequest) (*GetPingResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetPing not implemented")
 }
 
 func RegisterPersonaAppServer(s *grpc.Server, srv PersonaAppServer) {
 	s.RegisterService(&_PersonaApp_serviceDesc, srv)
 }
 
-func _PersonaApp_Ping_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(PingRequest)
+func _PersonaApp_SetPing_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(SetPingRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(PersonaAppServer).Ping(ctx, in)
+		return srv.(PersonaAppServer).SetPing(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/personaappapi.PersonaApp/Ping",
+		FullMethod: "/personaappapi.PersonaApp/SetPing",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PersonaAppServer).Ping(ctx, req.(*PingRequest))
+		return srv.(PersonaAppServer).SetPing(ctx, req.(*SetPingRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PersonaApp_GetPing_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetPingRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PersonaAppServer).GetPing(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/personaappapi.PersonaApp/GetPing",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PersonaAppServer).GetPing(ctx, req.(*GetPingRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -197,8 +388,12 @@ var _PersonaApp_serviceDesc = grpc.ServiceDesc{
 	HandlerType: (*PersonaAppServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "Ping",
-			Handler:    _PersonaApp_Ping_Handler,
+			MethodName: "SetPing",
+			Handler:    _PersonaApp_SetPing_Handler,
+		},
+		{
+			MethodName: "GetPing",
+			Handler:    _PersonaApp_GetPing_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},

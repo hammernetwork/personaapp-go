@@ -1,6 +1,7 @@
 package flag
 
 import (
+	"github.com/cockroachdb/errors"
 	"os"
 	"strings"
 
@@ -8,12 +9,13 @@ import (
 	"github.com/spf13/pflag"
 )
 
-func BindEnv(cmd *cobra.Command) {
+func BindEnv(cmd *cobra.Command) error {
 	names := map[string]struct{}{}
 	cmd.Flags().Visit(func(f *pflag.Flag) {
 		names[f.Name] = struct{}{}
 	})
 
+	var errs error
 	cmd.Flags().VisitAll(func(f *pflag.Flag) {
 		replacer := strings.NewReplacer("-", "_", ".", "_")
 		name := replacer.Replace(strings.ToUpper(f.Name))
@@ -31,12 +33,18 @@ func BindEnv(cmd *cobra.Command) {
 		if t == "stringArray" || t == "stringSlice" {
 			vals := strings.Split(val, " ")
 			for _, v := range vals {
-				cmd.Flags().Set(f.Name, v)
+				if err := cmd.Flags().Set(f.Name, v); err != nil {
+					errs = errors.CombineErrors(errs, err)
+				}
 			}
 
 			return
 		}
 
-		cmd.Flags().Set(f.Name, val)
+		if err := cmd.Flags().Set(f.Name, val); err != nil {
+			errs = errors.CombineErrors(errs, err)
+		}
 	})
+
+	return errs
 }

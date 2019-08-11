@@ -3,8 +3,8 @@ package nats
 import (
 	"encoding/json"
 
+	"github.com/cockroachdb/errors"
 	"github.com/nats-io/go-nats"
-	"github.com/pkg/errors"
 )
 
 type Bus struct {

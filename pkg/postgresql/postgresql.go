@@ -4,8 +4,9 @@ import (
 	"database/sql"
 	"fmt"
 
+	"github.com/cockroachdb/errors"
+
 	_ "github.com/lib/pq" // register pg driver
-	"github.com/pkg/errors"
 )
 
 type Storage struct {
