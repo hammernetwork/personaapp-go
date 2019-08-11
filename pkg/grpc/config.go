@@ -3,9 +3,9 @@ package grpc
 import (
 	"time"
 
-	"personaapp/pkg/flag/mapping"
-
 	"github.com/spf13/pflag"
+
+	"personaapp/pkg/flag/mapping"
 )
 
 type Config struct {
@@ -15,8 +15,7 @@ type Config struct {
 	WriteTimeout   time.Duration
 }
 
-func (c *Config) Flags(prefix string) *pflag.FlagSet {
-	name := prefix + "grpc"
+func (c *Config) Flags(name, prefix string) *pflag.FlagSet {
 	f := pflag.NewFlagSet(name, pflag.PanicOnError)
 
 	f.StringVar(&c.Address, "address", "127.0.0.1:8000", "Address in ip:port format")

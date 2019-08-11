@@ -5,13 +5,30 @@ package personaappapi;
 import "google/protobuf/timestamp.proto";
 
 service PersonaApp {
-    rpc Ping (PingRequest) returns (PingResponse);
+    rpc SetPing (SetPingRequest) returns (SetPingResponse);
+    rpc GetPing (GetPingRequest) returns (GetPingResponse);
 }
 
-message PingRequest {
-    string ping = 1;
+message Ping {
+    string key = 1;
+    string value = 2;
+    google.protobuf.Timestamp created_at = 3;
+    google.protobuf.Timestamp updated_at = 4;
 }
 
-message PingResponse {
-    string pong = 1;
+message SetPingRequest {
+    string key = 1;
+    string value = 2;
+}
+
+message SetPingResponse {
+    Ping ping = 1;
+}
+
+message GetPingRequest {
+    string key = 1;
+}
+
+message GetPingResponse {
+    Ping ping = 1;
 }

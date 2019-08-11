@@ -3,14 +3,14 @@ package client
 import (
 	"context"
 
+	"github.com/cockroachdb/errors"
 	"github.com/grpc-ecosystem/go-grpc-middleware"
 	"github.com/grpc-ecosystem/go-grpc-prometheus"
-	"github.com/pkg/errors"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/balancer/roundrobin"
 )
 
-func NewClient(
+func New(
 	ctx context.Context,
 	cfg *Config,
 	bind func(*grpc.ClientConn) interface{},
@@ -49,7 +49,9 @@ func NewClient(
 	}
 
 	if cfg.DialTimeout > 0 {
-		ctx, _ = context.WithTimeout(ctx, cfg.DialTimeout)
+		var cancel context.CancelFunc
+		ctx, cancel = context.WithTimeout(ctx, cfg.DialTimeout)
+		defer cancel()
 	}
 	conn, err := grpc.DialContext(ctx, cfg.Servers, dialOpts...)
 	if err != nil {
