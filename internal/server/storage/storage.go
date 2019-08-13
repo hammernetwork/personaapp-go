@@ -55,8 +55,9 @@ func (s *Storage) TxPutPing(ctx context.Context, tx pkgtx.Tx, p *Ping) error {
 }
 
 func (s *Storage) TxGetPing(ctx context.Context, tx pkgtx.Tx, key string) (*Ping, error) {
+	c := postgresql.FromTx(tx)
 	var p Ping
-	err := s.QueryRowContext(
+	err := c.QueryRowContext(
 		ctx,
 		`SELECT * FROM pingpong WHERE
 			key = $1`,
