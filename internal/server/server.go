@@ -9,6 +9,7 @@ import (
 	"github.com/golang/protobuf/ptypes"
 
 	"personaapp/internal/server/controller"
+	registerController "personaapp/internal/server/controller/register"
 	"personaapp/pkg/grpcapi/personaappapi"
 )
 
@@ -17,12 +18,17 @@ type Controller interface {
 	GetPing(ctx context.Context, key string) (*controller.Ping, error)
 }
 
-type Server struct {
-	c Controller
+type RegisterController interface {
+	RegisterCompany(ctx context.Context, cp *registerController.Company) error
 }
 
-func New(c Controller) *Server {
-	return &Server{c: c}
+type Server struct {
+	c Controller
+	rc RegisterController
+}
+
+func New(c Controller, rc RegisterController) *Server {
+	return &Server{c: c, rc: rc}
 }
 
 func (s *Server) SetPing(ctx context.Context, req *personaappapi.SetPingRequest) (*personaappapi.SetPingResponse, error) {
@@ -63,4 +69,23 @@ func (s *Server) GetPing(ctx context.Context, req *personaappapi.GetPingRequest)
 			UpdatedAt: updatedAt,
 		},
 	}, nil
+}
+
+func (s *Server) RegisterCompany(ctx context.Context, req *personaappapi.RegisterCompanyRequest) (*personaappapi.RegisterCompanyResponse, error) {
+	err := s.rc.RegisterCompany(ctx, &registerController.Company{
+		Name: 		 req.GetCompanyName(),
+		Email:       req.GetEmail(),
+		Phone:       req.GetPhone(),
+		Password:    req.GetPassword(),
+	})
+
+	switch err {
+	case nil:
+	case registerController.ErrAlreadyExists:
+		return nil, status.Error(codes.AlreadyExists, err.Error())
+	default:
+		return nil, errors.WithStack(err)
+	}
+
+	return &personaappapi.RegisterCompanyResponse{}, nil
 }
