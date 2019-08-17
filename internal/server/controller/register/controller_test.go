@@ -44,7 +44,63 @@ func migrateUp(db *sql.DB) error {
 
 
 func TestRegisterCompany(t *testing.T) {
-	t.Run("dummy", func(t *testing.T) {
+	t.Run("normal flow", func(t *testing.T) {
+
+	})
+
+	t.Run("normal flow with dirty company name", func(t *testing.T) {
+
+	})
+
+	t.Run("normal flow with dirty email", func(t *testing.T) {
+
+	})
+
+	t.Run("normal flow with dirty phone", func(t *testing.T) {
+
+	})
+
+	t.Run("already existing", func(t *testing.T) {
+
+	})
+
+	t.Run("short company name", func(t *testing.T) {
+
+	})
+
+	t.Run("long company name", func(t *testing.T) {
+
+	})
+
+	t.Run("short email", func(t *testing.T) {
+
+	})
+
+	t.Run("long email", func(t *testing.T) {
+
+	})
+
+	t.Run("invalid email format", func(t *testing.T) {
+
+	})
+
+	t.Run("short phone", func(t *testing.T) {
+
+	})
+
+	t.Run("long phone", func(t *testing.T) {
+
+	})
+
+	t.Run("invalid phone format", func(t *testing.T) {
+
+	})
+
+	t.Run("short password", func(t *testing.T) {
+
+	})
+
+	t.Run("long password", func(t *testing.T) {
 
 	})
 }

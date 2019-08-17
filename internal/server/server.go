@@ -83,6 +83,15 @@ func (s *Server) RegisterCompany(ctx context.Context, req *personaappapi.Registe
 	case nil:
 	case registerController.ErrAlreadyExists:
 		return nil, status.Error(codes.AlreadyExists, err.Error())
+	case registerController.ErrCompanyEmailInvalid:
+		return nil, status.Error(codes.InvalidArgument, err.Error())
+	case registerController.ErrCompanyNameInvalid:
+		return nil, status.Error(codes.InvalidArgument, err.Error())
+	case registerController.ErrCompanyPasswordInvalid:
+		return nil, status.Error(codes.InvalidArgument, err.Error())
+	case registerController.ErrCompanyPhoneInvalid:
+		return nil, status.Error(codes.InvalidArgument, err.Error())
+
 	default:
 		return nil, errors.WithStack(err)
 	}

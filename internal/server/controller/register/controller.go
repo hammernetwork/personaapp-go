@@ -6,10 +6,17 @@ import (
 	"personaapp/internal/validator"
 	pkgtx "personaapp/pkg/tx"
 	"github.com/cockroachdb/errors"
+	"regexp"
+	"strings"
 	"time"
+	"golang.org/x/crypto/bcrypt"
 )
 
 var ErrAlreadyExists = errors.New("company with this email or phone already exists")
+var ErrCompanyNameInvalid = errors.New("company name is invalid")
+var ErrCompanyEmailInvalid = errors.New("company email is invalid")
+var ErrCompanyPhoneInvalid = errors.New("company phone is invalid")
+var ErrCompanyPasswordInvalid = errors.New("company password is invalid")
 
 type Company struct {
 	Name string
@@ -35,17 +42,39 @@ func New(s Storage) *Controller {
 }
 
 func (c *Controller) RegisterCompany(ctx context.Context, cp *Company) error {
-	if err := validator.ValidateCompany(validator.Company{
-		Name:     cp.Name,
-		Email:    cp.Email,
-		Phone:    cp.Phone,
+	r := regexp.MustCompile(`\s+`)
+	company := Company{
+		Name: r.ReplaceAllString(strings.TrimSpace(cp.Name), " "),
+		Email: r.ReplaceAllString(strings.TrimSpace(cp.Email), " "),
+		Phone: r.ReplaceAllString(strings.TrimSpace(cp.Phone), " "),
 		Password: cp.Password,
+	}
+
+	if err := validator.ValidateCompany(validator.Company{
+		Name:     company.Name,
+		Email:    company.Email,
+		Phone:    company.Phone,
+		Password: company.Password,
 	}); err != nil {
-		return errors.WithStack(err)
+		switch err {
+		case validator.ErrCompanyNameInvalid:
+			return errors.WithStack(ErrCompanyNameInvalid)
+		case validator.ErrCompanyEmailInvalid:
+			return errors.WithStack(ErrCompanyEmailInvalid)
+		case validator.ErrCompanyPhoneInvalid:
+			return errors.WithStack(ErrCompanyPhoneInvalid)
+		case validator.ErrCompanyPasswordInvalid:
+			return errors.WithStack(ErrCompanyPasswordInvalid)
+		}
+	}
+
+	password, passwordErr := bcrypt.GenerateFromPassword([]byte(company.Password), bcrypt.DefaultCost)
+	if passwordErr != nil {
+		return errors.WithStack(passwordErr)
 	}
 
 	if err := pkgtx.RunInTx(ctx, c.s, func(i context.Context, tx pkgtx.Tx) error {
-		switch exists, err := c.s.TxCheckCompanyIsUnique(ctx, tx, cp.Name, cp.Email); err {
+		switch exists, err := c.s.TxCheckCompanyIsUnique(ctx, tx, company.Name, company.Email); err {
 		case nil:
 			if exists {
 				return errors.WithStack(ErrAlreadyExists)
@@ -55,11 +84,10 @@ func (c *Controller) RegisterCompany(ctx context.Context, cp *Company) error {
 		}
 
 		return errors.WithStack(c.s.TxCreateCompany(ctx, tx, &storage.Company{
-			Name:     cp.Name,
-			Email:    cp.Email,
-			Phone:    cp.Phone,
-			//TODO: wrap in bcrypt hash function
-			Password: cp.Password,
+			Name:     company.Name,
+			Email:    company.Email,
+			Phone:    company.Phone,
+			Password: string(password),
 			CreatedAt: time.Now(),
 			UpdatedAt: time.Now(),
 		}))
