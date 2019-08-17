@@ -25,15 +25,15 @@ type Company struct {
 	UpdatedAt time.Time
 }
 
-func (s *Storage) TxCheckCompanyIsUnique(ctx context.Context, tx pkgtx.Tx, name string, email string) (bool, error) {
+func (s *Storage) TxCheckCompanyIsUnique(ctx context.Context, tx pkgtx.Tx, phone string, email string) (bool, error) {
 	c := postgresql.FromTx(tx)
 
 	var count int
 	err := c.QueryRowContext(
 		ctx,
 		`SELECT COUNT(*) FROM company WHERE
-			name = $1 OR email = $2`,
-		name,
+			phone = $1 OR email = $2`,
+		phone,
 		email,
 	).Scan(&count)
 

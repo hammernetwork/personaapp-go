@@ -26,7 +26,7 @@ var migrations = []*migrate.Migration{
 		Id: "01 - Create companies table",
 		Up: []string{
 			`CREATE TABLE IF NOT EXISTS company (
-					id            INTEGER         PRIMARY KEY,
+					id            SERIAL          PRIMARY KEY,
 					name          VARCHAR(100)    NOT NULL,
 					email         VARCHAR(255)    NOT NULL,
 					phone         VARCHAR(30)     NOT NULL,

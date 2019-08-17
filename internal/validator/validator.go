@@ -42,6 +42,10 @@ func ValidateEmail(value string) error {
 	return errors.WithStack(ValidateRegex(value, emailRegexp))
 }
 
+func ValidatePhone(value string) error {
+	return errors.WithStack(ValidateRegex(value, phoneRegexp))
+}
+
 func ValidateRegex(value string, r *regexp.Regexp) error {
 	if !r.MatchString(value) {
 		return errors.WithStack(ErrInvalidFormat)

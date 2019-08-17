@@ -50,7 +50,7 @@ func validateEmail(email string) error {
 }
 
 func validatePhone(phone string) error {
-	if err := validatePhone(phone); err != nil {
+	if err := ValidatePhone(phone); err != nil {
 		return errors.WithStack(err)
 	}
 	return nil

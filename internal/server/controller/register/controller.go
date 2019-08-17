@@ -26,7 +26,7 @@ type Company struct {
 }
 
 type Storage interface {
-	TxCheckCompanyIsUnique(ctx context.Context, tx pkgtx.Tx, name string, email string) (bool, error)
+	TxCheckCompanyIsUnique(ctx context.Context, tx pkgtx.Tx, phone string, email string) (bool, error)
 	TxCreateCompany(ctx context.Context, tx pkgtx.Tx, cp *storage.Company) error
 
 	BeginTx(ctx context.Context) (pkgtx.Tx, error)
@@ -74,9 +74,9 @@ func (c *Controller) RegisterCompany(ctx context.Context, cp *Company) error {
 	}
 
 	if err := pkgtx.RunInTx(ctx, c.s, func(i context.Context, tx pkgtx.Tx) error {
-		switch exists, err := c.s.TxCheckCompanyIsUnique(ctx, tx, company.Name, company.Email); err {
+		switch isUnique, err := c.s.TxCheckCompanyIsUnique(ctx, tx, company.Phone, company.Email); err {
 		case nil:
-			if exists {
+			if !isUnique {
 				return errors.WithStack(ErrAlreadyExists)
 			}
 		default:
