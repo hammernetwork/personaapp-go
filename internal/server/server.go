@@ -13,6 +13,13 @@ import (
 	"personaapp/pkg/grpcapi/personaappapi"
 )
 
+var ErrCompanyAlreadyExists = errors.New("company already exists")
+var ErrCompanyNameInvalid = errors.New("company name is invalid")
+var ErrCompanyEmailInvalid = errors.New("company email is invalid")
+var ErrCompanyPhoneInvalid = errors.New("company phone is invalid")
+var ErrCompanyPasswordInvalid = errors.New("company password is invalid")
+var ErrUnknown = errors.New("unknown error")
+
 type Controller interface {
 	SetPing(ctx context.Context, sp *controller.SetPing) error
 	GetPing(ctx context.Context, key string) (*controller.Ping, error)
@@ -82,18 +89,18 @@ func (s *Server) RegisterCompany(ctx context.Context, req *personaappapi.Registe
 	switch err {
 	case nil:
 	case registerController.ErrAlreadyExists:
-		return nil, status.Error(codes.AlreadyExists, err.Error())
+		return nil, status.Error(codes.AlreadyExists, ErrCompanyAlreadyExists.Error())
 	case registerController.ErrCompanyEmailInvalid:
-		return nil, status.Error(codes.InvalidArgument, err.Error())
+		return nil, status.Error(codes.InvalidArgument, ErrCompanyEmailInvalid.Error())
 	case registerController.ErrCompanyNameInvalid:
-		return nil, status.Error(codes.InvalidArgument, err.Error())
+		return nil, status.Error(codes.InvalidArgument, ErrCompanyNameInvalid.Error())
 	case registerController.ErrCompanyPasswordInvalid:
-		return nil, status.Error(codes.InvalidArgument, err.Error())
+		return nil, status.Error(codes.InvalidArgument, ErrCompanyPasswordInvalid.Error())
 	case registerController.ErrCompanyPhoneInvalid:
-		return nil, status.Error(codes.InvalidArgument, err.Error())
+		return nil, status.Error(codes.InvalidArgument, ErrCompanyPhoneInvalid.Error())
 
 	default:
-		return nil, errors.WithStack(err)
+		return nil, status.Error(codes.Unknown, ErrUnknown.Error())
 	}
 
 	return &personaappapi.RegisterCompanyResponse{}, nil

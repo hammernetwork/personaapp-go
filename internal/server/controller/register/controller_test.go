@@ -3,10 +3,11 @@ package register_test
 import (
 	"context"
 	"database/sql"
-	migrate "github.com/rubenv/sql-migrate"
 	"github.com/cockroachdb/errors"
-	cmdmigrate "personaapp/cmd/migrate"
+	migrate "github.com/rubenv/sql-migrate"
 	"github.com/stretchr/testify/require"
+	_ "personaapp/internal/validator"
+	cmdmigrate "personaapp/cmd/migrate"
 	controller "personaapp/internal/server/controller/register"
 	storage "personaapp/internal/server/storage/register"
 	"personaapp/pkg/dockertest"
@@ -63,18 +64,6 @@ func TestRegisterCompanyNormalFlow(t *testing.T) {
 		})
 
 		require.Nil(t, err)
-	})
-
-	t.Run("normal flow with dirty company name", func(t *testing.T) {
-
-	})
-
-	t.Run("normal flow with dirty email", func(t *testing.T) {
-
-	})
-
-	t.Run("normal flow with dirty phone", func(t *testing.T) {
-
 	})
 }
 

@@ -1,12 +1,15 @@
 package register
 
 import (
+	"database/sql"
 	"personaapp/pkg/postgresql"
 	"context"
 	pkgtx "personaapp/pkg/tx"
 	"github.com/cockroachdb/errors"
 	"time"
 )
+
+var ErrNotFound = errors.New("not found")
 
 type Storage struct {
 	*postgresql.Storage
@@ -25,25 +28,30 @@ type Company struct {
 	UpdatedAt time.Time
 }
 
-func (s *Storage) TxCheckCompanyIsUnique(ctx context.Context, tx pkgtx.Tx, phone string, email string) (bool, error) {
+func (s *Storage) TxGetCompanyByEmailOrPhone(ctx context.Context, tx pkgtx.Tx, phone string, email string) (*Company, error) {
 	c := postgresql.FromTx(tx)
 
-	var count int
+	var cp Company
 	err := c.QueryRowContext(
 		ctx,
-		`SELECT COUNT(*) FROM company WHERE
-			phone = $1 OR email = $2`,
+		`SELECT name, email, phone, password, created_at, updated_at 
+			FROM company 
+			WHERE phone = $1 OR email = $2`,
 		phone,
 		email,
-	).Scan(&count)
+	).Scan(&cp.Name, &cp.Email, &cp.Phone, &cp.Password, &cp.CreatedAt, &cp.UpdatedAt)
 
-	if err != nil {
-		return false, errors.WithStack(err)
+	switch err {
+	case nil:
+	case sql.ErrNoRows:
+		return nil, ErrNotFound
+	default:
+		return nil, errors.WithStack(err)
 	}
-	return count == 0, nil
+	return &cp, nil
 }
 
-func (s *Storage) TxCreateCompany(ctx context.Context, tx pkgtx.Tx, cp *Company) error {
+func (s *Storage) TxPutCompany(ctx context.Context, tx pkgtx.Tx, cp *Company) error {
 	c := postgresql.FromTx(tx)
 	if _, err := c.ExecContext(
 		ctx,

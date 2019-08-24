@@ -2,10 +2,11 @@ package register
 
 import (
 	"context"
+	"github.com/asaskevich/govalidator"
 	storage "personaapp/internal/server/storage/register"
-	"personaapp/internal/validator"
 	pkgtx "personaapp/pkg/tx"
 	"github.com/cockroachdb/errors"
+	_ "personaapp/internal/validator"
 	"regexp"
 	"strings"
 	"time"
@@ -19,15 +20,15 @@ var ErrCompanyPhoneInvalid = errors.New("company phone is invalid")
 var ErrCompanyPasswordInvalid = errors.New("company password is invalid")
 
 type Company struct {
-	Name string
-	Email string
-	Phone string
-	Password string
+	Name string `valid:"stringlength(2|100),required"`
+	Email string `valid:"stringlength(5|255),email,required"`
+	Phone string `valid:"phone,required"`
+	Password string `valid:"stringlength(6|30),required"`
 }
 
 type Storage interface {
-	TxCheckCompanyIsUnique(ctx context.Context, tx pkgtx.Tx, phone string, email string) (bool, error)
-	TxCreateCompany(ctx context.Context, tx pkgtx.Tx, cp *storage.Company) error
+	TxGetCompanyByEmailOrPhone(ctx context.Context, tx pkgtx.Tx, phone string, email string) (*storage.Company, error)
+	TxPutCompany(ctx context.Context, tx pkgtx.Tx, cp *storage.Company) error
 
 	BeginTx(ctx context.Context) (pkgtx.Tx, error)
 	NoTx() pkgtx.Tx
@@ -50,20 +51,14 @@ func (c *Controller) RegisterCompany(ctx context.Context, cp *Company) error {
 		Password: cp.Password,
 	}
 
-	if err := validator.ValidateCompany(validator.Company{
-		Name:     company.Name,
-		Email:    company.Email,
-		Phone:    company.Phone,
-		Password: company.Password,
-	}); err != nil {
-		switch err {
-		case validator.ErrCompanyNameInvalid:
+	if valid, err := govalidator.ValidateStruct(company); !valid {
+		if govalidator.ErrorByField(err, "Name") != "" {
 			return errors.WithStack(ErrCompanyNameInvalid)
-		case validator.ErrCompanyEmailInvalid:
+		} else if govalidator.ErrorByField(err, "Email") != "" {
 			return errors.WithStack(ErrCompanyEmailInvalid)
-		case validator.ErrCompanyPhoneInvalid:
+		} else if govalidator.ErrorByField(err, "Phone") != "" {
 			return errors.WithStack(ErrCompanyPhoneInvalid)
-		case validator.ErrCompanyPasswordInvalid:
+		} else if govalidator.ErrorByField(err, "Password") != "" {
 			return errors.WithStack(ErrCompanyPasswordInvalid)
 		}
 	}
@@ -74,16 +69,17 @@ func (c *Controller) RegisterCompany(ctx context.Context, cp *Company) error {
 	}
 
 	if err := pkgtx.RunInTx(ctx, c.s, func(i context.Context, tx pkgtx.Tx) error {
-		switch isUnique, err := c.s.TxCheckCompanyIsUnique(ctx, tx, company.Phone, company.Email); err {
+		switch existingCompany, err := c.s.TxGetCompanyByEmailOrPhone(ctx, tx, company.Phone, company.Name); err {
 		case nil:
-			if !isUnique {
+			if existingCompany != nil {
 				return errors.WithStack(ErrAlreadyExists)
 			}
+		case storage.ErrNotFound:
 		default:
 			return errors.WithStack(err)
 		}
 
-		return errors.WithStack(c.s.TxCreateCompany(ctx, tx, &storage.Company{
+		return errors.WithStack(c.s.TxPutCompany(ctx, tx, &storage.Company{
 			Name:     company.Name,
 			Email:    company.Email,
 			Phone:    company.Phone,

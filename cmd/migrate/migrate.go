@@ -23,10 +23,19 @@ var migrations = []*migrate.Migration{
 		},
 	},
 	{
-		Id: "01 - Create companies table",
+		Id: "02 - Create uuid extension",
+		Up: []string{
+			`CREATE EXTENSION IF NOT EXISTS "uuid-ossp";`,
+		},
+		Down: []string{
+			`DROP EXTENSION IF EXISTS "uuid-ossp";`,
+		},
+	},
+	{
+		Id: "03 - Create companies table",
 		Up: []string{
 			`CREATE TABLE IF NOT EXISTS company (
-					id            SERIAL          PRIMARY KEY,
+					id            uuid            PRIMARY KEY     DEFAULT uuid_generate_v4(),
 					name          VARCHAR(100)    NOT NULL,
 					email         VARCHAR(255)    NOT NULL,
 					phone         VARCHAR(30)     NOT NULL,
