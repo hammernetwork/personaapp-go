@@ -13,7 +13,9 @@ import (
 
 	"personaapp/internal/server"
 	"personaapp/internal/server/controller"
+	registerController "personaapp/internal/server/controller/register"
 	"personaapp/internal/server/storage"
+	registerStorage "personaapp/internal/server/storage/register"
 	"personaapp/pkg/closeable"
 	pkgcmd "personaapp/pkg/cmd"
 	"personaapp/pkg/flag"
@@ -58,7 +60,10 @@ func run(cfg *Config) func(cmd *cobra.Command, args []string) error {
 
 		s := storage.New(pg)
 		c := controller.New(s)
-		srv := server.New(c)
+
+		rs := registerStorage.New(pg)
+		rc := registerController.New(rs)
+		srv := server.New(c, rc)
 
 		ln, err := net.Listen("tcp", cfg.Server.Address)
 		if err != nil {
