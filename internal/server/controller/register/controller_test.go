@@ -232,3 +232,238 @@ func TestRegisterCompanyInvalidArgument(t *testing.T){
 		}))
 	})
 }
+
+func TestRegisterPersonaNormalFlow(t *testing.T) {
+	s, closer := initStorage(t)
+	defer func() {
+		if err := closer(); err != nil {
+			t.Error(err)
+		}
+	}()
+
+	c := controller.New(s)
+
+	t.Run("normal flow", func(t *testing.T) {
+		err := c.RegisterPersona(context.Background(), &controller.Persona{
+			FirstName:  "normal",
+			LastName:   "persona",
+			Email:      "normal_persona@gmail.com",
+			Phone:      "+380991234567",
+			Password:   "SuperPassword",
+		})
+
+		require.Nil(t, err)
+	})
+}
+
+
+func TestRegisterPersonaAlreadyExisting(t *testing.T) {
+	s, closer := initStorage(t)
+	defer func() {
+		if err := closer(); err != nil {
+			t.Error(err)
+		}
+	}()
+
+	c := controller.New(s)
+
+	t.Run("already existing", func(t *testing.T) {
+		existingEmail := "some_persona@gmail.com"
+		nonExistingEmail := "some_other_persona@gmail.com"
+		existingPhone := "+380990123456"
+		nonExistingPhone := "+380996543210"
+
+		require.Nil(t, c.RegisterPersona(context.Background(), &controller.Persona{
+			FirstName:  "some",
+			LastName:   "persona",
+			Email:      existingEmail,
+			Phone:      existingPhone,
+			Password:   "SuperPassword",
+		}))
+
+		require.Error(t, controller.ErrPersonaAlreadyExists, c.RegisterPersona(context.Background(), &controller.Persona{
+			FirstName: "other",
+			LastName:  "persona",
+			Email:     existingEmail,
+			Phone:     nonExistingPhone,
+			Password:  "OtherSuperPassword",
+		}))
+
+		require.Error(t, controller.ErrPersonaAlreadyExists, c.RegisterPersona(context.Background(), &controller.Persona{
+			FirstName:  "other",
+			LastName:   "persona",
+			Email:      nonExistingEmail,
+			Phone:      existingPhone,
+			Password:   "SomeOtherPassword",
+		}))
+
+		require.Error(t, controller.ErrPersonaAlreadyExists, c.RegisterPersona(context.Background(), &controller.Persona{
+			FirstName:   "other",
+			LastName:    "persona",
+			Email:       "",
+			Phone:       existingPhone,
+			Password:    "SomeOtherPassword",
+		}))
+	})
+}
+
+func TestRegisterPersonaInvalidArgument(t *testing.T){
+	s, closer := initStorage(t)
+	defer func() {
+		if err := closer(); err != nil {
+			t.Error(err)
+		}
+	}()
+
+	c := controller.New(s)
+
+	t.Run("short persona first name", func(t *testing.T) {
+		require.Error(t, controller.ErrPersonaFirstNameInvalid, c.RegisterPersona(context.Background(), &controller.Persona{
+			FirstName: "c",
+			LastName:  "persona",
+			Email:     "short_persona@gmail.com",
+			Phone:     "+380992345678",
+			Password:  "ShortPassword",
+		}))
+	})
+
+	t.Run("short persona last name", func(t *testing.T) {
+		require.Error(t, controller.ErrPersonaLastNameInvalid, c.RegisterPersona(context.Background(), &controller.Persona{
+			FirstName: "persona",
+			LastName:  "c",
+			Email:     "short_persona@gmail.com",
+			Phone:     "+380992345678",
+			Password:  "ShortPassword",
+		}))
+	})
+
+	t.Run("long persona first name", func(t *testing.T) {
+		firstName := "SAcUTunuEryWYwgwHCQBrJaxoxTzaFNGsPyOuTUyTqwAWqGMzOb"
+		require.Error(t, controller.ErrPersonaFirstNameInvalid, c.RegisterPersona(context.Background(), &controller.Persona{
+			FirstName: firstName,
+			LastName:  "persona",
+			Email:     "long_persona@gmail.com",
+			Phone:     "+380992345678",
+			Password:  "LongPassword",
+		}))
+	})
+
+	t.Run("long persona last name", func(t *testing.T) {
+		lastName := "CQjVvpawLEaRPhrARVogZJKvpCdXSdEITYfszFJbcYdxSzjXoEa"
+		require.Error(t, controller.ErrPersonaLastNameInvalid, c.RegisterPersona(context.Background(), &controller.Persona{
+			FirstName:  "persona",
+			LastName:   lastName,
+			Email:      "long_persona@gmail.com",
+			Phone:      "+380992345678",
+			Password:   "LongPassword",
+		}))
+	})
+
+	t.Run("invalid email format", func(t *testing.T) {
+		require.Error(t, controller.ErrPersonaEmailInvalid, c.RegisterPersona(context.Background(), &controller.Persona{
+			FirstName:  "invalid",
+			LastName:   "email",
+			Email:      "plainemail",
+			Phone:      "+38000112233",
+			Password:   "InvalidEmail",
+		}))
+
+		require.Error(t, controller.ErrPersonaEmailInvalid, c.RegisterPersona(context.Background(), &controller.Persona{
+			FirstName:  "invalid",
+			LastName:   "email",
+			Email:      "#@%^%#$@#$@#.com",
+			Phone:      "+38000112233",
+			Password:   "InvalidEmail",
+		}))
+
+		require.Error(t, controller.ErrPersonaEmailInvalid, c.RegisterPersona(context.Background(), &controller.Persona{
+			FirstName:  "invalid",
+			LastName:   "email",
+			Email:      "@domain.com",
+			Phone:      "+38000112233",
+			Password:   "InvalidEmail",
+		}))
+
+		require.Error(t, controller.ErrPersonaEmailInvalid, c.RegisterPersona(context.Background(), &controller.Persona{
+			FirstName:  "invalid",
+			LastName:   "email",
+			Email:      "email.domain.com",
+			Phone:      "+38000112233",
+			Password:   "InvalidEmail",
+		}))
+	})
+
+	t.Run("short phone", func(t *testing.T) {
+		require.Error(t, controller.ErrPersonaPhoneInvalid, c.RegisterPersona(context.Background(), &controller.Persona{
+			FirstName:  "short",
+			LastName:   "phone",
+			Email:      "short_phone@gmail.com",
+			Phone:      "1234",
+			Password:   "InvalidPhone",
+		}))
+
+		require.Error(t, controller.ErrPersonaPhoneInvalid, c.RegisterPersona(context.Background(), &controller.Persona{
+			FirstName:  "short",
+			LastName:   "phone",
+			Email:      "short_phone@gmail.com",
+			Phone:      "+3805",
+			Password:   "InvalidPhone",
+		}))
+	})
+
+	t.Run("long phone", func(t *testing.T) {
+		require.Error(t, controller.ErrPersonaPhoneInvalid, c.RegisterPersona(context.Background(), &controller.Persona{
+			FirstName:  "long",
+			LastName:   "phone",
+			Email:      "long_phone@gmail.com",
+			Phone:      "+380501234567890123451",
+			Password:   "InvalidPhone",
+		}))
+	})
+
+	t.Run("invalid phone format", func(t *testing.T) {
+		require.Error(t, controller.ErrPersonaPhoneInvalid, c.RegisterPersona(context.Background(), &controller.Persona{
+			FirstName:  "invalid",
+			LastName:   "phone",
+			Email:      "invalid_phone@gmail.com",
+			Phone:      "phone",
+			Password:   "InvalidPhone",
+		}))
+
+		require.Error(t, controller.ErrPersonaPhoneInvalid, c.RegisterPersona(context.Background(), &controller.Persona{
+			FirstName:  "invalid",
+			LastName:   "phone",
+			Email:      "invalid_phone@gmail.com",
+			Phone:      "+38(099)4888377",
+			Password:   "InvalidPhone",
+		}))
+
+		require.Error(t, controller.ErrPersonaPhoneInvalid, c.RegisterPersona(context.Background(), &controller.Persona{
+			FirstName:  "invalid",
+			LastName:   "phone",
+			Email:      "invalid_phone@gmail.com",
+			Phone:      "099-488-83-77",
+			Password:   "InvalidPhone",
+		}))
+	})
+
+	t.Run("short password", func(t *testing.T) {
+		require.Error(t, controller.ErrPersonaPhoneInvalid, c.RegisterPersona(context.Background(), &controller.Persona{
+			FirstName:  "short",
+			LastName:   "password",
+			Email:      "invalid_password@gmail.com",
+			Phone:      "099-488-83-77",
+			Password:   "abcde",
+		}))
+	})
+
+	t.Run("long password", func(t *testing.T) {
+		require.Error(t, controller.ErrPersonaPhoneInvalid, c.RegisterPersona(context.Background(), &controller.Persona{
+			FirstName:  "short",
+			LastName:   "password",
+			Email:      "invalid_password@gmail.com",
+			Phone:      "099-488-83-77",
+			Password:   "abcdeABCDEabcdeABCDEabcdeABCDEz",
+		}))
+	})
+}

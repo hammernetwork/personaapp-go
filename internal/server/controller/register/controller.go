@@ -34,8 +34,8 @@ type Company struct {
 }
 
 type Persona struct {
-	FirstName string `valid:"stringlength(2|50),required"`
-	LastName string `valid:"stringlength(2|50),required"`
+	FirstName string `valid:"stringlength(2|50),alpha,required"`
+	LastName string `valid:"stringlength(2|50),alpha,required"`
 	Email string `valid:"stringlength(5|255),email"`
 	Phone string `valid:"phone,required"`
 	Password string `valid:"stringlength(6|30),required"`
