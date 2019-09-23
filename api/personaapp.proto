@@ -8,6 +8,7 @@ service PersonaApp {
     rpc SetPing (SetPingRequest) returns (SetPingResponse);
     rpc GetPing (GetPingRequest) returns (GetPingResponse);
     rpc RegisterCompany(RegisterCompanyRequest) returns (RegisterCompanyResponse);
+    rpc RegisterPersona(RegisterPersonaRequest) returns (RegisterPersonaResponse);
 }
 
 message Ping {
@@ -42,5 +43,17 @@ message RegisterCompanyRequest {
 }
 
 message RegisterCompanyResponse {
+
+}
+
+message RegisterPersonaRequest {
+    string firstName = 1;
+    string lastName = 2;
+    string email = 3;
+    string phone = 4;
+    string password = 5;
+}
+
+message RegisterPersonaResponse {
 
 }

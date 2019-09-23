@@ -18,6 +18,14 @@ var ErrCompanyNameInvalid = errors.New("company name is invalid")
 var ErrCompanyEmailInvalid = errors.New("company email is invalid")
 var ErrCompanyPhoneInvalid = errors.New("company phone is invalid")
 var ErrCompanyPasswordInvalid = errors.New("company password is invalid")
+
+var ErrPersonaAlreadyExists = errors.New("persona already exists")
+var ErrPersonaFirstNameInvalid = errors.New("persona first name is invalid")
+var ErrPersonaLastNameInvalid = errors.New("persona last name is invalid")
+var ErrPersonaEmailInvalid = errors.New("persona email is invalid")
+var ErrPersonaPhoneInvalid = errors.New("persona phone is invalid")
+var ErrPersonaPasswordInvalid = errors.New("persona password is invalid")
+
 var ErrUnknown = errors.New("unknown error")
 
 type Controller interface {
@@ -27,6 +35,7 @@ type Controller interface {
 
 type RegisterController interface {
 	RegisterCompany(ctx context.Context, cp *registerController.Company) error
+	RegisterPersona(ctx context.Context, cp *registerController.Persona) error
 }
 
 type Server struct {
@@ -88,7 +97,7 @@ func (s *Server) RegisterCompany(ctx context.Context, req *personaappapi.Registe
 
 	switch err {
 	case nil:
-	case registerController.ErrAlreadyExists:
+	case registerController.ErrCompanyAlreadyExists:
 		return nil, status.Error(codes.AlreadyExists, ErrCompanyAlreadyExists.Error())
 	case registerController.ErrCompanyEmailInvalid:
 		return nil, status.Error(codes.InvalidArgument, ErrCompanyEmailInvalid.Error())
@@ -104,4 +113,35 @@ func (s *Server) RegisterCompany(ctx context.Context, req *personaappapi.Registe
 	}
 
 	return &personaappapi.RegisterCompanyResponse{}, nil
+}
+
+func (s *Server) RegisterPersona(ctx context.Context, req *personaappapi.RegisterPersonaRequest) (*personaappapi.RegisterPersonaResponse, error) {
+	err := s.rc.RegisterPersona(ctx, &registerController.Persona{
+		FirstName:   req.GetFirstName(),
+		LastName:    req.GetLastName(),
+		Email:       req.GetEmail(),
+		Phone:       req.GetPhone(),
+		Password:    req.GetPassword(),
+	})
+
+	switch err {
+	case nil:
+	case registerController.ErrPersonaAlreadyExists:
+		return nil, status.Error(codes.AlreadyExists, ErrPersonaAlreadyExists.Error())
+	case registerController.ErrPersonaEmailInvalid:
+		return nil, status.Error(codes.InvalidArgument, ErrPersonaEmailInvalid.Error())
+	case registerController.ErrPersonaFirstNameInvalid:
+		return nil, status.Error(codes.InvalidArgument, ErrPersonaFirstNameInvalid.Error())
+	case registerController.ErrPersonaLastNameInvalid:
+		return nil, status.Error(codes.InvalidArgument, ErrPersonaLastNameInvalid.Error())
+	case registerController.ErrPersonaPasswordInvalid:
+		return nil, status.Error(codes.InvalidArgument, ErrPersonaPasswordInvalid.Error())
+	case registerController.ErrPersonaPhoneInvalid:
+		return nil, status.Error(codes.InvalidArgument, ErrPersonaPhoneInvalid.Error())
+
+	default:
+		return nil, status.Error(codes.Unknown, ErrUnknown.Error())
+	}
+
+	return &personaappapi.RegisterPersonaResponse{}, nil
 }

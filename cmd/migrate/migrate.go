@@ -50,6 +50,26 @@ var migrations = []*migrate.Migration{
 			`DROP TABLE IF EXISTS company;`,
 		},
 	},
+	{
+		Id: "04 - Create personas table",
+		Up: []string{
+			`CREATE TABLE IF NOT EXISTS persona (
+					id            uuid            PRIMARY KEY     DEFAULT uuid_generate_v4(),
+					first_name    VARCHAR(100)    NOT NULL,
+					last_name     VARCHAR(100)    NOT NULL,
+					email         VARCHAR(255)    NULL,
+					phone         VARCHAR(30)     NOT NULL,
+					password      VARCHAR(100)    NOT NULL,
+					created_at    TIMESTAMPTZ     NOT NULL,
+					updated_at    TIMESTAMPTZ     NOT NULL
+				);`,
+			`CREATE UNIQUE INDEX persona_email_idx ON persona (email);`,
+			`CREATE UNIQUE INDEX persona_phone_idx ON persona (phone);`,
+		},
+		Down: []string{
+			`DROP TABLE IF EXISTS persona;`,
+		},
+	},
 }
 
 func Command() *cobra.Command {

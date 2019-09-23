@@ -91,14 +91,14 @@ func TestRegisterCompanyAlreadyExisting(t *testing.T) {
 			Password: "SuperPassword",
 		}))
 
-		require.Error(t, controller.ErrAlreadyExists, c.RegisterCompany(context.Background(), &controller.Company{
+		require.Error(t, controller.ErrCompanyAlreadyExists, c.RegisterCompany(context.Background(), &controller.Company{
 			Name:     "other company",
 			Email:    existingEmail,
 			Phone:   nonExistingPhone,
 			Password: "OtherSuperPassword",
 		}))
 
-		require.Error(t, controller.ErrAlreadyExists, c.RegisterCompany(context.Background(), &controller.Company{
+		require.Error(t, controller.ErrCompanyAlreadyExists, c.RegisterCompany(context.Background(), &controller.Company{
 			Name:     "some other company",
 			Email:    nonExistingEmail,
 			Phone:    existingPhone,
