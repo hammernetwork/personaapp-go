@@ -12,10 +12,8 @@ import (
 	"google.golang.org/grpc/reflection"
 
 	"personaapp/internal/server"
-	"personaapp/internal/server/controller"
-	registerController "personaapp/internal/server/controller/register"
-	"personaapp/internal/server/storage"
-	registerStorage "personaapp/internal/server/storage/register"
+	authController "personaapp/internal/server/auth/controller"
+	authStorage "personaapp/internal/server/auth/storage"
 	"personaapp/pkg/closeable"
 	pkgcmd "personaapp/pkg/cmd"
 	"personaapp/pkg/flag"
@@ -58,12 +56,10 @@ func run(cfg *Config) func(cmd *cobra.Command, args []string) error {
 		}
 		closeable.CloseWithErrorLogging(sugar, pg)
 
-		s := storage.New(pg)
-		c := controller.New(s)
+		as := authStorage.New(pg)
+		ac := authController.New(&cfg.AuthController, as)
 
-		rs := registerStorage.New(pg)
-		rc := registerController.New(rs)
-		srv := server.New(c, rc)
+		srv := server.New(ac)
 
 		ln, err := net.Listen("tcp", cfg.Server.Address)
 		if err != nil {

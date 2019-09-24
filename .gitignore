@@ -2,3 +2,4 @@
 
 # ignore build artifacts
 bin/
+*.DS_Store

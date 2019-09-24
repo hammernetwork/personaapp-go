@@ -2,106 +2,161 @@ package server
 
 import (
 	"context"
+	"google.golang.org/grpc/metadata"
+
+	"github.com/golang/protobuf/ptypes"
+	"github.com/cockroachdb/errors"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 
-	"github.com/cockroachdb/errors"
-	"github.com/golang/protobuf/ptypes"
-
-	"personaapp/internal/server/controller"
-	registerController "personaapp/internal/server/controller/register"
+	authController "personaapp/internal/server/auth/controller"
 	"personaapp/pkg/grpcapi/personaappapi"
 )
 
-var ErrCompanyAlreadyExists = errors.New("company already exists")
-var ErrCompanyNameInvalid = errors.New("company name is invalid")
-var ErrCompanyEmailInvalid = errors.New("company email is invalid")
-var ErrCompanyPhoneInvalid = errors.New("company phone is invalid")
-var ErrCompanyPasswordInvalid = errors.New("company password is invalid")
-var ErrUnknown = errors.New("unknown error")
-
-type Controller interface {
-	SetPing(ctx context.Context, sp *controller.SetPing) error
-	GetPing(ctx context.Context, key string) (*controller.Ping, error)
-}
-
-type RegisterController interface {
-	RegisterCompany(ctx context.Context, cp *registerController.Company) error
+type AuthController interface {
+	Register(ctx context.Context, rd *authController.RegisterData) (*authController.AuthToken, error)
+	Login(ctx context.Context, ld *authController.LoginData) (*authController.AuthToken, error)
+	Refresh(ctx context.Context, tokenStr string) (*authController.AuthToken, error)
 }
 
 type Server struct {
-	c Controller
-	rc RegisterController
+	ac AuthController
 }
 
-func New(c Controller, rc RegisterController) *Server {
-	return &Server{c: c, rc: rc}
+func New(ac AuthController) *Server {
+	return &Server{ac: ac}
 }
 
-func (s *Server) SetPing(ctx context.Context, req *personaappapi.SetPingRequest) (*personaappapi.SetPingResponse, error) {
-	if err := s.c.SetPing(ctx, &controller.SetPing{
-		Key:   req.Key,
-		Value: req.Value,
-	}); err != nil {
-		return nil, errors.WithStack(err)
-	}
-	return &personaappapi.SetPingResponse{
-		Ping: nil, // TODO fill response
-	}, nil
-}
-
-func (s *Server) GetPing(ctx context.Context, req *personaappapi.GetPingRequest) (*personaappapi.GetPingResponse, error) {
-	ping, err := s.c.GetPing(ctx, req.GetKey())
-	switch err {
-	case nil:
-	case controller.ErrNotFound:
-		return nil, status.Error(codes.NotFound, err.Error())
+func toControllerAccount(at personaappapi.AccountType) (authController.AccountType, error) {
+	switch at {
+	case personaappapi.AccountType_ACCOUNT_TYPE_UNKNOWN:
+		return "", errors.New("default unknown account type")
+	case personaappapi.AccountType_ACCOUNT_TYPE_COMPANY:
+		return authController.AccountTypeCompany, nil
+	case personaappapi.AccountType_ACCOUNT_TYPE_PERSONA:
+		return authController.AccountTypePersona, nil
 	default:
-		return nil, errors.WithStack(err)
+		return "", errors.New("unknown account type")
 	}
-	createdAt, err := ptypes.TimestampProto(ping.CreatedAt)
-	if err != nil {
-		return nil, errors.WithStack(err)
+}
+
+func toServerAccount(at authController.AccountType) personaappapi.AccountType {
+	switch at {
+	case authController.AccountTypeCompany:
+		return personaappapi.AccountType_ACCOUNT_TYPE_COMPANY
+	case authController.AccountTypePersona:
+		return personaappapi.AccountType_ACCOUNT_TYPE_PERSONA
+	default:
+		return personaappapi.AccountType_ACCOUNT_TYPE_UNKNOWN
 	}
-	updatedAt, err := ptypes.TimestampProto(ping.UpdatedAt)
+}
+
+func toServerToken(at *authController.AuthToken) (*personaappapi.Token, error) {
+	expiresAt, err := ptypes.TimestampProto(at.ExpiresAt)
 	if err != nil {
-		return nil, errors.WithStack(err)
+		return nil, errors.New("invalid expires at")
 	}
 
-	return &personaappapi.GetPingResponse{
-		Ping: &personaappapi.Ping{
-			Key:       ping.Key,
-			Value:     ping.Value,
-			CreatedAt: createdAt,
-			UpdatedAt: updatedAt,
-		},
+	return &personaappapi.Token{
+		Token:       at.Token,
+		ExpiresAt:   expiresAt,
+		AccountType: toServerAccount(at.AccountType),
 	}, nil
 }
 
-func (s *Server) RegisterCompany(ctx context.Context, req *personaappapi.RegisterCompanyRequest) (*personaappapi.RegisterCompanyResponse, error) {
-	err := s.rc.RegisterCompany(ctx, &registerController.Company{
-		Name: 		 req.GetCompanyName(),
-		Email:       req.GetEmail(),
-		Phone:       req.GetPhone(),
-		Password:    req.GetPassword(),
+func (s *Server) Register(ctx context.Context, req *personaappapi.RegisterRequest) (*personaappapi.RegisterResponse, error) {
+	cat, err := toControllerAccount(req.GetAccountType())
+	if err != nil {
+		return nil, status.Error(codes.InvalidArgument, err.Error())
+	}
+
+	authToken, err := s.ac.Register(ctx, &authController.RegisterData{
+		Email:    req.GetEmail(),
+		Phone:    req.GetPhone(),
+		Account:  cat,
+		Password: req.GetPassword(),
 	})
 
-	switch err {
+	switch errors.Cause(err) {
 	case nil:
-	case registerController.ErrAlreadyExists:
-		return nil, status.Error(codes.AlreadyExists, ErrCompanyAlreadyExists.Error())
-	case registerController.ErrCompanyEmailInvalid:
-		return nil, status.Error(codes.InvalidArgument, ErrCompanyEmailInvalid.Error())
-	case registerController.ErrCompanyNameInvalid:
-		return nil, status.Error(codes.InvalidArgument, ErrCompanyNameInvalid.Error())
-	case registerController.ErrCompanyPasswordInvalid:
-		return nil, status.Error(codes.InvalidArgument, ErrCompanyPasswordInvalid.Error())
-	case registerController.ErrCompanyPhoneInvalid:
-		return nil, status.Error(codes.InvalidArgument, ErrCompanyPhoneInvalid.Error())
-
+	case authController.ErrAlreadyExists:
+		return nil, status.Error(codes.AlreadyExists, err.Error())
+	case authController.ErrInvalidArgument:
+		return nil, status.Error(codes.InvalidArgument, err.Error())
+	case authController.ErrInvalidLogin:
+		return nil, status.Error(codes.InvalidArgument, err.Error())
+	case authController.ErrInvalidEmail:
+		return nil, status.Error(codes.InvalidArgument, err.Error())
+	case authController.ErrInvalidPhone:
+		return nil, status.Error(codes.InvalidArgument, err.Error())
+	case authController.ErrInvalidAccount:
+		return nil, status.Error(codes.InvalidArgument, err.Error())
+	case authController.ErrInvalidPassword:
+		return nil, status.Error(codes.InvalidArgument, err.Error())
 	default:
-		return nil, status.Error(codes.Unknown, ErrUnknown.Error())
+		return nil, status.Error(codes.Internal, err.Error())
 	}
 
-	return &personaappapi.RegisterCompanyResponse{}, nil
+	sat, err := toServerToken(authToken)
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	return &personaappapi.RegisterResponse{Token: sat}, nil
+}
+
+func (s *Server) Login(ctx context.Context, req *personaappapi.LoginRequest) (*personaappapi.LoginResponse, error) {
+	authToken, err := s.ac.Login(ctx, &authController.LoginData{
+		Login: req.GetLogin(),
+		Password: req.GetPassword(),
+	})
+
+	switch errors.Cause(err) {
+	case nil:
+	case authController.ErrInvalidLogin:
+		return nil, status.Error(codes.InvalidArgument, err.Error())
+	case authController.ErrInvalidPassword:
+		return nil, status.Error(codes.InvalidArgument, err.Error())
+	case authController.ErrUnauthorized:
+		return nil, status.Error(codes.Unauthenticated, err.Error())
+	default:
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	sat, err := toServerToken(authToken)
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	return &personaappapi.LoginResponse{Token: sat}, nil
+}
+
+func (s *Server) Logout(context.Context, *personaappapi.LogoutRequest) (*personaappapi.LogoutResponse, error) {
+	return &personaappapi.LogoutResponse{}, nil
+}
+
+func (s *Server) Refresh(ctx context.Context, req *personaappapi.RefreshRequest) (*personaappapi.RefreshResponse, error) {
+	md, ok := metadata.FromIncomingContext(ctx)
+	if !ok {
+		return nil, status.Error(codes.InvalidArgument, "no bearer provided")
+	}
+
+	token := md.Get("Bearer")[0] // TODO
+
+	authToken, err := s.ac.Refresh(ctx, token)
+
+	switch errors.Cause(err) {
+	case nil:
+	case authController.ErrUnauthorized:
+		return nil, status.Error(codes.Unauthenticated, err.Error())
+	default:
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	sat, err := toServerToken(authToken)
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	return &personaappapi.RefreshResponse{Token: sat}, nil
 }

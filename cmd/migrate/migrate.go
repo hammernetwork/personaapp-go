@@ -9,21 +9,7 @@ import (
 
 var migrations = []*migrate.Migration{
 	{
-		Id: "01 - Initial",
-		Up: []string{
-			`CREATE TABLE IF NOT EXISTS pingpong (
-					key              VARCHAR(128)            PRIMARY KEY,
-					value            VARCHAR(128),
-					created_at       TIMESTAMPTZ             NOT NULL,
-					updated_at       TIMESTAMPTZ             NOT NULL
-				);`,
-		},
-		Down: []string{
-			`DROP TABLE IF EXISTS pingpong;`,
-		},
-	},
-	{
-		Id: "02 - Create uuid extension",
+		Id: "01 - Create uuid extension",
 		Up: []string{
 			`CREATE EXTENSION IF NOT EXISTS "uuid-ossp";`,
 		},
@@ -32,23 +18,33 @@ var migrations = []*migrate.Migration{
 		},
 	},
 	{
-		Id: "03 - Create companies table",
+		Id: "02 - Create auth table",
 		Up: []string{
-			`CREATE TABLE IF NOT EXISTS company (
-					id            uuid            PRIMARY KEY     DEFAULT uuid_generate_v4(),
-					name          VARCHAR(100)    NOT NULL,
-					email         VARCHAR(255)    NOT NULL,
-					phone         VARCHAR(30)     NOT NULL,
-					password      VARCHAR(100)    NOT NULL,
-					created_at    TIMESTAMPTZ     NOT NULL,
-					updated_at    TIMESTAMPTZ     NOT NULL
-				);`,
-			`CREATE UNIQUE INDEX company_email_idx ON company (email);`,
-			`CREATE UNIQUE INDEX company_phone_idx ON company (phone);`,
+			`CREATE TYPE e_account_type AS ENUM (
+					'account_type_company',
+					'account_type_persona',
+			);`,
+
+			`CREATE TABLE IF NOT EXISTS auth (
+					account_id       uuid            PRIMARY KEY,
+					account_type     e_account_type  NOT NULL,
+					email            VARCHAR(255)    NOT NULL,
+					phone            VARCHAR(30)     NOT NULL,
+					password_hash    VARCHAR(100)    NOT NULL,
+					created_at       TIMESTAMPTZ     NOT NULL,
+					updated_at       TIMESTAMPTZ     NOT NULL
+			);`,
+
+			`CREATE UNIQUE INDEX auth_email_idx ON auth (email);`,
+			`CREATE UNIQUE INDEX auth_phone_idx ON auth (phone);`,
 		},
 		Down: []string{
-			`DROP TABLE IF EXISTS company;`,
+			`DROP INDEX IF EXISTS auth_phone_idx;`,
+			`DROP INDEX IF EXISTS auth_email_idx;`,
+			`DROP TABLE IF EXISTS auth;`,
+			`DROP TYPE IF EXISTS e_account_type;`,
 		},
+		//TODO migration test
 	},
 }
 
