@@ -2,6 +2,7 @@ package tx
 
 import (
 	"context"
+
 	"database/sql/driver"
 
 	"github.com/pkg/errors"
@@ -13,13 +14,13 @@ type Tx interface {
 
 var ErrConcurrentTx = errors.New("concurrent transaction")
 
-// TxBeginner returns a new transaction.
-type TxBeginner interface {
+// Beginner returns a new transaction.
+type Beginner interface {
 	BeginTx(ctx context.Context) (Tx, error)
 }
 
-// TxOption configures the way a transaction is executed.
-type TxOption interface {
+// Option configures the way a transaction is executed.
+type Option interface {
 	apply(*txSettings)
 }
 
@@ -29,7 +30,7 @@ type txSettings struct {
 
 // RunInTx runs f in a transaction.
 // Since f may be called multiple times, f should usually be idempotent.
-func RunInTx(ctx context.Context, txer TxBeginner, fn func(context.Context, Tx) error, opts ...TxOption) error {
+func RunInTx(ctx context.Context, txer Beginner, fn func(context.Context, Tx) error, opts ...Option) error {
 	settings := newTxSettings(opts)
 	for n := 0; n < settings.attempts; n++ {
 		tx, err := txer.BeginTx(ctx)
@@ -50,7 +51,7 @@ func RunInTx(ctx context.Context, txer TxBeginner, fn func(context.Context, Tx) 
 	return ErrConcurrentTx
 }
 
-func newTxSettings(opts []TxOption) *txSettings {
+func newTxSettings(opts []Option) *txSettings {
 	s := &txSettings{attempts: 3}
 	for _, o := range opts {
 		o.apply(s)
@@ -58,8 +59,8 @@ func newTxSettings(opts []TxOption) *txSettings {
 	return s
 }
 
-// MaxAttempts returns a TxOption that overrides the default 3 attempt times.
-func MaxAttempts(attempts int) TxOption {
+// MaxAttempts returns a Option that overrides the default 3 attempt times.
+func MaxAttempts(attempts int) Option {
 	return maxAttempts(attempts)
 }
 

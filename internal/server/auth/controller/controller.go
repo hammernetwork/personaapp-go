@@ -36,12 +36,22 @@ func init() {
 	})
 
 	govalidator.CustomTypeTagMap.Set("phone", func(i interface{}, o interface{}) bool {
-		r := regexp.MustCompile(`^\+380\d{9}$`)
-		switch v := i.(type) {
-		case string:
-			return r.MatchString(v)
+		phone, ok := i.(string)
+		if !ok {
+			return false
 		}
-		return false
+
+		rd, ok := o.(*RegisterData)
+		if !ok {
+			return false
+		}
+
+		if rd.Account == AccountTypePersona && rd.Phone == "" {
+			return true
+		}
+
+		r := regexp.MustCompile(`^\+380\d{9}$`)
+		return r.MatchString(phone)
 	})
 }
 

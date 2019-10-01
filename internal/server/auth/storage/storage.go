@@ -87,7 +87,12 @@ func (s *Storage) TxGetAuthDataByAccountID(ctx context.Context, tx pkgtx.Tx, acc
 	return &ad, nil
 }
 
-func (s *Storage) TxGetAuthDataByPhoneOrEmail(ctx context.Context, tx pkgtx.Tx, phone, email string) (*AuthData, error) {
+func (s *Storage) TxGetAuthDataByPhoneOrEmail(
+	ctx context.Context,
+	tx pkgtx.Tx,
+	phone string,
+	email string,
+) (*AuthData, error) {
 	c := postgresql.FromTx(tx)
 
 	var ad AuthData

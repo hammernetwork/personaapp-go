@@ -19,7 +19,7 @@ enum AccountType {
 
 message RegisterRequest {
     string email = 1;
-    string phone = 2;
+    string phone = 2; // optional for persona
     string password = 3;
     AccountType account_type = 4;
 }

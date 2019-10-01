@@ -33,7 +33,7 @@ func (c *Config) Flags(name, prefix string) *pflag.FlagSet {
 	return f
 }
 
-func (c Config) Validate() error {
+func (c *Config) Validate() error {
 	if c.Password == "" || c.Database == "" {
 		return errors.New("empty config")
 	}

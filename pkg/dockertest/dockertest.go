@@ -16,7 +16,10 @@ type component struct {
 
 type componentIdentifier string
 
-type initComponentFunc func(pool *dockertest.Pool, modifiers ...OptionModifier) (rport int, _ *dockertest.Resource, rerr error)
+type initComponentFunc func(
+	pool *dockertest.Pool,
+	modifiers ...OptionModifier,
+) (rport int, _ *dockertest.Resource, rerr error)
 
 var components *componentManager
 

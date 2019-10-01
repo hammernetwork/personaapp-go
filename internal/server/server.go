@@ -2,11 +2,11 @@ package server
 
 import (
 	"context"
-	"google.golang.org/grpc/metadata"
 
-	"github.com/golang/protobuf/ptypes"
 	"github.com/cockroachdb/errors"
+	"github.com/golang/protobuf/ptypes"
 	"google.golang.org/grpc/codes"
+	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
 
 	authController "personaapp/internal/server/auth/controller"
@@ -64,7 +64,10 @@ func toServerToken(at *authController.AuthToken) (*personaappapi.Token, error) {
 	}, nil
 }
 
-func (s *Server) Register(ctx context.Context, req *personaappapi.RegisterRequest) (*personaappapi.RegisterResponse, error) {
+func (s *Server) Register(
+	ctx context.Context,
+	req *personaappapi.RegisterRequest,
+) (*personaappapi.RegisterResponse, error) {
 	cat, err := toControllerAccount(req.GetAccountType())
 	if err != nil {
 		return nil, status.Error(codes.InvalidArgument, err.Error())
@@ -107,7 +110,7 @@ func (s *Server) Register(ctx context.Context, req *personaappapi.RegisterReques
 
 func (s *Server) Login(ctx context.Context, req *personaappapi.LoginRequest) (*personaappapi.LoginResponse, error) {
 	authToken, err := s.ac.Login(ctx, &authController.LoginData{
-		Login: req.GetLogin(),
+		Login:    req.GetLogin(),
 		Password: req.GetPassword(),
 	})
 
@@ -135,7 +138,10 @@ func (s *Server) Logout(context.Context, *personaappapi.LogoutRequest) (*persona
 	return &personaappapi.LogoutResponse{}, nil
 }
 
-func (s *Server) Refresh(ctx context.Context, req *personaappapi.RefreshRequest) (*personaappapi.RefreshResponse, error) {
+func (s *Server) Refresh(
+	ctx context.Context,
+	req *personaappapi.RefreshRequest,
+) (*personaappapi.RefreshResponse, error) {
 	md, ok := metadata.FromIncomingContext(ctx)
 	if !ok {
 		return nil, status.Error(codes.InvalidArgument, "no bearer provided")

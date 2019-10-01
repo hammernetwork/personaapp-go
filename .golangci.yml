@@ -1,0 +1,47 @@
+run:
+  concurrency: 8
+  deadline: 10m
+  issues-exit-code: 1
+  tests: false
+
+  skip-files:
+    # skip protobuf generated code
+    - ".*\\.pb\\.go$"
+
+linters-settings:
+  govet:
+    check-shadowing: true
+  golint:
+    min-confidence: 0
+  maligned:
+    suggest-new: true
+  goconst:
+    min-len: 2
+    min-occurrences: 2
+  misspell:
+    locale: US
+  gocritic:
+    enabled-tags:
+      - performance
+      - experimental
+
+linters:
+  enable-all: true
+  disable:
+    - goimports
+    - gochecknoinits
+    - gochecknoglobals
+    - govet
+    - maligned
+
+issues:
+  exclude-rules:
+    - linters:
+        - lll
+      source: "^//go:generate "
+    - linters:
+        - staticcheck
+      text: 'is deprecated'
+    - linters:
+        - interfacer
+      text: 'can be `fmt.Stringer`'
