@@ -101,7 +101,7 @@ func New(cfg *Config, s Storage) *Controller {
 
 type RegisterData struct {
 	Email    string      `valid:"stringlength(5|255),email,required"`
-	Phone    string      `valid:"phone,required"`
+	Phone    string      `valid:"phone"`
 	Account  AccountType `valid:"accountType,required"`
 	Password string      `valid:"stringlength(6|30),required"`
 }
