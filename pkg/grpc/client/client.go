@@ -32,7 +32,7 @@ func New(
 
 	var interceptors = []grpc.UnaryClientInterceptor{
 		grpc_prometheus.UnaryClientInterceptor,
-		//prometheus.UnaryClientInterceptor, TODO: client metrics
+		// prometheus.UnaryClientInterceptor, TODO: client metrics
 	}
 
 	if opt.unaryInt != nil {

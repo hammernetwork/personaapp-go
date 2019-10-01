@@ -43,7 +43,10 @@ func EnsurePostgres(modifiers ...OptionModifier) (*PostgresConfig, error) {
 	}, nil
 }
 
-func initPostgresComponent(pool *dockertest.Pool, modifiers ...OptionModifier) (rport int, _ *dockertest.Resource, rerr error) {
+func initPostgresComponent(
+	pool *dockertest.Pool,
+	modifiers ...OptionModifier,
+) (rport int, _ *dockertest.Resource, rerr error) {
 	const (
 		expireResource = 10 * time.Minute
 		internalPort   = "5432"
@@ -77,7 +80,14 @@ func initPostgresComponent(pool *dockertest.Pool, modifiers ...OptionModifier) (
 	var portStr string
 	if err := pool.Retry(func() error {
 		portStr = resource.GetPort(portID)
-		dsn := fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=disable", postgresUser, postgresPassword, "localhost", portStr, postgresDatabase)
+		dsn := fmt.Sprintf(
+			"postgres://%s:%s@%s:%s/%s?sslmode=disable",
+			postgresUser,
+			postgresPassword,
+			"localhost",
+			portStr,
+			postgresDatabase,
+		)
 		db, err := sql.Open("postgres", dsn)
 		if err != nil {
 			return errors.WithStack(err)

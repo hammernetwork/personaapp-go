@@ -41,7 +41,8 @@ func newMigration(logger *zap.SugaredLogger, pg *postgresql.Storage, migrationTa
 }
 
 func (m *migration) migrate(migrations []*migrate.Migration, direction migrate.MigrationDirection, limit int) error {
-	applied, err := migrate.ExecMax(m.pg.DB, "postgres", migrate.MemoryMigrationSource{Migrations: migrations}, direction, limit)
+	migrationSource := migrate.MemoryMigrationSource{Migrations: migrations}
+	applied, err := migrate.ExecMax(m.pg.DB, "postgres", migrationSource, direction, limit)
 	if err != nil {
 		return errors.WithStack(err)
 	}
