@@ -99,10 +99,36 @@ func (s *Storage) TxGetAuthDataByPhoneOrEmail(
 	err := c.QueryRowContext(
 		ctx,
 		`SELECT account_id, account_type, email, phone, password_hash, created_at, updated_at 
-			FROM company 
+			FROM auth 
 			WHERE phone = $1 OR email = $2`,
 		phone,
 		email,
+	).Scan(&ad.AccountID, &ad.Account, &ad.Email, &ad.Phone, &ad.PasswordHash, &ad.CreatedAt, &ad.UpdatedAt)
+
+	switch err {
+	case nil:
+	case sql.ErrNoRows:
+		return nil, ErrNotFound
+	default:
+		return nil, errors.WithStack(err)
+	}
+	return &ad, nil
+}
+
+func (s *Storage) TxGetAuthDataByPhone(
+	ctx context.Context,
+	tx pkgtx.Tx,
+	phone string,
+) (*AuthData, error) {
+	c := postgresql.FromTx(tx)
+
+	var ad AuthData
+	err := c.QueryRowContext(
+		ctx,
+		`SELECT account_id, account_type, email, phone, password_hash, created_at, updated_at 
+			FROM auth
+			WHERE phone = $1`,
+		phone,
 	).Scan(&ad.AccountID, &ad.Account, &ad.Email, &ad.Phone, &ad.PasswordHash, &ad.CreatedAt, &ad.UpdatedAt)
 
 	switch err {
