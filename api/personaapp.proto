@@ -3,12 +3,14 @@ syntax = "proto3";
 package personaappapi;
 
 import "google/protobuf/timestamp.proto";
+import "google/protobuf/wrappers.proto";
 
 service PersonaApp {
     rpc Register (RegisterRequest) returns (RegisterResponse);
     rpc Login (LoginRequest) returns (LoginResponse);
     rpc Logout (LogoutRequest) returns (LogoutResponse);
     rpc Refresh (RefreshRequest) returns (RefreshResponse);
+    rpc UpdateCompany (UpdateCompanyRequest) returns (UpdateCompanyResponse);
 }
 
 enum AccountType {
@@ -52,3 +54,12 @@ message RefreshRequest {}
 message RefreshResponse {
     Token token = 1;
 }
+
+message UpdateCompanyRequest {
+    google.protobuf.StringValue title = 1;
+    google.protobuf.StringValue description = 2;
+    google.protobuf.StringValue logo_url = 3;
+    google.protobuf.StringValue scope_id = 4;
+}
+
+message UpdateCompanyResponse {}
