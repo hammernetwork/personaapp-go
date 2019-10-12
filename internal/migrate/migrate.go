@@ -42,6 +42,44 @@ var migrations = []*migrate.Migration{
 			`DROP TYPE IF EXISTS e_account_type;`,
 		},
 	},
+	{
+		Id: "03 - Create company scope table",
+		Up: []string{
+			`CREATE TABLE IF NOT EXISTS company_scope (
+					company_scope_id	uuid			PRIMARY KEY,
+					title				VARCHAR(255)	NOT NULL,
+					alias				VARCHAR(255)	NOT NULL,
+					created_at      	TIMESTAMPTZ     NOT NULL,
+					updated_at      	TIMESTAMPTZ     NOT NULL
+			);`,
+			`CREATE UNIQUE INDEX company_scope_title_idx ON company_scope (title);`,
+			`CREATE UNIQUE INDEX company_scope_alias_idx ON company_scope (alias);`,
+			//TODO: insert temporary data
+		},
+		Down: []string{
+			`DROP INDEX IF EXISTS company_scope_title_idx;`,
+			`DROP INDEX IF EXISTS company_scope_alias_idx;`,
+			`DROP TABLE IF EXISTS company_scope;`,
+		},
+	},
+	{
+		Id: "04 - Create company table",
+		Up: []string{
+			`CREATE TABLE IF NOT EXISTS company (
+					company_id		uuid			PRIMARY KEY,
+					auth_id			uuid			REFERENCES auth(account_id) ON DELETE CASCADE,
+					scope_id		uuid			REFERENCES company_scope(company_scope_id) ON DELETE CASCADE,
+					title			VARCHAR(255)	NULL,
+					description		VARCHAR(255)	NULL,
+					logo_url		VARCHAR(255)	NULL,
+					created_at      TIMESTAMPTZ     NOT NULL,
+					updated_at      TIMESTAMPTZ     NOT NULL
+			);`,
+		},
+		Down: []string{
+			`DROP TABLE IF EXISTS company;`,
+		},
+	},
 }
 
 func GetMigrations() []*migrate.Migration {
