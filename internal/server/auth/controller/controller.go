@@ -41,17 +41,26 @@ func init() {
 			return false
 		}
 
+		r := regexp.MustCompile(`^\+380\d{9}$`)
+		return r.MatchString(phone)
+	})
+
+	govalidator.CustomTypeTagMap.Set("custom_email", func(i interface{}, o interface{}) bool {
+		email, ok := i.(string)
+		if !ok {
+			return false
+		}
+
 		rd, ok := o.(*RegisterData)
 		if !ok {
 			return false
 		}
 
-		if rd.Account == AccountTypePersona && rd.Phone == "" {
+		if rd.Account == AccountTypePersona && rd.Email == "" {
 			return true
 		}
 
-		r := regexp.MustCompile(`^\+380\d{9}$`)
-		return r.MatchString(phone)
+		return govalidator.IsEmail(email)
 	})
 }
 
@@ -85,6 +94,7 @@ func (c *Config) Flags(name string) *pflag.FlagSet {
 type Storage interface {
 	TxPutAuth(ctx context.Context, tx pkgtx.Tx, ad *authStorage.AuthData) error
 	TxGetAuthDataByPhoneOrEmail(ctx context.Context, tx pkgtx.Tx, phone, email string) (*authStorage.AuthData, error)
+	TxGetAuthDataByPhone(ctx context.Context, tx pkgtx.Tx, phone string) (*authStorage.AuthData, error)
 
 	BeginTx(ctx context.Context) (pkgtx.Tx, error)
 	NoTx() pkgtx.Tx
@@ -100,8 +110,8 @@ func New(cfg *Config, s Storage) *Controller {
 }
 
 type RegisterData struct {
-	Email    string      `valid:"stringlength(5|255),email,required"`
-	Phone    string      `valid:"phone"`
+	Email    string      `valid:"stringlength(5|255),custom_email"`
+	Phone    string      `valid:"phone,required"`
 	Account  AccountType `valid:"accountType,required"`
 	Password string      `valid:"stringlength(6|30),required"`
 }
@@ -268,7 +278,13 @@ func (c *Controller) Register(ctx context.Context, rd *RegisterData) (*AuthToken
 
 	var authToken *AuthToken
 	if err := pkgtx.RunInTx(ctx, c.s, func(ctx context.Context, tx pkgtx.Tx) error {
-		switch _, err := c.s.TxGetAuthDataByPhoneOrEmail(ctx, tx, rd.Phone, rd.Email); err {
+		var err error
+		if rd.Email == "" {
+			_, err = c.s.TxGetAuthDataByPhone(ctx, tx, rd.Phone)
+		} else {
+			_, err = c.s.TxGetAuthDataByPhoneOrEmail(ctx, tx, rd.Phone, rd.Email)
+		}
+		switch err {
 		case nil:
 			return errors.Wrap(ErrAlreadyExists, "account with specified phone or email already exists")
 		case authStorage.ErrNotFound:
