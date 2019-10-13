@@ -166,3 +166,11 @@ func (s *Server) Refresh(
 
 	return &personaappapi.RefreshResponse{Token: sat}, nil
 }
+
+func (s *Server) UpdateCompany(
+	ctx context.Context,
+	req *personaappapi.UpdateCompanyRequest,
+) (*personaappapi.UpdateCompanyResponse, error) {
+	//TODO: implement
+	return &personaappapi.UpdateCompanyResponse{}, nil
+}
