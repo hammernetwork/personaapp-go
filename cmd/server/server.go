@@ -14,6 +14,8 @@ import (
 	"personaapp/internal/server"
 	authController "personaapp/internal/server/auth/controller"
 	authStorage "personaapp/internal/server/auth/storage"
+	companyController "personaapp/internal/server/company/controller"
+	companyStorage "personaapp/internal/server/company/storage"
 	"personaapp/pkg/closeable"
 	pkgcmd "personaapp/pkg/cmd"
 	"personaapp/pkg/flag"
@@ -59,7 +61,10 @@ func run(cfg *Config) func(cmd *cobra.Command, args []string) error {
 		as := authStorage.New(pg)
 		ac := authController.New(&cfg.AuthController, as)
 
-		srv := server.New(ac)
+		cs := companyStorage.New(pg)
+		cc := companyController.New(cs)
+
+		srv := server.New(ac, cc)
 
 		ln, err := net.Listen("tcp", cfg.Server.Address)
 		if err != nil {

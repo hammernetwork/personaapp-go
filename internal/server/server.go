@@ -19,12 +19,16 @@ type AuthController interface {
 	Refresh(ctx context.Context, tokenStr string) (*authController.AuthToken, error)
 }
 
-type Server struct {
-	ac AuthController
+type CompanyController interface {
 }
 
-func New(ac AuthController) *Server {
-	return &Server{ac: ac}
+type Server struct {
+	ac AuthController
+	cc CompanyController
+}
+
+func New(ac AuthController, cc CompanyController) *Server {
+	return &Server{ac: ac, cc: cc}
 }
 
 func toControllerAccount(at personaappapi.AccountType) (authController.AccountType, error) {
