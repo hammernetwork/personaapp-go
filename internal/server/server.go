@@ -2,6 +2,7 @@ package server
 
 import (
 	"context"
+	"github.com/golang/protobuf/ptypes/wrappers"
 
 	"github.com/cockroachdb/errors"
 	"github.com/golang/protobuf/ptypes"
@@ -10,6 +11,7 @@ import (
 	"google.golang.org/grpc/status"
 
 	authController "personaapp/internal/server/auth/controller"
+	companyController "personaapp/internal/server/company/controller"
 	"personaapp/pkg/grpcapi/personaappapi"
 )
 
@@ -20,6 +22,7 @@ type AuthController interface {
 }
 
 type CompanyController interface {
+	Update(ctx context.Context, cd *companyController.CompanyData) error
 }
 
 type Server struct {
@@ -171,10 +174,36 @@ func (s *Server) Refresh(
 	return &personaappapi.RefreshResponse{Token: sat}, nil
 }
 
+func getOptionalString(sw *wrappers.StringValue) *string {
+	if sw == nil {
+		return nil
+	}
+	return &sw.Value
+}
+
 func (s *Server) UpdateCompany(
 	ctx context.Context,
 	req *personaappapi.UpdateCompanyRequest,
 ) (*personaappapi.UpdateCompanyResponse, error) {
-	//TODO: implement
+	err := s.cc.Update(ctx, &companyController.CompanyData{
+		AuthID:      "", //TODO: check and fetch auth id
+		ScopeID:     getOptionalString(req.ScopeId),
+		Title:       getOptionalString(req.Title),
+		Description: getOptionalString(req.Description),
+		LogoURL:     getOptionalString(req.LogoUrl),
+	})
+
+	switch errors.Cause(err) {
+	case nil:
+	case companyController.ErrInvalidTitle:
+		return nil, status.Error(codes.InvalidArgument, err.Error())
+	case companyController.ErrInvalidDescription:
+		return nil, status.Error(codes.InvalidArgument, err.Error())
+	case companyController.ErrInvalidLogoURL:
+		return nil, status.Error(codes.InvalidArgument, err.Error())
+	default:
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
 	return &personaappapi.UpdateCompanyResponse{}, nil
 }

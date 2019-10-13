@@ -66,17 +66,18 @@ var migrations = []*migrate.Migration{
 		Id: "04 - Create company table",
 		Up: []string{
 			`CREATE TABLE IF NOT EXISTS company (
-					company_id		uuid			PRIMARY KEY,
-					auth_id			uuid			REFERENCES auth(account_id) ON DELETE CASCADE,
-					scope_id		uuid			REFERENCES company_scope(company_scope_id) ON DELETE CASCADE,
+					auth_id			uuid			NOT NULL REFERENCES auth(account_id) ON DELETE CASCADE,
+					scope_id		uuid			NULL REFERENCES company_scope(company_scope_id) ON DELETE RESTRICT,
 					title			VARCHAR(255)	NULL,
 					description		VARCHAR(255)	NULL,
 					logo_url		VARCHAR(255)	NULL,
 					created_at      TIMESTAMPTZ     NOT NULL,
 					updated_at      TIMESTAMPTZ     NOT NULL
 			);`,
+			`CREATE UNIQUE INDEX company_auth_id_idx ON company (auth_id)`,
 		},
 		Down: []string{
+			`DROP INDEX IF EXISTS company_aut_id_idx;`,
 			`DROP TABLE IF EXISTS company;`,
 		},
 	},
