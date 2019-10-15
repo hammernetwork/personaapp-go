@@ -19,6 +19,7 @@ type AuthController interface {
 	Register(ctx context.Context, rd *authController.RegisterData) (*authController.AuthToken, error)
 	Login(ctx context.Context, ld *authController.LoginData) (*authController.AuthToken, error)
 	Refresh(ctx context.Context, tokenStr string) (*authController.AuthToken, error)
+	GetAuthClaims(ctx context.Context, tokenStr string) (*authController.AuthClaims, error)
 }
 
 type CompanyController interface {
@@ -181,16 +182,48 @@ func getOptionalString(sw *wrappers.StringValue) *string {
 	return &sw.Value
 }
 
+func (s *Server) getAuthClaims(ctx context.Context) (*authController.AuthClaims, error) {
+	md, ok := metadata.FromIncomingContext(ctx)
+	if !ok {
+		return nil, status.Error(codes.InvalidArgument, "no bearer provided")
+	}
+	token := md.Get("Bearer")[0] // TODO
+	claims, err := s.ac.GetAuthClaims(ctx, token)
+	switch errors.Cause(err) {
+	case nil:
+		return claims, nil
+	case authController.ErrUnauthorized:
+		return nil, status.Error(codes.Unauthenticated, err.Error())
+	default:
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+}
+
 func (s *Server) UpdateCompany(
 	ctx context.Context,
 	req *personaappapi.UpdateCompanyRequest,
 ) (*personaappapi.UpdateCompanyResponse, error) {
-	err := s.cc.Update(ctx, &companyController.CompanyData{
-		AuthID:      "", //TODO: check and fetch auth id
-		ScopeID:     getOptionalString(req.ScopeId),
-		Title:       getOptionalString(req.Title),
-		Description: getOptionalString(req.Description),
-		LogoURL:     getOptionalString(req.LogoUrl),
+	claims, err := s.getAuthClaims(ctx)
+	if err != nil {
+		return nil, err
+	}
+	if toServerAccount(claims.AccountType) != personaappapi.AccountType_ACCOUNT_TYPE_COMPANY {
+		return nil, status.Error(codes.Unauthenticated, "unauthorized")
+	}
+
+	activityFields := make([]string, len(req.ActivityFields))
+	i := 0
+	for k := range req.ActivityFields {
+		activityFields[i] = k
+		i++
+	}
+
+	err = s.cc.Update(ctx, &companyController.CompanyData{
+		AuthID:         claims.AccountID,
+		ActivityFields: activityFields,
+		Title:          getOptionalString(req.Title),
+		Description:    getOptionalString(req.Description),
+		LogoURL:        getOptionalString(req.LogoUrl),
 	})
 
 	switch errors.Cause(err) {

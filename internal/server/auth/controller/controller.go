@@ -399,3 +399,7 @@ func (c *Controller) Refresh(ctx context.Context, tokenStr string) (*AuthToken, 
 	at, err := c.refreshToken(tokenStr)
 	return at, errors.WithStack(err)
 }
+
+func (c *Controller) GetAuthClaims(ctx context.Context, tokenStr string) (*AuthClaims, error) {
+	return c.isAuthorized(tokenStr)
+}

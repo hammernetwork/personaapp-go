@@ -17,13 +17,26 @@ func init() {
 }
 
 var (
+	ErrCompanyNotFound    = errors.New("company not found")
 	ErrInvalidTitle       = errors.New("invalid title")
 	ErrInvalidDescription = errors.New("invalid description")
 	ErrInvalidLogoURL     = errors.New("invalid logo_url")
 )
 
 type Storage interface {
+	TxGetCompanyByID(ctx context.Context, tx pkgtx.Tx, authID string) (*companyStorage.CompanyData, error)
 	TxPutCompany(ctx context.Context, tx pkgtx.Tx, cs *companyStorage.CompanyData) error
+	TxGetCompanyActivityFieldsByID(
+		ctx context.Context,
+		tx pkgtx.Tx,
+		authID string,
+	) ([]*companyStorage.ActivityField, error)
+	TxPutCompanyActivityFields(
+		ctx context.Context,
+		tx pkgtx.Tx,
+		authID string,
+		activityFields []*companyStorage.ActivityField,
+	) error
 
 	BeginTx(ctx context.Context) (pkgtx.Tx, error)
 	NoTx() pkgtx.Tx
@@ -38,11 +51,11 @@ func New(s Storage) *Controller {
 }
 
 type CompanyData struct {
-	AuthID      string
-	ScopeID     *string
-	Title       *string `valid:"stringlength(0|100)"`
-	Description *string `valid:"stringlength(0|255)"`
-	LogoURL     *string `valid:"stringlength(0|255),media_link"`
+	AuthID         string
+	ActivityFields []string
+	Title          *string `valid:"stringlength(0|100)"`
+	Description    *string `valid:"stringlength(0|255)"`
+	LogoURL        *string `valid:"stringlength(0|255),media_link"`
 }
 
 func (cd *CompanyData) validate() error {
@@ -71,40 +84,48 @@ func (c *Controller) Update(ctx context.Context, cd *CompanyData) error {
 		return errors.WithStack(err)
 	}
 
-	now := time.Now()
-	scd := companyStorage.CompanyData{
-		Fields:      0,
-		AuthID:      cd.AuthID,
-		ScopeID:     "",
-		Title:       "",
-		Description: "",
-		LogoURL:     "",
-		CreatedAt:   now,
-		UpdatedAt:   now,
-	}
-
-	if cd.ScopeID != nil {
-		scd.ScopeID = *cd.ScopeID
-		scd.Fields |= companyStorage.FieldScopeID
-	}
-
-	if cd.Title != nil {
-		scd.Title = *cd.Title
-		scd.Fields |= companyStorage.FieldTitle
-	}
-
-	if cd.Description != nil {
-		scd.Description = *cd.Description
-		scd.Fields |= companyStorage.FieldDescription
-	}
-
-	if cd.LogoURL != nil {
-		scd.LogoURL = *cd.LogoURL
-		scd.Fields |= companyStorage.FieldLogoURL
-	}
-
 	if err := pkgtx.RunInTx(ctx, c.s, func(ctx context.Context, tx pkgtx.Tx) error {
-		return errors.WithStack(c.s.TxPutCompany(ctx, tx, &scd))
+		company, err := c.s.TxGetCompanyByID(ctx, tx, cd.AuthID)
+		switch err {
+		case nil:
+		case companyStorage.ErrNotFound:
+			return ErrCompanyNotFound
+		default:
+			return errors.WithStack(err)
+		}
+
+		now := time.Now()
+
+		scd := &companyStorage.CompanyData{
+			AuthID:      company.AuthID,
+			Title:       company.Title,
+			Description: company.Description,
+			LogoURL:     company.LogoURL,
+			CreatedAt:   now,
+			UpdatedAt:   now,
+		}
+
+		if cd.Title != nil {
+			scd.Title = *cd.Title
+		}
+		if cd.Description != nil {
+			scd.Description = *cd.Description
+		}
+		if cd.LogoURL != nil {
+			scd.LogoURL = *cd.LogoURL
+		}
+
+		if err := c.s.TxPutCompany(ctx, tx, scd); err != nil {
+			return errors.WithStack(err)
+		}
+
+		//activityFields, err := c.s.TxGetCompanyActivityFieldsByID(ctx, tx, cd.AuthID)
+		//if err != nil {
+		//	return errors.WithStack(err)
+		//}
+		//TODO: get company activity fields
+		//TODO: update company activity fields
+		return nil
 	}); err != nil {
 		return errors.WithStack(err)
 	}
