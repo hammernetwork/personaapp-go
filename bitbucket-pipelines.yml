@@ -1,4 +1,4 @@
-image: golang:1.12
+image: golang:1.13
 
 options:
   docker: true
@@ -13,4 +13,3 @@ pipelines:
           - cd "${PACKAGE_PATH}"
           - ls -lah
           - make all
-          
