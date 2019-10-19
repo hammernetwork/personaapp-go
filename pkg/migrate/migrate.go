@@ -43,17 +43,20 @@ func newMigration(logger *zap.SugaredLogger, pg *postgresql.Storage, migrationTa
 func (m *migration) migrate(migrations []*migrate.Migration, direction migrate.MigrationDirection, limit int) error {
 	migrationSource := migrate.MemoryMigrationSource{Migrations: migrations}
 	applied, err := migrate.ExecMax(m.pg.DB, "postgres", migrationSource, direction, limit)
+
 	if err != nil {
 		return errors.WithStack(err)
 	}
 
 	m.logger.Infof("Migrations applied: %d", applied)
+
 	return nil
 }
 
 func (m *migration) printStatus(migrations []*migrate.Migration) error {
 	const dialect = "postgres"
 	records, err := migrate.GetMigrationRecords(m.pg.DB, dialect)
+
 	if err != nil {
 		return errors.WithStack(err)
 	}
@@ -65,7 +68,9 @@ func (m *migration) printStatus(migrations []*migrate.Migration) error {
 	type row struct {
 		AppliedAt time.Time
 	}
+
 	migrationsMap := make(map[string]*row)
+
 	for _, m := range migrations {
 		migrationsMap[m.Id] = &row{}
 	}
@@ -79,24 +84,28 @@ func (m *migration) printStatus(migrations []*migrate.Migration) error {
 		if !m.AppliedAt.IsZero() {
 			appliedAt = m.AppliedAt.UTC().Format(time.RFC3339Nano)
 		}
+
 		table.Append([]string{id, appliedAt})
 	}
+
 	table.Render()
+
 	return nil
 }
 
-func Command(migrationTable string, migrations []*migrate.Migration) *cobra.Command {
+func run(
+	cmd *cobra.Command,
+	migrationTable string,
+	migrations []*migrate.Migration,
+) func(cmd *cobra.Command, args []string) error {
 	const (
 		up     = "up"
 		down   = "down"
 		status = "status"
 	)
 
-	cmd := &cobra.Command{
-		Use:   "migrate",
-		Short: "Database migrations",
-	}
 	var config Config
+
 	cmd.Flags().AddFlagSet(config.Flags())
 
 	run := func(cmd *cobra.Command, args []string) error {
@@ -105,12 +114,14 @@ func Command(migrationTable string, migrations []*migrate.Migration) *cobra.Comm
 		}
 
 		logger, _ := zap.NewProduction()
+
 		defer func() {
 			err := logger.Sync() // flushes buffer, if any
 			if err != nil {
-				log.Println(err) // todo think about errors mapper/parser service
+				log.Println(err) //nolint todo think about errors mapper/parser service
 			}
 		}()
+
 		sugar := logger.Sugar()
 
 		sugar.Info("starting migration")
@@ -122,6 +133,7 @@ func Command(migrationTable string, migrations []*migrate.Migration) *cobra.Comm
 		}
 
 		m := newMigration(sugar, pg, migrationTable)
+
 		switch cmd.Name() {
 		case up:
 			return m.migrate(migrations, migrate.Up, config.Limit)
@@ -134,21 +146,30 @@ func Command(migrationTable string, migrations []*migrate.Migration) *cobra.Comm
 		}
 	}
 
+	return run
+}
+
+func Command(migrationTable string, migrations []*migrate.Migration) *cobra.Command {
+	cmd := &cobra.Command{
+		Use:   "migrate",
+		Short: "Database migrations",
+	}
+
 	for _, s := range []*cobra.Command{
 		{
 			Use:   "up",
 			Short: "Up migration",
-			RunE:  run,
+			RunE:  run(cmd, migrationTable, migrations),
 		},
 		{
 			Use:   "down",
 			Short: "Down migration",
-			RunE:  run,
+			RunE:  run(cmd, migrationTable, migrations),
 		},
 		{
 			Use:   "status",
 			Short: "Print database status",
-			RunE:  run,
+			RunE:  run(cmd, migrationTable, migrations),
 		},
 	} {
 		cmd.AddCommand(s)

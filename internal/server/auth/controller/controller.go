@@ -138,12 +138,14 @@ func (rd *RegisterData) Validate() error {
 			Error: ErrInvalidPassword,
 		},
 	}
+
 	if valid, err := govalidator.ValidateStruct(rd); !valid {
 		for _, fe := range fieldErrors {
 			if msg := govalidator.ErrorByField(err, fe.Field); msg != "" {
 				return errors.Wrap(fe.Error, msg)
 			}
 		}
+
 		return errors.New("auth struct is filled with some invalid data")
 	}
 
@@ -197,6 +199,7 @@ func (c *Controller) generateToken(accountID string, accountType AccountType) (*
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	tokenString, err := token.SignedString([]byte(c.cfg.PrivateSigningKey))
+
 	if err != nil {
 		return nil, errors.WithStack(err)
 	}
@@ -214,6 +217,7 @@ func (c *Controller) isAuthorized(token string) (*AuthClaims, error) {
 	parsedToken, err := jwt.ParseWithClaims(token, claims, func(token *jwt.Token) (interface{}, error) {
 		return []byte(c.cfg.PrivateSigningKey), nil
 	})
+
 	switch err {
 	case nil:
 	case jwt.ErrSignatureInvalid:
@@ -221,6 +225,7 @@ func (c *Controller) isAuthorized(token string) (*AuthClaims, error) {
 	default:
 		return nil, errors.Wrap(ErrInvalidArgument, "wrong token")
 	}
+
 	if !parsedToken.Valid {
 		return nil, errors.Wrap(ErrUnauthorized, "invalid token")
 	}
@@ -250,6 +255,7 @@ func (c *Controller) refreshToken(tokenStr string) (*AuthToken, error) {
 
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	tokenString, err := token.SignedString([]byte(c.cfg.PrivateSigningKey))
+
 	if err != nil {
 		return nil, errors.WithStack(err)
 	}
@@ -277,6 +283,7 @@ func (c *Controller) Register(ctx context.Context, rd *RegisterData) (*AuthToken
 	}
 
 	var authToken *AuthToken
+
 	if err := pkgtx.RunInTx(ctx, c.s, func(ctx context.Context, tx pkgtx.Tx) error {
 		var err error
 		if rd.Email == "" {
@@ -348,13 +355,15 @@ func (ld *LoginData) Validate() error {
 			Error: ErrInvalidPassword,
 		},
 	}
+
 	if valid, err := govalidator.ValidateStruct(ld); !valid {
 		for _, fe := range fieldErrors {
 			if msg := govalidator.ErrorByField(err, fe.Field); msg != "" {
 				return errors.Wrap(fe.Error, msg)
 			}
 		}
-		return errors.New("auth struct is filled with some invalid data")
+
+		return errors.New("login struct is filled with some invalid data")
 	}
 
 	return nil
@@ -378,6 +387,7 @@ func (c *Controller) Login(ctx context.Context, ld *LoginData) (*AuthToken, erro
 	if err != nil {
 		return nil, errors.WithStack(err)
 	}
+
 	if ph != ad.PasswordHash {
 		return nil, errors.Wrap(ErrUnauthorized, "wrong password")
 	}

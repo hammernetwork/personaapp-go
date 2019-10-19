@@ -10,7 +10,7 @@ import (
 type Config redis.Options
 type ClusterOptions redis.ClusterOptions
 
-func (c *Config) Flags(prefix string) *pflag.FlagSet {
+func (c *Config) Flags(prefix string) *pflag.FlagSet { //nolint:funlen
 	f := pflag.NewFlagSet("RedisConfig", pflag.PanicOnError)
 
 	if prefix != "" {
@@ -105,7 +105,7 @@ func (c *Config) Flags(prefix string) *pflag.FlagSet {
 	return f
 }
 
-func (c *ClusterOptions) Flags(prefix string) *pflag.FlagSet {
+func (c *ClusterOptions) Flags(prefix string) *pflag.FlagSet { //nolint:funlen
 	f := pflag.NewFlagSet("RedisClusterConfig", pflag.PanicOnError)
 
 	if prefix != "" {

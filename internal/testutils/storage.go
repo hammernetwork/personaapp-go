@@ -21,6 +21,7 @@ func Migrate(db *sql.DB, md sqlMigrate.MigrationDirection) error {
 	if _, err := sqlMigrate.Exec(db, "postgres", source, md); err != nil {
 		return errors.WithStack(err)
 	}
+
 	return nil
 }
 

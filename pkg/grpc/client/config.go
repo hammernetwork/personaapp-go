@@ -30,5 +30,6 @@ func (c *Config) Validate() error {
 	if c.Servers == "" {
 		return errors.New("servers is not configured")
 	}
+
 	return nil
 }

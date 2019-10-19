@@ -155,7 +155,7 @@ func (s *Server) Refresh(
 		return nil, status.Error(codes.InvalidArgument, "no bearer provided")
 	}
 
-	token := md.Get("Bearer")[0] // TODO
+	token := md.Get("Bearer")[0] //nolint TODO
 
 	authToken, err := s.ac.Refresh(ctx, token)
 
