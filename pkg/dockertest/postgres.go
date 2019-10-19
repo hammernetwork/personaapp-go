@@ -35,12 +35,26 @@ func EnsurePostgres(modifiers ...OptionModifier) (*PostgresConfig, error) {
 	if err != nil {
 		return nil, errors.WithStack(err)
 	}
+
 	return &PostgresConfig{
 		Port:     port,
 		Database: postgresDatabase,
 		User:     postgresUser,
 		Password: postgresPassword,
 	}, nil
+}
+
+func pgRunOptions(internalPort string) *dockertest.RunOptions {
+	return &dockertest.RunOptions{
+		Repository:   "postgres",
+		Tag:          "9.6",
+		ExposedPorts: []string{internalPort},
+		Env: []string{
+			"POSTGRES_USER=" + postgresUser,
+			"POSTGRES_PASSWORD=" + postgresPassword,
+			"POSTGRES_DB=" + postgresDatabase,
+		},
+	}
 }
 
 func initPostgresComponent(
@@ -52,22 +66,15 @@ func initPostgresComponent(
 		internalPort   = "5432"
 		portID         = internalPort + "/tcp"
 	)
-	options := &dockertest.RunOptions{
-		Repository:   "postgres",
-		Tag:          "9.6",
-		ExposedPorts: []string{internalPort},
-		Env: []string{
-			"POSTGRES_USER=" + postgresUser,
-			"POSTGRES_PASSWORD=" + postgresPassword,
-			"POSTGRES_DB=" + postgresDatabase,
-		},
-	}
+
+	options := pgRunOptions(internalPort)
 	applyOptionsModifiers(options, modifiers...)
 
 	resource, err := pool.RunWithOptions(options)
 	if err != nil {
 		return 0, nil, errors.WithStack(err)
 	}
+
 	defer func() {
 		if rerr == nil {
 			return
@@ -78,6 +85,7 @@ func initPostgresComponent(
 	}()
 
 	var portStr string
+
 	if err := pool.Retry(func() error {
 		portStr = resource.GetPort(portID)
 		dsn := fmt.Sprintf(

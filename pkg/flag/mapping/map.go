@@ -12,9 +12,11 @@ func WithPrefix(f *pflag.FlagSet, name string, errorHandling pflag.ErrorHandling
 
 func all(f *pflag.FlagSet, name string, errorHandling pflag.ErrorHandling, fn func(*pflag.Flag)) *pflag.FlagSet {
 	fNew := pflag.NewFlagSet(name, errorHandling)
+
 	f.VisitAll(func(flag *pflag.Flag) {
 		fn(flag)
 		fNew.AddFlag(flag)
 	})
+
 	return fNew
 }
