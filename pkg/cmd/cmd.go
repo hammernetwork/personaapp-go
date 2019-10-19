@@ -11,6 +11,7 @@ func Await() {
 	defer close(sigCh)
 
 	signal.Notify(sigCh, syscall.SIGINT, syscall.SIGABRT, syscall.SIGTERM, syscall.SIGQUIT)
+
 	for sig := range sigCh {
 		switch sig {
 		case syscall.SIGINT, syscall.SIGABRT, syscall.SIGTERM, syscall.SIGQUIT:

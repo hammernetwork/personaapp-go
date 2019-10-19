@@ -11,8 +11,7 @@ type Bus struct {
 	client *nats.Conn
 }
 
-// TODO: configure with TLS https://github.com/nats-io/go-nats#tls
-
+//nolint TODO: configure with TLS https://github.com/nats-io/go-nats#tls
 func New(config Config) (*Bus, error) {
 	client, err := nats.Connect(config.Addr)
 	if err != nil {
@@ -36,5 +35,6 @@ func (b *Bus) MarshalAndPublish(subject string, msg interface{}) error {
 	if err != nil {
 		return err
 	}
+
 	return b.Publish(subject, msgb)
 }

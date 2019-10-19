@@ -62,6 +62,7 @@ func (s *Storage) TxPutAuth(ctx context.Context, tx pkgtx.Tx, ad *AuthData) erro
 	); err != nil {
 		return errors.WithStack(err)
 	}
+
 	return nil
 }
 
@@ -84,6 +85,7 @@ func (s *Storage) TxGetAuthDataByAccountID(ctx context.Context, tx pkgtx.Tx, acc
 	default:
 		return nil, errors.WithStack(err)
 	}
+
 	return &ad, nil
 }
 
@@ -112,6 +114,7 @@ func (s *Storage) TxGetAuthDataByPhoneOrEmail(
 	default:
 		return nil, errors.WithStack(err)
 	}
+
 	return &ad, nil
 }
 
@@ -138,5 +141,6 @@ func (s *Storage) TxGetAuthDataByPhone(
 	default:
 		return nil, errors.WithStack(err)
 	}
+
 	return &ad, nil
 }

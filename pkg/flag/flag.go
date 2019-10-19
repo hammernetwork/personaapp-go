@@ -11,11 +11,13 @@ import (
 
 func BindEnv(cmd *cobra.Command) error {
 	names := map[string]struct{}{}
+
 	cmd.Flags().Visit(func(f *pflag.Flag) {
 		names[f.Name] = struct{}{}
 	})
 
 	var errs error
+
 	cmd.Flags().VisitAll(func(f *pflag.Flag) {
 		replacer := strings.NewReplacer("-", "_", ".", "_")
 		name := replacer.Replace(strings.ToUpper(f.Name))

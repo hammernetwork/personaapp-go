@@ -16,7 +16,6 @@ func New(
 	bind func(*grpc.ClientConn) interface{},
 	customOpts ...Option,
 ) (interface{}, *grpc.ClientConn, error) {
-
 	if err := cfg.Validate(); err != nil {
 		return nil, nil, errors.WithStack(err)
 	}
@@ -51,9 +50,12 @@ func New(
 	if cfg.DialTimeout > 0 {
 		var cancel context.CancelFunc
 		ctx, cancel = context.WithTimeout(ctx, cfg.DialTimeout)
+
 		defer cancel()
 	}
+
 	conn, err := grpc.DialContext(ctx, cfg.Servers, dialOpts...)
+
 	if err != nil {
 		return nil, nil, err
 	}

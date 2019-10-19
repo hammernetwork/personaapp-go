@@ -53,9 +53,11 @@ func RunInTx(ctx context.Context, txer Beginner, fn func(context.Context, Tx) er
 
 func newTxSettings(opts []Option) *txSettings {
 	s := &txSettings{attempts: 3}
+
 	for _, o := range opts {
 		o.apply(s)
 	}
+
 	return s
 }
 
