@@ -28,6 +28,7 @@ func init() {
 	if err != nil {
 		log.Fatal(err, "failed to init component manager")
 	}
+
 	components = cs
 }
 
@@ -41,11 +42,13 @@ type componentManager struct {
 func newComponentManager() (*componentManager, error) {
 	const endpoint = ""
 	pool, err := dockertest.NewPool(endpoint)
+
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to init dockertest pool")
 	}
 
 	pool.MaxWait = 1 * time.Minute
+
 	return &componentManager{
 		initFuncs:  make(map[componentIdentifier]initComponentFunc),
 		components: make(map[componentIdentifier]*component),
@@ -60,6 +63,7 @@ func (cm *componentManager) registerComponent(ci componentIdentifier, f initComp
 	if _, ok := cm.initFuncs[ci]; ok {
 		return
 	}
+
 	cm.initFuncs[ci] = f
 }
 
@@ -67,6 +71,7 @@ func (cm *componentManager) ensureComponent(ci componentIdentifier, modifiers ..
 	cm.m.RLock()
 	c, ok := cm.components[ci]
 	cm.m.RUnlock()
+
 	if ok {
 		return c.port, nil
 	}

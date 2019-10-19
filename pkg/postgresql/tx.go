@@ -35,6 +35,7 @@ func (tx *Tx) Commit() error {
 	default:
 		return errors.WithStack(err)
 	}
+
 	return nil
 }
 
@@ -57,8 +58,8 @@ func (s *Storage) NoTx() pkgtx.Tx {
 
 func (s *Storage) BeginTx(ctx context.Context) (pkgtx.Tx, error) {
 	tx, err := s.DB.BeginTx(ctx, &sql.TxOptions{
-		Isolation: sql.LevelSerializable, // TODO: weaken requirements
-		ReadOnly:  false,                 // TODO: some Tx could be read only
+		Isolation: sql.LevelSerializable, //nolint TODO: weaken requirements
+		ReadOnly:  false,                 //nolint TODO: some Tx could be read only
 	})
 	if err != nil {
 		return nil, errors.WithStack(err)
