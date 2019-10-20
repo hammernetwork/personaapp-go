@@ -63,6 +63,14 @@ type CompanyData struct {
 	LogoURL        *string `valid:"stringlength(0|255),media_link"`
 }
 
+type Company struct {
+	AuthID         string
+	ActivityFields []string
+	Title          string
+	Description    string
+	LogoURL        string
+}
+
 func (cd *CompanyData) validate() error {
 	var fieldErrors = []struct {
 		Field string
@@ -72,12 +80,14 @@ func (cd *CompanyData) validate() error {
 		{Field: "Description", Error: ErrInvalidDescription},
 		{Field: "LogoURL", Error: ErrInvalidLogoURL},
 	}
+
 	if valid, err := govalidator.ValidateStruct(cd); !valid {
 		for _, fe := range fieldErrors {
 			if msg := govalidator.ErrorByField(err, fe.Field); msg != "" {
 				return errors.Wrap(fe.Error, msg)
 			}
 		}
+
 		return errors.New("company data struct is filled with some invalid data")
 	}
 
@@ -143,4 +153,45 @@ func (c *Controller) Update(ctx context.Context, cd *CompanyData) error {
 	}
 
 	return nil
+}
+
+func (c *Controller) Get(ctx context.Context, companyID string) (*Company, error) {
+	var company *Company
+
+	if err := pkgtx.RunInTx(ctx, c.s, func(ctx context.Context, tx pkgtx.Tx) error {
+		cd, err := c.s.TxGetCompanyByID(ctx, tx, companyID)
+
+		switch err {
+		case nil:
+		case companyStorage.ErrNotFound:
+			return ErrCompanyNotFound
+		default:
+			return errors.WithStack(err)
+		}
+
+		afs, err := c.s.TxGetActivityFieldsByCompanyID(ctx, tx, companyID)
+
+		if err != nil {
+			return errors.WithStack(err)
+		}
+
+		activityFieldsIDs := make([]string, len(afs))
+		for i := 0; i < len(afs); i++ {
+			activityFieldsIDs[i] = afs[i].Title
+		}
+
+		company = &Company{
+			AuthID:         cd.AuthID,
+			ActivityFields: activityFieldsIDs,
+			Title:          cd.Title,
+			Description:    cd.Description,
+			LogoURL:        cd.LogoURL,
+		}
+
+		return nil
+	}); err != nil {
+		return nil, errors.WithStack(err)
+	}
+
+	return company, nil
 }

@@ -113,12 +113,14 @@ func (s *Storage) TxGetActivityFieldsByCompanyID(
 	}
 
 	afs := make([]*ActivityField, 0)
+
 	for rows.Next() {
 		var af ActivityField
 		if err := rows.Scan(&af.ID, &af.Title, &af.Alias); err != nil {
 			_ = rows.Close()
 			return nil, errors.WithStack(err)
 		}
+
 		afs = append(afs, &af)
 	}
 
@@ -135,19 +137,25 @@ func (s *Storage) TxPutCompanyActivityFields(
 
 	now := time.Now()
 
-	queryFormat := `INSERT INTO company_activity_fields (company_id, activity_field_id, created_at, updated_at)
+	queryFormat := `INSERT 
+		INTO company_activity_fields (company_id, activity_field_id, created_at, updated_at)
 		VALUES %s;`
 
 	columns := 4
 	valueStrings := make([]string, 0, len(activityFieldsIDs))
-	valueArgs := make([]interface{}, len(activityFieldsIDs)*columns)
+	valueArgs := make([]interface{}, 0, len(activityFieldsIDs)*columns)
+
 	for i := 0; i < len(activityFieldsIDs); i++ {
 		offset := i * columns
 		valueStrings = append(valueStrings, fmt.Sprintf("($%d, $%d, $%d, $%d)", offset+1, offset+2, offset+3, offset+4))
 		valueArgs = append(valueArgs, authID, activityFieldsIDs[i], now, now)
 	}
 
-	if _, err := c.ExecContext(ctx, fmt.Sprintf(queryFormat, strings.Join(valueStrings, ","))); err != nil {
+	if _, err := c.ExecContext(
+		ctx,
+		fmt.Sprintf(queryFormat, strings.Join(valueStrings, ",")),
+		valueArgs...,
+	); err != nil {
 		return errors.WithStack(err)
 	}
 

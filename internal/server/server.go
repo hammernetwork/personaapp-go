@@ -23,6 +23,7 @@ type AuthController interface {
 }
 
 type CompanyController interface {
+	Get(ctx context.Context, companyID string) (*companyController.Company, error)
 	Update(ctx context.Context, cd *companyController.CompanyData) error
 }
 
@@ -179,6 +180,7 @@ func getOptionalString(sw *wrappers.StringValue) *string {
 	if sw == nil {
 		return nil
 	}
+
 	return &sw.Value
 }
 
@@ -187,8 +189,9 @@ func (s *Server) getAuthClaims(ctx context.Context) (*authController.AuthClaims,
 	if !ok {
 		return nil, status.Error(codes.InvalidArgument, "no bearer provided")
 	}
-	token := md.Get("Bearer")[0] // TODO
+	token := md.Get("Bearer")[0] // nolint TODO
 	claims, err := s.ac.GetAuthClaims(ctx, token)
+
 	switch errors.Cause(err) {
 	case nil:
 		return claims, nil
@@ -207,12 +210,14 @@ func (s *Server) UpdateCompany(
 	if err != nil {
 		return nil, err
 	}
+
 	if toServerAccount(claims.AccountType) != personaappapi.AccountType_ACCOUNT_TYPE_COMPANY {
 		return nil, status.Error(codes.Unauthenticated, "unauthorized")
 	}
 
 	activityFields := make([]string, len(req.ActivityFields))
 	i := 0
+
 	for k := range req.ActivityFields {
 		activityFields[i] = k
 		i++
@@ -239,4 +244,37 @@ func (s *Server) UpdateCompany(
 	}
 
 	return &personaappapi.UpdateCompanyResponse{}, nil
+}
+
+func (s *Server) GetCompany(
+	ctx context.Context,
+	req *personaappapi.GetCompanyRequest,
+) (*personaappapi.GetCompanyResponse, error) {
+	if _, err := s.getAuthClaims(ctx); err != nil {
+		return nil, err
+	}
+
+	company, err := s.cc.Get(ctx, req.Id)
+	switch errors.Cause(err) {
+	case nil:
+	case companyController.ErrCompanyNotFound:
+		return nil, status.Error(codes.NotFound, err.Error())
+	default:
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	activityFields := make(map[string]*personaappapi.CompanyActivityField, len(company.ActivityFields))
+	for _, af := range company.ActivityFields {
+		activityFields[af] = &personaappapi.CompanyActivityField{}
+	}
+
+	return &personaappapi.GetCompanyResponse{
+		Company: &personaappapi.Company{
+			Id:             company.AuthID,
+			Title:          company.Title,
+			Description:    company.Description,
+			LogoUrl:        company.LogoURL,
+			ActivityFields: activityFields,
+		},
+	}, nil
 }

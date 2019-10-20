@@ -11,6 +11,7 @@ service PersonaApp {
     rpc Logout (LogoutRequest) returns (LogoutResponse);
     rpc Refresh (RefreshRequest) returns (RefreshResponse);
     rpc UpdateCompany (UpdateCompanyRequest) returns (UpdateCompanyResponse);
+    rpc GetCompany (GetCompanyRequest) returns (GetCompanyResponse);
 }
 
 enum AccountType {
@@ -25,6 +26,8 @@ message RegisterRequest {
     string password = 3;
     AccountType account_type = 4;
 }
+
+message Empty {}
 
 message Token {
     string token = 1;
@@ -61,7 +64,23 @@ message UpdateCompanyRequest {
     google.protobuf.StringValue title = 1;
     google.protobuf.StringValue description = 2;
     google.protobuf.StringValue logo_url = 3;
-    map<string, CompanyActivityField> activity_fields = 4;
+    map<string, Empty> activity_fields = 4;
 }
 
 message UpdateCompanyResponse {}
+
+message Company {
+    string id = 1;
+    string title = 2;
+    string description = 3;
+    string logo_url = 4;
+    map<string, CompanyActivityField> activity_fields = 5;
+}
+
+message GetCompanyRequest {
+    string id = 1;
+}
+
+message GetCompanyResponse {
+    Company company = 1;
+}
