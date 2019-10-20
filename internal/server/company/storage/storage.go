@@ -3,9 +3,11 @@ package storage
 import (
 	"context"
 	"database/sql"
+	"fmt"
 	"github.com/cockroachdb/errors"
 	"personaapp/pkg/postgresql"
 	pkgtx "personaapp/pkg/tx"
+	"strings"
 	"time"
 )
 
@@ -53,6 +55,7 @@ func (s *Storage) TxGetCompanyByID(ctx context.Context, tx pkgtx.Tx, authID stri
 	default:
 		return nil, errors.WithStack(err)
 	}
+
 	return &cd, nil
 }
 
@@ -82,6 +85,7 @@ func (s *Storage) TxPutCompany(ctx context.Context, tx pkgtx.Tx, cd *CompanyData
 	); err != nil {
 		return errors.WithStack(err)
 	}
+
 	return nil
 }
 
@@ -117,37 +121,53 @@ func (s *Storage) TxGetActivityFieldsByCompanyID(
 		}
 		afs = append(afs, &af)
 	}
+
 	return afs, nil
 }
 
-func (s *Storage) TxPutActivityFields(
+func (s *Storage) TxPutCompanyActivityFields(
 	ctx context.Context,
 	tx pkgtx.Tx,
 	authID string,
-	activityFields []*ActivityField,
-) error {
-	//TODO: implement
-	return nil
-}
-
-func (s *Storage) TxDeleteActivityFieldsByCompanyID(
-	ctx context.Context,
-	tx pkgtx.Tx,
 	activityFieldsIDs []string,
 ) error {
 	c := postgresql.FromTx(tx)
 
-	_, err := c.ExecContext(
+	now := time.Now()
+
+	queryFormat := `INSERT INTO company_activity_fields (company_id, activity_field_id, created_at, updated_at)
+		VALUES %s;`
+
+	columns := 4
+	valueStrings := make([]string, 0, len(activityFieldsIDs))
+	valueArgs := make([]interface{}, len(activityFieldsIDs)*columns)
+	for i := 0; i < len(activityFieldsIDs); i++ {
+		offset := i * columns
+		valueStrings = append(valueStrings, fmt.Sprintf("($%d, $%d, $%d, $%d)", offset+1, offset+2, offset+3, offset+4))
+		valueArgs = append(valueArgs, authID, activityFieldsIDs[i], now, now)
+	}
+
+	if _, err := c.ExecContext(ctx, fmt.Sprintf(queryFormat, strings.Join(valueStrings, ","))); err != nil {
+		return errors.WithStack(err)
+	}
+
+	return nil
+}
+
+func (s *Storage) TxDeleteCompanyActivityFieldsByCompanyID(
+	ctx context.Context,
+	tx pkgtx.Tx,
+	authID string,
+) error {
+	c := postgresql.FromTx(tx)
+
+	if _, err := c.ExecContext(
 		ctx,
 		`DELETE 
 			FROM company_activity_fields
-			WHERE activity_field_id = ANY($1::string[]);`,
-		activityFieldsIDs,
-	)
-	switch err {
-	case nil:
-	case sql.ErrNoRows:
-	default:
+			WHERE company_id = $1`,
+		authID,
+	); err != nil {
 		return errors.WithStack(err)
 	}
 

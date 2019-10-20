@@ -11,7 +11,7 @@ import (
 
 func init() {
 	govalidator.CustomTypeTagMap.Set("media_link", func(i interface{}, o interface{}) bool {
-		//TODO: Implement CDN link check
+		// nolint TODO: Implement CDN link check
 		return true
 	})
 }
@@ -31,16 +31,16 @@ type Storage interface {
 		tx pkgtx.Tx,
 		authID string,
 	) ([]*companyStorage.ActivityField, error)
-	TxPutActivityFields(
+	TxPutCompanyActivityFields(
 		ctx context.Context,
 		tx pkgtx.Tx,
 		authID string,
-		activityFields []*companyStorage.ActivityField,
+		activityFieldsIDs []string,
 	) error
-	TxDeleteActivityFieldsByCompanyID(
+	TxDeleteCompanyActivityFieldsByCompanyID(
 		ctx context.Context,
 		tx pkgtx.Tx,
-		activityFieldsIDs []string,
+		authID string,
 	) error
 
 	BeginTx(ctx context.Context) (pkgtx.Tx, error)
@@ -90,24 +90,30 @@ func (c *Controller) Update(ctx context.Context, cd *CompanyData) error {
 	}
 
 	if err := pkgtx.RunInTx(ctx, c.s, func(ctx context.Context, tx pkgtx.Tx) error {
-		company, err := c.s.TxGetCompanyByID(ctx, tx, cd.AuthID)
-		switch err {
-		case nil:
-		case companyStorage.ErrNotFound:
-			return ErrCompanyNotFound
-		default:
-			return errors.WithStack(err)
-		}
-
+		var scd *companyStorage.CompanyData
 		now := time.Now()
 
-		scd := &companyStorage.CompanyData{
-			AuthID:      company.AuthID,
-			Title:       company.Title,
-			Description: company.Description,
-			LogoURL:     company.LogoURL,
-			CreatedAt:   now,
-			UpdatedAt:   now,
+		switch company, err := c.s.TxGetCompanyByID(ctx, tx, cd.AuthID); err {
+		case nil:
+			scd = &companyStorage.CompanyData{
+				AuthID:      company.AuthID,
+				Title:       company.Title,
+				Description: company.Description,
+				LogoURL:     company.LogoURL,
+				CreatedAt:   company.CreatedAt,
+				UpdatedAt:   now,
+			}
+		case companyStorage.ErrNotFound:
+			scd = &companyStorage.CompanyData{
+				AuthID:      cd.AuthID,
+				Title:       "",
+				Description: "",
+				LogoURL:     "",
+				CreatedAt:   now,
+				UpdatedAt:   now,
+			}
+		default:
+			return errors.WithStack(err)
 		}
 
 		if cd.Title != nil {
@@ -124,12 +130,13 @@ func (c *Controller) Update(ctx context.Context, cd *CompanyData) error {
 			return errors.WithStack(err)
 		}
 
-		activityFields, err := c.s.TxGetCompanyActivityFieldsByID(ctx, tx, cd.AuthID)
-		if err != nil {
+		if err := c.s.TxDeleteCompanyActivityFieldsByCompanyID(ctx, tx, cd.AuthID); err != nil {
 			return errors.WithStack(err)
 		}
-		//TODO: get company activity fields
-		//TODO: update company activity fields
+
+		if err := c.s.TxPutCompanyActivityFields(ctx, tx, cd.AuthID, cd.ActivityFields); err != nil {
+			return errors.WithStack(err)
+		}
 		return nil
 	}); err != nil {
 		return errors.WithStack(err)
