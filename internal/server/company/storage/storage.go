@@ -72,7 +72,7 @@ func (s *Storage) TxPutCompany(ctx context.Context, tx pkgtx.Tx, cd *CompanyData
 		)
 		INSERT INTO auth (auth_id, title, description, logo_url, created_at, updated_at)
 		SELECT $1, $2, $3, $4, $5, $6
-		WHERE NOT EXISTS (SELECT * FROM upsert)`,
+		WHERE NOT EXISTS (SELECT * FROM upsert);`,
 		cd.AuthID,
 		cd.Title,
 		cd.Description,
@@ -85,20 +85,71 @@ func (s *Storage) TxPutCompany(ctx context.Context, tx pkgtx.Tx, cd *CompanyData
 	return nil
 }
 
-func (s *Storage) TxGetCompanyActivityFieldsByID(
+func (s *Storage) TxGetActivityFieldsByCompanyID(
 	ctx context.Context,
 	tx pkgtx.Tx,
 	authID string,
 ) ([]*ActivityField, error) {
-	//TODO: implement
-	return nil, nil
+	c := postgresql.FromTx(tx)
+
+	rows, err := c.QueryContext(
+		ctx,
+		`SELECT caf.activity_field_id, af.title, af.alias
+			FROM company_activity_fields AS caf
+			INNER JOIN activity_field AS af
+			ON caf.activity_field_id = af.id
+			WHERE caf.company_id = $1;`,
+		authID,
+	)
+
+	switch err {
+	case nil:
+	default:
+		return nil, errors.WithStack(err)
+	}
+
+	afs := make([]*ActivityField, 0)
+	for rows.Next() {
+		var af ActivityField
+		if err := rows.Scan(&af.ID, &af.Title, &af.Alias); err != nil {
+			_ = rows.Close()
+			return nil, errors.WithStack(err)
+		}
+		afs = append(afs, &af)
+	}
+	return afs, nil
 }
-func (s *Storage) TxPutCompanyActivityFields(
+
+func (s *Storage) TxPutActivityFields(
 	ctx context.Context,
 	tx pkgtx.Tx,
 	authID string,
 	activityFields []*ActivityField,
 ) error {
 	//TODO: implement
+	return nil
+}
+
+func (s *Storage) TxDeleteActivityFieldsByCompanyID(
+	ctx context.Context,
+	tx pkgtx.Tx,
+	activityFieldsIDs []string,
+) error {
+	c := postgresql.FromTx(tx)
+
+	_, err := c.ExecContext(
+		ctx,
+		`DELETE 
+			FROM company_activity_fields
+			WHERE activity_field_id = ANY($1::string[]);`,
+		activityFieldsIDs,
+	)
+	switch err {
+	case nil:
+	case sql.ErrNoRows:
+	default:
+		return errors.WithStack(err)
+	}
+
 	return nil
 }

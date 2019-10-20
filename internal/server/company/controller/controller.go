@@ -26,16 +26,21 @@ var (
 type Storage interface {
 	TxGetCompanyByID(ctx context.Context, tx pkgtx.Tx, authID string) (*companyStorage.CompanyData, error)
 	TxPutCompany(ctx context.Context, tx pkgtx.Tx, cs *companyStorage.CompanyData) error
-	TxGetCompanyActivityFieldsByID(
+	TxGetActivityFieldsByCompanyID(
 		ctx context.Context,
 		tx pkgtx.Tx,
 		authID string,
 	) ([]*companyStorage.ActivityField, error)
-	TxPutCompanyActivityFields(
+	TxPutActivityFields(
 		ctx context.Context,
 		tx pkgtx.Tx,
 		authID string,
 		activityFields []*companyStorage.ActivityField,
+	) error
+	TxDeleteActivityFieldsByCompanyID(
+		ctx context.Context,
+		tx pkgtx.Tx,
+		activityFieldsIDs []string,
 	) error
 
 	BeginTx(ctx context.Context) (pkgtx.Tx, error)
@@ -119,10 +124,10 @@ func (c *Controller) Update(ctx context.Context, cd *CompanyData) error {
 			return errors.WithStack(err)
 		}
 
-		//activityFields, err := c.s.TxGetCompanyActivityFieldsByID(ctx, tx, cd.AuthID)
-		//if err != nil {
-		//	return errors.WithStack(err)
-		//}
+		activityFields, err := c.s.TxGetCompanyActivityFieldsByID(ctx, tx, cd.AuthID)
+		if err != nil {
+			return errors.WithStack(err)
+		}
 		//TODO: get company activity fields
 		//TODO: update company activity fields
 		return nil
