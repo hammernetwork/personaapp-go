@@ -43,7 +43,7 @@ func EnsurePostgres(t *testing.T) *postgresql.Storage {
 	return pg
 }
 
-func InitStorage(t *testing.T) (_ *storage.Storage, closer func() error) {
+func InitAuthStorage(t *testing.T) (_ *storage.Storage, closer func() error) {
 	pg := EnsurePostgres(t)
 	require.NoError(t, Migrate(pg.DB, sqlMigrate.Up))
 
