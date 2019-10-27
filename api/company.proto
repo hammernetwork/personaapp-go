@@ -1,0 +1,36 @@
+syntax = "proto3";
+
+package personaappapi;
+
+import "entities.proto";
+import "google/protobuf/wrappers.proto";
+
+// Update
+message UpdateCompanyRequest {
+    google.protobuf.StringValue title = 1;
+    google.protobuf.StringValue description = 2;
+    google.protobuf.StringValue logo_url = 3;
+    map<string, Empty> activity_fields = 4;
+}
+
+message UpdateCompanyResponse {}
+
+// Get
+message GetCompanyRequest {
+    string id = 1;
+}
+
+message GetCompanyResponse {
+    Company company = 1;
+}
+
+// Entities
+message CompanyActivityField {}
+
+message Company {
+    string id = 1;
+    string title = 2;
+    string description = 3;
+    string logo_url = 4;
+    map<string, CompanyActivityField> activity_fields = 5;
+}

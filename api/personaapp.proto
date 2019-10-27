@@ -2,8 +2,11 @@ syntax = "proto3";
 
 package personaappapi;
 
-import "google/protobuf/timestamp.proto";
-import "google/protobuf/wrappers.proto";
+option java_package = "online.personaapp.auth";
+option java_outer_classname = "PersonaAppAuth";
+
+import public "auth.proto";
+import public "company.proto";
 
 service PersonaApp {
     rpc Register (RegisterRequest) returns (RegisterResponse);
@@ -12,75 +15,4 @@ service PersonaApp {
     rpc Refresh (RefreshRequest) returns (RefreshResponse);
     rpc UpdateCompany (UpdateCompanyRequest) returns (UpdateCompanyResponse);
     rpc GetCompany (GetCompanyRequest) returns (GetCompanyResponse);
-}
-
-enum AccountType {
-    ACCOUNT_TYPE_UNKNOWN = 0;
-    ACCOUNT_TYPE_COMPANY = 1;
-    ACCOUNT_TYPE_PERSONA = 2;
-}
-
-message RegisterRequest {
-    string email = 1;
-    string phone = 2; // optional for persona
-    string password = 3;
-    AccountType account_type = 4;
-}
-
-message Empty {}
-
-message Token {
-    string token = 1;
-    google.protobuf.Timestamp expires_at = 2;
-    AccountType account_type = 3;
-}
-
-message RegisterResponse {
-    Token token = 1;
-}
-
-message LoginRequest {
-    string login = 1;
-    string password = 2;
-}
-
-message LoginResponse {
-    Token token = 1;
-}
-
-message LogoutRequest {}
-
-message LogoutResponse {}
-
-message RefreshRequest {}
-
-message RefreshResponse {
-    Token token = 1;
-}
-
-message CompanyActivityField {}
-
-message UpdateCompanyRequest {
-    google.protobuf.StringValue title = 1;
-    google.protobuf.StringValue description = 2;
-    google.protobuf.StringValue logo_url = 3;
-    map<string, Empty> activity_fields = 4;
-}
-
-message UpdateCompanyResponse {}
-
-message Company {
-    string id = 1;
-    string title = 2;
-    string description = 3;
-    string logo_url = 4;
-    map<string, CompanyActivityField> activity_fields = 5;
-}
-
-message GetCompanyRequest {
-    string id = 1;
-}
-
-message GetCompanyResponse {
-    Company company = 1;
 }

@@ -78,7 +78,7 @@ endif
 
 	@${PROTOC} \
 		-I ./api \
-		./api/personaapp.proto \
+		./api/*.proto \
 		--go_out=plugins=grpc:./pkg/grpcapi/personaappapi
 
 generate:
