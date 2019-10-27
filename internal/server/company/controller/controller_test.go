@@ -1,17 +1,24 @@
 package controller_test
 
 import (
-	"testing"
 	"context"
+	"testing"
+	"time"
 
-	"personaapp/internal/testutils"
-	companyController "personaapp/internal/server/company/controller"
 	authController "personaapp/internal/server/auth/controller"
+	companyController "personaapp/internal/server/company/controller"
 	"personaapp/internal/server/company/storage"
+	"personaapp/internal/testutils"
 
-	"github.com/stretchr/testify/require"
 	sqlMigrate "github.com/rubenv/sql-migrate"
+	"github.com/stretchr/testify/require"
 )
+
+var authCfg = &authController.Config{
+	TokenExpiration:   5 * time.Minute,
+	PrivateSigningKey: "signkey",
+	TokenValidityGap:  15 * time.Second,
+}
 
 func InitStorage(t *testing.T) (_ *storage.Storage, closer func() error) {
 	pg := testutils.EnsurePostgres(t)
@@ -45,7 +52,7 @@ func TestGetExistingButNotCompletedCompany(t *testing.T) {
 		}
 	}()
 
-	ac := authController.New(nil, as)
+	ac := authController.New(authCfg, as)
 
 	cs, companyCloser := InitStorage(t)
 	defer func() {
@@ -57,8 +64,8 @@ func TestGetExistingButNotCompletedCompany(t *testing.T) {
 	cc := companyController.New(cs)
 
 	rd := authController.RegisterData{
-		Email:    "company_test@gmail.com",
-		Phone:    "+0112345678",
+		Email:    "companytest@gmail.com",
+		Phone:    "+380011234567",
 		Account:  authController.AccountTypeCompany,
 		Password: "Password",
 	}
@@ -72,6 +79,60 @@ func TestGetExistingButNotCompletedCompany(t *testing.T) {
 		company, err := cc.Get(context.Background(), token.AccountID)
 		require.Error(t, companyController.ErrCompanyNotFound, err)
 		require.Nil(t, company)
+	})
+}
+
+func TestUpdateExistingCompany(t *testing.T) {
+	as, authCloser := testutils.InitAuthStorage(t)
+	defer func() {
+		if err := authCloser(); err != nil {
+			t.Error(err)
+		}
+	}()
+
+	ac := authController.New(authCfg, as)
+
+	cs, companyCloser := InitStorage(t)
+	defer func() {
+		if err := companyCloser(); err != nil {
+			t.Error(err)
+		}
+	}()
+
+	cc := companyController.New(cs)
+
+	rd := authController.RegisterData{
+		Email:    "companytest2@gmail.com",
+		Phone:    "+380019988776",
+		Account:  authController.AccountTypeCompany,
+		Password: "Password2",
+	}
+
+	token, err := ac.Register(context.Background(), &rd)
+	if err != nil {
+		t.Error(err)
+	}
+
+	title := "Title"
+	description := "Description"
+	logoURL := "https://logourl.com"
+
+	cd := companyController.CompanyData{
+		AuthID:         token.AccountID,
+		ActivityFields: nil,
+		Title:          &title,
+		Description:    &description,
+		LogoURL:        &logoURL,
+	}
+
+	t.Run("update all fields", func(t *testing.T) {
+		require.NoError(t, cc.Update(context.Background(), &cd))
+
+		company, err := cc.Get(context.Background(), token.AccountID)
+		require.NoError(t, err)
+		require.Equal(t, title, company.Title)
+		require.Equal(t, description, company.Description)
+		require.Equal(t, logoURL, company.LogoURL)
 	})
 }
 
@@ -96,57 +157,4 @@ func TestUpdateNonExistingCompany(t *testing.T) {
 	t.Run("normal flow", func(t *testing.T) {
 		require.Error(t, companyController.ErrCompanyNotFound, cc.Update(context.Background(), &cd))
 	})
-}
-
-func TestUpdateExistingCompany(t *testing.T) {
-	as, authCloser := testutils.InitAuthStorage(t)
-	defer func() {
-		if err := authCloser(); err != nil {
-			t.Error(err)
-		}
-	}()
-
-	ac := authController.New(nil, as)
-
-	cs, companyCloser := InitStorage(t)
-	defer func() {
-		if err := companyCloser(); err != nil {
-			t.Error(err)
-		}
-	}()
-
-	cc := companyController.New(cs)
-
-	rd := authController.RegisterData{
-		Email:    "company_test@gmail.com",
-		Phone:    "+0112345678",
-		Account:  authController.AccountTypeCompany,
-		Password: "Password",
-	}
-
-	token, err := ac.Register(context.Background(), &rd)
-	if err != nil {
-		t.Error(err)
-	}
-
-	t.Run("normal flow", func(t *testing.T) {
-		company, err := cc.Get(context.Background(), token.AccountID)
-		require.Error(t, companyController.ErrCompanyNotFound, err)
-		require.Nil(t, company)
-	})
-
-	cd := companyController.CompanyData{
-		AuthID:         token.AccountID,
-		ActivityFields: nil,
-		Title:          nil,
-		Description:    nil,
-		LogoURL:        nil,
-	}
-
-	//t.Run("after update", func(t *testing.T) {
-	//	err :cc.Update(context.Background(), &cd)
-	//	company, err := cc.Get(context.Background(), token.AccountID)
-	//	require.NoError(t, err)
-	//	require.Equal(t, company.Title)
-	//})
 }

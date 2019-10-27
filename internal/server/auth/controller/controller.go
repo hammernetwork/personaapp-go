@@ -51,7 +51,7 @@ func init() {
 			return false
 		}
 
-		rd, ok := o.(*RegisterData)
+		rd, ok := o.(RegisterData)
 		if !ok {
 			return false
 		}

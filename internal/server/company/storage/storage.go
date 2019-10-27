@@ -44,7 +44,7 @@ func (s *Storage) TxGetCompanyByID(ctx context.Context, tx pkgtx.Tx, authID stri
 		ctx,
 		`SELECT auth_id, title, description, logo_url, created_at, updated_at 
 			FROM company 
-			WHERE auth_id = $1;`,
+			WHERE auth_id = $1`,
 		authID,
 	).Scan(&cd.AuthID, &cd.Title, &cd.Description, &cd.LogoURL, &cd.CreatedAt, &cd.UpdatedAt)
 
@@ -73,9 +73,9 @@ func (s *Storage) TxPutCompany(ctx context.Context, tx pkgtx.Tx, cd *CompanyData
 			WHERE auth_id = $1
 			RETURNING *
 		)
-		INSERT INTO auth (auth_id, title, description, logo_url, created_at, updated_at)
+		INSERT INTO company (auth_id, title, description, logo_url, created_at, updated_at)
 		SELECT $1, $2, $3, $4, $5, $6
-		WHERE NOT EXISTS (SELECT * FROM upsert);`,
+		WHERE NOT EXISTS (SELECT * FROM upsert)`,
 		cd.AuthID,
 		cd.Title,
 		cd.Description,
@@ -102,7 +102,7 @@ func (s *Storage) TxGetActivityFieldsByCompanyID(
 			FROM company_activity_fields AS caf
 			INNER JOIN activity_field AS af
 			ON caf.activity_field_id = af.id
-			WHERE caf.company_id = $1;`,
+			WHERE caf.company_id = $1`,
 		authID,
 	)
 
@@ -139,7 +139,7 @@ func (s *Storage) TxPutCompanyActivityFields(
 
 	queryFormat := `INSERT 
 		INTO company_activity_fields (company_id, activity_field_id, created_at, updated_at)
-		VALUES %s;`
+		VALUES %s`
 
 	columns := 4
 	valueStrings := make([]string, 0, len(activityFieldsIDs))

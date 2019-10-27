@@ -144,8 +144,10 @@ func (c *Controller) Update(ctx context.Context, cd *CompanyData) error {
 			return errors.WithStack(err)
 		}
 
-		if err := c.s.TxPutCompanyActivityFields(ctx, tx, cd.AuthID, cd.ActivityFields); err != nil {
-			return errors.WithStack(err)
+		if len(cd.ActivityFields) > 0 {
+			if err := c.s.TxPutCompanyActivityFields(ctx, tx, cd.AuthID, cd.ActivityFields); err != nil {
+				return errors.WithStack(err)
+			}
 		}
 		return nil
 	}); err != nil {
