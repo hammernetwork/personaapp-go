@@ -12,7 +12,9 @@ import (
 
 	authController "personaapp/internal/server/auth/controller"
 	companyController "personaapp/internal/server/company/controller"
-	"personaapp/pkg/grpcapi/personaappapi"
+	apiauth "personaapp/pkg/grpcapi/auth"
+	apicompany "personaapp/pkg/grpcapi/company"
+	apientities "personaapp/pkg/grpcapi/entities"
 )
 
 type AuthController interface {
@@ -36,37 +38,37 @@ func New(ac AuthController, cc CompanyController) *Server {
 	return &Server{ac: ac, cc: cc}
 }
 
-func toControllerAccount(at personaappapi.AccountType) (authController.AccountType, error) {
+func toControllerAccount(at apientities.AccountType) (authController.AccountType, error) {
 	switch at {
-	case personaappapi.AccountType_ACCOUNT_TYPE_UNKNOWN:
+	case apientities.AccountType_ACCOUNT_TYPE_UNKNOWN:
 		return "", errors.New("default unknown account type")
-	case personaappapi.AccountType_ACCOUNT_TYPE_COMPANY:
+	case apientities.AccountType_ACCOUNT_TYPE_COMPANY:
 		return authController.AccountTypeCompany, nil
-	case personaappapi.AccountType_ACCOUNT_TYPE_PERSONA:
+	case apientities.AccountType_ACCOUNT_TYPE_PERSONA:
 		return authController.AccountTypePersona, nil
 	default:
 		return "", errors.New("unknown account type")
 	}
 }
 
-func toServerAccount(at authController.AccountType) personaappapi.AccountType {
+func toServerAccount(at authController.AccountType) apientities.AccountType {
 	switch at {
 	case authController.AccountTypeCompany:
-		return personaappapi.AccountType_ACCOUNT_TYPE_COMPANY
+		return apientities.AccountType_ACCOUNT_TYPE_COMPANY
 	case authController.AccountTypePersona:
-		return personaappapi.AccountType_ACCOUNT_TYPE_PERSONA
+		return apientities.AccountType_ACCOUNT_TYPE_PERSONA
 	default:
-		return personaappapi.AccountType_ACCOUNT_TYPE_UNKNOWN
+		return apientities.AccountType_ACCOUNT_TYPE_UNKNOWN
 	}
 }
 
-func toServerToken(at *authController.AuthToken) (*personaappapi.Token, error) {
+func toServerToken(at *authController.AuthToken) (*apiauth.Token, error) {
 	expiresAt, err := ptypes.TimestampProto(at.ExpiresAt)
 	if err != nil {
 		return nil, errors.New("invalid expires at")
 	}
 
-	return &personaappapi.Token{
+	return &apiauth.Token{
 		Token:       at.Token,
 		ExpiresAt:   expiresAt,
 		AccountType: toServerAccount(at.AccountType),
@@ -75,8 +77,8 @@ func toServerToken(at *authController.AuthToken) (*personaappapi.Token, error) {
 
 func (s *Server) Register(
 	ctx context.Context,
-	req *personaappapi.RegisterRequest,
-) (*personaappapi.RegisterResponse, error) {
+	req *apiauth.RegisterRequest,
+) (*apiauth.RegisterResponse, error) {
 	cat, err := toControllerAccount(req.GetAccountType())
 	if err != nil {
 		return nil, status.Error(codes.InvalidArgument, err.Error())
@@ -114,10 +116,10 @@ func (s *Server) Register(
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
-	return &personaappapi.RegisterResponse{Token: sat}, nil
+	return &apiauth.RegisterResponse{Token: sat}, nil
 }
 
-func (s *Server) Login(ctx context.Context, req *personaappapi.LoginRequest) (*personaappapi.LoginResponse, error) {
+func (s *Server) Login(ctx context.Context, req *apiauth.LoginRequest) (*apiauth.LoginResponse, error) {
 	authToken, err := s.ac.Login(ctx, &authController.LoginData{
 		Login:    req.GetLogin(),
 		Password: req.GetPassword(),
@@ -140,17 +142,17 @@ func (s *Server) Login(ctx context.Context, req *personaappapi.LoginRequest) (*p
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
-	return &personaappapi.LoginResponse{Token: sat}, nil
+	return &apiauth.LoginResponse{Token: sat}, nil
 }
 
-func (s *Server) Logout(context.Context, *personaappapi.LogoutRequest) (*personaappapi.LogoutResponse, error) {
-	return &personaappapi.LogoutResponse{}, nil
+func (s *Server) Logout(context.Context, *apiauth.LogoutRequest) (*apiauth.LogoutResponse, error) {
+	return &apiauth.LogoutResponse{}, nil
 }
 
 func (s *Server) Refresh(
 	ctx context.Context,
-	req *personaappapi.RefreshRequest,
-) (*personaappapi.RefreshResponse, error) {
+	req *apiauth.RefreshRequest,
+) (*apiauth.RefreshResponse, error) {
 	md, ok := metadata.FromIncomingContext(ctx)
 	if !ok {
 		return nil, status.Error(codes.InvalidArgument, "no bearer provided")
@@ -173,7 +175,7 @@ func (s *Server) Refresh(
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
-	return &personaappapi.RefreshResponse{Token: sat}, nil
+	return &apiauth.RefreshResponse{Token: sat}, nil
 }
 
 func getOptionalString(sw *wrappers.StringValue) *string {
@@ -202,16 +204,53 @@ func (s *Server) getAuthClaims(ctx context.Context) (*authController.AuthClaims,
 	}
 }
 
+func companyControllerErrorToServerErrors(err error) (apicompany.ErrorCode, error) {
+	errorCode := apicompany.ErrorCode_UNKNOWN_ERROR_CODE
+
+	var statusErr error
+
+	switch errors.Cause(err) {
+	case nil:
+	case companyController.ErrInvalidTitle:
+		errorCode = apicompany.ErrorCode_INVALID_TITLE_FORMAT
+		statusErr = status.Error(codes.InvalidArgument, err.Error())
+	case companyController.ErrInvalidTitleLength:
+		errorCode = apicompany.ErrorCode_INVALID_TITLE_LENGTH
+		statusErr = status.Error(codes.InvalidArgument, err.Error())
+	case companyController.ErrInvalidDescription:
+		errorCode = apicompany.ErrorCode_INVALID_DESCRIPTION_FORMAT
+		statusErr = status.Error(codes.InvalidArgument, err.Error())
+	case companyController.ErrInvalidDescriptionLength:
+		errorCode = apicompany.ErrorCode_INVALID_DESCRIPTION_LENGTH
+		statusErr = status.Error(codes.InvalidArgument, err.Error())
+	case companyController.ErrInvalidLogoURL:
+		errorCode = apicompany.ErrorCode_INVALID_LOGO_URL_FORMAT
+		statusErr = status.Error(codes.InvalidArgument, err.Error())
+	case companyController.ErrInvalidLogoURLFormat:
+		errorCode = apicompany.ErrorCode_INVALID_LOGO_URL_FORMAT
+		statusErr = status.Error(codes.InvalidArgument, err.Error())
+	case companyController.ErrInvalidLogoURLLength:
+		errorCode = apicompany.ErrorCode_INVALID_LOGO_URL_LENGTH
+		statusErr = status.Error(codes.InvalidArgument, err.Error())
+	case companyController.ErrCompanyNotFound:
+		return errorCode, status.Error(codes.NotFound, err.Error())
+	default:
+		return errorCode, status.Error(codes.Internal, err.Error())
+	}
+
+	return errorCode, statusErr
+}
+
 func (s *Server) UpdateCompany(
 	ctx context.Context,
-	req *personaappapi.UpdateCompanyRequest,
-) (*personaappapi.UpdateCompanyResponse, error) {
+	req *apicompany.UpdateCompanyRequest,
+) (*apicompany.UpdateCompanyResponse, error) {
 	claims, err := s.getAuthClaims(ctx)
 	if err != nil {
 		return nil, err
 	}
 
-	if toServerAccount(claims.AccountType) != personaappapi.AccountType_ACCOUNT_TYPE_COMPANY {
+	if toServerAccount(claims.AccountType) != apientities.AccountType_ACCOUNT_TYPE_COMPANY {
 		return nil, status.Error(codes.Unauthenticated, "unauthorized")
 	}
 
@@ -231,25 +270,19 @@ func (s *Server) UpdateCompany(
 		LogoURL:        getOptionalString(req.LogoUrl),
 	})
 
-	switch errors.Cause(err) {
-	case nil:
-	case companyController.ErrInvalidTitle:
-		return nil, status.Error(codes.InvalidArgument, err.Error())
-	case companyController.ErrInvalidDescription:
-		return nil, status.Error(codes.InvalidArgument, err.Error())
-	case companyController.ErrInvalidLogoURL:
-		return nil, status.Error(codes.InvalidArgument, err.Error())
-	default:
-		return nil, status.Error(codes.Internal, err.Error())
+	if errorCode, statusErr := companyControllerErrorToServerErrors(err); statusErr != nil {
+		return &apicompany.UpdateCompanyResponse{
+			Response: &apicompany.UpdateCompanyResponse_ErrorCode{ErrorCode: errorCode},
+		}, statusErr
 	}
 
-	return &personaappapi.UpdateCompanyResponse{}, nil
+	return &apicompany.UpdateCompanyResponse{}, nil
 }
 
 func (s *Server) GetCompany(
 	ctx context.Context,
-	req *personaappapi.GetCompanyRequest,
-) (*personaappapi.GetCompanyResponse, error) {
+	req *apicompany.GetCompanyRequest,
+) (*apicompany.GetCompanyResponse, error) {
 	if _, err := s.getAuthClaims(ctx); err != nil {
 		return nil, err
 	}
@@ -263,13 +296,13 @@ func (s *Server) GetCompany(
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
-	activityFields := make(map[string]*personaappapi.CompanyActivityField, len(company.ActivityFields))
+	activityFields := make(map[string]*apicompany.CompanyActivityField, len(company.ActivityFields))
 	for _, af := range company.ActivityFields {
-		activityFields[af] = &personaappapi.CompanyActivityField{}
+		activityFields[af] = &apicompany.CompanyActivityField{}
 	}
 
-	return &personaappapi.GetCompanyResponse{
-		Company: &personaappapi.Company{
+	return &apicompany.GetCompanyResponse{
+		Company: &apicompany.Company{
 			Id:             company.AuthID,
 			Title:          company.Title,
 			Description:    company.Description,

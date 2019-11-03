@@ -17,10 +17,14 @@ func init() {
 }
 
 var (
-	ErrCompanyNotFound    = errors.New("company not found")
-	ErrInvalidTitle       = errors.New("invalid title")
-	ErrInvalidDescription = errors.New("invalid description")
-	ErrInvalidLogoURL     = errors.New("invalid logo_url")
+	ErrCompanyNotFound          = errors.New("company not found")
+	ErrInvalidTitle             = errors.New("invalid title")
+	ErrInvalidTitleLength       = errors.New("invalid title length")
+	ErrInvalidDescription       = errors.New("invalid description")
+	ErrInvalidDescriptionLength = errors.New("invalid description length")
+	ErrInvalidLogoURL           = errors.New("invalid logo_url")
+	ErrInvalidLogoURLLength     = errors.New("invalid logo_url length")
+	ErrInvalidLogoURLFormat     = errors.New("invalid logo_url format")
 )
 
 type Storage interface {
@@ -73,18 +77,47 @@ type Company struct {
 
 func (cd *CompanyData) validate() error {
 	var fieldErrors = []struct {
-		Field string
-		Error error
+		Field        string
+		Errors       map[string]error
+		DefaultError error
 	}{
-		{Field: "Title", Error: ErrInvalidTitle},
-		{Field: "Description", Error: ErrInvalidDescription},
-		{Field: "LogoURL", Error: ErrInvalidLogoURL},
+		{
+			Field: "Title",
+			Errors: map[string]error{
+				"stringlength": ErrInvalidTitleLength,
+			},
+			DefaultError: ErrInvalidTitle,
+		},
+		{
+			Field: "Description",
+			Errors: map[string]error{
+				"stringlength": ErrInvalidDescriptionLength,
+			},
+			DefaultError: ErrInvalidDescription,
+		},
+		{
+			Field: "LogoURL",
+			Errors: map[string]error{
+				"stringlength": ErrInvalidLogoURLLength,
+				"media_link":   ErrInvalidLogoURLFormat,
+			},
+			DefaultError: ErrInvalidLogoURL,
+		},
 	}
 
 	if valid, err := govalidator.ValidateStruct(cd); !valid {
 		for _, fe := range fieldErrors {
 			if msg := govalidator.ErrorByField(err, fe.Field); msg != "" {
-				return errors.Wrap(fe.Error, msg)
+				validatorError, ok := err.(govalidator.Error)
+				if !ok {
+					return errors.Wrap(fe.DefaultError, msg)
+				}
+
+				if err, ok := fe.Errors[validatorError.Validator]; ok {
+					return errors.Wrap(err, msg)
+				}
+
+				return errors.Wrap(fe.DefaultError, msg)
 			}
 		}
 

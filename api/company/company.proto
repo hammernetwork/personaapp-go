@@ -1,0 +1,60 @@
+syntax = "proto3";
+
+package personaappapi.company;
+
+import "entities/entities.proto";
+import "google/protobuf/wrappers.proto";
+
+option go_package = "personaapp/pkg/grpcapi/company";
+option java_package = "online.personaapp.core";
+option java_outer_classname = "GrpcCompany";
+
+service PersonaAppCompany {
+    rpc UpdateCompany (UpdateCompanyRequest) returns (UpdateCompanyResponse);
+    rpc GetCompany (GetCompanyRequest) returns (GetCompanyResponse);
+}
+
+// Common
+enum ErrorCode {
+    UNKNOWN_ERROR_CODE = 0;
+    INVALID_TITLE_FORMAT = 3000;
+    INVALID_TITLE_LENGTH = 3001;
+    INVALID_DESCRIPTION_FORMAT = 3100;
+    INVALID_DESCRIPTION_LENGTH = 3101;
+    INVALID_LOGO_URL_FORMAT = 3200;
+    INVALID_LOGO_URL_LENGTH = 3201;
+}
+
+// Update
+message UpdateCompanyRequest {
+    google.protobuf.StringValue title = 1;
+    google.protobuf.StringValue description = 2;
+    google.protobuf.StringValue logo_url = 3;
+    map<string, personaappapi.entities.Empty> activity_fields = 4;
+}
+
+message UpdateCompanyResponse {
+    oneof response {
+        ErrorCode error_code = 1;
+    }
+}
+
+// Get
+message GetCompanyRequest {
+    string id = 1;
+}
+
+message GetCompanyResponse {
+    Company company = 1;
+}
+
+// Entities
+message CompanyActivityField {}
+
+message Company {
+    string id = 1;
+    string title = 2;
+    string description = 3;
+    string logo_url = 4;
+    map<string, CompanyActivityField> activity_fields = 5;
+}

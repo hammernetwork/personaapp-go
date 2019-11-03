@@ -74,12 +74,22 @@ endif
 
 	@echo " [$(GREEN_COLOR)grpc$(DEFAULT_COLOR)]"
 		@-rm -rf ./pkg/grpcapi
-		@mkdir -p ./pkg/grpcapi/personaappapi
+		@mkdir -p ./pkg/grpcapi/entities ./pkg/grpcapi/auth ./pkg/grpcapi/company
 
 	@${PROTOC} \
 		-I ./api \
-		./api/*.proto \
-		--go_out=plugins=grpc:./pkg/grpcapi/personaappapi
+		./api/entities/*.proto \
+		--go_out=plugins=grpc:..
+
+	@${PROTOC} \
+        -I ./api \
+        ./api/auth/*.proto \
+        --go_out=plugins=grpc:..
+
+	@${PROTOC} \
+        -I ./api \
+        ./api/company/*.proto \
+        --go_out=plugins=grpc:..
 
 generate:
 	@mkdir -p ./bin
