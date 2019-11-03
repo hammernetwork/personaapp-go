@@ -22,7 +22,7 @@ type Config struct {
 }
 
 func (c *Config) Flags() *pflag.FlagSet {
-	f := pflag.NewFlagSet("ServerConfig", pflag.PanicOnError)
+	f := pflag.NewFlagSet("PostgresConfig", pflag.PanicOnError)
 
 	f.AddFlagSet(c.Postgres.Flags("PostgresConfig", "postgres"))
 	f.IntVar(&c.Limit, "environment", 0, "Limit number of migrations to apply")
@@ -150,10 +150,14 @@ func run(
 }
 
 func Command(migrationTable string, migrations []*migrate.Migration) *cobra.Command {
+	var config Config
+
 	cmd := &cobra.Command{
 		Use:   "migrate",
 		Short: "Database migrations",
 	}
+
+	cmd.PersistentFlags().AddFlagSet(config.Flags())
 
 	for _, s := range []*cobra.Command{
 		{
