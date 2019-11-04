@@ -3,6 +3,7 @@ package server
 import (
 	"log"
 	"net"
+	"personaapp/pkg/closeable"
 
 	"github.com/cockroachdb/errors"
 	"github.com/spf13/cobra"
@@ -16,7 +17,6 @@ import (
 	authStorage "personaapp/internal/server/auth/storage"
 	companyController "personaapp/internal/server/company/controller"
 	companyStorage "personaapp/internal/server/company/storage"
-	"personaapp/pkg/closeable"
 	pkgcmd "personaapp/pkg/cmd"
 	"personaapp/pkg/flag"
 	apiauth "personaapp/pkg/grpcapi/auth"
@@ -60,7 +60,8 @@ func run(cfg *Config) func(cmd *cobra.Command, args []string) error {
 		if err != nil {
 			return errors.WithStack(err)
 		}
-		closeable.CloseWithErrorLogging(sugar, pg)
+		// nolint TODO: not sure if there should be defer, but I guess so
+		defer closeable.CloseWithErrorLogging(sugar, pg)
 
 		as := authStorage.New(pg)
 		ac := authController.New(&cfg.AuthController, as)
