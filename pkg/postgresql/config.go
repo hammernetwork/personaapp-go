@@ -26,7 +26,7 @@ func (c *Config) Flags(name, prefix string) *pflag.FlagSet {
 	f.Uint16Var(&c.Port, prefix+"port", 5432, "Port")
 	f.StringVar(&c.User, prefix+"user", "root", "User")
 	f.StringVar(&c.Password, prefix+"password", "", "Password")
-	f.StringVar(&c.Database, prefix+"database", "", "Database")
+	f.StringVar(&c.Database, prefix+"database", "postgres", "Database")
 	f.IntVar(&c.MaxOpenConnections, prefix+"max_open_connections", 16, "Max number of the open connections")
 	f.IntVar(&c.MaxIdleConnections, prefix+"max_idle_connections", 16, "Max number of the idle connections")
 

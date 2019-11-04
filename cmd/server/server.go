@@ -3,6 +3,7 @@ package server
 import (
 	"log"
 	"net"
+	"personaapp/pkg/closeable"
 
 	"github.com/cockroachdb/errors"
 	"github.com/spf13/cobra"
@@ -14,10 +15,12 @@ import (
 	"personaapp/internal/server"
 	authController "personaapp/internal/server/auth/controller"
 	authStorage "personaapp/internal/server/auth/storage"
-	"personaapp/pkg/closeable"
+	companyController "personaapp/internal/server/company/controller"
+	companyStorage "personaapp/internal/server/company/storage"
 	pkgcmd "personaapp/pkg/cmd"
 	"personaapp/pkg/flag"
-	"personaapp/pkg/grpcapi/personaappapi"
+	apiauth "personaapp/pkg/grpcapi/auth"
+	apicompany "personaapp/pkg/grpcapi/company"
 	"personaapp/pkg/postgresql"
 )
 
@@ -57,12 +60,16 @@ func run(cfg *Config) func(cmd *cobra.Command, args []string) error {
 		if err != nil {
 			return errors.WithStack(err)
 		}
-		closeable.CloseWithErrorLogging(sugar, pg)
+		// nolint TODO: not sure if there should be defer, but I guess so
+		defer closeable.CloseWithErrorLogging(sugar, pg)
 
 		as := authStorage.New(pg)
 		ac := authController.New(&cfg.AuthController, as)
 
-		srv := server.New(ac)
+		cs := companyStorage.New(pg)
+		cc := companyController.New(cs)
+
+		srv := server.New(ac, cc)
 
 		ln, err := net.Listen("tcp", cfg.Server.Address)
 		if err != nil {
@@ -70,7 +77,8 @@ func run(cfg *Config) func(cmd *cobra.Command, args []string) error {
 		}
 
 		grpcServer := grpc.NewServer()
-		personaappapi.RegisterPersonaAppServer(grpcServer, srv)
+		apiauth.RegisterPersonaAppAuthServer(grpcServer, srv)
+		apicompany.RegisterPersonaAppCompanyServer(grpcServer, srv)
 		reflection.Register(grpcServer)
 
 		g := &errgroup.Group{}

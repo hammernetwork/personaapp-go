@@ -42,18 +42,20 @@ func (s *Storage) TxPutAuth(ctx context.Context, tx pkgtx.Tx, ad *AuthData) erro
 		ctx,
 		`WITH upsert AS (
 			UPDATE auth SET
-				email = $2,
-				phone = $3,
-				password_hash = $4,
-				created_at = $5,
-				updated_at = $6
+				account_type = $2,
+				email = $3,
+				phone = $4,
+				password_hash = $5,
+				created_at = $6,
+				updated_at = $7
 			WHERE account_id = $1
 			RETURNING *
 		)
 		INSERT INTO auth (account_id, account_type, email, phone, password_hash, created_at, updated_at)
-		SELECT $1, $2, $3, $4, $5, $6
+		SELECT $1, $2, $3, $4, $5, $6, $7
 		WHERE NOT EXISTS (SELECT * FROM upsert)`,
 		ad.AccountID,
+		ad.Account,
 		ad.Email,
 		ad.Phone,
 		ad.PasswordHash,

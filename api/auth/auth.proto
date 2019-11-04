@@ -1,39 +1,34 @@
 syntax = "proto3";
 
-package personaappapi;
+package personaappapi.auth;
 
+import "entities/entities.proto";
 import "google/protobuf/timestamp.proto";
 
-service PersonaApp {
+option go_package = "personaapp/pkg/grpcapi/auth";
+option java_package = "online.personaapp.core";
+option java_outer_classname = "GrpcAuth";
+
+service PersonaAppAuth {
     rpc Register (RegisterRequest) returns (RegisterResponse);
     rpc Login (LoginRequest) returns (LoginResponse);
     rpc Logout (LogoutRequest) returns (LogoutResponse);
     rpc Refresh (RefreshRequest) returns (RefreshResponse);
 }
 
-enum AccountType {
-    ACCOUNT_TYPE_UNKNOWN = 0;
-    ACCOUNT_TYPE_COMPANY = 1;
-    ACCOUNT_TYPE_PERSONA = 2;
-}
-
+// Register
 message RegisterRequest {
     string email = 1;
     string phone = 2; // optional for persona
     string password = 3;
-    AccountType account_type = 4;
-}
-
-message Token {
-    string token = 1;
-    google.protobuf.Timestamp expires_at = 2;
-    AccountType account_type = 3;
+    personaappapi.entities.AccountType account_type = 4;
 }
 
 message RegisterResponse {
     Token token = 1;
 }
 
+// Login
 message LoginRequest {
     string login = 1;
     string password = 2;
@@ -43,12 +38,21 @@ message LoginResponse {
     Token token = 1;
 }
 
+// Logout
 message LogoutRequest {}
 
 message LogoutResponse {}
 
+// Refresh
 message RefreshRequest {}
 
 message RefreshResponse {
     Token token = 1;
+}
+
+// Entities
+message Token {
+    string token = 1;
+    google.protobuf.Timestamp expires_at = 2;
+    personaappapi.entities.AccountType account_type = 3;
 }

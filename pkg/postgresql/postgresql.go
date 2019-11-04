@@ -3,7 +3,6 @@ package postgresql
 import (
 	"database/sql"
 	"fmt"
-
 	"github.com/cockroachdb/errors"
 
 	_ "github.com/lib/pq" // register pg driver

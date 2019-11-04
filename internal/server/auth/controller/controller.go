@@ -51,7 +51,7 @@ func init() {
 			return false
 		}
 
-		rd, ok := o.(*RegisterData)
+		rd, ok := o.(RegisterData)
 		if !ok {
 			return false
 		}
@@ -408,4 +408,8 @@ func (c *Controller) Login(ctx context.Context, ld *LoginData) (*AuthToken, erro
 func (c *Controller) Refresh(ctx context.Context, tokenStr string) (*AuthToken, error) {
 	at, err := c.refreshToken(tokenStr)
 	return at, errors.WithStack(err)
+}
+
+func (c *Controller) GetAuthClaims(ctx context.Context, tokenStr string) (*AuthClaims, error) {
+	return c.isAuthorized(tokenStr)
 }
