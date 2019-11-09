@@ -69,13 +69,12 @@ func (ErrorCode) EnumDescriptor() ([]byte, []int) {
 
 // Update
 type UpdateCompanyRequest struct {
-	Title                *wrappers.StringValue      `protobuf:"bytes,1,opt,name=title,proto3" json:"title,omitempty"`
-	Description          *wrappers.StringValue      `protobuf:"bytes,2,opt,name=description,proto3" json:"description,omitempty"`
-	LogoUrl              *wrappers.StringValue      `protobuf:"bytes,3,opt,name=logo_url,json=logoUrl,proto3" json:"logo_url,omitempty"`
-	ActivityFields       map[string]*entities.Empty `protobuf:"bytes,4,rep,name=activity_fields,json=activityFields,proto3" json:"activity_fields,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
-	XXX_NoUnkeyedLiteral struct{}                   `json:"-"`
-	XXX_unrecognized     []byte                     `json:"-"`
-	XXX_sizecache        int32                      `json:"-"`
+	Title                *wrappers.StringValue `protobuf:"bytes,1,opt,name=title,proto3" json:"title,omitempty"`
+	Description          *wrappers.StringValue `protobuf:"bytes,2,opt,name=description,proto3" json:"description,omitempty"`
+	LogoUrl              *wrappers.StringValue `protobuf:"bytes,3,opt,name=logo_url,json=logoUrl,proto3" json:"logo_url,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}              `json:"-"`
+	XXX_unrecognized     []byte                `json:"-"`
+	XXX_sizecache        int32                 `json:"-"`
 }
 
 func (m *UpdateCompanyRequest) Reset()         { *m = UpdateCompanyRequest{} }
@@ -124,20 +123,14 @@ func (m *UpdateCompanyRequest) GetLogoUrl() *wrappers.StringValue {
 	return nil
 }
 
-func (m *UpdateCompanyRequest) GetActivityFields() map[string]*entities.Empty {
-	if m != nil {
-		return m.ActivityFields
-	}
-	return nil
-}
-
 type UpdateCompanyResponse struct {
-	// Types that are valid to be assigned to Response:
+	// Types that are valid to be assigned to UpdateCompanyResponse:
 	//	*UpdateCompanyResponse_ErrorCode
-	Response             isUpdateCompanyResponse_Response `protobuf_oneof:"response"`
-	XXX_NoUnkeyedLiteral struct{}                         `json:"-"`
-	XXX_unrecognized     []byte                           `json:"-"`
-	XXX_sizecache        int32                            `json:"-"`
+	//	*UpdateCompanyResponse_Response_
+	UpdateCompanyResponse isUpdateCompanyResponse_UpdateCompanyResponse `protobuf_oneof:"update_company_response"`
+	XXX_NoUnkeyedLiteral  struct{}                                      `json:"-"`
+	XXX_unrecognized      []byte                                        `json:"-"`
+	XXX_sizecache         int32                                         `json:"-"`
 }
 
 func (m *UpdateCompanyResponse) Reset()         { *m = UpdateCompanyResponse{} }
@@ -165,36 +158,238 @@ func (m *UpdateCompanyResponse) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_UpdateCompanyResponse proto.InternalMessageInfo
 
-type isUpdateCompanyResponse_Response interface {
-	isUpdateCompanyResponse_Response()
+type isUpdateCompanyResponse_UpdateCompanyResponse interface {
+	isUpdateCompanyResponse_UpdateCompanyResponse()
 }
 
 type UpdateCompanyResponse_ErrorCode struct {
 	ErrorCode ErrorCode `protobuf:"varint,1,opt,name=error_code,json=errorCode,proto3,enum=personaappapi.company.ErrorCode,oneof"`
 }
 
-func (*UpdateCompanyResponse_ErrorCode) isUpdateCompanyResponse_Response() {}
+type UpdateCompanyResponse_Response_ struct {
+	Response *UpdateCompanyResponse_Response `protobuf:"bytes,2,opt,name=response,proto3,oneof"`
+}
 
-func (m *UpdateCompanyResponse) GetResponse() isUpdateCompanyResponse_Response {
+func (*UpdateCompanyResponse_ErrorCode) isUpdateCompanyResponse_UpdateCompanyResponse() {}
+
+func (*UpdateCompanyResponse_Response_) isUpdateCompanyResponse_UpdateCompanyResponse() {}
+
+func (m *UpdateCompanyResponse) GetUpdateCompanyResponse() isUpdateCompanyResponse_UpdateCompanyResponse {
 	if m != nil {
-		return m.Response
+		return m.UpdateCompanyResponse
 	}
 	return nil
 }
 
 func (m *UpdateCompanyResponse) GetErrorCode() ErrorCode {
-	if x, ok := m.GetResponse().(*UpdateCompanyResponse_ErrorCode); ok {
+	if x, ok := m.GetUpdateCompanyResponse().(*UpdateCompanyResponse_ErrorCode); ok {
 		return x.ErrorCode
 	}
 	return ErrorCode_UNKNOWN_ERROR_CODE
+}
+
+func (m *UpdateCompanyResponse) GetResponse() *UpdateCompanyResponse_Response {
+	if x, ok := m.GetUpdateCompanyResponse().(*UpdateCompanyResponse_Response_); ok {
+		return x.Response
+	}
+	return nil
 }
 
 // XXX_OneofWrappers is for the internal use of the proto package.
 func (*UpdateCompanyResponse) XXX_OneofWrappers() []interface{} {
 	return []interface{}{
 		(*UpdateCompanyResponse_ErrorCode)(nil),
+		(*UpdateCompanyResponse_Response_)(nil),
 	}
 }
+
+type UpdateCompanyResponse_Response struct {
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *UpdateCompanyResponse_Response) Reset()         { *m = UpdateCompanyResponse_Response{} }
+func (m *UpdateCompanyResponse_Response) String() string { return proto.CompactTextString(m) }
+func (*UpdateCompanyResponse_Response) ProtoMessage()    {}
+func (*UpdateCompanyResponse_Response) Descriptor() ([]byte, []int) {
+	return fileDescriptor_13f68715d26ff6fb, []int{1, 0}
+}
+
+func (m *UpdateCompanyResponse_Response) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_UpdateCompanyResponse_Response.Unmarshal(m, b)
+}
+func (m *UpdateCompanyResponse_Response) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_UpdateCompanyResponse_Response.Marshal(b, m, deterministic)
+}
+func (m *UpdateCompanyResponse_Response) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_UpdateCompanyResponse_Response.Merge(m, src)
+}
+func (m *UpdateCompanyResponse_Response) XXX_Size() int {
+	return xxx_messageInfo_UpdateCompanyResponse_Response.Size(m)
+}
+func (m *UpdateCompanyResponse_Response) XXX_DiscardUnknown() {
+	xxx_messageInfo_UpdateCompanyResponse_Response.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_UpdateCompanyResponse_Response proto.InternalMessageInfo
+
+// Update Activity Fields
+type UpdateCompanyActivityFieldsRequest struct {
+	ActivityFields       map[string]*entities.Empty `protobuf:"bytes,1,rep,name=activity_fields,json=activityFields,proto3" json:"activity_fields,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
+	XXX_NoUnkeyedLiteral struct{}                   `json:"-"`
+	XXX_unrecognized     []byte                     `json:"-"`
+	XXX_sizecache        int32                      `json:"-"`
+}
+
+func (m *UpdateCompanyActivityFieldsRequest) Reset()         { *m = UpdateCompanyActivityFieldsRequest{} }
+func (m *UpdateCompanyActivityFieldsRequest) String() string { return proto.CompactTextString(m) }
+func (*UpdateCompanyActivityFieldsRequest) ProtoMessage()    {}
+func (*UpdateCompanyActivityFieldsRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_13f68715d26ff6fb, []int{2}
+}
+
+func (m *UpdateCompanyActivityFieldsRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_UpdateCompanyActivityFieldsRequest.Unmarshal(m, b)
+}
+func (m *UpdateCompanyActivityFieldsRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_UpdateCompanyActivityFieldsRequest.Marshal(b, m, deterministic)
+}
+func (m *UpdateCompanyActivityFieldsRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_UpdateCompanyActivityFieldsRequest.Merge(m, src)
+}
+func (m *UpdateCompanyActivityFieldsRequest) XXX_Size() int {
+	return xxx_messageInfo_UpdateCompanyActivityFieldsRequest.Size(m)
+}
+func (m *UpdateCompanyActivityFieldsRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_UpdateCompanyActivityFieldsRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_UpdateCompanyActivityFieldsRequest proto.InternalMessageInfo
+
+func (m *UpdateCompanyActivityFieldsRequest) GetActivityFields() map[string]*entities.Empty {
+	if m != nil {
+		return m.ActivityFields
+	}
+	return nil
+}
+
+type UpdateCompanyActivityFieldsResponse struct {
+	// Types that are valid to be assigned to UpdateCompanyActivityFieldsResponse:
+	//	*UpdateCompanyActivityFieldsResponse_ErrorCode
+	//	*UpdateCompanyActivityFieldsResponse_Response_
+	UpdateCompanyActivityFieldsResponse isUpdateCompanyActivityFieldsResponse_UpdateCompanyActivityFieldsResponse `protobuf_oneof:"update_company_activity_fields_response"`
+	XXX_NoUnkeyedLiteral                struct{}                                                                  `json:"-"`
+	XXX_unrecognized                    []byte                                                                    `json:"-"`
+	XXX_sizecache                       int32                                                                     `json:"-"`
+}
+
+func (m *UpdateCompanyActivityFieldsResponse) Reset()         { *m = UpdateCompanyActivityFieldsResponse{} }
+func (m *UpdateCompanyActivityFieldsResponse) String() string { return proto.CompactTextString(m) }
+func (*UpdateCompanyActivityFieldsResponse) ProtoMessage()    {}
+func (*UpdateCompanyActivityFieldsResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_13f68715d26ff6fb, []int{3}
+}
+
+func (m *UpdateCompanyActivityFieldsResponse) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_UpdateCompanyActivityFieldsResponse.Unmarshal(m, b)
+}
+func (m *UpdateCompanyActivityFieldsResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_UpdateCompanyActivityFieldsResponse.Marshal(b, m, deterministic)
+}
+func (m *UpdateCompanyActivityFieldsResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_UpdateCompanyActivityFieldsResponse.Merge(m, src)
+}
+func (m *UpdateCompanyActivityFieldsResponse) XXX_Size() int {
+	return xxx_messageInfo_UpdateCompanyActivityFieldsResponse.Size(m)
+}
+func (m *UpdateCompanyActivityFieldsResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_UpdateCompanyActivityFieldsResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_UpdateCompanyActivityFieldsResponse proto.InternalMessageInfo
+
+type isUpdateCompanyActivityFieldsResponse_UpdateCompanyActivityFieldsResponse interface {
+	isUpdateCompanyActivityFieldsResponse_UpdateCompanyActivityFieldsResponse()
+}
+
+type UpdateCompanyActivityFieldsResponse_ErrorCode struct {
+	ErrorCode ErrorCode `protobuf:"varint,1,opt,name=error_code,json=errorCode,proto3,enum=personaappapi.company.ErrorCode,oneof"`
+}
+
+type UpdateCompanyActivityFieldsResponse_Response_ struct {
+	Response *UpdateCompanyActivityFieldsResponse_Response `protobuf:"bytes,2,opt,name=response,proto3,oneof"`
+}
+
+func (*UpdateCompanyActivityFieldsResponse_ErrorCode) isUpdateCompanyActivityFieldsResponse_UpdateCompanyActivityFieldsResponse() {
+}
+
+func (*UpdateCompanyActivityFieldsResponse_Response_) isUpdateCompanyActivityFieldsResponse_UpdateCompanyActivityFieldsResponse() {
+}
+
+func (m *UpdateCompanyActivityFieldsResponse) GetUpdateCompanyActivityFieldsResponse() isUpdateCompanyActivityFieldsResponse_UpdateCompanyActivityFieldsResponse {
+	if m != nil {
+		return m.UpdateCompanyActivityFieldsResponse
+	}
+	return nil
+}
+
+func (m *UpdateCompanyActivityFieldsResponse) GetErrorCode() ErrorCode {
+	if x, ok := m.GetUpdateCompanyActivityFieldsResponse().(*UpdateCompanyActivityFieldsResponse_ErrorCode); ok {
+		return x.ErrorCode
+	}
+	return ErrorCode_UNKNOWN_ERROR_CODE
+}
+
+func (m *UpdateCompanyActivityFieldsResponse) GetResponse() *UpdateCompanyActivityFieldsResponse_Response {
+	if x, ok := m.GetUpdateCompanyActivityFieldsResponse().(*UpdateCompanyActivityFieldsResponse_Response_); ok {
+		return x.Response
+	}
+	return nil
+}
+
+// XXX_OneofWrappers is for the internal use of the proto package.
+func (*UpdateCompanyActivityFieldsResponse) XXX_OneofWrappers() []interface{} {
+	return []interface{}{
+		(*UpdateCompanyActivityFieldsResponse_ErrorCode)(nil),
+		(*UpdateCompanyActivityFieldsResponse_Response_)(nil),
+	}
+}
+
+type UpdateCompanyActivityFieldsResponse_Response struct {
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *UpdateCompanyActivityFieldsResponse_Response) Reset() {
+	*m = UpdateCompanyActivityFieldsResponse_Response{}
+}
+func (m *UpdateCompanyActivityFieldsResponse_Response) String() string {
+	return proto.CompactTextString(m)
+}
+func (*UpdateCompanyActivityFieldsResponse_Response) ProtoMessage() {}
+func (*UpdateCompanyActivityFieldsResponse_Response) Descriptor() ([]byte, []int) {
+	return fileDescriptor_13f68715d26ff6fb, []int{3, 0}
+}
+
+func (m *UpdateCompanyActivityFieldsResponse_Response) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_UpdateCompanyActivityFieldsResponse_Response.Unmarshal(m, b)
+}
+func (m *UpdateCompanyActivityFieldsResponse_Response) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_UpdateCompanyActivityFieldsResponse_Response.Marshal(b, m, deterministic)
+}
+func (m *UpdateCompanyActivityFieldsResponse_Response) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_UpdateCompanyActivityFieldsResponse_Response.Merge(m, src)
+}
+func (m *UpdateCompanyActivityFieldsResponse_Response) XXX_Size() int {
+	return xxx_messageInfo_UpdateCompanyActivityFieldsResponse_Response.Size(m)
+}
+func (m *UpdateCompanyActivityFieldsResponse_Response) XXX_DiscardUnknown() {
+	xxx_messageInfo_UpdateCompanyActivityFieldsResponse_Response.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_UpdateCompanyActivityFieldsResponse_Response proto.InternalMessageInfo
 
 // Get
 type GetCompanyRequest struct {
@@ -208,7 +403,7 @@ func (m *GetCompanyRequest) Reset()         { *m = GetCompanyRequest{} }
 func (m *GetCompanyRequest) String() string { return proto.CompactTextString(m) }
 func (*GetCompanyRequest) ProtoMessage()    {}
 func (*GetCompanyRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_13f68715d26ff6fb, []int{2}
+	return fileDescriptor_13f68715d26ff6fb, []int{4}
 }
 
 func (m *GetCompanyRequest) XXX_Unmarshal(b []byte) error {
@@ -237,17 +432,20 @@ func (m *GetCompanyRequest) GetId() string {
 }
 
 type GetCompanyResponse struct {
-	Company              *Company `protobuf:"bytes,1,opt,name=company,proto3" json:"company,omitempty"`
-	XXX_NoUnkeyedLiteral struct{} `json:"-"`
-	XXX_unrecognized     []byte   `json:"-"`
-	XXX_sizecache        int32    `json:"-"`
+	// Types that are valid to be assigned to GetCompanyResponse:
+	//	*GetCompanyResponse_ErrorCode
+	//	*GetCompanyResponse_Response_
+	GetCompanyResponse   isGetCompanyResponse_GetCompanyResponse `protobuf_oneof:"get_company_response"`
+	XXX_NoUnkeyedLiteral struct{}                                `json:"-"`
+	XXX_unrecognized     []byte                                  `json:"-"`
+	XXX_sizecache        int32                                   `json:"-"`
 }
 
 func (m *GetCompanyResponse) Reset()         { *m = GetCompanyResponse{} }
 func (m *GetCompanyResponse) String() string { return proto.CompactTextString(m) }
 func (*GetCompanyResponse) ProtoMessage()    {}
 func (*GetCompanyResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_13f68715d26ff6fb, []int{3}
+	return fileDescriptor_13f68715d26ff6fb, []int{5}
 }
 
 func (m *GetCompanyResponse) XXX_Unmarshal(b []byte) error {
@@ -268,112 +466,190 @@ func (m *GetCompanyResponse) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_GetCompanyResponse proto.InternalMessageInfo
 
-func (m *GetCompanyResponse) GetCompany() *Company {
+type isGetCompanyResponse_GetCompanyResponse interface {
+	isGetCompanyResponse_GetCompanyResponse()
+}
+
+type GetCompanyResponse_ErrorCode struct {
+	ErrorCode ErrorCode `protobuf:"varint,1,opt,name=error_code,json=errorCode,proto3,enum=personaappapi.company.ErrorCode,oneof"`
+}
+
+type GetCompanyResponse_Response_ struct {
+	Response *GetCompanyResponse_Response `protobuf:"bytes,2,opt,name=response,proto3,oneof"`
+}
+
+func (*GetCompanyResponse_ErrorCode) isGetCompanyResponse_GetCompanyResponse() {}
+
+func (*GetCompanyResponse_Response_) isGetCompanyResponse_GetCompanyResponse() {}
+
+func (m *GetCompanyResponse) GetGetCompanyResponse() isGetCompanyResponse_GetCompanyResponse {
 	if m != nil {
-		return m.Company
+		return m.GetCompanyResponse
 	}
 	return nil
 }
 
-// Entities
-type CompanyActivityField struct {
-	XXX_NoUnkeyedLiteral struct{} `json:"-"`
-	XXX_unrecognized     []byte   `json:"-"`
-	XXX_sizecache        int32    `json:"-"`
+func (m *GetCompanyResponse) GetErrorCode() ErrorCode {
+	if x, ok := m.GetGetCompanyResponse().(*GetCompanyResponse_ErrorCode); ok {
+		return x.ErrorCode
+	}
+	return ErrorCode_UNKNOWN_ERROR_CODE
 }
 
-func (m *CompanyActivityField) Reset()         { *m = CompanyActivityField{} }
-func (m *CompanyActivityField) String() string { return proto.CompactTextString(m) }
-func (*CompanyActivityField) ProtoMessage()    {}
-func (*CompanyActivityField) Descriptor() ([]byte, []int) {
-	return fileDescriptor_13f68715d26ff6fb, []int{4}
+func (m *GetCompanyResponse) GetResponse() *GetCompanyResponse_Response {
+	if x, ok := m.GetGetCompanyResponse().(*GetCompanyResponse_Response_); ok {
+		return x.Response
+	}
+	return nil
 }
 
-func (m *CompanyActivityField) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_CompanyActivityField.Unmarshal(m, b)
-}
-func (m *CompanyActivityField) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_CompanyActivityField.Marshal(b, m, deterministic)
-}
-func (m *CompanyActivityField) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_CompanyActivityField.Merge(m, src)
-}
-func (m *CompanyActivityField) XXX_Size() int {
-	return xxx_messageInfo_CompanyActivityField.Size(m)
-}
-func (m *CompanyActivityField) XXX_DiscardUnknown() {
-	xxx_messageInfo_CompanyActivityField.DiscardUnknown(m)
+// XXX_OneofWrappers is for the internal use of the proto package.
+func (*GetCompanyResponse) XXX_OneofWrappers() []interface{} {
+	return []interface{}{
+		(*GetCompanyResponse_ErrorCode)(nil),
+		(*GetCompanyResponse_Response_)(nil),
+	}
 }
 
-var xxx_messageInfo_CompanyActivityField proto.InternalMessageInfo
-
-type Company struct {
-	Id                   string                           `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	Title                string                           `protobuf:"bytes,2,opt,name=title,proto3" json:"title,omitempty"`
-	Description          string                           `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`
-	LogoUrl              string                           `protobuf:"bytes,4,opt,name=logo_url,json=logoUrl,proto3" json:"logo_url,omitempty"`
-	ActivityFields       map[string]*CompanyActivityField `protobuf:"bytes,5,rep,name=activity_fields,json=activityFields,proto3" json:"activity_fields,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
-	XXX_NoUnkeyedLiteral struct{}                         `json:"-"`
-	XXX_unrecognized     []byte                           `json:"-"`
-	XXX_sizecache        int32                            `json:"-"`
+type GetCompanyResponse_Company struct {
+	Id                   string                                              `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Title                string                                              `protobuf:"bytes,2,opt,name=title,proto3" json:"title,omitempty"`
+	Description          string                                              `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`
+	LogoUrl              string                                              `protobuf:"bytes,4,opt,name=logo_url,json=logoUrl,proto3" json:"logo_url,omitempty"`
+	ActivityFields       map[string]*GetCompanyResponse_CompanyActivityField `protobuf:"bytes,5,rep,name=activity_fields,json=activityFields,proto3" json:"activity_fields,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
+	XXX_NoUnkeyedLiteral struct{}                                            `json:"-"`
+	XXX_unrecognized     []byte                                              `json:"-"`
+	XXX_sizecache        int32                                               `json:"-"`
 }
 
-func (m *Company) Reset()         { *m = Company{} }
-func (m *Company) String() string { return proto.CompactTextString(m) }
-func (*Company) ProtoMessage()    {}
-func (*Company) Descriptor() ([]byte, []int) {
-	return fileDescriptor_13f68715d26ff6fb, []int{5}
+func (m *GetCompanyResponse_Company) Reset()         { *m = GetCompanyResponse_Company{} }
+func (m *GetCompanyResponse_Company) String() string { return proto.CompactTextString(m) }
+func (*GetCompanyResponse_Company) ProtoMessage()    {}
+func (*GetCompanyResponse_Company) Descriptor() ([]byte, []int) {
+	return fileDescriptor_13f68715d26ff6fb, []int{5, 0}
 }
 
-func (m *Company) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_Company.Unmarshal(m, b)
+func (m *GetCompanyResponse_Company) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetCompanyResponse_Company.Unmarshal(m, b)
 }
-func (m *Company) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_Company.Marshal(b, m, deterministic)
+func (m *GetCompanyResponse_Company) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetCompanyResponse_Company.Marshal(b, m, deterministic)
 }
-func (m *Company) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_Company.Merge(m, src)
+func (m *GetCompanyResponse_Company) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetCompanyResponse_Company.Merge(m, src)
 }
-func (m *Company) XXX_Size() int {
-	return xxx_messageInfo_Company.Size(m)
+func (m *GetCompanyResponse_Company) XXX_Size() int {
+	return xxx_messageInfo_GetCompanyResponse_Company.Size(m)
 }
-func (m *Company) XXX_DiscardUnknown() {
-	xxx_messageInfo_Company.DiscardUnknown(m)
+func (m *GetCompanyResponse_Company) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetCompanyResponse_Company.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_Company proto.InternalMessageInfo
+var xxx_messageInfo_GetCompanyResponse_Company proto.InternalMessageInfo
 
-func (m *Company) GetId() string {
+func (m *GetCompanyResponse_Company) GetId() string {
 	if m != nil {
 		return m.Id
 	}
 	return ""
 }
 
-func (m *Company) GetTitle() string {
+func (m *GetCompanyResponse_Company) GetTitle() string {
 	if m != nil {
 		return m.Title
 	}
 	return ""
 }
 
-func (m *Company) GetDescription() string {
+func (m *GetCompanyResponse_Company) GetDescription() string {
 	if m != nil {
 		return m.Description
 	}
 	return ""
 }
 
-func (m *Company) GetLogoUrl() string {
+func (m *GetCompanyResponse_Company) GetLogoUrl() string {
 	if m != nil {
 		return m.LogoUrl
 	}
 	return ""
 }
 
-func (m *Company) GetActivityFields() map[string]*CompanyActivityField {
+func (m *GetCompanyResponse_Company) GetActivityFields() map[string]*GetCompanyResponse_CompanyActivityField {
 	if m != nil {
 		return m.ActivityFields
+	}
+	return nil
+}
+
+type GetCompanyResponse_CompanyActivityField struct {
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *GetCompanyResponse_CompanyActivityField) Reset() {
+	*m = GetCompanyResponse_CompanyActivityField{}
+}
+func (m *GetCompanyResponse_CompanyActivityField) String() string { return proto.CompactTextString(m) }
+func (*GetCompanyResponse_CompanyActivityField) ProtoMessage()    {}
+func (*GetCompanyResponse_CompanyActivityField) Descriptor() ([]byte, []int) {
+	return fileDescriptor_13f68715d26ff6fb, []int{5, 1}
+}
+
+func (m *GetCompanyResponse_CompanyActivityField) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetCompanyResponse_CompanyActivityField.Unmarshal(m, b)
+}
+func (m *GetCompanyResponse_CompanyActivityField) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetCompanyResponse_CompanyActivityField.Marshal(b, m, deterministic)
+}
+func (m *GetCompanyResponse_CompanyActivityField) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetCompanyResponse_CompanyActivityField.Merge(m, src)
+}
+func (m *GetCompanyResponse_CompanyActivityField) XXX_Size() int {
+	return xxx_messageInfo_GetCompanyResponse_CompanyActivityField.Size(m)
+}
+func (m *GetCompanyResponse_CompanyActivityField) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetCompanyResponse_CompanyActivityField.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetCompanyResponse_CompanyActivityField proto.InternalMessageInfo
+
+type GetCompanyResponse_Response struct {
+	Company              *GetCompanyResponse_Company `protobuf:"bytes,1,opt,name=company,proto3" json:"company,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}                    `json:"-"`
+	XXX_unrecognized     []byte                      `json:"-"`
+	XXX_sizecache        int32                       `json:"-"`
+}
+
+func (m *GetCompanyResponse_Response) Reset()         { *m = GetCompanyResponse_Response{} }
+func (m *GetCompanyResponse_Response) String() string { return proto.CompactTextString(m) }
+func (*GetCompanyResponse_Response) ProtoMessage()    {}
+func (*GetCompanyResponse_Response) Descriptor() ([]byte, []int) {
+	return fileDescriptor_13f68715d26ff6fb, []int{5, 2}
+}
+
+func (m *GetCompanyResponse_Response) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetCompanyResponse_Response.Unmarshal(m, b)
+}
+func (m *GetCompanyResponse_Response) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetCompanyResponse_Response.Marshal(b, m, deterministic)
+}
+func (m *GetCompanyResponse_Response) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetCompanyResponse_Response.Merge(m, src)
+}
+func (m *GetCompanyResponse_Response) XXX_Size() int {
+	return xxx_messageInfo_GetCompanyResponse_Response.Size(m)
+}
+func (m *GetCompanyResponse_Response) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetCompanyResponse_Response.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetCompanyResponse_Response proto.InternalMessageInfo
+
+func (m *GetCompanyResponse_Response) GetCompany() *GetCompanyResponse_Company {
+	if m != nil {
+		return m.Company
 	}
 	return nil
 }
@@ -381,60 +657,73 @@ func (m *Company) GetActivityFields() map[string]*CompanyActivityField {
 func init() {
 	proto.RegisterEnum("personaappapi.company.ErrorCode", ErrorCode_name, ErrorCode_value)
 	proto.RegisterType((*UpdateCompanyRequest)(nil), "personaappapi.company.UpdateCompanyRequest")
-	proto.RegisterMapType((map[string]*entities.Empty)(nil), "personaappapi.company.UpdateCompanyRequest.ActivityFieldsEntry")
 	proto.RegisterType((*UpdateCompanyResponse)(nil), "personaappapi.company.UpdateCompanyResponse")
+	proto.RegisterType((*UpdateCompanyResponse_Response)(nil), "personaappapi.company.UpdateCompanyResponse.Response")
+	proto.RegisterType((*UpdateCompanyActivityFieldsRequest)(nil), "personaappapi.company.UpdateCompanyActivityFieldsRequest")
+	proto.RegisterMapType((map[string]*entities.Empty)(nil), "personaappapi.company.UpdateCompanyActivityFieldsRequest.ActivityFieldsEntry")
+	proto.RegisterType((*UpdateCompanyActivityFieldsResponse)(nil), "personaappapi.company.UpdateCompanyActivityFieldsResponse")
+	proto.RegisterType((*UpdateCompanyActivityFieldsResponse_Response)(nil), "personaappapi.company.UpdateCompanyActivityFieldsResponse.Response")
 	proto.RegisterType((*GetCompanyRequest)(nil), "personaappapi.company.GetCompanyRequest")
 	proto.RegisterType((*GetCompanyResponse)(nil), "personaappapi.company.GetCompanyResponse")
-	proto.RegisterType((*CompanyActivityField)(nil), "personaappapi.company.CompanyActivityField")
-	proto.RegisterType((*Company)(nil), "personaappapi.company.Company")
-	proto.RegisterMapType((map[string]*CompanyActivityField)(nil), "personaappapi.company.Company.ActivityFieldsEntry")
+	proto.RegisterType((*GetCompanyResponse_Company)(nil), "personaappapi.company.GetCompanyResponse.Company")
+	proto.RegisterMapType((map[string]*GetCompanyResponse_CompanyActivityField)(nil), "personaappapi.company.GetCompanyResponse.Company.ActivityFieldsEntry")
+	proto.RegisterType((*GetCompanyResponse_CompanyActivityField)(nil), "personaappapi.company.GetCompanyResponse.CompanyActivityField")
+	proto.RegisterType((*GetCompanyResponse_Response)(nil), "personaappapi.company.GetCompanyResponse.Response")
 }
 
 func init() { proto.RegisterFile("company/company.proto", fileDescriptor_13f68715d26ff6fb) }
 
 var fileDescriptor_13f68715d26ff6fb = []byte{
-	// 651 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0x94, 0x55, 0xdd, 0x52, 0xd3, 0x40,
-	0x14, 0xa6, 0x2d, 0x08, 0x9c, 0x8e, 0x58, 0xd6, 0x42, 0x7f, 0x06, 0xb1, 0x53, 0x6f, 0x50, 0x9c,
-	0x74, 0xa6, 0x5c, 0xc8, 0x78, 0xa1, 0x53, 0x4a, 0x28, 0x1d, 0x6b, 0xc2, 0x84, 0x16, 0x67, 0xf4,
-	0x22, 0x86, 0x64, 0xa9, 0x2b, 0x21, 0xbb, 0x6e, 0xb6, 0x38, 0xbd, 0xd3, 0x27, 0xf0, 0x05, 0xf4,
-	0x3d, 0xe4, 0x49, 0xbc, 0xf7, 0x49, 0x9c, 0x26, 0x1b, 0x68, 0x4a, 0xcb, 0xc4, 0xab, 0x26, 0xfb,
-	0xfd, 0xec, 0xd9, 0x73, 0xbe, 0x6d, 0x60, 0xcd, 0xa6, 0x17, 0xcc, 0xf2, 0x86, 0x35, 0xf9, 0xab,
-	0x30, 0x4e, 0x05, 0x45, 0x6b, 0x0c, 0x73, 0x9f, 0x7a, 0x96, 0xc5, 0x98, 0xc5, 0x88, 0x22, 0xc1,
-	0x72, 0x01, 0x7b, 0x82, 0x08, 0x82, 0xfd, 0x5a, 0xf4, 0x10, 0xf2, 0xcb, 0x9b, 0x7d, 0x4a, 0xfb,
-	0x2e, 0xae, 0x05, 0x6f, 0xa7, 0x83, 0xb3, 0xda, 0x57, 0x6e, 0xb1, 0x91, 0x47, 0x88, 0x57, 0x7f,
-	0x64, 0x20, 0xdf, 0x63, 0x8e, 0x25, 0x70, 0x33, 0xb4, 0x32, 0xf0, 0x97, 0x01, 0xf6, 0x05, 0xaa,
-	0xc3, 0x82, 0x20, 0xc2, 0xc5, 0xc5, 0x54, 0x25, 0xb5, 0x95, 0xad, 0x6f, 0x28, 0xa1, 0x91, 0x12,
-	0x19, 0x29, 0xc7, 0x82, 0x13, 0xaf, 0x7f, 0x62, 0xb9, 0x03, 0x6c, 0x84, 0x54, 0xf4, 0x0a, 0xb2,
-	0x0e, 0xf6, 0x6d, 0x4e, 0x98, 0x20, 0xd4, 0x2b, 0xa6, 0x13, 0x28, 0xc7, 0x05, 0xe8, 0x05, 0x2c,
-	0xb9, 0xb4, 0x4f, 0xcd, 0x01, 0x77, 0x8b, 0x99, 0x04, 0xe2, 0xc5, 0x11, 0xbb, 0xc7, 0x5d, 0xf4,
-	0x09, 0x1e, 0x58, 0xb6, 0x20, 0x97, 0x44, 0x0c, 0xcd, 0x33, 0x82, 0x5d, 0xc7, 0x2f, 0xce, 0x57,
-	0x32, 0x5b, 0xd9, 0xfa, 0x6b, 0x65, 0x6a, 0xbf, 0x94, 0x69, 0x47, 0x56, 0x1a, 0xd2, 0xe2, 0x20,
-	0x70, 0x50, 0x3d, 0xc1, 0x87, 0xc6, 0x8a, 0x15, 0x5b, 0x2c, 0x7f, 0x84, 0x87, 0x53, 0x68, 0x28,
-	0x07, 0x99, 0x73, 0x3c, 0x0c, 0x7a, 0xb5, 0x6c, 0x8c, 0x1e, 0xd1, 0x0e, 0x2c, 0x5c, 0x8e, 0x8a,
-	0x94, 0x5d, 0x78, 0x34, 0x51, 0xc8, 0xf5, 0x98, 0xd4, 0x0b, 0x26, 0x86, 0x46, 0xc8, 0x7d, 0x99,
-	0xde, 0x4d, 0x55, 0xcf, 0x60, 0x6d, 0xa2, 0x3a, 0x9f, 0x51, 0xcf, 0xc7, 0xa8, 0x01, 0x80, 0x39,
-	0xa7, 0xdc, 0xb4, 0xa9, 0x13, 0x8e, 0x65, 0xa5, 0x5e, 0x99, 0x71, 0x3e, 0x75, 0x44, 0x6c, 0x52,
-	0x07, 0x1f, 0xce, 0x19, 0xcb, 0x38, 0x7a, 0xd9, 0x03, 0x58, 0xe2, 0xd2, 0xae, 0xfa, 0x04, 0x56,
-	0x5b, 0x58, 0x4c, 0x4c, 0x7d, 0x05, 0xd2, 0xc4, 0x91, 0xc7, 0x48, 0x13, 0xa7, 0xaa, 0x01, 0x1a,
-	0x27, 0xc9, 0x4a, 0x76, 0x61, 0x51, 0x6e, 0x24, 0xd3, 0xb1, 0x39, 0xa3, 0x8c, 0x48, 0x18, 0xd1,
-	0xab, 0xeb, 0x90, 0x97, 0x6b, 0xb1, 0x2e, 0x56, 0xaf, 0xd2, 0xb0, 0x28, 0x81, 0xc9, 0x1a, 0x50,
-	0x3e, 0x4a, 0x62, 0x3a, 0x58, 0x92, 0x59, 0xab, 0xc4, 0xb3, 0x96, 0x09, 0xb0, 0x58, 0x9a, 0x4a,
-	0x63, 0x69, 0x9a, 0x0f, 0xe0, 0xeb, 0xbc, 0x7c, 0xb8, 0x9d, 0x97, 0x85, 0x20, 0x2f, 0xf5, 0xbb,
-	0x0f, 0x92, 0x28, 0x22, 0x5e, 0xd2, 0x88, 0x34, 0xe2, 0x11, 0xd9, 0xbe, 0x7b, 0xef, 0x98, 0xe7,
-	0x58, 0x60, 0x9e, 0xfd, 0x49, 0xc1, 0xf2, 0xf5, 0xbc, 0xd1, 0x3a, 0xa0, 0x9e, 0xf6, 0x46, 0xd3,
-	0xdf, 0x69, 0xa6, 0x6a, 0x18, 0xba, 0x61, 0x36, 0xf5, 0x7d, 0x35, 0x37, 0x87, 0x4a, 0x90, 0x6f,
-	0x6b, 0x27, 0x8d, 0x4e, 0x7b, 0xdf, 0xec, 0xb6, 0xbb, 0x1d, 0xd5, 0x3c, 0xd0, 0x8d, 0xb7, 0x8d,
-	0x6e, 0xee, 0x77, 0xe1, 0x36, 0xd4, 0x51, 0xb5, 0x56, 0xf7, 0x30, 0x77, 0x55, 0x40, 0x8f, 0xa1,
-	0x1c, 0x41, 0xfb, 0xea, 0x71, 0xd3, 0x68, 0x1f, 0x75, 0xdb, 0xba, 0x16, 0x69, 0x7f, 0x16, 0x67,
-	0x11, 0xa4, 0xc3, 0xaf, 0x22, 0xda, 0x80, 0x42, 0x44, 0xe8, 0xe8, 0x2d, 0xdd, 0xec, 0x19, 0x9d,
-	0x48, 0xfe, 0xad, 0x34, 0x15, 0x95, 0xda, 0xef, 0xa5, 0xfa, 0xdf, 0x14, 0xac, 0x1e, 0x85, 0x3d,
-	0x69, 0x30, 0x16, 0xe5, 0xe3, 0x33, 0xdc, 0x8f, 0x5d, 0x10, 0xb4, 0xfd, 0x1f, 0x97, 0xbc, 0xfc,
-	0x3c, 0x19, 0x59, 0x26, 0xdd, 0x02, 0xb8, 0xc9, 0x3f, 0xda, 0x9a, 0xa1, 0xbd, 0x75, 0x8f, 0xca,
-	0x4f, 0x13, 0x30, 0xc3, 0x2d, 0xf6, 0x54, 0x58, 0xa7, 0x9e, 0x4b, 0x3c, 0x3c, 0x26, 0x51, 0x6c,
-	0xca, 0xf1, 0x5e, 0xb6, 0xc5, 0x99, 0x2d, 0xe9, 0xef, 0x37, 0x6f, 0xd0, 0x1a, 0x3b, 0xef, 0xd7,
-	0xfa, 0x9c, 0xd9, 0x16, 0x23, 0xd1, 0xe7, 0xe1, 0xf4, 0x5e, 0xf0, 0x0f, 0xb9, 0xf3, 0x2f, 0x00,
-	0x00, 0xff, 0xff, 0xdd, 0xda, 0xac, 0xf5, 0x38, 0x06, 0x00, 0x00,
+	// 774 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xac, 0x56, 0x4f, 0x53, 0xd3, 0x4e,
+	0x18, 0x26, 0xe9, 0xaf, 0x3f, 0xe0, 0xed, 0x88, 0x65, 0x2d, 0xfd, 0x13, 0x11, 0x3b, 0xe5, 0x20,
+	0xa8, 0x93, 0x8e, 0x65, 0x1c, 0x95, 0x03, 0x33, 0x6d, 0x09, 0xa5, 0x43, 0x69, 0x99, 0xd0, 0xc2,
+	0x8c, 0x97, 0x18, 0xda, 0xa5, 0x13, 0x09, 0xc9, 0x9a, 0x6e, 0x71, 0x7a, 0x13, 0x3f, 0x83, 0xde,
+	0xf4, 0x7b, 0xe8, 0xd9, 0xef, 0xa0, 0x57, 0xbf, 0x86, 0x17, 0xc7, 0x69, 0xb2, 0x4b, 0x9b, 0xb6,
+	0x30, 0x81, 0xe1, 0xd4, 0xdd, 0x7d, 0x9f, 0xf7, 0xd9, 0x7d, 0xff, 0x3d, 0x0d, 0x2c, 0x34, 0xed,
+	0x53, 0xa2, 0x5b, 0xbd, 0x2c, 0xfb, 0x95, 0x89, 0x63, 0x53, 0x1b, 0x2d, 0x10, 0xec, 0x74, 0x6c,
+	0x4b, 0xd7, 0x09, 0xd1, 0x89, 0x21, 0x33, 0xa3, 0x94, 0xc0, 0x16, 0x35, 0xa8, 0x81, 0x3b, 0x59,
+	0xbe, 0xf0, 0xf0, 0xd2, 0x52, 0xdb, 0xb6, 0xdb, 0x26, 0xce, 0xba, 0xbb, 0xa3, 0xee, 0x71, 0xf6,
+	0xbd, 0xa3, 0x93, 0x3e, 0x87, 0x67, 0xcf, 0xfc, 0x10, 0x20, 0xd6, 0x20, 0x2d, 0x9d, 0xe2, 0xa2,
+	0x47, 0xa5, 0xe2, 0x77, 0x5d, 0xdc, 0xa1, 0x28, 0x07, 0x61, 0x6a, 0x50, 0x13, 0x27, 0x85, 0xb4,
+	0xb0, 0x12, 0xc9, 0x2d, 0xca, 0x1e, 0x91, 0xcc, 0x89, 0xe4, 0x7d, 0xea, 0x18, 0x56, 0xfb, 0x40,
+	0x37, 0xbb, 0x58, 0xf5, 0xa0, 0x68, 0x03, 0x22, 0x2d, 0xdc, 0x69, 0x3a, 0x06, 0xa1, 0x86, 0x6d,
+	0x25, 0xc5, 0x00, 0x9e, 0xc3, 0x0e, 0xe8, 0x05, 0xcc, 0x98, 0x76, 0xdb, 0xd6, 0xba, 0x8e, 0x99,
+	0x0c, 0x05, 0x70, 0x9e, 0xee, 0xa3, 0x1b, 0x8e, 0x99, 0xf9, 0x29, 0xc0, 0xc2, 0x48, 0x14, 0x1d,
+	0x62, 0x5b, 0x1d, 0x8c, 0xf2, 0x00, 0xd8, 0x71, 0x6c, 0x47, 0x6b, 0xda, 0x2d, 0x2f, 0x96, 0xb9,
+	0x5c, 0x5a, 0x9e, 0x98, 0x44, 0x59, 0xe9, 0x03, 0x8b, 0x76, 0x0b, 0x6f, 0x4f, 0xa9, 0xb3, 0x98,
+	0x6f, 0xd0, 0x3e, 0xcc, 0x38, 0x8c, 0x8e, 0x85, 0xf4, 0xfc, 0x12, 0x82, 0x89, 0x4f, 0x90, 0xf9,
+	0x62, 0x7b, 0x4a, 0xbd, 0x20, 0x92, 0x00, 0x66, 0xf8, 0x79, 0x21, 0x05, 0x89, 0xae, 0xeb, 0xa9,
+	0x31, 0x22, 0x8d, 0xc3, 0x32, 0x7f, 0x05, 0xc8, 0xf8, 0x58, 0xf3, 0x4d, 0x6a, 0x9c, 0x19, 0xb4,
+	0xb7, 0x65, 0x60, 0xb3, 0xd5, 0xe1, 0xc5, 0x3a, 0x83, 0xbb, 0x3a, 0x33, 0x68, 0xc7, 0xae, 0x25,
+	0x29, 0xa4, 0x43, 0x2b, 0x91, 0xdc, 0x6e, 0x90, 0x97, 0x4e, 0xe4, 0x94, 0xfd, 0xa7, 0x8a, 0x45,
+	0x9d, 0x9e, 0x3a, 0xa7, 0xfb, 0x0e, 0xa5, 0x37, 0x70, 0x6f, 0x02, 0x0c, 0x45, 0x21, 0x74, 0x82,
+	0x7b, 0x6e, 0xb6, 0x67, 0xd5, 0xfe, 0x12, 0xad, 0x41, 0xf8, 0xac, 0x5f, 0x32, 0x96, 0xc0, 0x07,
+	0x23, 0xcf, 0xba, 0x68, 0x5a, 0xe5, 0x94, 0xd0, 0x9e, 0xea, 0x61, 0xd7, 0xc5, 0x97, 0x42, 0xe6,
+	0xa3, 0x08, 0xcb, 0x57, 0x3e, 0xf6, 0xf6, 0xea, 0xac, 0x8f, 0xd5, 0xb9, 0x78, 0x93, 0xec, 0x05,
+	0xad, 0xfa, 0x2a, 0x3c, 0x1a, 0xa9, 0xfa, 0x48, 0x09, 0x07, 0x5d, 0xb0, 0x0c, 0xf3, 0x25, 0x4c,
+	0x47, 0x06, 0x74, 0x0e, 0x44, 0xa3, 0xc5, 0x72, 0x2c, 0x1a, 0xad, 0xcc, 0xe7, 0x30, 0xa0, 0x61,
+	0xd4, 0xed, 0x25, 0x66, 0x6f, 0x2c, 0x31, 0xb9, 0x4b, 0x08, 0xc6, 0xef, 0x9f, 0x9c, 0x87, 0xdf,
+	0x22, 0x4c, 0x33, 0xe0, 0x68, 0x1c, 0x28, 0xc6, 0x85, 0x47, 0x74, 0x8f, 0x98, 0xb4, 0xa4, 0xfd,
+	0xd2, 0x12, 0x72, 0x6d, 0x3e, 0xf1, 0x48, 0x0d, 0x89, 0xc7, 0x7f, 0xae, 0x99, 0xcb, 0x03, 0xb2,
+	0xc6, 0xc7, 0x23, 0xec, 0x8e, 0x87, 0x12, 0x3c, 0x0e, 0xb6, 0x0f, 0x34, 0x16, 0xe7, 0x42, 0xd0,
+	0xb9, 0xa8, 0xfb, 0xe7, 0x62, 0xe3, 0xda, 0xef, 0xf1, 0x5d, 0x33, 0x34, 0x38, 0x52, 0x1c, 0x62,
+	0x93, 0x20, 0xd2, 0xe1, 0xa0, 0x05, 0xd1, 0x0e, 0x4c, 0xb3, 0x1b, 0x98, 0xca, 0x3f, 0xbb, 0xf6,
+	0xfd, 0x2a, 0x67, 0x28, 0xc4, 0x21, 0xd6, 0xc6, 0x74, 0x4c, 0xc2, 0x1e, 0xff, 0x12, 0x60, 0xf6,
+	0xa2, 0xb1, 0x50, 0x1c, 0x50, 0xa3, 0xba, 0x53, 0xad, 0x1d, 0x56, 0x35, 0x45, 0x55, 0x6b, 0xaa,
+	0x56, 0xac, 0x6d, 0x2a, 0xd1, 0x29, 0x94, 0x82, 0x58, 0xb9, 0x7a, 0x90, 0xaf, 0x94, 0x37, 0xb5,
+	0x7a, 0xb9, 0x5e, 0x51, 0xb4, 0xad, 0x9a, 0xba, 0x9b, 0xaf, 0x47, 0xbf, 0x25, 0xc6, 0x4d, 0x15,
+	0xa5, 0x5a, 0xaa, 0x6f, 0x47, 0xbf, 0x27, 0xd0, 0x43, 0x90, 0xb8, 0x69, 0x53, 0xd9, 0x2f, 0xaa,
+	0xe5, 0xbd, 0x7a, 0xb9, 0x56, 0xe5, 0xbe, 0x5f, 0x92, 0x97, 0x01, 0x18, 0xc3, 0xd7, 0x24, 0x5a,
+	0x84, 0x04, 0x07, 0x54, 0x6a, 0xa5, 0x9a, 0xd6, 0x50, 0x2b, 0xdc, 0xfd, 0x43, 0x6a, 0xa2, 0x95,
+	0xf9, 0x9e, 0xa7, 0x72, 0x7f, 0x44, 0x98, 0xdf, 0xf3, 0xf2, 0x95, 0x27, 0x84, 0xf7, 0xf3, 0x5b,
+	0xb8, 0xe3, 0xd3, 0x07, 0xf4, 0x24, 0xd8, 0xbf, 0x85, 0x3b, 0xd5, 0xd2, 0xd3, 0xeb, 0xfc, 0xb5,
+	0xa0, 0x4f, 0x02, 0xdc, 0xbf, 0x42, 0x8c, 0xd0, 0xab, 0x1b, 0xcb, 0xbf, 0xb4, 0x7e, 0x73, 0xed,
+	0x43, 0x3a, 0xc0, 0xa0, 0x63, 0xd0, 0x4a, 0x80, 0xa6, 0xf2, 0xee, 0x5c, 0x0d, 0xdc, 0x7e, 0x05,
+	0x05, 0xe2, 0xb6, 0x65, 0x1a, 0x16, 0x1e, 0x72, 0x91, 0x9b, 0xb6, 0x83, 0x0b, 0x91, 0x92, 0x43,
+	0x9a, 0x0c, 0xfe, 0x7a, 0x69, 0x60, 0xcd, 0x92, 0x93, 0x76, 0xb6, 0xed, 0x90, 0xa6, 0x4e, 0x0c,
+	0xfe, 0x51, 0x75, 0xf4, 0xbf, 0xfb, 0x5d, 0xb1, 0xf6, 0x2f, 0x00, 0x00, 0xff, 0xff, 0x8f, 0xf1,
+	0xe3, 0x49, 0x6e, 0x09, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -450,6 +739,7 @@ const _ = grpc.SupportPackageIsVersion4
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type PersonaAppCompanyClient interface {
 	UpdateCompany(ctx context.Context, in *UpdateCompanyRequest, opts ...grpc.CallOption) (*UpdateCompanyResponse, error)
+	UpdateCompanyActivityFields(ctx context.Context, in *UpdateCompanyActivityFieldsRequest, opts ...grpc.CallOption) (*UpdateCompanyActivityFieldsResponse, error)
 	GetCompany(ctx context.Context, in *GetCompanyRequest, opts ...grpc.CallOption) (*GetCompanyResponse, error)
 }
 
@@ -470,6 +760,15 @@ func (c *personaAppCompanyClient) UpdateCompany(ctx context.Context, in *UpdateC
 	return out, nil
 }
 
+func (c *personaAppCompanyClient) UpdateCompanyActivityFields(ctx context.Context, in *UpdateCompanyActivityFieldsRequest, opts ...grpc.CallOption) (*UpdateCompanyActivityFieldsResponse, error) {
+	out := new(UpdateCompanyActivityFieldsResponse)
+	err := c.cc.Invoke(ctx, "/personaappapi.company.PersonaAppCompany/UpdateCompanyActivityFields", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *personaAppCompanyClient) GetCompany(ctx context.Context, in *GetCompanyRequest, opts ...grpc.CallOption) (*GetCompanyResponse, error) {
 	out := new(GetCompanyResponse)
 	err := c.cc.Invoke(ctx, "/personaappapi.company.PersonaAppCompany/GetCompany", in, out, opts...)
@@ -482,6 +781,7 @@ func (c *personaAppCompanyClient) GetCompany(ctx context.Context, in *GetCompany
 // PersonaAppCompanyServer is the server API for PersonaAppCompany service.
 type PersonaAppCompanyServer interface {
 	UpdateCompany(context.Context, *UpdateCompanyRequest) (*UpdateCompanyResponse, error)
+	UpdateCompanyActivityFields(context.Context, *UpdateCompanyActivityFieldsRequest) (*UpdateCompanyActivityFieldsResponse, error)
 	GetCompany(context.Context, *GetCompanyRequest) (*GetCompanyResponse, error)
 }
 
@@ -491,6 +791,9 @@ type UnimplementedPersonaAppCompanyServer struct {
 
 func (*UnimplementedPersonaAppCompanyServer) UpdateCompany(ctx context.Context, req *UpdateCompanyRequest) (*UpdateCompanyResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateCompany not implemented")
+}
+func (*UnimplementedPersonaAppCompanyServer) UpdateCompanyActivityFields(ctx context.Context, req *UpdateCompanyActivityFieldsRequest) (*UpdateCompanyActivityFieldsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateCompanyActivityFields not implemented")
 }
 func (*UnimplementedPersonaAppCompanyServer) GetCompany(ctx context.Context, req *GetCompanyRequest) (*GetCompanyResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetCompany not implemented")
@@ -514,6 +817,24 @@ func _PersonaAppCompany_UpdateCompany_Handler(srv interface{}, ctx context.Conte
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(PersonaAppCompanyServer).UpdateCompany(ctx, req.(*UpdateCompanyRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PersonaAppCompany_UpdateCompanyActivityFields_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateCompanyActivityFieldsRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PersonaAppCompanyServer).UpdateCompanyActivityFields(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/personaappapi.company.PersonaAppCompany/UpdateCompanyActivityFields",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PersonaAppCompanyServer).UpdateCompanyActivityFields(ctx, req.(*UpdateCompanyActivityFieldsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -543,6 +864,10 @@ var _PersonaAppCompany_serviceDesc = grpc.ServiceDesc{
 		{
 			MethodName: "UpdateCompany",
 			Handler:    _PersonaAppCompany_UpdateCompany_Handler,
+		},
+		{
+			MethodName: "UpdateCompanyActivityFields",
+			Handler:    _PersonaAppCompany_UpdateCompanyActivityFields_Handler,
 		},
 		{
 			MethodName: "GetCompany",

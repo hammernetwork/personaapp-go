@@ -27,6 +27,7 @@ type AuthController interface {
 type CompanyController interface {
 	Get(ctx context.Context, companyID string) (*companyController.Company, error)
 	Update(ctx context.Context, cd *companyController.CompanyData) error
+	UpdateActivityFields(ctx context.Context, companyID string, af []string) error
 }
 
 type Server struct {
@@ -254,6 +255,35 @@ func (s *Server) UpdateCompany(
 		return nil, status.Error(codes.Unauthenticated, "unauthorized")
 	}
 
+	err = s.cc.Update(ctx, &companyController.CompanyData{
+		AuthID:      claims.AccountID,
+		Title:       getOptionalString(req.Title),
+		Description: getOptionalString(req.Description),
+		LogoURL:     getOptionalString(req.LogoUrl),
+	})
+
+	if errorCode, statusErr := companyControllerErrorToServerErrors(err); statusErr != nil {
+		return &apicompany.UpdateCompanyResponse{
+			UpdateCompanyResponse: &apicompany.UpdateCompanyResponse_ErrorCode{ErrorCode: errorCode},
+		}, statusErr
+	}
+
+	return &apicompany.UpdateCompanyResponse{}, nil
+}
+
+func (s *Server) UpdateCompanyActivityFields(
+	ctx context.Context,
+	req *apicompany.UpdateCompanyActivityFieldsRequest,
+) (*apicompany.UpdateCompanyActivityFieldsResponse, error) {
+	claims, err := s.getAuthClaims(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	if toServerAccount(claims.AccountType) != apientities.AccountType_ACCOUNT_TYPE_COMPANY {
+		return nil, status.Error(codes.Unauthenticated, "unauthorized")
+	}
+
 	activityFields := make([]string, len(req.ActivityFields))
 	i := 0
 
@@ -262,21 +292,19 @@ func (s *Server) UpdateCompany(
 		i++
 	}
 
-	err = s.cc.Update(ctx, &companyController.CompanyData{
-		AuthID:         claims.AccountID,
-		ActivityFields: activityFields,
-		Title:          getOptionalString(req.Title),
-		Description:    getOptionalString(req.Description),
-		LogoURL:        getOptionalString(req.LogoUrl),
-	})
+	err = s.cc.UpdateActivityFields(ctx, claims.AccountID, activityFields)
 
 	if errorCode, statusErr := companyControllerErrorToServerErrors(err); statusErr != nil {
-		return &apicompany.UpdateCompanyResponse{
-			Response: &apicompany.UpdateCompanyResponse_ErrorCode{ErrorCode: errorCode},
+		return &apicompany.UpdateCompanyActivityFieldsResponse{
+			UpdateCompanyActivityFieldsResponse: &apicompany.UpdateCompanyActivityFieldsResponse_ErrorCode{ErrorCode: errorCode},
 		}, statusErr
 	}
 
-	return &apicompany.UpdateCompanyResponse{}, nil
+	return &apicompany.UpdateCompanyActivityFieldsResponse{
+		UpdateCompanyActivityFieldsResponse: &apicompany.UpdateCompanyActivityFieldsResponse_Response_{
+			Response: &apicompany.UpdateCompanyActivityFieldsResponse_Response{},
+		},
+	}, nil
 }
 
 func (s *Server) GetCompany(
@@ -296,18 +324,22 @@ func (s *Server) GetCompany(
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
-	activityFields := make(map[string]*apicompany.CompanyActivityField, len(company.ActivityFields))
+	activityFields := make(map[string]*apicompany.GetCompanyResponse_CompanyActivityField, len(company.ActivityFields))
 	for _, af := range company.ActivityFields {
-		activityFields[af] = &apicompany.CompanyActivityField{}
+		activityFields[af] = &apicompany.GetCompanyResponse_CompanyActivityField{}
 	}
 
 	return &apicompany.GetCompanyResponse{
-		Company: &apicompany.Company{
-			Id:             company.AuthID,
-			Title:          company.Title,
-			Description:    company.Description,
-			LogoUrl:        company.LogoURL,
-			ActivityFields: activityFields,
+		GetCompanyResponse: &apicompany.GetCompanyResponse_Response_{
+			Response: &apicompany.GetCompanyResponse_Response{
+				Company: &apicompany.GetCompanyResponse_Company{
+					Id:             company.AuthID,
+					Title:          company.Title,
+					Description:    company.Description,
+					LogoUrl:        company.LogoURL,
+					ActivityFields: activityFields,
+				},
+			},
 		},
 	}, nil
 }

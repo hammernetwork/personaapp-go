@@ -118,11 +118,10 @@ func TestUpdateExistingCompany(t *testing.T) {
 	logoURL := "https://logourl.com"
 
 	cd := companyController.CompanyData{
-		AuthID:         token.AccountID,
-		ActivityFields: nil,
-		Title:          &title,
-		Description:    &description,
-		LogoURL:        &logoURL,
+		AuthID:      token.AccountID,
+		Title:       &title,
+		Description: &description,
+		LogoURL:     &logoURL,
 	}
 
 	t.Run("update all fields", func(t *testing.T) {
@@ -147,11 +146,10 @@ func TestUpdateNonExistingCompany(t *testing.T) {
 	cc := companyController.New(cs)
 
 	cd := companyController.CompanyData{
-		AuthID:         "nonexistingid",
-		ActivityFields: nil,
-		Title:          nil,
-		Description:    nil,
-		LogoURL:        nil,
+		AuthID:      "nonexistingid",
+		Title:       nil,
+		Description: nil,
+		LogoURL:     nil,
 	}
 
 	t.Run("normal flow", func(t *testing.T) {
