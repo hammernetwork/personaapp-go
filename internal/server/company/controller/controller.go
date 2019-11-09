@@ -180,8 +180,8 @@ func (c *Controller) Update(ctx context.Context, cd *CompanyData) error {
 	return nil
 }
 
-func (c *Controller) UpdateActivityFields(ctx context.Context, companyID string, af []string) error {
-	if af == nil {
+func (c *Controller) UpdateActivityFields(ctx context.Context, companyID string, activityFields []string) error {
+	if activityFields == nil {
 		return nil
 	}
 
@@ -190,8 +190,8 @@ func (c *Controller) UpdateActivityFields(ctx context.Context, companyID string,
 			return errors.WithStack(err)
 		}
 
-		if len(af) > 0 {
-			if err := c.s.TxPutCompanyActivityFields(ctx, tx, companyID, af); err != nil {
+		if len(activityFields) > 0 {
+			if err := c.s.TxPutCompanyActivityFields(ctx, tx, companyID, activityFields); err != nil {
 				return errors.WithStack(err)
 			}
 		}

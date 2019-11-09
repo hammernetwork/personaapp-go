@@ -34,11 +34,11 @@ message UpdateCompanyRequest {
 }
 
 message UpdateCompanyResponse {
-    message Response {}
+    message Body {}
 
-    oneof update_company_response {
+    oneof response {
         ErrorCode error_code = 1;
-        Response response = 2;
+        Body body = 2;
     }
 }
 
@@ -48,11 +48,11 @@ message UpdateCompanyActivityFieldsRequest {
 }
 
 message UpdateCompanyActivityFieldsResponse {
-    message Response {}
+    message Body {}
 
-    oneof update_company_activity_fields_response {
+    oneof response {
         ErrorCode error_code = 1;
-        Response response = 2;
+        Body body = 2;
     }
 }
 
@@ -72,12 +72,12 @@ message GetCompanyResponse {
 
     message CompanyActivityField {}
 
-    message Response {
+    message Body {
         Company company = 1;
     }
 
-    oneof get_company_response {
+    oneof response {
         ErrorCode error_code = 1;
-        Response response = 2;
+        Body body = 2;
     }
 }

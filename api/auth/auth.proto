@@ -16,6 +16,28 @@ service PersonaAppAuth {
     rpc Refresh (RefreshRequest) returns (RefreshResponse);
 }
 
+// Common
+enum ErrorCode {
+    UNKNOWN_ERROR_CODE = 0;
+
+    INVALID_LOGIN = 3000;
+    INVALID_LOGIN_LENGTH = 3001;
+
+    INVALID_EMAIL = 3100;
+    INVALID_EMAIL_FORMAT = 3101;
+    INVALID_EMAIL_LENGTH = 3102;
+
+    INVALID_PHONE = 3200;
+    INVALID_PHONE_FORMAT = 3201;
+
+    INVALID_ACCOUNT_TYPE = 3300;
+
+    INVALID_PASSWORD = 3301;
+    INVALID_PASSWORD_LENGTH = 3302;
+
+    INVALID_TOKEN = 3400;
+}
+
 // Register
 message RegisterRequest {
     string email = 1;
@@ -25,7 +47,14 @@ message RegisterRequest {
 }
 
 message RegisterResponse {
-    Token token = 1;
+    message Body {
+        Token token = 1;
+    }
+
+    oneof response {
+        ErrorCode error_code = 1;
+        Body body = 2;
+    }
 }
 
 // Login
@@ -35,19 +64,40 @@ message LoginRequest {
 }
 
 message LoginResponse {
-    Token token = 1;
+    message Body {
+        Token token = 1;
+    }
+
+    oneof response {
+        ErrorCode error_code = 1;
+        Body body = 2;
+    }
 }
 
 // Logout
 message LogoutRequest {}
 
-message LogoutResponse {}
+message LogoutResponse {
+    message Body {}
+
+    oneof response {
+        ErrorCode error_code = 1;
+        Body body = 2;
+    }
+}
 
 // Refresh
 message RefreshRequest {}
 
 message RefreshResponse {
-    Token token = 1;
+    message Body {
+        Token token = 1;
+    }
+
+    oneof response {
+        ErrorCode error_code = 1;
+        Body body = 2;
+    }
 }
 
 // Entities
