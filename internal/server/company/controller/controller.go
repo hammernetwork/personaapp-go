@@ -60,11 +60,10 @@ func New(s Storage) *Controller {
 }
 
 type CompanyData struct {
-	AuthID         string
-	ActivityFields []string
-	Title          *string `valid:"stringlength(0|100)"`
-	Description    *string `valid:"stringlength(0|255)"`
-	LogoURL        *string `valid:"stringlength(0|255),media_link"`
+	AuthID      string
+	Title       *string `valid:"stringlength(0|100)"`
+	Description *string `valid:"stringlength(0|255)"`
+	LogoURL     *string `valid:"stringlength(0|255),media_link"`
 }
 
 type Company struct {
@@ -173,12 +172,26 @@ func (c *Controller) Update(ctx context.Context, cd *CompanyData) error {
 			return errors.WithStack(err)
 		}
 
-		if err := c.s.TxDeleteCompanyActivityFieldsByCompanyID(ctx, tx, cd.AuthID); err != nil {
+		return nil
+	}); err != nil {
+		return errors.WithStack(err)
+	}
+
+	return nil
+}
+
+func (c *Controller) UpdateActivityFields(ctx context.Context, companyID string, activityFields []string) error {
+	if activityFields == nil {
+		return nil
+	}
+
+	if err := pkgtx.RunInTx(ctx, c.s, func(ctx context.Context, tx pkgtx.Tx) error {
+		if err := c.s.TxDeleteCompanyActivityFieldsByCompanyID(ctx, tx, companyID); err != nil {
 			return errors.WithStack(err)
 		}
 
-		if len(cd.ActivityFields) > 0 {
-			if err := c.s.TxPutCompanyActivityFields(ctx, tx, cd.AuthID, cd.ActivityFields); err != nil {
+		if len(activityFields) > 0 {
+			if err := c.s.TxPutCompanyActivityFields(ctx, tx, companyID, activityFields); err != nil {
 				return errors.WithStack(err)
 			}
 		}

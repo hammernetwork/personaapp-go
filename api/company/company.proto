@@ -11,6 +11,7 @@ option java_outer_classname = "GrpcCompany";
 
 service PersonaAppCompany {
     rpc UpdateCompany (UpdateCompanyRequest) returns (UpdateCompanyResponse);
+    rpc UpdateCompanyActivityFields (UpdateCompanyActivityFieldsRequest) returns (UpdateCompanyActivityFieldsResponse);
     rpc GetCompany (GetCompanyRequest) returns (GetCompanyResponse);
 }
 
@@ -30,12 +31,28 @@ message UpdateCompanyRequest {
     google.protobuf.StringValue title = 1;
     google.protobuf.StringValue description = 2;
     google.protobuf.StringValue logo_url = 3;
-    map<string, personaappapi.entities.Empty> activity_fields = 4;
 }
 
 message UpdateCompanyResponse {
+    message Body {}
+
     oneof response {
         ErrorCode error_code = 1;
+        Body body = 2;
+    }
+}
+
+// Update Activity Fields
+message UpdateCompanyActivityFieldsRequest {
+    map<string, personaappapi.entities.Empty> activity_fields = 1;
+}
+
+message UpdateCompanyActivityFieldsResponse {
+    message Body {}
+
+    oneof response {
+        ErrorCode error_code = 1;
+        Body body = 2;
     }
 }
 
@@ -45,16 +62,22 @@ message GetCompanyRequest {
 }
 
 message GetCompanyResponse {
-    Company company = 1;
-}
+    message Company {
+        string id = 1;
+        string title = 2;
+        string description = 3;
+        string logo_url = 4;
+        map<string, CompanyActivityField> activity_fields = 5;
+    }
 
-// Entities
-message CompanyActivityField {}
+    message CompanyActivityField {}
 
-message Company {
-    string id = 1;
-    string title = 2;
-    string description = 3;
-    string logo_url = 4;
-    map<string, CompanyActivityField> activity_fields = 5;
+    message Body {
+        Company company = 1;
+    }
+
+    oneof response {
+        ErrorCode error_code = 1;
+        Body body = 2;
+    }
 }

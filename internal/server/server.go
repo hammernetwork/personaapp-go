@@ -27,6 +27,7 @@ type AuthController interface {
 type CompanyController interface {
 	Get(ctx context.Context, companyID string) (*companyController.Company, error)
 	Update(ctx context.Context, cd *companyController.CompanyData) error
+	UpdateActivityFields(ctx context.Context, companyID string, activityFields []string) error
 }
 
 type Server struct {
@@ -75,6 +76,58 @@ func toServerToken(at *authController.AuthToken) (*apiauth.Token, error) {
 	}, nil
 }
 
+// nolint: funlen
+func authControllerErrorToServerErrors(err error) (apiauth.ErrorCode, error) {
+	errorCode := apiauth.ErrorCode_UNKNOWN_ERROR_CODE
+
+	var statusErr error
+
+	switch errors.Cause(err) {
+	case nil:
+	case authController.ErrAlreadyExists:
+		return errorCode, status.Error(codes.AlreadyExists, err.Error())
+	case authController.ErrUnauthorized:
+		return errorCode, status.Error(codes.Unauthenticated, err.Error())
+	case authController.ErrInvalidToken:
+		errorCode = apiauth.ErrorCode_INVALID_TOKEN
+		statusErr = status.Error(codes.InvalidArgument, err.Error())
+	case authController.ErrInvalidLogin:
+		errorCode = apiauth.ErrorCode_INVALID_LOGIN
+		statusErr = status.Error(codes.InvalidArgument, err.Error())
+	case authController.ErrInvalidLoginLength:
+		errorCode = apiauth.ErrorCode_INVALID_LOGIN_LENGTH
+		statusErr = status.Error(codes.InvalidArgument, err.Error())
+	case authController.ErrInvalidEmail:
+		errorCode = apiauth.ErrorCode_INVALID_EMAIL
+		statusErr = status.Error(codes.InvalidArgument, err.Error())
+	case authController.ErrInvalidEmailFormat:
+		errorCode = apiauth.ErrorCode_INVALID_EMAIL_FORMAT
+		statusErr = status.Error(codes.InvalidArgument, err.Error())
+	case authController.ErrInvalidEmailLength:
+		errorCode = apiauth.ErrorCode_INVALID_EMAIL_LENGTH
+		statusErr = status.Error(codes.InvalidArgument, err.Error())
+	case authController.ErrInvalidPhone:
+		errorCode = apiauth.ErrorCode_INVALID_PHONE
+		statusErr = status.Error(codes.InvalidArgument, err.Error())
+	case authController.ErrInvalidPhoneFormat:
+		errorCode = apiauth.ErrorCode_INVALID_PHONE_FORMAT
+		statusErr = status.Error(codes.InvalidArgument, err.Error())
+	case authController.ErrInvalidAccount:
+		errorCode = apiauth.ErrorCode_INVALID_ACCOUNT_TYPE
+		statusErr = status.Error(codes.InvalidArgument, err.Error())
+	case authController.ErrInvalidPassword:
+		errorCode = apiauth.ErrorCode_INVALID_PASSWORD
+		statusErr = status.Error(codes.InvalidArgument, err.Error())
+	case authController.ErrInvalidPasswordLength:
+		errorCode = apiauth.ErrorCode_INVALID_PASSWORD_LENGTH
+		statusErr = status.Error(codes.InvalidArgument, err.Error())
+	default:
+		return errorCode, status.Error(codes.Internal, err.Error())
+	}
+
+	return errorCode, statusErr
+}
+
 func (s *Server) Register(
 	ctx context.Context,
 	req *apiauth.RegisterRequest,
@@ -91,24 +144,10 @@ func (s *Server) Register(
 		Password: req.GetPassword(),
 	})
 
-	switch errors.Cause(err) {
-	case nil:
-	case authController.ErrAlreadyExists:
-		return nil, status.Error(codes.AlreadyExists, err.Error())
-	case authController.ErrInvalidArgument:
-		return nil, status.Error(codes.InvalidArgument, err.Error())
-	case authController.ErrInvalidLogin:
-		return nil, status.Error(codes.InvalidArgument, err.Error())
-	case authController.ErrInvalidEmail:
-		return nil, status.Error(codes.InvalidArgument, err.Error())
-	case authController.ErrInvalidPhone:
-		return nil, status.Error(codes.InvalidArgument, err.Error())
-	case authController.ErrInvalidAccount:
-		return nil, status.Error(codes.InvalidArgument, err.Error())
-	case authController.ErrInvalidPassword:
-		return nil, status.Error(codes.InvalidArgument, err.Error())
-	default:
-		return nil, status.Error(codes.Internal, err.Error())
+	if errorCode, statusErr := authControllerErrorToServerErrors(err); statusErr != nil {
+		return &apiauth.RegisterResponse{
+			Response: &apiauth.RegisterResponse_ErrorCode{ErrorCode: errorCode},
+		}, statusErr
 	}
 
 	sat, err := toServerToken(authToken)
@@ -116,7 +155,11 @@ func (s *Server) Register(
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
-	return &apiauth.RegisterResponse{Token: sat}, nil
+	return &apiauth.RegisterResponse{
+		Response: &apiauth.RegisterResponse_Body_{
+			Body: &apiauth.RegisterResponse_Body{Token: sat},
+		},
+	}, nil
 }
 
 func (s *Server) Login(ctx context.Context, req *apiauth.LoginRequest) (*apiauth.LoginResponse, error) {
@@ -125,16 +168,10 @@ func (s *Server) Login(ctx context.Context, req *apiauth.LoginRequest) (*apiauth
 		Password: req.GetPassword(),
 	})
 
-	switch errors.Cause(err) {
-	case nil:
-	case authController.ErrInvalidLogin:
-		return nil, status.Error(codes.InvalidArgument, err.Error())
-	case authController.ErrInvalidPassword:
-		return nil, status.Error(codes.InvalidArgument, err.Error())
-	case authController.ErrUnauthorized:
-		return nil, status.Error(codes.Unauthenticated, err.Error())
-	default:
-		return nil, status.Error(codes.Internal, err.Error())
+	if errorCode, statusErr := authControllerErrorToServerErrors(err); statusErr != nil {
+		return &apiauth.LoginResponse{
+			Response: &apiauth.LoginResponse_ErrorCode{ErrorCode: errorCode},
+		}, statusErr
 	}
 
 	sat, err := toServerToken(authToken)
@@ -142,7 +179,11 @@ func (s *Server) Login(ctx context.Context, req *apiauth.LoginRequest) (*apiauth
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
-	return &apiauth.LoginResponse{Token: sat}, nil
+	return &apiauth.LoginResponse{
+		Response: &apiauth.LoginResponse_Body_{
+			Body: &apiauth.LoginResponse_Body{Token: sat},
+		},
+	}, nil
 }
 
 func (s *Server) Logout(context.Context, *apiauth.LogoutRequest) (*apiauth.LogoutResponse, error) {
@@ -162,12 +203,10 @@ func (s *Server) Refresh(
 
 	authToken, err := s.ac.Refresh(ctx, token)
 
-	switch errors.Cause(err) {
-	case nil:
-	case authController.ErrUnauthorized:
-		return nil, status.Error(codes.Unauthenticated, err.Error())
-	default:
-		return nil, status.Error(codes.Internal, err.Error())
+	if errorCode, statusErr := authControllerErrorToServerErrors(err); statusErr != nil {
+		return &apiauth.RefreshResponse{
+			Response: &apiauth.RefreshResponse_ErrorCode{ErrorCode: errorCode},
+		}, statusErr
 	}
 
 	sat, err := toServerToken(authToken)
@@ -175,7 +214,11 @@ func (s *Server) Refresh(
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
-	return &apiauth.RefreshResponse{Token: sat}, nil
+	return &apiauth.RefreshResponse{
+		Response: &apiauth.RefreshResponse_Body_{
+			Body: &apiauth.RefreshResponse_Body{Token: sat},
+		},
+	}, nil
 }
 
 func getOptionalString(sw *wrappers.StringValue) *string {
@@ -254,20 +297,11 @@ func (s *Server) UpdateCompany(
 		return nil, status.Error(codes.Unauthenticated, "unauthorized")
 	}
 
-	activityFields := make([]string, len(req.ActivityFields))
-	i := 0
-
-	for k := range req.ActivityFields {
-		activityFields[i] = k
-		i++
-	}
-
 	err = s.cc.Update(ctx, &companyController.CompanyData{
-		AuthID:         claims.AccountID,
-		ActivityFields: activityFields,
-		Title:          getOptionalString(req.Title),
-		Description:    getOptionalString(req.Description),
-		LogoURL:        getOptionalString(req.LogoUrl),
+		AuthID:      claims.AccountID,
+		Title:       getOptionalString(req.Title),
+		Description: getOptionalString(req.Description),
+		LogoURL:     getOptionalString(req.LogoUrl),
 	})
 
 	if errorCode, statusErr := companyControllerErrorToServerErrors(err); statusErr != nil {
@@ -277,6 +311,42 @@ func (s *Server) UpdateCompany(
 	}
 
 	return &apicompany.UpdateCompanyResponse{}, nil
+}
+
+func (s *Server) UpdateCompanyActivityFields(
+	ctx context.Context,
+	req *apicompany.UpdateCompanyActivityFieldsRequest,
+) (*apicompany.UpdateCompanyActivityFieldsResponse, error) {
+	claims, err := s.getAuthClaims(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	if toServerAccount(claims.AccountType) != apientities.AccountType_ACCOUNT_TYPE_COMPANY {
+		return nil, status.Error(codes.Unauthenticated, "unauthorized")
+	}
+
+	activityFields := make([]string, len(req.ActivityFields))
+	i := 0
+
+	for k := range req.ActivityFields {
+		activityFields[i] = k
+		i++
+	}
+
+	err = s.cc.UpdateActivityFields(ctx, claims.AccountID, activityFields)
+
+	if errorCode, statusErr := companyControllerErrorToServerErrors(err); statusErr != nil {
+		return &apicompany.UpdateCompanyActivityFieldsResponse{
+			Response: &apicompany.UpdateCompanyActivityFieldsResponse_ErrorCode{ErrorCode: errorCode},
+		}, statusErr
+	}
+
+	return &apicompany.UpdateCompanyActivityFieldsResponse{
+		Response: &apicompany.UpdateCompanyActivityFieldsResponse_Body_{
+			Body: &apicompany.UpdateCompanyActivityFieldsResponse_Body{},
+		},
+	}, nil
 }
 
 func (s *Server) GetCompany(
@@ -296,18 +366,22 @@ func (s *Server) GetCompany(
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
-	activityFields := make(map[string]*apicompany.CompanyActivityField, len(company.ActivityFields))
+	activityFields := make(map[string]*apicompany.GetCompanyResponse_CompanyActivityField, len(company.ActivityFields))
 	for _, af := range company.ActivityFields {
-		activityFields[af] = &apicompany.CompanyActivityField{}
+		activityFields[af] = &apicompany.GetCompanyResponse_CompanyActivityField{}
 	}
 
 	return &apicompany.GetCompanyResponse{
-		Company: &apicompany.Company{
-			Id:             company.AuthID,
-			Title:          company.Title,
-			Description:    company.Description,
-			LogoUrl:        company.LogoURL,
-			ActivityFields: activityFields,
+		Response: &apicompany.GetCompanyResponse_Body_{
+			Body: &apicompany.GetCompanyResponse_Body{
+				Company: &apicompany.GetCompanyResponse_Company{
+					Id:             company.AuthID,
+					Title:          company.Title,
+					Description:    company.Description,
+					LogoUrl:        company.LogoURL,
+					ActivityFields: activityFields,
+				},
+			},
 		},
 	}, nil
 }

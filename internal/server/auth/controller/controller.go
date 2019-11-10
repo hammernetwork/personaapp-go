@@ -24,7 +24,7 @@ const (
 )
 
 func init() {
-	govalidator.CustomTypeTagMap.Set("accountType", func(i interface{}, o interface{}) bool {
+	govalidator.CustomTypeTagMap.Set("account_type", func(i interface{}, o interface{}) bool {
 		if at, ok := i.(AccountType); ok {
 			switch at {
 			case AccountTypeCompany, AccountTypePersona:
@@ -65,14 +65,19 @@ func init() {
 }
 
 var (
-	ErrAlreadyExists   = errors.New("already exists")
-	ErrUnauthorized    = errors.New("unauthorized")
-	ErrInvalidArgument = errors.New("invalid argument")
-	ErrInvalidLogin    = errors.New("invalid login")
-	ErrInvalidEmail    = errors.New("invalid email")
-	ErrInvalidPhone    = errors.New("invalid phone")
-	ErrInvalidAccount  = errors.New("invalid account")
-	ErrInvalidPassword = errors.New("invalid password")
+	ErrAlreadyExists         = errors.New("already exists")
+	ErrUnauthorized          = errors.New("unauthorized")
+	ErrInvalidToken          = errors.New("invalid token")
+	ErrInvalidLogin          = errors.New("invalid login")
+	ErrInvalidLoginLength    = errors.New("invalid login length")
+	ErrInvalidEmail          = errors.New("invalid email")
+	ErrInvalidEmailFormat    = errors.New("invalid email format")
+	ErrInvalidEmailLength    = errors.New("invalid email length")
+	ErrInvalidPhone          = errors.New("invalid phone")
+	ErrInvalidPhoneFormat    = errors.New("invalid phone format")
+	ErrInvalidAccount        = errors.New("invalid account")
+	ErrInvalidPassword       = errors.New("invalid password")
+	ErrInvalidPasswordLength = errors.New("invalid password length")
 )
 
 type Config struct {
@@ -112,37 +117,60 @@ func New(cfg *Config, s Storage) *Controller {
 type RegisterData struct {
 	Email    string      `valid:"stringlength(5|255),custom_email"`
 	Phone    string      `valid:"phone,required"`
-	Account  AccountType `valid:"accountType,required"`
+	Account  AccountType `valid:"account_type,required"`
 	Password string      `valid:"stringlength(6|30),required"`
 }
 
 func (rd *RegisterData) Validate() error {
 	var fieldErrors = []struct {
-		Field string
-		Error error
+		Field        string
+		Errors       map[string]error
+		DefaultError error
 	}{
 		{
 			Field: "Email",
-			Error: ErrInvalidEmail,
+			Errors: map[string]error{
+				"stringlength": ErrInvalidEmailLength,
+				"custom_email": ErrInvalidEmailFormat,
+			},
+			DefaultError: ErrInvalidEmail,
 		},
 		{
 			Field: "Phone",
-			Error: ErrInvalidPhone,
+			Errors: map[string]error{
+				"phone": ErrInvalidPhoneFormat,
+			},
+			DefaultError: ErrInvalidPhone,
 		},
 		{
 			Field: "Account",
-			Error: ErrInvalidAccount,
+			Errors: map[string]error{
+				"account_type": ErrInvalidAccount,
+			},
+			DefaultError: ErrInvalidAccount,
 		},
 		{
 			Field: "Password",
-			Error: ErrInvalidPassword,
+			Errors: map[string]error{
+				"stringlength": ErrInvalidPasswordLength,
+			},
+			DefaultError: ErrInvalidPassword,
 		},
 	}
 
 	if valid, err := govalidator.ValidateStruct(rd); !valid {
 		for _, fe := range fieldErrors {
 			if msg := govalidator.ErrorByField(err, fe.Field); msg != "" {
-				return errors.Wrap(fe.Error, msg)
+				validatorError, ok := err.(govalidator.Error)
+				if !ok {
+					return errors.Wrap(fe.DefaultError, msg)
+				}
+
+				if err, ok := fe.Errors[validatorError.Validator]; ok {
+					return errors.Wrap(err, msg)
+				}
+
+				return errors.Wrap(fe.DefaultError, msg)
 			}
 		}
 
@@ -223,7 +251,7 @@ func (c *Controller) isAuthorized(token string) (*AuthClaims, error) {
 	case jwt.ErrSignatureInvalid:
 		return nil, errors.Wrap(ErrUnauthorized, "signature mismatch")
 	default:
-		return nil, errors.Wrap(ErrInvalidArgument, "wrong token")
+		return nil, errors.Wrap(ErrInvalidToken, "wrong token")
 	}
 
 	if !parsedToken.Valid {
@@ -343,23 +371,39 @@ type LoginData struct {
 
 func (ld *LoginData) Validate() error {
 	var fieldErrors = []struct {
-		Field string
-		Error error
+		Field        string
+		Errors       map[string]error
+		DefaultError error
 	}{
 		{
 			Field: "Login",
-			Error: ErrInvalidLogin,
+			Errors: map[string]error{
+				"stringlength": ErrInvalidLoginLength,
+			},
+			DefaultError: ErrInvalidLogin,
 		},
 		{
 			Field: "Password",
-			Error: ErrInvalidPassword,
+			Errors: map[string]error{
+				"stringlength": ErrInvalidPasswordLength,
+			},
+			DefaultError: ErrInvalidPassword,
 		},
 	}
 
 	if valid, err := govalidator.ValidateStruct(ld); !valid {
 		for _, fe := range fieldErrors {
 			if msg := govalidator.ErrorByField(err, fe.Field); msg != "" {
-				return errors.Wrap(fe.Error, msg)
+				validatorError, ok := err.(govalidator.Error)
+				if !ok {
+					return errors.Wrap(fe.DefaultError, msg)
+				}
+
+				if err, ok := fe.Errors[validatorError.Validator]; ok {
+					return errors.Wrap(err, msg)
+				}
+
+				return errors.Wrap(fe.DefaultError, msg)
 			}
 		}
 
