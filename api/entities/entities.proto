@@ -7,9 +7,3 @@ option java_package = "online.personaapp.core";
 option java_outer_classname = "GrpcEntity";
 
 message Empty {}
-
-enum AccountType {
-    ACCOUNT_TYPE_UNKNOWN = 0;
-    ACCOUNT_TYPE_COMPANY = 1;
-    ACCOUNT_TYPE_PERSONA = 2;
-}

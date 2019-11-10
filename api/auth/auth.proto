@@ -14,6 +14,9 @@ service PersonaAppAuth {
     rpc Login (LoginRequest) returns (LoginResponse);
     rpc Logout (LogoutRequest) returns (LogoutResponse);
     rpc Refresh (RefreshRequest) returns (RefreshResponse);
+    rpc UpdateEmail (UpdateEmailRequest) returns (UpdateEmailResponse);
+    rpc UpdatePhone (UpdatePhoneRequest) returns (UpdatePhoneResponse);
+    rpc UpdatePassword (UpdatePasswordRequest) returns (UpdatePasswordResponse);
 }
 
 // Common
@@ -43,7 +46,7 @@ message RegisterRequest {
     string email = 1;
     string phone = 2; // optional for persona
     string password = 3;
-    personaappapi.entities.AccountType account_type = 4;
+    AccountType account_type = 4;
 }
 
 message RegisterResponse {
@@ -100,9 +103,58 @@ message RefreshResponse {
     }
 }
 
+// Update email
+message UpdateEmailRequest {
+    string email = 1;
+}
+
+message UpdateEmailResponse {
+    message Body {}
+
+    oneof response {
+        ErrorCode error_code = 1;
+        Body body = 2;
+    }
+}
+
+// Update phone
+message UpdatePhoneRequest {
+    string phone = 1;
+}
+
+message UpdatePhoneResponse {
+    message Body {}
+
+    oneof response {
+        ErrorCode error_code = 1;
+        Body body = 2;
+    }
+}
+
+// Update password
+message UpdatePasswordRequest {
+    string old_password = 1;
+    string new_password = 2;
+}
+
+message UpdatePasswordResponse {
+    message Body {}
+
+    oneof response {
+        ErrorCode error_code = 1;
+        Body body = 2;
+    }
+}
+
 // Entities
+enum AccountType {
+    ACCOUNT_TYPE_UNKNOWN = 0;
+    ACCOUNT_TYPE_COMPANY = 1;
+    ACCOUNT_TYPE_PERSONA = 2;
+}
+
 message Token {
     string token = 1;
     google.protobuf.Timestamp expires_at = 2;
-    personaappapi.entities.AccountType account_type = 3;
+    AccountType account_type = 3;
 }
