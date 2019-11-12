@@ -15,11 +15,6 @@ service PersonaAppVacancy {
     rpc GetVacancyDetails (GetVacancyDetailsRequest) returns (GetVacancyDetailsResponse);
 }
 
-// Common
-enum ErrorCode {
-    UNKNOWN_ERROR_CODE = 0;
-}
-
 // Get Vacancies filters list
 message GetVacanciesFiltersListRequest {}
 
@@ -34,8 +29,7 @@ message GetVacanciesFiltersListResponse {
     }
 
     oneof response {
-        ErrorCode error_code = 1;
-        Body body = 2;
+        Body body = 1;
     }
 }
 
@@ -75,8 +69,7 @@ message GetVacanciesListResponse {
     }
 
     oneof response {
-        ErrorCode error_code = 1;
-        Body body = 2;
+        Body body = 1;
     }
 }
 
@@ -122,8 +115,7 @@ message GetVacancyDetailsResponse {
     }
 
     oneof response {
-        ErrorCode error_code = 1;
-        Body body = 2;
+        Body body = 1;
     }
 }
 

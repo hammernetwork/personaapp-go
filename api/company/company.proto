@@ -16,17 +16,6 @@ service PersonaAppCompany {
     rpc GetCompaniesActivityFieldsList (GetCompaniesActivityFieldsListRequest) returns (GetCompaniesActivityFieldsListResponse);
 }
 
-// Common
-enum ErrorCode {
-    UNKNOWN_ERROR_CODE = 0;
-    INVALID_TITLE_FORMAT = 3000;
-    INVALID_TITLE_LENGTH = 3001;
-    INVALID_DESCRIPTION_FORMAT = 3100;
-    INVALID_DESCRIPTION_LENGTH = 3101;
-    INVALID_LOGO_URL_FORMAT = 3200;
-    INVALID_LOGO_URL_LENGTH = 3201;
-}
-
 // Update
 message UpdateCompanyRequest {
     google.protobuf.StringValue title = 1;
@@ -35,11 +24,18 @@ message UpdateCompanyRequest {
 }
 
 message UpdateCompanyResponse {
-    message Body {}
+    enum ErrorCode {
+        UNKNOWN_ERROR_CODE = 0;
+        INVALID_TITLE_FORMAT = 3000;
+        INVALID_TITLE_LENGTH = 3001;
+        INVALID_DESCRIPTION_FORMAT = 3100;
+        INVALID_DESCRIPTION_LENGTH = 3101;
+        INVALID_LOGO_URL_FORMAT = 3200;
+        INVALID_LOGO_URL_LENGTH = 3201;
+    }
 
     oneof response {
         ErrorCode error_code = 1;
-        Body body = 2;
     }
 }
 
@@ -48,14 +44,7 @@ message UpdateCompanyActivityFieldsRequest {
     map<string, personaappapi.entities.Empty> activity_fields = 1;
 }
 
-message UpdateCompanyActivityFieldsResponse {
-    message Body {}
-
-    oneof response {
-        ErrorCode error_code = 1;
-        Body body = 2;
-    }
-}
+message UpdateCompanyActivityFieldsResponse {}
 
 // Get
 message GetCompanyRequest {
@@ -78,8 +67,7 @@ message GetCompanyResponse {
     }
 
     oneof response {
-        ErrorCode error_code = 1;
-        Body body = 2;
+        Body body = 1;
     }
 }
 
@@ -97,7 +85,6 @@ message GetCompaniesActivityFieldsListResponse {
     }
 
     oneof response {
-        ErrorCode error_code = 1;
-        Body body = 2;
+        Body body = 1;
     }
 }
