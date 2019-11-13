@@ -1,0 +1,34 @@
+version: '3.5'
+services:
+  database:
+    image: postgres
+    environment:
+      POSTGRES_DB: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - 5432:5432
+    healthcheck:
+      test: pg_isready -d postgres -h 0.0.0.0 -p 5432 -U postgres -q
+      interval: 2s
+      timeout: 20s
+      retries: 10
+      start_period: 20s
+  migrate:
+    build: .
+    command: bin/personaapp migrate --postgres_database=postgres --postgres_password=postgres --postgres_user=postgres --postgres_host=database up
+    restart: on-failure
+    depends_on:
+      - database
+    links:
+      - database
+  app:
+    build: .
+    command: bin/personaapp server --postgres_database=postgres --postgres_password=postgres --postgres_user=postgres --postgres_host=database --postgres_port=5432 --server.address="app:8000"
+    restart: on-failure
+    ports:
+      - "8000:8000"
+    depends_on:
+      - database
+    links:
+      - database
