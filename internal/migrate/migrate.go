@@ -48,16 +48,14 @@ var migrations = []*migrate.Migration{
 			`CREATE TABLE IF NOT EXISTS activity_field (
 					id            uuid			   PRIMARY KEY,
 					title	      VARCHAR(255)	   NOT NULL,
-					alias	      VARCHAR(255)	   NOT NULL,
+					icon_url	  VARCHAR(255)     NOT NULL,
 					created_at    TIMESTAMPTZ      NOT NULL,
 					updated_at    TIMESTAMPTZ      NOT NULL
 			);`,
 			`CREATE UNIQUE INDEX activity_field_title_idx ON activity_field (title);`,
-			`CREATE UNIQUE INDEX activity_field_alias_idx ON activity_field (alias);`,
 		},
 		Down: []string{
 			`DROP INDEX IF EXISTS activity_field_title_idx;`,
-			`DROP INDEX IF EXISTS activity_field_alias_idx;`,
 			`DROP TABLE IF EXISTS activity_field;`,
 		},
 	},

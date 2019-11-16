@@ -75,7 +75,11 @@ message GetCompanyResponse {
         map<string, CompanyActivityField> activity_fields = 5;
     }
 
-    message CompanyActivityField {}
+    message CompanyActivityField {
+        string id = 1;
+        string title = 2;
+        string icon_url = 3;
+    }
 
     message Body {
         Company company = 1;
@@ -95,8 +99,9 @@ message GetCompaniesActivityFieldsListResponse {
         UNKNOWN_ERROR_CODE = 0;
     }
     message CompanyActivityField {
-        string title = 1;
-        string alias = 2;
+        string id = 1;
+        string title = 2;
+        string icon_url = 3;
     }
 
     message Body {

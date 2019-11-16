@@ -234,7 +234,12 @@ func (s *Server) Refresh(
 	}, nil
 }
 
-func (s *Server) UpdateEmail(context.Context, *apiauth.UpdateEmailRequest) (*apiauth.UpdateEmailResponse, error) {
+func (s *Server) UpdateEmail(ctx context.Context, req *apiauth.UpdateEmailRequest) (*apiauth.UpdateEmailResponse, error) {
+	//claims, err := s.getAuthClaims(ctx)
+	//if err != nil {
+	//	return nil, err
+	//}
+
 	// nolint: TODO: implement
 	return nil, nil
 }

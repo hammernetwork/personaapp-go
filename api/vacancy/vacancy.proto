@@ -23,8 +23,9 @@ message GetVacanciesFiltersListResponse {
     }
 
     message VacancyFilter {
-        string title = 1;
-        string alias = 2;
+        string id = 1;
+        string title = 2;
+        string icon_url = 3;
     }
 
     message Body {
@@ -50,23 +51,26 @@ message GetVacanciesListResponse {
     }
 
     message CompanyActivityField {
-        string title = 1;
-        string alias = 2;
+        string id = 1;
+        string title = 2;
+        string icon_url = 3;
     }
 
     message Company {
-        string title = 1;
-        string logo_url = 2;
-        map<string, Empty> activity_fields_ids = 3;
+        string id = 1;
+        string title = 2;
+        string logo_url = 3;
+        map<string, Empty> activity_fields_ids = 4;
     }
 
     message Vacancy {
-        string title = 1;
-        int32 min_salary = 2;
-        int32 max_salary = 3;
-        Currency currency = 4;
-        string image_url = 5;
-        string company_id = 6;
+        string id = 1;
+        string title = 2;
+        int32 min_salary = 3;
+        int32 max_salary = 4;
+        Currency currency = 5;
+        string image_url = 6;
+        string company_id = 7;
     }
 
     message Body {
@@ -93,16 +97,17 @@ message GetVacancyDetailsResponse {
     }
 
     message Vacancy {
-        Company company = 1;
-        Location location = 2;
-        string title = 3;
-        string description = 4;
-        int32 min_salary = 5;
-        int32 max_salary = 6;
-        Currency currency = 7;
-        string image_url = 8;
-        string work_experience = 9;
-        string work_schedule = 10;
+        string id = 1;
+        Company company = 2;
+        Location location = 3;
+        string title = 4;
+        string description = 5;
+        int32 min_salary = 6;
+        int32 max_salary = 7;
+        Currency currency = 8;
+        string image_url = 9;
+        string work_experience = 10;
+        string work_schedule = 11;
     }
 
     message Location {
@@ -111,16 +116,18 @@ message GetVacancyDetailsResponse {
     }
 
     message Company {
-        string title = 1;
-        string description = 2;
-        string logo_url = 3;
-        string phone = 4;
-        map<string, CompanyActivityField> activity_fields = 5;
+        string id = 1;
+        string title = 2;
+        string description = 3;
+        string logo_url = 4;
+        string phone = 5;
+        map<string, CompanyActivityField> activity_fields = 6;
     }
 
     message CompanyActivityField {
-        string title = 1;
-        string alias = 2;
+        string id = 1;
+        string title = 2;
+        string icon_url = 3;
     }
 
     message Body {
