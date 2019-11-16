@@ -137,6 +137,116 @@ func (LoginResponse_ErrorCode) EnumDescriptor() ([]byte, []int) {
 	return fileDescriptor_712ec48c1eaf43a2, []int{3, 0}
 }
 
+type LogoutResponse_ErrorCode int32
+
+const (
+	LogoutResponse_UNKNOWN_ERROR_CODE LogoutResponse_ErrorCode = 0
+)
+
+var LogoutResponse_ErrorCode_name = map[int32]string{
+	0: "UNKNOWN_ERROR_CODE",
+}
+
+var LogoutResponse_ErrorCode_value = map[string]int32{
+	"UNKNOWN_ERROR_CODE": 0,
+}
+
+func (x LogoutResponse_ErrorCode) String() string {
+	return proto.EnumName(LogoutResponse_ErrorCode_name, int32(x))
+}
+
+func (LogoutResponse_ErrorCode) EnumDescriptor() ([]byte, []int) {
+	return fileDescriptor_712ec48c1eaf43a2, []int{5, 0}
+}
+
+type RefreshResponse_ErrorCode int32
+
+const (
+	RefreshResponse_UNKNOWN_ERROR_CODE RefreshResponse_ErrorCode = 0
+)
+
+var RefreshResponse_ErrorCode_name = map[int32]string{
+	0: "UNKNOWN_ERROR_CODE",
+}
+
+var RefreshResponse_ErrorCode_value = map[string]int32{
+	"UNKNOWN_ERROR_CODE": 0,
+}
+
+func (x RefreshResponse_ErrorCode) String() string {
+	return proto.EnumName(RefreshResponse_ErrorCode_name, int32(x))
+}
+
+func (RefreshResponse_ErrorCode) EnumDescriptor() ([]byte, []int) {
+	return fileDescriptor_712ec48c1eaf43a2, []int{7, 0}
+}
+
+type UpdateEmailResponse_ErrorCode int32
+
+const (
+	UpdateEmailResponse_UNKNOWN_ERROR_CODE UpdateEmailResponse_ErrorCode = 0
+)
+
+var UpdateEmailResponse_ErrorCode_name = map[int32]string{
+	0: "UNKNOWN_ERROR_CODE",
+}
+
+var UpdateEmailResponse_ErrorCode_value = map[string]int32{
+	"UNKNOWN_ERROR_CODE": 0,
+}
+
+func (x UpdateEmailResponse_ErrorCode) String() string {
+	return proto.EnumName(UpdateEmailResponse_ErrorCode_name, int32(x))
+}
+
+func (UpdateEmailResponse_ErrorCode) EnumDescriptor() ([]byte, []int) {
+	return fileDescriptor_712ec48c1eaf43a2, []int{9, 0}
+}
+
+type UpdatePhoneResponse_ErrorCode int32
+
+const (
+	UpdatePhoneResponse_UNKNOWN_ERROR_CODE UpdatePhoneResponse_ErrorCode = 0
+)
+
+var UpdatePhoneResponse_ErrorCode_name = map[int32]string{
+	0: "UNKNOWN_ERROR_CODE",
+}
+
+var UpdatePhoneResponse_ErrorCode_value = map[string]int32{
+	"UNKNOWN_ERROR_CODE": 0,
+}
+
+func (x UpdatePhoneResponse_ErrorCode) String() string {
+	return proto.EnumName(UpdatePhoneResponse_ErrorCode_name, int32(x))
+}
+
+func (UpdatePhoneResponse_ErrorCode) EnumDescriptor() ([]byte, []int) {
+	return fileDescriptor_712ec48c1eaf43a2, []int{11, 0}
+}
+
+type UpdatePasswordResponse_ErrorCode int32
+
+const (
+	UpdatePasswordResponse_UNKNOWN_ERROR_CODE UpdatePasswordResponse_ErrorCode = 0
+)
+
+var UpdatePasswordResponse_ErrorCode_name = map[int32]string{
+	0: "UNKNOWN_ERROR_CODE",
+}
+
+var UpdatePasswordResponse_ErrorCode_value = map[string]int32{
+	"UNKNOWN_ERROR_CODE": 0,
+}
+
+func (x UpdatePasswordResponse_ErrorCode) String() string {
+	return proto.EnumName(UpdatePasswordResponse_ErrorCode_name, int32(x))
+}
+
+func (UpdatePasswordResponse_ErrorCode) EnumDescriptor() ([]byte, []int) {
+	return fileDescriptor_712ec48c1eaf43a2, []int{13, 0}
+}
+
 // Register
 type RegisterRequest struct {
 	Email                string      `protobuf:"bytes,1,opt,name=email,proto3" json:"email,omitempty"`
@@ -203,8 +313,8 @@ func (m *RegisterRequest) GetAccountType() AccountType {
 
 type RegisterResponse struct {
 	// Types that are valid to be assigned to Response:
-	//	*RegisterResponse_ErrorCode_
 	//	*RegisterResponse_Body_
+	//	*RegisterResponse_ErrorCode_
 	Response             isRegisterResponse_Response `protobuf_oneof:"response"`
 	XXX_NoUnkeyedLiteral struct{}                    `json:"-"`
 	XXX_unrecognized     []byte                      `json:"-"`
@@ -240,21 +350,28 @@ type isRegisterResponse_Response interface {
 	isRegisterResponse_Response()
 }
 
-type RegisterResponse_ErrorCode_ struct {
-	ErrorCode RegisterResponse_ErrorCode `protobuf:"varint,1,opt,name=error_code,json=errorCode,proto3,enum=personaappapi.auth.RegisterResponse_ErrorCode,oneof"`
-}
-
 type RegisterResponse_Body_ struct {
-	Body *RegisterResponse_Body `protobuf:"bytes,2,opt,name=body,proto3,oneof"`
+	Body *RegisterResponse_Body `protobuf:"bytes,1,opt,name=body,proto3,oneof"`
 }
 
-func (*RegisterResponse_ErrorCode_) isRegisterResponse_Response() {}
+type RegisterResponse_ErrorCode_ struct {
+	ErrorCode RegisterResponse_ErrorCode `protobuf:"varint,2,opt,name=error_code,json=errorCode,proto3,enum=personaappapi.auth.RegisterResponse_ErrorCode,oneof"`
+}
 
 func (*RegisterResponse_Body_) isRegisterResponse_Response() {}
+
+func (*RegisterResponse_ErrorCode_) isRegisterResponse_Response() {}
 
 func (m *RegisterResponse) GetResponse() isRegisterResponse_Response {
 	if m != nil {
 		return m.Response
+	}
+	return nil
+}
+
+func (m *RegisterResponse) GetBody() *RegisterResponse_Body {
+	if x, ok := m.GetResponse().(*RegisterResponse_Body_); ok {
+		return x.Body
 	}
 	return nil
 }
@@ -266,18 +383,11 @@ func (m *RegisterResponse) GetErrorCode() RegisterResponse_ErrorCode {
 	return RegisterResponse_UNKNOWN_ERROR_CODE
 }
 
-func (m *RegisterResponse) GetBody() *RegisterResponse_Body {
-	if x, ok := m.GetResponse().(*RegisterResponse_Body_); ok {
-		return x.Body
-	}
-	return nil
-}
-
 // XXX_OneofWrappers is for the internal use of the proto package.
 func (*RegisterResponse) XXX_OneofWrappers() []interface{} {
 	return []interface{}{
-		(*RegisterResponse_ErrorCode_)(nil),
 		(*RegisterResponse_Body_)(nil),
+		(*RegisterResponse_ErrorCode_)(nil),
 	}
 }
 
@@ -370,8 +480,8 @@ func (m *LoginRequest) GetPassword() string {
 
 type LoginResponse struct {
 	// Types that are valid to be assigned to Response:
-	//	*LoginResponse_ErrorCode_
 	//	*LoginResponse_Body_
+	//	*LoginResponse_ErrorCode_
 	Response             isLoginResponse_Response `protobuf_oneof:"response"`
 	XXX_NoUnkeyedLiteral struct{}                 `json:"-"`
 	XXX_unrecognized     []byte                   `json:"-"`
@@ -407,21 +517,28 @@ type isLoginResponse_Response interface {
 	isLoginResponse_Response()
 }
 
-type LoginResponse_ErrorCode_ struct {
-	ErrorCode LoginResponse_ErrorCode `protobuf:"varint,1,opt,name=error_code,json=errorCode,proto3,enum=personaappapi.auth.LoginResponse_ErrorCode,oneof"`
-}
-
 type LoginResponse_Body_ struct {
-	Body *LoginResponse_Body `protobuf:"bytes,2,opt,name=body,proto3,oneof"`
+	Body *LoginResponse_Body `protobuf:"bytes,1,opt,name=body,proto3,oneof"`
 }
 
-func (*LoginResponse_ErrorCode_) isLoginResponse_Response() {}
+type LoginResponse_ErrorCode_ struct {
+	ErrorCode LoginResponse_ErrorCode `protobuf:"varint,2,opt,name=error_code,json=errorCode,proto3,enum=personaappapi.auth.LoginResponse_ErrorCode,oneof"`
+}
 
 func (*LoginResponse_Body_) isLoginResponse_Response() {}
+
+func (*LoginResponse_ErrorCode_) isLoginResponse_Response() {}
 
 func (m *LoginResponse) GetResponse() isLoginResponse_Response {
 	if m != nil {
 		return m.Response
+	}
+	return nil
+}
+
+func (m *LoginResponse) GetBody() *LoginResponse_Body {
+	if x, ok := m.GetResponse().(*LoginResponse_Body_); ok {
+		return x.Body
 	}
 	return nil
 }
@@ -433,18 +550,11 @@ func (m *LoginResponse) GetErrorCode() LoginResponse_ErrorCode {
 	return LoginResponse_UNKNOWN_ERROR_CODE
 }
 
-func (m *LoginResponse) GetBody() *LoginResponse_Body {
-	if x, ok := m.GetResponse().(*LoginResponse_Body_); ok {
-		return x.Body
-	}
-	return nil
-}
-
 // XXX_OneofWrappers is for the internal use of the proto package.
 func (*LoginResponse) XXX_OneofWrappers() []interface{} {
 	return []interface{}{
-		(*LoginResponse_ErrorCode_)(nil),
 		(*LoginResponse_Body_)(nil),
+		(*LoginResponse_ErrorCode_)(nil),
 	}
 }
 
@@ -520,9 +630,13 @@ func (m *LogoutRequest) XXX_DiscardUnknown() {
 var xxx_messageInfo_LogoutRequest proto.InternalMessageInfo
 
 type LogoutResponse struct {
-	XXX_NoUnkeyedLiteral struct{} `json:"-"`
-	XXX_unrecognized     []byte   `json:"-"`
-	XXX_sizecache        int32    `json:"-"`
+	// Types that are valid to be assigned to Response:
+	//	*LogoutResponse_Body_
+	//	*LogoutResponse_ErrorCode_
+	Response             isLogoutResponse_Response `protobuf_oneof:"response"`
+	XXX_NoUnkeyedLiteral struct{}                  `json:"-"`
+	XXX_unrecognized     []byte                    `json:"-"`
+	XXX_sizecache        int32                     `json:"-"`
 }
 
 func (m *LogoutResponse) Reset()         { *m = LogoutResponse{} }
@@ -549,6 +663,82 @@ func (m *LogoutResponse) XXX_DiscardUnknown() {
 }
 
 var xxx_messageInfo_LogoutResponse proto.InternalMessageInfo
+
+type isLogoutResponse_Response interface {
+	isLogoutResponse_Response()
+}
+
+type LogoutResponse_Body_ struct {
+	Body *LogoutResponse_Body `protobuf:"bytes,1,opt,name=body,proto3,oneof"`
+}
+
+type LogoutResponse_ErrorCode_ struct {
+	ErrorCode LogoutResponse_ErrorCode `protobuf:"varint,2,opt,name=error_code,json=errorCode,proto3,enum=personaappapi.auth.LogoutResponse_ErrorCode,oneof"`
+}
+
+func (*LogoutResponse_Body_) isLogoutResponse_Response() {}
+
+func (*LogoutResponse_ErrorCode_) isLogoutResponse_Response() {}
+
+func (m *LogoutResponse) GetResponse() isLogoutResponse_Response {
+	if m != nil {
+		return m.Response
+	}
+	return nil
+}
+
+func (m *LogoutResponse) GetBody() *LogoutResponse_Body {
+	if x, ok := m.GetResponse().(*LogoutResponse_Body_); ok {
+		return x.Body
+	}
+	return nil
+}
+
+func (m *LogoutResponse) GetErrorCode() LogoutResponse_ErrorCode {
+	if x, ok := m.GetResponse().(*LogoutResponse_ErrorCode_); ok {
+		return x.ErrorCode
+	}
+	return LogoutResponse_UNKNOWN_ERROR_CODE
+}
+
+// XXX_OneofWrappers is for the internal use of the proto package.
+func (*LogoutResponse) XXX_OneofWrappers() []interface{} {
+	return []interface{}{
+		(*LogoutResponse_Body_)(nil),
+		(*LogoutResponse_ErrorCode_)(nil),
+	}
+}
+
+type LogoutResponse_Body struct {
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *LogoutResponse_Body) Reset()         { *m = LogoutResponse_Body{} }
+func (m *LogoutResponse_Body) String() string { return proto.CompactTextString(m) }
+func (*LogoutResponse_Body) ProtoMessage()    {}
+func (*LogoutResponse_Body) Descriptor() ([]byte, []int) {
+	return fileDescriptor_712ec48c1eaf43a2, []int{5, 0}
+}
+
+func (m *LogoutResponse_Body) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_LogoutResponse_Body.Unmarshal(m, b)
+}
+func (m *LogoutResponse_Body) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_LogoutResponse_Body.Marshal(b, m, deterministic)
+}
+func (m *LogoutResponse_Body) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_LogoutResponse_Body.Merge(m, src)
+}
+func (m *LogoutResponse_Body) XXX_Size() int {
+	return xxx_messageInfo_LogoutResponse_Body.Size(m)
+}
+func (m *LogoutResponse_Body) XXX_DiscardUnknown() {
+	xxx_messageInfo_LogoutResponse_Body.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_LogoutResponse_Body proto.InternalMessageInfo
 
 // Refresh
 type RefreshRequest struct {
@@ -585,6 +775,7 @@ var xxx_messageInfo_RefreshRequest proto.InternalMessageInfo
 type RefreshResponse struct {
 	// Types that are valid to be assigned to Response:
 	//	*RefreshResponse_Body_
+	//	*RefreshResponse_ErrorCode_
 	Response             isRefreshResponse_Response `protobuf_oneof:"response"`
 	XXX_NoUnkeyedLiteral struct{}                   `json:"-"`
 	XXX_unrecognized     []byte                     `json:"-"`
@@ -624,7 +815,13 @@ type RefreshResponse_Body_ struct {
 	Body *RefreshResponse_Body `protobuf:"bytes,1,opt,name=body,proto3,oneof"`
 }
 
+type RefreshResponse_ErrorCode_ struct {
+	ErrorCode RefreshResponse_ErrorCode `protobuf:"varint,2,opt,name=error_code,json=errorCode,proto3,enum=personaappapi.auth.RefreshResponse_ErrorCode,oneof"`
+}
+
 func (*RefreshResponse_Body_) isRefreshResponse_Response() {}
+
+func (*RefreshResponse_ErrorCode_) isRefreshResponse_Response() {}
 
 func (m *RefreshResponse) GetResponse() isRefreshResponse_Response {
 	if m != nil {
@@ -640,10 +837,18 @@ func (m *RefreshResponse) GetBody() *RefreshResponse_Body {
 	return nil
 }
 
+func (m *RefreshResponse) GetErrorCode() RefreshResponse_ErrorCode {
+	if x, ok := m.GetResponse().(*RefreshResponse_ErrorCode_); ok {
+		return x.ErrorCode
+	}
+	return RefreshResponse_UNKNOWN_ERROR_CODE
+}
+
 // XXX_OneofWrappers is for the internal use of the proto package.
 func (*RefreshResponse) XXX_OneofWrappers() []interface{} {
 	return []interface{}{
 		(*RefreshResponse_Body_)(nil),
+		(*RefreshResponse_ErrorCode_)(nil),
 	}
 }
 
@@ -727,9 +932,13 @@ func (m *UpdateEmailRequest) GetEmail() string {
 }
 
 type UpdateEmailResponse struct {
-	XXX_NoUnkeyedLiteral struct{} `json:"-"`
-	XXX_unrecognized     []byte   `json:"-"`
-	XXX_sizecache        int32    `json:"-"`
+	// Types that are valid to be assigned to Response:
+	//	*UpdateEmailResponse_Body_
+	//	*UpdateEmailResponse_ErrorCode_
+	Response             isUpdateEmailResponse_Response `protobuf_oneof:"response"`
+	XXX_NoUnkeyedLiteral struct{}                       `json:"-"`
+	XXX_unrecognized     []byte                         `json:"-"`
+	XXX_sizecache        int32                          `json:"-"`
 }
 
 func (m *UpdateEmailResponse) Reset()         { *m = UpdateEmailResponse{} }
@@ -756,6 +965,82 @@ func (m *UpdateEmailResponse) XXX_DiscardUnknown() {
 }
 
 var xxx_messageInfo_UpdateEmailResponse proto.InternalMessageInfo
+
+type isUpdateEmailResponse_Response interface {
+	isUpdateEmailResponse_Response()
+}
+
+type UpdateEmailResponse_Body_ struct {
+	Body *UpdateEmailResponse_Body `protobuf:"bytes,1,opt,name=body,proto3,oneof"`
+}
+
+type UpdateEmailResponse_ErrorCode_ struct {
+	ErrorCode UpdateEmailResponse_ErrorCode `protobuf:"varint,2,opt,name=error_code,json=errorCode,proto3,enum=personaappapi.auth.UpdateEmailResponse_ErrorCode,oneof"`
+}
+
+func (*UpdateEmailResponse_Body_) isUpdateEmailResponse_Response() {}
+
+func (*UpdateEmailResponse_ErrorCode_) isUpdateEmailResponse_Response() {}
+
+func (m *UpdateEmailResponse) GetResponse() isUpdateEmailResponse_Response {
+	if m != nil {
+		return m.Response
+	}
+	return nil
+}
+
+func (m *UpdateEmailResponse) GetBody() *UpdateEmailResponse_Body {
+	if x, ok := m.GetResponse().(*UpdateEmailResponse_Body_); ok {
+		return x.Body
+	}
+	return nil
+}
+
+func (m *UpdateEmailResponse) GetErrorCode() UpdateEmailResponse_ErrorCode {
+	if x, ok := m.GetResponse().(*UpdateEmailResponse_ErrorCode_); ok {
+		return x.ErrorCode
+	}
+	return UpdateEmailResponse_UNKNOWN_ERROR_CODE
+}
+
+// XXX_OneofWrappers is for the internal use of the proto package.
+func (*UpdateEmailResponse) XXX_OneofWrappers() []interface{} {
+	return []interface{}{
+		(*UpdateEmailResponse_Body_)(nil),
+		(*UpdateEmailResponse_ErrorCode_)(nil),
+	}
+}
+
+type UpdateEmailResponse_Body struct {
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *UpdateEmailResponse_Body) Reset()         { *m = UpdateEmailResponse_Body{} }
+func (m *UpdateEmailResponse_Body) String() string { return proto.CompactTextString(m) }
+func (*UpdateEmailResponse_Body) ProtoMessage()    {}
+func (*UpdateEmailResponse_Body) Descriptor() ([]byte, []int) {
+	return fileDescriptor_712ec48c1eaf43a2, []int{9, 0}
+}
+
+func (m *UpdateEmailResponse_Body) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_UpdateEmailResponse_Body.Unmarshal(m, b)
+}
+func (m *UpdateEmailResponse_Body) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_UpdateEmailResponse_Body.Marshal(b, m, deterministic)
+}
+func (m *UpdateEmailResponse_Body) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_UpdateEmailResponse_Body.Merge(m, src)
+}
+func (m *UpdateEmailResponse_Body) XXX_Size() int {
+	return xxx_messageInfo_UpdateEmailResponse_Body.Size(m)
+}
+func (m *UpdateEmailResponse_Body) XXX_DiscardUnknown() {
+	xxx_messageInfo_UpdateEmailResponse_Body.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_UpdateEmailResponse_Body proto.InternalMessageInfo
 
 // Update phone
 type UpdatePhoneRequest struct {
@@ -798,9 +1083,13 @@ func (m *UpdatePhoneRequest) GetPhone() string {
 }
 
 type UpdatePhoneResponse struct {
-	XXX_NoUnkeyedLiteral struct{} `json:"-"`
-	XXX_unrecognized     []byte   `json:"-"`
-	XXX_sizecache        int32    `json:"-"`
+	// Types that are valid to be assigned to Response:
+	//	*UpdatePhoneResponse_Body_
+	//	*UpdatePhoneResponse_ErrorCode_
+	Response             isUpdatePhoneResponse_Response `protobuf_oneof:"response"`
+	XXX_NoUnkeyedLiteral struct{}                       `json:"-"`
+	XXX_unrecognized     []byte                         `json:"-"`
+	XXX_sizecache        int32                          `json:"-"`
 }
 
 func (m *UpdatePhoneResponse) Reset()         { *m = UpdatePhoneResponse{} }
@@ -827,6 +1116,82 @@ func (m *UpdatePhoneResponse) XXX_DiscardUnknown() {
 }
 
 var xxx_messageInfo_UpdatePhoneResponse proto.InternalMessageInfo
+
+type isUpdatePhoneResponse_Response interface {
+	isUpdatePhoneResponse_Response()
+}
+
+type UpdatePhoneResponse_Body_ struct {
+	Body *UpdatePhoneResponse_Body `protobuf:"bytes,1,opt,name=body,proto3,oneof"`
+}
+
+type UpdatePhoneResponse_ErrorCode_ struct {
+	ErrorCode UpdatePhoneResponse_ErrorCode `protobuf:"varint,2,opt,name=error_code,json=errorCode,proto3,enum=personaappapi.auth.UpdatePhoneResponse_ErrorCode,oneof"`
+}
+
+func (*UpdatePhoneResponse_Body_) isUpdatePhoneResponse_Response() {}
+
+func (*UpdatePhoneResponse_ErrorCode_) isUpdatePhoneResponse_Response() {}
+
+func (m *UpdatePhoneResponse) GetResponse() isUpdatePhoneResponse_Response {
+	if m != nil {
+		return m.Response
+	}
+	return nil
+}
+
+func (m *UpdatePhoneResponse) GetBody() *UpdatePhoneResponse_Body {
+	if x, ok := m.GetResponse().(*UpdatePhoneResponse_Body_); ok {
+		return x.Body
+	}
+	return nil
+}
+
+func (m *UpdatePhoneResponse) GetErrorCode() UpdatePhoneResponse_ErrorCode {
+	if x, ok := m.GetResponse().(*UpdatePhoneResponse_ErrorCode_); ok {
+		return x.ErrorCode
+	}
+	return UpdatePhoneResponse_UNKNOWN_ERROR_CODE
+}
+
+// XXX_OneofWrappers is for the internal use of the proto package.
+func (*UpdatePhoneResponse) XXX_OneofWrappers() []interface{} {
+	return []interface{}{
+		(*UpdatePhoneResponse_Body_)(nil),
+		(*UpdatePhoneResponse_ErrorCode_)(nil),
+	}
+}
+
+type UpdatePhoneResponse_Body struct {
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *UpdatePhoneResponse_Body) Reset()         { *m = UpdatePhoneResponse_Body{} }
+func (m *UpdatePhoneResponse_Body) String() string { return proto.CompactTextString(m) }
+func (*UpdatePhoneResponse_Body) ProtoMessage()    {}
+func (*UpdatePhoneResponse_Body) Descriptor() ([]byte, []int) {
+	return fileDescriptor_712ec48c1eaf43a2, []int{11, 0}
+}
+
+func (m *UpdatePhoneResponse_Body) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_UpdatePhoneResponse_Body.Unmarshal(m, b)
+}
+func (m *UpdatePhoneResponse_Body) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_UpdatePhoneResponse_Body.Marshal(b, m, deterministic)
+}
+func (m *UpdatePhoneResponse_Body) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_UpdatePhoneResponse_Body.Merge(m, src)
+}
+func (m *UpdatePhoneResponse_Body) XXX_Size() int {
+	return xxx_messageInfo_UpdatePhoneResponse_Body.Size(m)
+}
+func (m *UpdatePhoneResponse_Body) XXX_DiscardUnknown() {
+	xxx_messageInfo_UpdatePhoneResponse_Body.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_UpdatePhoneResponse_Body proto.InternalMessageInfo
 
 // Update password
 type UpdatePasswordRequest struct {
@@ -877,9 +1242,13 @@ func (m *UpdatePasswordRequest) GetNewPassword() string {
 }
 
 type UpdatePasswordResponse struct {
-	XXX_NoUnkeyedLiteral struct{} `json:"-"`
-	XXX_unrecognized     []byte   `json:"-"`
-	XXX_sizecache        int32    `json:"-"`
+	// Types that are valid to be assigned to Response:
+	//	*UpdatePasswordResponse_Body_
+	//	*UpdatePasswordResponse_ErrorCode_
+	Response             isUpdatePasswordResponse_Response `protobuf_oneof:"response"`
+	XXX_NoUnkeyedLiteral struct{}                          `json:"-"`
+	XXX_unrecognized     []byte                            `json:"-"`
+	XXX_sizecache        int32                             `json:"-"`
 }
 
 func (m *UpdatePasswordResponse) Reset()         { *m = UpdatePasswordResponse{} }
@@ -906,6 +1275,82 @@ func (m *UpdatePasswordResponse) XXX_DiscardUnknown() {
 }
 
 var xxx_messageInfo_UpdatePasswordResponse proto.InternalMessageInfo
+
+type isUpdatePasswordResponse_Response interface {
+	isUpdatePasswordResponse_Response()
+}
+
+type UpdatePasswordResponse_Body_ struct {
+	Body *UpdatePasswordResponse_Body `protobuf:"bytes,1,opt,name=body,proto3,oneof"`
+}
+
+type UpdatePasswordResponse_ErrorCode_ struct {
+	ErrorCode UpdatePasswordResponse_ErrorCode `protobuf:"varint,2,opt,name=error_code,json=errorCode,proto3,enum=personaappapi.auth.UpdatePasswordResponse_ErrorCode,oneof"`
+}
+
+func (*UpdatePasswordResponse_Body_) isUpdatePasswordResponse_Response() {}
+
+func (*UpdatePasswordResponse_ErrorCode_) isUpdatePasswordResponse_Response() {}
+
+func (m *UpdatePasswordResponse) GetResponse() isUpdatePasswordResponse_Response {
+	if m != nil {
+		return m.Response
+	}
+	return nil
+}
+
+func (m *UpdatePasswordResponse) GetBody() *UpdatePasswordResponse_Body {
+	if x, ok := m.GetResponse().(*UpdatePasswordResponse_Body_); ok {
+		return x.Body
+	}
+	return nil
+}
+
+func (m *UpdatePasswordResponse) GetErrorCode() UpdatePasswordResponse_ErrorCode {
+	if x, ok := m.GetResponse().(*UpdatePasswordResponse_ErrorCode_); ok {
+		return x.ErrorCode
+	}
+	return UpdatePasswordResponse_UNKNOWN_ERROR_CODE
+}
+
+// XXX_OneofWrappers is for the internal use of the proto package.
+func (*UpdatePasswordResponse) XXX_OneofWrappers() []interface{} {
+	return []interface{}{
+		(*UpdatePasswordResponse_Body_)(nil),
+		(*UpdatePasswordResponse_ErrorCode_)(nil),
+	}
+}
+
+type UpdatePasswordResponse_Body struct {
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *UpdatePasswordResponse_Body) Reset()         { *m = UpdatePasswordResponse_Body{} }
+func (m *UpdatePasswordResponse_Body) String() string { return proto.CompactTextString(m) }
+func (*UpdatePasswordResponse_Body) ProtoMessage()    {}
+func (*UpdatePasswordResponse_Body) Descriptor() ([]byte, []int) {
+	return fileDescriptor_712ec48c1eaf43a2, []int{13, 0}
+}
+
+func (m *UpdatePasswordResponse_Body) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_UpdatePasswordResponse_Body.Unmarshal(m, b)
+}
+func (m *UpdatePasswordResponse_Body) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_UpdatePasswordResponse_Body.Marshal(b, m, deterministic)
+}
+func (m *UpdatePasswordResponse_Body) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_UpdatePasswordResponse_Body.Merge(m, src)
+}
+func (m *UpdatePasswordResponse_Body) XXX_Size() int {
+	return xxx_messageInfo_UpdatePasswordResponse_Body.Size(m)
+}
+func (m *UpdatePasswordResponse_Body) XXX_DiscardUnknown() {
+	xxx_messageInfo_UpdatePasswordResponse_Body.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_UpdatePasswordResponse_Body proto.InternalMessageInfo
 
 type Token struct {
 	Token                string               `protobuf:"bytes,1,opt,name=token,proto3" json:"token,omitempty"`
@@ -966,6 +1411,11 @@ func init() {
 	proto.RegisterEnum("personaappapi.auth.AccountType", AccountType_name, AccountType_value)
 	proto.RegisterEnum("personaappapi.auth.RegisterResponse_ErrorCode", RegisterResponse_ErrorCode_name, RegisterResponse_ErrorCode_value)
 	proto.RegisterEnum("personaappapi.auth.LoginResponse_ErrorCode", LoginResponse_ErrorCode_name, LoginResponse_ErrorCode_value)
+	proto.RegisterEnum("personaappapi.auth.LogoutResponse_ErrorCode", LogoutResponse_ErrorCode_name, LogoutResponse_ErrorCode_value)
+	proto.RegisterEnum("personaappapi.auth.RefreshResponse_ErrorCode", RefreshResponse_ErrorCode_name, RefreshResponse_ErrorCode_value)
+	proto.RegisterEnum("personaappapi.auth.UpdateEmailResponse_ErrorCode", UpdateEmailResponse_ErrorCode_name, UpdateEmailResponse_ErrorCode_value)
+	proto.RegisterEnum("personaappapi.auth.UpdatePhoneResponse_ErrorCode", UpdatePhoneResponse_ErrorCode_name, UpdatePhoneResponse_ErrorCode_value)
+	proto.RegisterEnum("personaappapi.auth.UpdatePasswordResponse_ErrorCode", UpdatePasswordResponse_ErrorCode_name, UpdatePasswordResponse_ErrorCode_value)
 	proto.RegisterType((*RegisterRequest)(nil), "personaappapi.auth.RegisterRequest")
 	proto.RegisterType((*RegisterResponse)(nil), "personaappapi.auth.RegisterResponse")
 	proto.RegisterType((*RegisterResponse_Body)(nil), "personaappapi.auth.RegisterResponse.Body")
@@ -974,79 +1424,89 @@ func init() {
 	proto.RegisterType((*LoginResponse_Body)(nil), "personaappapi.auth.LoginResponse.Body")
 	proto.RegisterType((*LogoutRequest)(nil), "personaappapi.auth.LogoutRequest")
 	proto.RegisterType((*LogoutResponse)(nil), "personaappapi.auth.LogoutResponse")
+	proto.RegisterType((*LogoutResponse_Body)(nil), "personaappapi.auth.LogoutResponse.Body")
 	proto.RegisterType((*RefreshRequest)(nil), "personaappapi.auth.RefreshRequest")
 	proto.RegisterType((*RefreshResponse)(nil), "personaappapi.auth.RefreshResponse")
 	proto.RegisterType((*RefreshResponse_Body)(nil), "personaappapi.auth.RefreshResponse.Body")
 	proto.RegisterType((*UpdateEmailRequest)(nil), "personaappapi.auth.UpdateEmailRequest")
 	proto.RegisterType((*UpdateEmailResponse)(nil), "personaappapi.auth.UpdateEmailResponse")
+	proto.RegisterType((*UpdateEmailResponse_Body)(nil), "personaappapi.auth.UpdateEmailResponse.Body")
 	proto.RegisterType((*UpdatePhoneRequest)(nil), "personaappapi.auth.UpdatePhoneRequest")
 	proto.RegisterType((*UpdatePhoneResponse)(nil), "personaappapi.auth.UpdatePhoneResponse")
+	proto.RegisterType((*UpdatePhoneResponse_Body)(nil), "personaappapi.auth.UpdatePhoneResponse.Body")
 	proto.RegisterType((*UpdatePasswordRequest)(nil), "personaappapi.auth.UpdatePasswordRequest")
 	proto.RegisterType((*UpdatePasswordResponse)(nil), "personaappapi.auth.UpdatePasswordResponse")
+	proto.RegisterType((*UpdatePasswordResponse_Body)(nil), "personaappapi.auth.UpdatePasswordResponse.Body")
 	proto.RegisterType((*Token)(nil), "personaappapi.auth.Token")
 }
 
 func init() { proto.RegisterFile("auth/auth.proto", fileDescriptor_712ec48c1eaf43a2) }
 
 var fileDescriptor_712ec48c1eaf43a2 = []byte{
-	// 902 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xac, 0x56, 0xd1, 0x6e, 0xe3, 0x44,
-	0x14, 0x6d, 0xd2, 0x66, 0x69, 0x6e, 0xba, 0xa9, 0x35, 0xb4, 0xc5, 0x31, 0x48, 0xdb, 0xf5, 0x22,
-	0xe8, 0x16, 0xc9, 0x91, 0xc2, 0x03, 0x42, 0x42, 0x2c, 0x4e, 0x6a, 0xda, 0x6a, 0x53, 0x3b, 0x9a,
-	0xba, 0xac, 0x16, 0x04, 0x96, 0x1b, 0xcf, 0xa6, 0xd6, 0xa6, 0x9e, 0xc1, 0x76, 0x54, 0xfa, 0xb6,
-	0x88, 0x07, 0xfe, 0x80, 0xa7, 0x2d, 0xdf, 0xc3, 0x87, 0x00, 0x0f, 0x88, 0x8f, 0x40, 0x1e, 0x8f,
-	0x1b, 0x3b, 0xc9, 0xba, 0x5d, 0xd4, 0x97, 0x4a, 0xf7, 0xde, 0x73, 0x8f, 0x27, 0x77, 0xce, 0xb9,
-	0x53, 0x58, 0x77, 0x27, 0xf1, 0x59, 0x3b, 0xf9, 0xa3, 0xb1, 0x90, 0xc6, 0x14, 0x21, 0x46, 0xc2,
-	0x88, 0x06, 0xae, 0xcb, 0x98, 0xcb, 0x7c, 0x2d, 0xa9, 0x28, 0x0f, 0x46, 0x94, 0x8e, 0xc6, 0xa4,
-	0xcd, 0x11, 0xa7, 0x93, 0x17, 0xed, 0xd8, 0x3f, 0x27, 0x51, 0xec, 0x9e, 0xb3, 0xb4, 0x49, 0xbd,
-	0xaa, 0xc0, 0x3a, 0x26, 0x23, 0x3f, 0x8a, 0x49, 0x88, 0xc9, 0x8f, 0x13, 0x12, 0xc5, 0x68, 0x03,
-	0x6a, 0xe4, 0xdc, 0xf5, 0xc7, 0x72, 0x65, 0xbb, 0xb2, 0x53, 0xc7, 0x69, 0x90, 0x64, 0xd9, 0x19,
-	0x0d, 0x88, 0x5c, 0x4d, 0xb3, 0x3c, 0x40, 0x0a, 0xac, 0x32, 0x37, 0x8a, 0x2e, 0x68, 0xe8, 0xc9,
-	0xcb, 0xbc, 0x70, 0x1d, 0xa3, 0x2e, 0xac, 0xb9, 0xc3, 0x21, 0x9d, 0x04, 0xb1, 0x13, 0x5f, 0x32,
-	0x22, 0xaf, 0x6c, 0x57, 0x76, 0x9a, 0x9d, 0x07, 0xda, 0xfc, 0x39, 0x35, 0x3d, 0xc5, 0xd9, 0x97,
-	0x8c, 0xe0, 0x86, 0x3b, 0x0d, 0xd4, 0x7f, 0x97, 0x41, 0x9a, 0x9e, 0x2f, 0x62, 0x34, 0x88, 0x08,
-	0xb2, 0x00, 0x48, 0x18, 0xd2, 0xd0, 0x19, 0x52, 0x8f, 0xf0, 0x53, 0x36, 0x3b, 0xda, 0x22, 0xda,
-	0xd9, 0x4e, 0xcd, 0x48, 0xda, 0x7a, 0xd4, 0x23, 0x07, 0x4b, 0xb8, 0x4e, 0xb2, 0x00, 0x3d, 0x81,
-	0x95, 0x53, 0xea, 0x5d, 0xf2, 0x9f, 0xd6, 0xe8, 0x3c, 0xbe, 0x15, 0x55, 0x97, 0x7a, 0x97, 0x07,
-	0x4b, 0x98, 0x37, 0x2a, 0x9f, 0xc1, 0x4a, 0x12, 0xa3, 0x36, 0xd4, 0x62, 0xfa, 0x92, 0x04, 0xfc,
-	0x50, 0x8d, 0x4e, 0x6b, 0x11, 0x93, 0x9d, 0x00, 0x70, 0x8a, 0x53, 0x5f, 0x55, 0xa1, 0x7e, 0x7d,
-	0x28, 0xb4, 0x05, 0xe8, 0xc4, 0x7c, 0x6a, 0x5a, 0xcf, 0x4c, 0xc7, 0xc0, 0xd8, 0xc2, 0x4e, 0xcf,
-	0xda, 0x33, 0xa4, 0x25, 0x84, 0xe0, 0xfe, 0xa1, 0xf9, 0x8d, 0xde, 0x3f, 0xdc, 0x73, 0x8c, 0x23,
-	0xfd, 0xb0, 0x2f, 0xbd, 0x96, 0x51, 0x0b, 0x36, 0x0a, 0x39, 0xe7, 0x6b, 0x0b, 0x1f, 0xe9, 0xb6,
-	0x74, 0xb5, 0xa0, 0xd4, 0x37, 0xcc, 0x7d, 0xfb, 0x40, 0xfa, 0x5d, 0xce, 0x33, 0x0d, 0x0e, 0x2c,
-	0xd3, 0x90, 0x5e, 0xb5, 0xf2, 0x70, 0x9e, 0xcb, 0x98, 0x7e, 0x2e, 0x94, 0xf4, 0x5e, 0xcf, 0x3a,
-	0x31, 0x6d, 0xc7, 0x7e, 0x3e, 0x30, 0xa4, 0x3f, 0x5b, 0x68, 0x13, 0xa4, 0xeb, 0x2e, 0xfd, 0xf8,
-	0xf8, 0x99, 0x85, 0xf7, 0xa4, 0xbf, 0x5a, 0xe8, 0x03, 0x78, 0x6f, 0x36, 0x9d, 0x7d, 0xfe, 0xef,
-	0x56, 0xfe, 0xf3, 0xb6, 0xf5, 0xd4, 0x30, 0xa5, 0x3f, 0x94, 0x2e, 0xc0, 0x6a, 0x28, 0x86, 0xaa,
-	0x7e, 0x05, 0x6b, 0x7d, 0x3a, 0xf2, 0x83, 0x9c, 0x14, 0xc7, 0x49, 0x9c, 0x49, 0x91, 0x07, 0x05,
-	0xd1, 0x55, 0x8b, 0xa2, 0x53, 0xff, 0xa9, 0xc2, 0x7d, 0x41, 0x21, 0xd4, 0xd2, 0x5f, 0xa0, 0x96,
-	0x4f, 0x16, 0x5d, 0x4c, 0xa1, 0xed, 0x4d, 0x52, 0xf9, 0xa2, 0x20, 0x95, 0x8f, 0x6e, 0xe6, 0xb9,
-	0x1b, 0x9d, 0xfc, 0x5a, 0x79, 0x4b, 0x9d, 0xf4, 0xad, 0xfd, 0x43, 0x73, 0x46, 0x27, 0x3c, 0x97,
-	0xdd, 0xc6, 0x95, 0xfc, 0xbf, 0xae, 0xb0, 0x70, 0x5d, 0xeb, 0x7c, 0xd6, 0x74, 0x12, 0x8b, 0xfb,
-	0x52, 0x25, 0x68, 0x66, 0x09, 0x01, 0x91, 0xa0, 0x89, 0xc9, 0x8b, 0x90, 0x44, 0x67, 0x19, 0xe6,
-	0x37, 0xbe, 0x72, 0x44, 0x4a, 0xdc, 0xd1, 0x97, 0x62, 0xaa, 0xe9, 0x38, 0x76, 0x16, 0x1b, 0xb0,
-	0xd0, 0x72, 0x37, 0x73, 0x2d, 0xfc, 0x9a, 0x5d, 0x40, 0x27, 0xcc, 0x73, 0x63, 0x62, 0x24, 0x0b,
-	0xaf, 0x74, 0x1b, 0xaa, 0x9b, 0xf0, 0x6e, 0x01, 0x3b, 0x4b, 0x31, 0x48, 0xb6, 0x63, 0x8e, 0x22,
-	0x5d, 0x9d, 0x95, 0xdc, 0xea, 0x9c, 0x52, 0x08, 0xac, 0xa0, 0xf8, 0x1e, 0x36, 0x45, 0x5a, 0x48,
-	0x3a, 0x63, 0x79, 0x08, 0x6b, 0x74, 0xec, 0x39, 0xd7, 0xca, 0x4f, 0xc9, 0x1a, 0x74, 0xec, 0x65,
-	0xc8, 0x04, 0x12, 0x90, 0x0b, 0x67, 0xc6, 0x1c, 0x8d, 0x80, 0x5c, 0x64, 0x10, 0x55, 0x86, 0xad,
-	0x59, 0x7a, 0xf1, 0xe1, 0xd7, 0x15, 0xa8, 0xf1, 0xd9, 0x24, 0xe7, 0x9d, 0x4e, 0xb1, 0x2e, 0x46,
-	0x85, 0x3e, 0x07, 0x20, 0x3f, 0x31, 0x3f, 0x24, 0x91, 0xe3, 0xc6, 0x42, 0xff, 0x8a, 0x96, 0x3e,
-	0x30, 0x5a, 0xf6, 0xc0, 0x68, 0x76, 0xf6, 0xc0, 0xe0, 0xba, 0x40, 0xeb, 0xf1, 0xdc, 0x4b, 0xb0,
-	0xfc, 0xf6, 0x2f, 0xc1, 0xee, 0x77, 0xd0, 0xc8, 0xd5, 0x90, 0x0c, 0x1b, 0xf9, 0x8d, 0xe4, 0x08,
-	0x3f, 0x48, 0x4b, 0x73, 0x95, 0x9e, 0x75, 0x34, 0xd0, 0xcd, 0xe7, 0x52, 0x65, 0xae, 0x32, 0x30,
-	0xf0, 0xb1, 0x65, 0xea, 0x52, 0xb5, 0xf3, 0x4b, 0x0d, 0x9a, 0x83, 0xf4, 0x30, 0x3a, 0x63, 0xfa,
-	0x24, 0x3e, 0x43, 0x27, 0xb0, 0x9a, 0xed, 0x7c, 0xf4, 0xa8, 0xfc, 0x45, 0xe0, 0xf7, 0xa3, 0x7c,
-	0x78, 0x9b, 0x67, 0x03, 0xf5, 0xa1, 0xc6, 0xf7, 0x03, 0xda, 0x2e, 0x59, 0x1d, 0x29, 0xe1, 0xc3,
-	0x1b, 0x97, 0x0b, 0xb2, 0xe0, 0x5e, 0xea, 0x37, 0xf4, 0x26, 0xf0, 0xd4, 0x9c, 0x8a, 0x5a, 0x06,
-	0x11, 0x84, 0x18, 0xde, 0x11, 0x46, 0x43, 0x6a, 0xa9, 0x0b, 0x53, 0xca, 0x47, 0xb7, 0x70, 0x2a,
-	0xfa, 0x01, 0x1a, 0x39, 0xaf, 0xa0, 0x85, 0x3b, 0x73, 0xde, 0x78, 0xca, 0xc7, 0x37, 0xe2, 0x66,
-	0xf9, 0xb9, 0x91, 0xca, 0xf8, 0xf3, 0xae, 0x2c, 0xe3, 0x2f, 0x38, 0x12, 0x8d, 0xa0, 0x59, 0xb4,
-	0x0c, 0x7a, 0x5c, 0xd2, 0x5a, 0x74, 0xad, 0xb2, 0x7b, 0x1b, 0x68, 0xfa, 0xa1, 0xee, 0x13, 0xd8,
-	0xa2, 0xc1, 0xd8, 0x0f, 0x48, 0xae, 0x47, 0x1b, 0xd2, 0x90, 0x74, 0x57, 0xf7, 0x43, 0x36, 0x4c,
-	0x64, 0xf9, 0xed, 0xfb, 0xd3, 0x52, 0x9b, 0xbd, 0x1c, 0xb5, 0x47, 0x21, 0x1b, 0xba, 0xcc, 0xe7,
-	0xff, 0x08, 0x9e, 0xde, 0xe3, 0x36, 0xfc, 0xf4, 0xbf, 0x00, 0x00, 0x00, 0xff, 0xff, 0x21, 0x86,
-	0x58, 0x74, 0x1c, 0x0a, 0x00, 0x00,
+	// 1003 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xac, 0x57, 0xe1, 0x6e, 0xe3, 0x44,
+	0x10, 0xae, 0xd3, 0xa6, 0x34, 0x93, 0x5e, 0x6a, 0x2d, 0xbd, 0x92, 0x04, 0xa4, 0x6b, 0x5d, 0x74,
+	0xd7, 0x2b, 0xe0, 0x88, 0x80, 0x84, 0x90, 0x80, 0xc3, 0x49, 0x4d, 0x5b, 0x5d, 0x6a, 0x47, 0x6e,
+	0xc2, 0xe9, 0x40, 0x60, 0xb9, 0xc9, 0x5e, 0x1a, 0x5d, 0xea, 0x5d, 0x6c, 0x47, 0xa5, 0xff, 0x0e,
+	0xf1, 0x83, 0x1f, 0xbc, 0xc2, 0x95, 0xe7, 0xe1, 0x0d, 0x78, 0x01, 0xb8, 0x1f, 0x08, 0x89, 0x57,
+	0x40, 0xb6, 0xd7, 0x89, 0x37, 0x75, 0x13, 0x87, 0xcb, 0x9f, 0x48, 0xbb, 0x3b, 0xf3, 0x79, 0xe7,
+	0x9b, 0x6f, 0x67, 0x26, 0xb0, 0x61, 0x0d, 0xbd, 0xf3, 0x8a, 0xff, 0x23, 0x53, 0x87, 0x78, 0x04,
+	0x21, 0x8a, 0x1d, 0x97, 0xd8, 0x96, 0x45, 0xa9, 0x45, 0xfb, 0xb2, 0x7f, 0x52, 0xbe, 0xd7, 0x23,
+	0xa4, 0x37, 0xc0, 0x95, 0xc0, 0xe2, 0x6c, 0xf8, 0xac, 0xe2, 0xf5, 0x2f, 0xb0, 0xeb, 0x59, 0x17,
+	0x34, 0x74, 0x92, 0xae, 0x05, 0xd8, 0x30, 0x70, 0xaf, 0xef, 0x7a, 0xd8, 0x31, 0xf0, 0x0f, 0x43,
+	0xec, 0x7a, 0x68, 0x13, 0xb2, 0xf8, 0xc2, 0xea, 0x0f, 0x8a, 0xc2, 0xb6, 0xb0, 0x97, 0x33, 0xc2,
+	0x85, 0xbf, 0x4b, 0xcf, 0x89, 0x8d, 0x8b, 0x99, 0x70, 0x37, 0x58, 0xa0, 0x32, 0xac, 0x51, 0xcb,
+	0x75, 0x2f, 0x89, 0xd3, 0x2d, 0x2e, 0x07, 0x07, 0xa3, 0x35, 0xaa, 0xc1, 0xba, 0xd5, 0xe9, 0x90,
+	0xa1, 0xed, 0x99, 0xde, 0x15, 0xc5, 0xc5, 0x95, 0x6d, 0x61, 0xaf, 0x50, 0xbd, 0x27, 0xdf, 0xbc,
+	0xa7, 0xac, 0x84, 0x76, 0xad, 0x2b, 0x8a, 0x8d, 0xbc, 0x35, 0x5e, 0x48, 0xff, 0x2c, 0x83, 0x38,
+	0xbe, 0x9f, 0x4b, 0x89, 0xed, 0x62, 0xf4, 0x08, 0x56, 0xce, 0x48, 0xf7, 0x2a, 0xb8, 0x5f, 0xbe,
+	0xfa, 0x30, 0x09, 0x70, 0xd2, 0x47, 0xae, 0x91, 0xee, 0xd5, 0xd1, 0x92, 0x11, 0x38, 0x22, 0x1d,
+	0x00, 0x3b, 0x0e, 0x71, 0xcc, 0x0e, 0xe9, 0x86, 0x01, 0x15, 0xaa, 0x72, 0x2a, 0x18, 0xd5, 0x77,
+	0xab, 0x93, 0x2e, 0x3e, 0x5a, 0x32, 0x72, 0x38, 0x5a, 0x94, 0x3f, 0x81, 0x15, 0xff, 0x03, 0xa8,
+	0x02, 0x59, 0x8f, 0x3c, 0xc7, 0x36, 0xbb, 0x5a, 0x29, 0x09, 0xb3, 0xe5, 0x1b, 0x18, 0xa1, 0x9d,
+	0xf4, 0x22, 0x03, 0xb9, 0x11, 0x26, 0xda, 0x02, 0xd4, 0xd6, 0x1e, 0x6b, 0xfa, 0x13, 0xcd, 0x54,
+	0x0d, 0x43, 0x37, 0xcc, 0xba, 0x7e, 0xa0, 0x8a, 0x4b, 0x08, 0xc1, 0x9d, 0x63, 0xed, 0x6b, 0xa5,
+	0x71, 0x7c, 0x60, 0xaa, 0x27, 0xca, 0x71, 0x43, 0x7c, 0x59, 0x44, 0x25, 0xd8, 0xe4, 0xf6, 0xcc,
+	0xaf, 0x74, 0xe3, 0x44, 0x69, 0x89, 0xd7, 0x09, 0x47, 0x0d, 0x55, 0x3b, 0x6c, 0x1d, 0x89, 0xbf,
+	0x15, 0xe3, 0x48, 0xcd, 0x23, 0x5d, 0x53, 0xc5, 0x17, 0xa5, 0xb8, 0x79, 0xb0, 0x17, 0x21, 0xfd,
+	0xc4, 0x1d, 0x29, 0xf5, 0xba, 0xde, 0xd6, 0x5a, 0x66, 0xeb, 0x69, 0x53, 0x15, 0xff, 0x2c, 0xa1,
+	0xbb, 0x20, 0x8e, 0xbc, 0x94, 0xd3, 0xd3, 0x27, 0xba, 0x71, 0x20, 0xfe, 0x55, 0x42, 0xef, 0xc0,
+	0x5b, 0x93, 0xdb, 0xd1, 0xe7, 0x5f, 0x95, 0xe2, 0x9f, 0x6f, 0xe9, 0x8f, 0x55, 0x4d, 0xfc, 0xbd,
+	0x5c, 0x03, 0x58, 0x73, 0x18, 0xbd, 0xd2, 0x97, 0xb0, 0xde, 0x20, 0xbd, 0xbe, 0x1d, 0x93, 0xe2,
+	0xc0, 0x5f, 0x47, 0x52, 0x0c, 0x16, 0x9c, 0xe8, 0x32, 0xbc, 0xe8, 0xa4, 0xbf, 0x33, 0x70, 0x87,
+	0x41, 0x30, 0xb5, 0x7c, 0xc6, 0xa9, 0xe5, 0x7e, 0x52, 0x4a, 0x38, 0x07, 0x5e, 0x2a, 0x8d, 0x04,
+	0xa9, 0xbc, 0x37, 0x1b, 0x63, 0xd1, 0x3a, 0xf9, 0x45, 0x98, 0x53, 0x27, 0x0d, 0xfd, 0xf0, 0x58,
+	0x9b, 0xd0, 0x49, 0xb0, 0x17, 0x65, 0xe3, 0xba, 0xf8, 0xbf, 0x52, 0xc8, 0xa5, 0x6b, 0x23, 0xe0,
+	0x9a, 0x0c, 0x3d, 0x96, 0x2f, 0xe9, 0x0f, 0x01, 0x0a, 0xd1, 0x0e, 0xa3, 0xff, 0x73, 0x8e, 0xfe,
+	0x07, 0xb7, 0x50, 0x17, 0xf3, 0xe0, 0xf9, 0x3f, 0x49, 0xe0, 0xff, 0xfd, 0x14, 0x20, 0xb7, 0x24,
+	0x60, 0x35, 0x4c, 0x80, 0xb4, 0x9b, 0x82, 0x4e, 0x2e, 0x54, 0x11, 0x0a, 0x06, 0x7e, 0xe6, 0x60,
+	0xf7, 0x3c, 0x8a, 0xf5, 0xd7, 0x8c, 0x5f, 0x3a, 0xd9, 0x16, 0x0b, 0xf6, 0x0b, 0x2e, 0xd8, 0xbd,
+	0xe4, 0x92, 0xc2, 0xb9, 0xf0, 0xd1, 0x6a, 0x09, 0xd1, 0x7e, 0x90, 0x06, 0x65, 0xd1, 0x7a, 0x9b,
+	0x9b, 0x9f, 0x7d, 0x40, 0x6d, 0xda, 0xb5, 0x3c, 0xac, 0xfa, 0xdd, 0x62, 0x6a, 0x2b, 0x91, 0x5e,
+	0x09, 0xf0, 0x26, 0x67, 0xcc, 0xd8, 0xab, 0x71, 0xec, 0x25, 0x66, 0x39, 0xc1, 0x8d, 0x67, 0xd0,
+	0x48, 0x60, 0xf0, 0xc3, 0xb4, 0x48, 0x8b, 0x16, 0xcd, 0x88, 0x94, 0xa6, 0xdf, 0x2c, 0x63, 0xa4,
+	0x84, 0x9d, 0x54, 0x88, 0x75, 0xd2, 0x18, 0x29, 0xcc, 0x78, 0x5e, 0x52, 0x38, 0xb7, 0xd7, 0x22,
+	0x85, 0x47, 0x5a, 0x34, 0x29, 0xdf, 0xc1, 0x5d, 0xf6, 0x19, 0x56, 0xb3, 0x23, 0x5e, 0x76, 0x60,
+	0x9d, 0x0c, 0xba, 0xe6, 0xa8, 0xb4, 0x87, 0xf4, 0xe4, 0xc9, 0xa0, 0x1b, 0x59, 0xfa, 0x26, 0x36,
+	0xbe, 0x34, 0x27, 0xaa, 0x7f, 0xde, 0xc6, 0x97, 0x91, 0x89, 0xf4, 0xaf, 0x00, 0x5b, 0x93, 0xf8,
+	0x8c, 0x4a, 0x95, 0xa3, 0xb2, 0x32, 0x85, 0x80, 0x09, 0x4f, 0x9e, 0xcd, 0x76, 0x02, 0x9b, 0x1f,
+	0xcf, 0x01, 0xb6, 0x68, 0x42, 0x5f, 0x0a, 0x90, 0x0d, 0x1e, 0xaf, 0xaf, 0xac, 0xf1, 0x33, 0xcf,
+	0xb1, 0xb7, 0x8c, 0x3e, 0x05, 0xc0, 0x3f, 0xd2, 0xbe, 0x83, 0x5d, 0xd3, 0xf2, 0x82, 0xfb, 0xe6,
+	0xab, 0x65, 0x39, 0x9c, 0x0c, 0xe5, 0x68, 0x32, 0x94, 0x5b, 0xd1, 0x64, 0x68, 0xe4, 0x98, 0xb5,
+	0xe2, 0xdd, 0x18, 0xe1, 0x96, 0xe7, 0x1f, 0xe1, 0xf6, 0xbf, 0x85, 0x7c, 0xec, 0x0c, 0x15, 0x61,
+	0x33, 0x3e, 0x4a, 0x98, 0x2c, 0x3c, 0x71, 0xe9, 0xc6, 0x49, 0x5d, 0x3f, 0x69, 0x2a, 0xda, 0x53,
+	0x51, 0xb8, 0x71, 0xd2, 0x54, 0x8d, 0x53, 0x5d, 0x53, 0xc4, 0x4c, 0xf5, 0xe7, 0x2c, 0x14, 0x9a,
+	0xe1, 0x65, 0x14, 0x4a, 0x95, 0xa1, 0x77, 0x8e, 0xda, 0xb0, 0x16, 0x8d, 0x6d, 0x68, 0x77, 0xfa,
+	0x50, 0x17, 0xe8, 0xae, 0xfc, 0x6e, 0x9a, 0xc9, 0x0f, 0x35, 0x20, 0x1b, 0xb4, 0x78, 0xb4, 0x3d,
+	0xa5, 0xfb, 0x87, 0x80, 0x3b, 0x33, 0xe7, 0x03, 0xa4, 0xc3, 0x6a, 0xd8, 0xb0, 0xd0, 0xce, 0xb4,
+	0x66, 0x16, 0xe2, 0x49, 0xb3, 0xfb, 0x1d, 0x32, 0xe0, 0x0d, 0xd6, 0x13, 0x90, 0x34, 0xb5, 0x61,
+	0x84, 0x90, 0xbb, 0x29, 0x9a, 0x0a, 0xfa, 0x1e, 0xf2, 0xb1, 0x2a, 0x89, 0xee, 0xcf, 0x2c, 0xa3,
+	0x21, 0xf6, 0x83, 0x94, 0xe5, 0x76, 0x8c, 0x1f, 0x14, 0x9c, 0x69, 0xf8, 0xf1, 0xfa, 0x39, 0x0d,
+	0x9f, 0x2f, 0x9d, 0x3d, 0x28, 0xf0, 0x4f, 0x10, 0x3d, 0x4c, 0xf3, 0x4c, 0xc3, 0xaf, 0xec, 0xa7,
+	0x7f, 0xd1, 0xb5, 0x47, 0xb0, 0x45, 0xec, 0x41, 0xdf, 0xc6, 0x31, 0x1f, 0xb9, 0x43, 0x1c, 0x5c,
+	0x5b, 0x3b, 0x74, 0x68, 0xc7, 0x97, 0xe5, 0x37, 0x6f, 0x8f, 0x8f, 0x2a, 0xf4, 0x79, 0xaf, 0xd2,
+	0x73, 0x68, 0xc7, 0xa2, 0xfd, 0xe0, 0x1f, 0xdc, 0xd9, 0x6a, 0xf0, 0x0c, 0x3f, 0xfa, 0x2f, 0x00,
+	0x00, 0xff, 0xff, 0xbf, 0xc6, 0xaf, 0x55, 0xd5, 0x0d, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.

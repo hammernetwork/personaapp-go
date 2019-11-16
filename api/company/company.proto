@@ -2,7 +2,6 @@ syntax = "proto3";
 
 package personaappapi.company;
 
-import "entities/entities.proto";
 import "google/protobuf/wrappers.proto";
 
 option go_package = "personaapp/pkg/grpcapi/company";
@@ -34,17 +33,29 @@ message UpdateCompanyResponse {
         INVALID_LOGO_URL_LENGTH = 3201;
     }
 
+    message Body {}
+
     oneof response {
-        ErrorCode error_code = 1;
+        Body body = 1;
+        ErrorCode error_code = 2;
     }
 }
 
 // Update Activity Fields
 message UpdateCompanyActivityFieldsRequest {
-    map<string, personaappapi.entities.Empty> activity_fields = 1;
+    map<string, Empty> activity_fields = 1;
 }
 
-message UpdateCompanyActivityFieldsResponse {}
+message UpdateCompanyActivityFieldsResponse {
+    enum ErrorCode {
+        UNKNOWN_ERROR_CODE = 0;
+    }
+    message Body {}
+    oneof response {
+        Body body = 1;
+        ErrorCode error_code = 2;
+    }
+}
 
 // Get
 message GetCompanyRequest {
@@ -52,6 +63,10 @@ message GetCompanyRequest {
 }
 
 message GetCompanyResponse {
+    enum ErrorCode {
+        UNKNOWN_ERROR_CODE = 0;
+    }
+
     message Company {
         string id = 1;
         string title = 2;
@@ -68,6 +83,7 @@ message GetCompanyResponse {
 
     oneof response {
         Body body = 1;
+        ErrorCode error_code = 2;
     }
 }
 
@@ -75,6 +91,9 @@ message GetCompanyResponse {
 message GetCompaniesActivityFieldsListRequest {}
 
 message GetCompaniesActivityFieldsListResponse {
+    enum ErrorCode {
+        UNKNOWN_ERROR_CODE = 0;
+    }
     message CompanyActivityField {
         string title = 1;
         string alias = 2;
@@ -86,5 +105,9 @@ message GetCompaniesActivityFieldsListResponse {
 
     oneof response {
         Body body = 1;
+        ErrorCode error_code = 2;
     }
 }
+
+// Entities
+message Empty {}

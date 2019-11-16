@@ -2,7 +2,6 @@ syntax = "proto3";
 
 package personaappapi.vacancy;
 
-import "entities/entities.proto";
 import "google/protobuf/wrappers.proto";
 
 option go_package = "personaapp/pkg/grpcapi/vacancy";
@@ -19,6 +18,10 @@ service PersonaAppVacancy {
 message GetVacanciesFiltersListRequest {}
 
 message GetVacanciesFiltersListResponse {
+    enum ErrorCode {
+        UNKNOWN_ERROR_CODE = 0;
+    }
+
     message VacancyFilter {
         string title = 1;
         string alias = 2;
@@ -30,17 +33,22 @@ message GetVacanciesFiltersListResponse {
 
     oneof response {
         Body body = 1;
+        ErrorCode error_code = 2;
     }
 }
 
 // Get Vacancies List
 message GetVacanciesListRequest {
-    map<string, personaappapi.entities.Empty> filter_ids = 1;
+    map<string, Empty> filter_ids = 1;
     google.protobuf.Int32Value offset = 2;
     google.protobuf.Int32Value count = 3;
 }
 
 message GetVacanciesListResponse {
+    enum ErrorCode {
+        UNKNOWN_ERROR_CODE = 0;
+    }
+
     message CompanyActivityField {
         string title = 1;
         string alias = 2;
@@ -49,7 +57,7 @@ message GetVacanciesListResponse {
     message Company {
         string title = 1;
         string logo_url = 2;
-        map<string, personaappapi.entities.Empty> activity_fields_ids = 3;
+        map<string, Empty> activity_fields_ids = 3;
     }
 
     message Vacancy {
@@ -70,6 +78,7 @@ message GetVacanciesListResponse {
 
     oneof response {
         Body body = 1;
+        ErrorCode error_code = 2;
     }
 }
 
@@ -79,6 +88,10 @@ message GetVacancyDetailsRequest {
 }
 
 message GetVacancyDetailsResponse {
+    enum ErrorCode {
+        UNKNOWN_ERROR_CODE = 0;
+    }
+
     message Vacancy {
         Company company = 1;
         Location location = 2;
@@ -116,10 +129,12 @@ message GetVacancyDetailsResponse {
 
     oneof response {
         Body body = 1;
+        ErrorCode error_code = 2;
     }
 }
 
 // Entity
+message Empty {}
 
 enum Currency {
     CURRENCY_UNKNOWN = 0;

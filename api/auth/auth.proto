@@ -50,8 +50,8 @@ message RegisterResponse {
     }
 
     oneof response {
-        ErrorCode error_code = 1;
-        Body body = 2;
+        Body body = 1;
+        ErrorCode error_code = 2;
     }
 }
 
@@ -77,25 +77,38 @@ message LoginResponse {
     }
 
     oneof response {
-        ErrorCode error_code = 1;
-        Body body = 2;
+        Body body = 1;
+        ErrorCode error_code = 2;
     }
 }
 
 // Logout
 message LogoutRequest {}
 
-message LogoutResponse {}
+message LogoutResponse {
+    enum ErrorCode {
+        UNKNOWN_ERROR_CODE = 0;
+    }
+    message Body {}
+    oneof response {
+        Body body = 1;
+        ErrorCode error_code = 2;
+    }
+}
 
 // Refresh
 message RefreshRequest {}
 
 message RefreshResponse {
+    enum ErrorCode {
+        UNKNOWN_ERROR_CODE = 0;
+    }
     message Body {
         Token token = 1;
     }
     oneof response {
         Body body = 1;
+        ErrorCode error_code = 2;
     }
 }
 
@@ -104,14 +117,32 @@ message UpdateEmailRequest {
     string email = 1;
 }
 
-message UpdateEmailResponse {}
+message UpdateEmailResponse {
+    enum ErrorCode {
+        UNKNOWN_ERROR_CODE = 0;
+    }
+    message Body {}
+    oneof response {
+        Body body = 1;
+        ErrorCode error_code = 2;
+    }
+}
 
 // Update phone
 message UpdatePhoneRequest {
     string phone = 1;
 }
 
-message UpdatePhoneResponse {}
+message UpdatePhoneResponse {
+    enum ErrorCode {
+        UNKNOWN_ERROR_CODE = 0;
+    }
+    message Body {}
+    oneof response {
+        Body body = 1;
+        ErrorCode error_code = 2;
+    }
+}
 
 // Update password
 message UpdatePasswordRequest {
@@ -119,7 +150,16 @@ message UpdatePasswordRequest {
     string new_password = 2;
 }
 
-message UpdatePasswordResponse {}
+message UpdatePasswordResponse {
+    enum ErrorCode {
+        UNKNOWN_ERROR_CODE = 0;
+    }
+    message Body {}
+    oneof response {
+        Body body = 1;
+        ErrorCode error_code = 2;
+    }
+}
 
 // Entities
 enum AccountType {
