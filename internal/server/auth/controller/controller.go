@@ -2,6 +2,7 @@ package controller
 
 import (
 	"context"
+	"personaapp/internal/server/company/storage"
 	"regexp"
 	"time"
 
@@ -78,6 +79,7 @@ var (
 	ErrInvalidAccount        = errors.New("invalid account")
 	ErrInvalidPassword       = errors.New("invalid password")
 	ErrInvalidPasswordLength = errors.New("invalid password length")
+	ErrAuthEntityNotFound    = errors.New("auth entity not found")
 )
 
 type Config struct {
@@ -98,6 +100,7 @@ func (c *Config) Flags(name string) *pflag.FlagSet {
 
 type Storage interface {
 	TxPutAuth(ctx context.Context, tx pkgtx.Tx, ad *authStorage.AuthData) error
+	TxGetAuthDataByID(ctx context.Context, tx pkgtx.Tx, accountID string) (*authStorage.AuthData, error)
 	TxGetAuthDataByPhoneOrEmail(ctx context.Context, tx pkgtx.Tx, phone, email string) (*authStorage.AuthData, error)
 	TxGetAuthDataByPhone(ctx context.Context, tx pkgtx.Tx, phone string) (*authStorage.AuthData, error)
 
@@ -456,4 +459,58 @@ func (c *Controller) Refresh(ctx context.Context, tokenStr string) (*AuthToken, 
 
 func (c *Controller) GetAuthClaims(ctx context.Context, tokenStr string) (*AuthClaims, error) {
 	return c.isAuthorized(tokenStr)
+}
+
+func (c *Controller) UpdateEmail(ctx context.Context, accountID string, email string) (*AuthToken, error) {
+	rd := struct {
+		Email string `valid:"stringlength(5|255),custom_email"`
+	}{Email: email}
+
+	if valid, err := govalidator.ValidateStruct(rd); !valid {
+		if msg := govalidator.ErrorByField(err, "Email"); msg != "" {
+			validatorError, ok := err.(govalidator.Error)
+			if !ok {
+				return nil, errors.Wrap(ErrInvalidEmail, msg)
+			}
+
+			switch validatorError.Validator {
+			case "stringlength":
+				return nil, errors.Wrap(ErrInvalidEmailLength, msg)
+			case "custom_email":
+				return nil, errors.Wrap(ErrInvalidEmailFormat, msg)
+			default:
+				return nil, errors.Wrap(ErrInvalidEmail, msg)
+			}
+		}
+	}
+
+	ad, err := c.s.TxGetAuthDataByID(ctx, c.s.NoTx(), accountID)
+	switch err {
+	case nil:
+	case storage.ErrNotFound:
+		return nil, errors.WithStack(ErrAuthEntityNotFound)
+	default:
+		return nil, errors.WithStack(err)
+	}
+
+	at, err := fromStorageAccount(ad.Account)
+	if err != nil {
+		return nil, errors.WithStack(err)
+	}
+
+	sat, err := c.generateToken(accountID, at)
+	if err != nil {
+		return nil, errors.WithStack(err)
+	}
+
+	ad.Email = email
+	ad.UpdatedAt = time.Now()
+
+	if err := pkgtx.RunInTx(ctx, c.s, func(ctx context.Context, tx pkgtx.Tx) error {
+		return errors.WithStack(c.s.TxPutAuth(ctx, tx, ad))
+	}); err != nil {
+		return nil, errors.WithStack(err)
+	}
+
+	return sat, nil
 }

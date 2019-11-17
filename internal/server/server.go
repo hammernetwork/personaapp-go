@@ -22,6 +22,7 @@ type AuthController interface {
 	Login(ctx context.Context, ld *authController.LoginData) (*authController.AuthToken, error)
 	Refresh(ctx context.Context, tokenStr string) (*authController.AuthToken, error)
 	GetAuthClaims(ctx context.Context, tokenStr string) (*authController.AuthClaims, error)
+	UpdateEmail(ctx context.Context, accountID string, email string) (*authController.AuthToken, error)
 }
 
 type CompanyController interface {
@@ -234,14 +235,54 @@ func (s *Server) Refresh(
 	}, nil
 }
 
-func (s *Server) UpdateEmail(ctx context.Context, req *apiauth.UpdateEmailRequest) (*apiauth.UpdateEmailResponse, error) {
-	//claims, err := s.getAuthClaims(ctx)
-	//if err != nil {
-	//	return nil, err
-	//}
+func (s *Server) UpdateEmail(
+	ctx context.Context,
+	req *apiauth.UpdateEmailRequest,
+) (*apiauth.UpdateEmailResponse, error) {
+	claims, err := s.getAuthClaims(ctx)
+	if err != nil {
+		return nil, err
+	}
 
-	// nolint: TODO: implement
-	return nil, nil
+	errorCode := apiauth.UpdateEmailResponse_UNKNOWN_ERROR_CODE
+
+	var statusErr error
+
+	token, updateErr := s.ac.UpdateEmail(ctx, claims.AccountID, req.Email)
+
+	switch errors.Cause(updateErr) {
+	case nil:
+	case authController.ErrInvalidEmailFormat:
+		errorCode = apiauth.UpdateEmailResponse_INVALID_EMAIL_FORMAT
+		statusErr = status.Error(codes.InvalidArgument, updateErr.Error())
+	case authController.ErrInvalidEmailLength:
+		errorCode = apiauth.UpdateEmailResponse_INVALID_EMAIL_LENGTH
+		statusErr = status.Error(codes.InvalidArgument, updateErr.Error())
+	case authController.ErrInvalidEmail:
+		errorCode = apiauth.UpdateEmailResponse_INVALID_EMAIL
+		statusErr = status.Error(codes.InvalidArgument, updateErr.Error())
+	case authController.ErrAuthEntityNotFound:
+		statusErr = status.Error(codes.NotFound, updateErr.Error())
+	default:
+		statusErr = status.Error(codes.Internal, updateErr.Error())
+	}
+
+	if statusErr != nil {
+		return &apiauth.UpdateEmailResponse{
+			Response: &apiauth.UpdateEmailResponse_ErrorCode_{ErrorCode: errorCode},
+		}, statusErr
+	}
+
+	sat, err := toServerToken(token)
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	return &apiauth.UpdateEmailResponse{
+		Response: &apiauth.UpdateEmailResponse_Body_{
+			Body: &apiauth.UpdateEmailResponse_Body{Token: sat},
+		},
+	}, nil
 }
 
 func (s *Server) UpdatePhone(context.Context, *apiauth.UpdatePhoneRequest) (*apiauth.UpdatePhoneResponse, error) {

@@ -120,8 +120,14 @@ message UpdateEmailRequest {
 message UpdateEmailResponse {
     enum ErrorCode {
         UNKNOWN_ERROR_CODE = 0;
+
+        INVALID_EMAIL = 3000;
+        INVALID_EMAIL_LENGTH = 3001;
+        INVALID_EMAIL_FORMAT = 3002;
     }
-    message Body {}
+    message Body {
+        Token token = 1;
+    }
     oneof response {
         Body body = 1;
         ErrorCode error_code = 2;
@@ -137,7 +143,9 @@ message UpdatePhoneResponse {
     enum ErrorCode {
         UNKNOWN_ERROR_CODE = 0;
     }
-    message Body {}
+    message Body {
+        Token token = 1;
+    }
     oneof response {
         Body body = 1;
         ErrorCode error_code = 2;
@@ -154,7 +162,9 @@ message UpdatePasswordResponse {
     enum ErrorCode {
         UNKNOWN_ERROR_CODE = 0;
     }
-    message Body {}
+    message Body {
+        Token token = 1;
+    }
     oneof response {
         Body body = 1;
         ErrorCode error_code = 2;
