@@ -23,6 +23,7 @@ type AuthController interface {
 	Refresh(ctx context.Context, tokenStr string) (*authController.AuthToken, error)
 	GetAuthClaims(ctx context.Context, tokenStr string) (*authController.AuthClaims, error)
 	UpdateEmail(ctx context.Context, accountID string, email string) (*authController.AuthToken, error)
+	UpdatePhone(ctx context.Context, accountID string, phone string) (*authController.AuthToken, error)
 }
 
 type CompanyController interface {
@@ -235,6 +236,7 @@ func (s *Server) Refresh(
 	}, nil
 }
 
+// nolint: dupl
 func (s *Server) UpdateEmail(
 	ctx context.Context,
 	req *apiauth.UpdateEmailRequest,
@@ -285,9 +287,55 @@ func (s *Server) UpdateEmail(
 	}, nil
 }
 
-func (s *Server) UpdatePhone(context.Context, *apiauth.UpdatePhoneRequest) (*apiauth.UpdatePhoneResponse, error) {
-	// nolint: TODO: implement
-	return nil, nil
+// nolint: dupl
+func (s *Server) UpdatePhone(
+	ctx context.Context,
+	req *apiauth.UpdatePhoneRequest,
+) (*apiauth.UpdatePhoneResponse, error) {
+	claims, err := s.getAuthClaims(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	errorCode := apiauth.UpdatePhoneResponse_UNKNOWN_ERROR_CODE
+
+	var statusErr error
+
+	token, updateErr := s.ac.UpdatePhone(ctx, claims.AccountID, req.Phone)
+
+	switch errors.Cause(updateErr) {
+	case nil:
+	case authController.ErrInvalidPhoneFormat:
+		errorCode = apiauth.UpdatePhoneResponse_INVALID_PHONE_FORMAT
+		statusErr = status.Error(codes.InvalidArgument, updateErr.Error())
+	case authController.ErrInvalidPhoneRequired:
+		errorCode = apiauth.UpdatePhoneResponse_INVALID_PHONE_LENGTH
+		statusErr = status.Error(codes.InvalidArgument, updateErr.Error())
+	case authController.ErrInvalidPhone:
+		errorCode = apiauth.UpdatePhoneResponse_INVALID_PHONE
+		statusErr = status.Error(codes.InvalidArgument, updateErr.Error())
+	case authController.ErrAuthEntityNotFound:
+		statusErr = status.Error(codes.NotFound, updateErr.Error())
+	default:
+		statusErr = status.Error(codes.Internal, updateErr.Error())
+	}
+
+	if statusErr != nil {
+		return &apiauth.UpdatePhoneResponse{
+			Response: &apiauth.UpdatePhoneResponse_ErrorCode_{ErrorCode: errorCode},
+		}, statusErr
+	}
+
+	sat, err := toServerToken(token)
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	return &apiauth.UpdatePhoneResponse{
+		Response: &apiauth.UpdatePhoneResponse_Body_{
+			Body: &apiauth.UpdatePhoneResponse_Body{Token: sat},
+		},
+	}, nil
 }
 
 func (s *Server) UpdatePassword(

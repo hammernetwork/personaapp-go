@@ -142,6 +142,10 @@ message UpdatePhoneRequest {
 message UpdatePhoneResponse {
     enum ErrorCode {
         UNKNOWN_ERROR_CODE = 0;
+
+        INVALID_PHONE = 3000;
+        INVALID_PHONE_LENGTH = 3001;
+        INVALID_PHONE_FORMAT = 3002;
     }
     message Body {
         Token token = 1;

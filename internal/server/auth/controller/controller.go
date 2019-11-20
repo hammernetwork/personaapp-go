@@ -76,6 +76,7 @@ var (
 	ErrInvalidEmailLength    = errors.New("invalid email length")
 	ErrInvalidPhone          = errors.New("invalid phone")
 	ErrInvalidPhoneFormat    = errors.New("invalid phone format")
+	ErrInvalidPhoneRequired  = errors.New("invalid phone required")
 	ErrInvalidAccount        = errors.New("invalid account")
 	ErrInvalidPassword       = errors.New("invalid password")
 	ErrInvalidPasswordLength = errors.New("invalid password length")
@@ -461,9 +462,10 @@ func (c *Controller) GetAuthClaims(ctx context.Context, tokenStr string) (*AuthC
 	return c.isAuthorized(tokenStr)
 }
 
+// nolint: dupl
 func (c *Controller) UpdateEmail(ctx context.Context, accountID string, email string) (*AuthToken, error) {
 	rd := struct {
-		Email string `valid:"stringlength(5|255),custom_email"`
+		Email string `valid:"stringlength(5|255),custom_email,required"`
 	}{Email: email}
 
 	if valid, err := govalidator.ValidateStruct(rd); !valid {
@@ -504,6 +506,61 @@ func (c *Controller) UpdateEmail(ctx context.Context, accountID string, email st
 	}
 
 	ad.Email = email
+	ad.UpdatedAt = time.Now()
+
+	if err := pkgtx.RunInTx(ctx, c.s, func(ctx context.Context, tx pkgtx.Tx) error {
+		return errors.WithStack(c.s.TxPutAuth(ctx, tx, ad))
+	}); err != nil {
+		return nil, errors.WithStack(err)
+	}
+
+	return sat, nil
+}
+
+// nolint: dupl
+func (c *Controller) UpdatePhone(ctx context.Context, accountID string, phone string) (*AuthToken, error) {
+	rd := struct {
+		Phone string `valid:"phone,required"`
+	}{Phone: phone}
+
+	if valid, err := govalidator.ValidateStruct(rd); !valid {
+		if msg := govalidator.ErrorByField(err, "Phone"); msg != "" {
+			validatorError, ok := err.(govalidator.Error)
+			if !ok {
+				return nil, errors.Wrap(ErrInvalidPhone, msg)
+			}
+
+			switch validatorError.Validator {
+			case "phone":
+				return nil, errors.Wrap(ErrInvalidPhoneFormat, msg)
+			case "required":
+				return nil, errors.Wrap(ErrInvalidPhoneRequired, msg)
+			default:
+				return nil, errors.Wrap(ErrInvalidPhone, msg)
+			}
+		}
+	}
+
+	ad, err := c.s.TxGetAuthDataByID(ctx, c.s.NoTx(), accountID)
+	switch err {
+	case nil:
+	case storage.ErrNotFound:
+		return nil, errors.WithStack(ErrAuthEntityNotFound)
+	default:
+		return nil, errors.WithStack(err)
+	}
+
+	at, err := fromStorageAccount(ad.Account)
+	if err != nil {
+		return nil, errors.WithStack(err)
+	}
+
+	sat, err := c.generateToken(accountID, at)
+	if err != nil {
+		return nil, errors.WithStack(err)
+	}
+
+	ad.Phone = phone
 	ad.UpdatedAt = time.Now()
 
 	if err := pkgtx.RunInTx(ctx, c.s, func(ctx context.Context, tx pkgtx.Tx) error {
