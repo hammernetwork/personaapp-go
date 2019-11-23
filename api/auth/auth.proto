@@ -165,6 +165,13 @@ message UpdatePasswordRequest {
 message UpdatePasswordResponse {
     enum ErrorCode {
         UNKNOWN_ERROR_CODE = 0;
+
+        INVALID_PASSWORD = 3000;
+        INVALID_PASSWORD_LENGTH = 3001;
+
+        INVALID_OLD_PASSWORD = 3100;
+        INVALID_OLD_PASSWORD_LENGTH = 3101;
+        INVALID_OLD_PASSWORD_NOT_MATCH = 3102;
     }
     message Body {
         Token token = 1;

@@ -24,6 +24,11 @@ type AuthController interface {
 	GetAuthClaims(ctx context.Context, tokenStr string) (*authController.AuthClaims, error)
 	UpdateEmail(ctx context.Context, accountID string, email string) (*authController.AuthToken, error)
 	UpdatePhone(ctx context.Context, accountID string, phone string) (*authController.AuthToken, error)
+	UpdatePassword(
+		ctx context.Context,
+		accountID string,
+		upd *authController.UpdatePasswordData,
+	) (*authController.AuthToken, error)
 }
 
 type CompanyController interface {
@@ -265,6 +270,8 @@ func (s *Server) UpdateEmail(
 		statusErr = status.Error(codes.InvalidArgument, updateErr.Error())
 	case authController.ErrAuthEntityNotFound:
 		statusErr = status.Error(codes.NotFound, updateErr.Error())
+	case authController.ErrAlreadyExists:
+		statusErr = status.Error(codes.AlreadyExists, updateErr.Error())
 	default:
 		statusErr = status.Error(codes.Internal, updateErr.Error())
 	}
@@ -316,6 +323,8 @@ func (s *Server) UpdatePhone(
 		statusErr = status.Error(codes.InvalidArgument, updateErr.Error())
 	case authController.ErrAuthEntityNotFound:
 		statusErr = status.Error(codes.NotFound, updateErr.Error())
+	case authController.ErrAlreadyExists:
+		statusErr = status.Error(codes.AlreadyExists, updateErr.Error())
 	default:
 		statusErr = status.Error(codes.Internal, updateErr.Error())
 	}
@@ -338,12 +347,65 @@ func (s *Server) UpdatePhone(
 	}, nil
 }
 
+// nolint: dupl
 func (s *Server) UpdatePassword(
-	context.Context,
-	*apiauth.UpdatePasswordRequest,
+	ctx context.Context,
+	req *apiauth.UpdatePasswordRequest,
 ) (*apiauth.UpdatePasswordResponse, error) {
-	// nolint: TODO: implement
-	return nil, nil
+	claims, err := s.getAuthClaims(ctx)
+	if err != nil {
+		return nil, err
+	}
+
+	errorCode := apiauth.UpdatePasswordResponse_UNKNOWN_ERROR_CODE
+
+	var statusErr error
+
+	upd := &authController.UpdatePasswordData{
+		OldPassword: req.OldPassword,
+		NewPassword: req.NewPassword,
+	}
+	token, updateErr := s.ac.UpdatePassword(ctx, claims.AccountID, upd)
+
+	switch errors.Cause(updateErr) {
+	case nil:
+	case authController.ErrInvalidOldPassword:
+		errorCode = apiauth.UpdatePasswordResponse_INVALID_OLD_PASSWORD
+		statusErr = status.Error(codes.InvalidArgument, updateErr.Error())
+	case authController.ErrInvalidOldPasswordLength:
+		errorCode = apiauth.UpdatePasswordResponse_INVALID_OLD_PASSWORD_LENGTH
+		statusErr = status.Error(codes.InvalidArgument, updateErr.Error())
+	case authController.ErrInvalidOldPasswordNotMatch:
+		errorCode = apiauth.UpdatePasswordResponse_INVALID_OLD_PASSWORD_NOT_MATCH
+		statusErr = status.Error(codes.InvalidArgument, updateErr.Error())
+	case authController.ErrInvalidPassword:
+		errorCode = apiauth.UpdatePasswordResponse_INVALID_PASSWORD
+		statusErr = status.Error(codes.InvalidArgument, updateErr.Error())
+	case authController.ErrInvalidPasswordLength:
+		errorCode = apiauth.UpdatePasswordResponse_INVALID_PASSWORD_LENGTH
+		statusErr = status.Error(codes.InvalidArgument, updateErr.Error())
+	case authController.ErrAuthEntityNotFound:
+		statusErr = status.Error(codes.NotFound, updateErr.Error())
+	default:
+		statusErr = status.Error(codes.Internal, updateErr.Error())
+	}
+
+	if statusErr != nil {
+		return &apiauth.UpdatePasswordResponse{
+			Response: &apiauth.UpdatePasswordResponse_ErrorCode_{ErrorCode: errorCode},
+		}, statusErr
+	}
+
+	sat, err := toServerToken(token)
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	return &apiauth.UpdatePasswordResponse{
+		Response: &apiauth.UpdatePasswordResponse_Body_{
+			Body: &apiauth.UpdatePasswordResponse_Body{Token: sat},
+		},
+	}, nil
 }
 
 func getOptionalString(sw *wrappers.StringValue) *string {

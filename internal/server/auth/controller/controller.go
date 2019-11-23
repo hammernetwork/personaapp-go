@@ -66,21 +66,24 @@ func init() {
 }
 
 var (
-	ErrAlreadyExists         = errors.New("already exists")
-	ErrUnauthorized          = errors.New("unauthorized")
-	ErrInvalidToken          = errors.New("invalid token")
-	ErrInvalidLogin          = errors.New("invalid login")
-	ErrInvalidLoginLength    = errors.New("invalid login length")
-	ErrInvalidEmail          = errors.New("invalid email")
-	ErrInvalidEmailFormat    = errors.New("invalid email format")
-	ErrInvalidEmailLength    = errors.New("invalid email length")
-	ErrInvalidPhone          = errors.New("invalid phone")
-	ErrInvalidPhoneFormat    = errors.New("invalid phone format")
-	ErrInvalidPhoneRequired  = errors.New("invalid phone required")
-	ErrInvalidAccount        = errors.New("invalid account")
-	ErrInvalidPassword       = errors.New("invalid password")
-	ErrInvalidPasswordLength = errors.New("invalid password length")
-	ErrAuthEntityNotFound    = errors.New("auth entity not found")
+	ErrAlreadyExists              = errors.New("already exists")
+	ErrUnauthorized               = errors.New("unauthorized")
+	ErrInvalidToken               = errors.New("invalid token")
+	ErrInvalidLogin               = errors.New("invalid login")
+	ErrInvalidLoginLength         = errors.New("invalid login length")
+	ErrInvalidEmail               = errors.New("invalid email")
+	ErrInvalidEmailFormat         = errors.New("invalid email format")
+	ErrInvalidEmailLength         = errors.New("invalid email length")
+	ErrInvalidPhone               = errors.New("invalid phone")
+	ErrInvalidPhoneFormat         = errors.New("invalid phone format")
+	ErrInvalidPhoneRequired       = errors.New("invalid phone required")
+	ErrInvalidAccount             = errors.New("invalid account")
+	ErrInvalidPassword            = errors.New("invalid password")
+	ErrInvalidPasswordLength      = errors.New("invalid password length")
+	ErrInvalidOldPassword         = errors.New("invalid old password")
+	ErrInvalidOldPasswordLength   = errors.New("invalid old password length")
+	ErrInvalidOldPasswordNotMatch = errors.New("invalid old password not match")
+	ErrAuthEntityNotFound         = errors.New("auth entity not found")
 )
 
 type Config struct {
@@ -104,6 +107,7 @@ type Storage interface {
 	TxGetAuthDataByID(ctx context.Context, tx pkgtx.Tx, accountID string) (*authStorage.AuthData, error)
 	TxGetAuthDataByPhoneOrEmail(ctx context.Context, tx pkgtx.Tx, phone, email string) (*authStorage.AuthData, error)
 	TxGetAuthDataByPhone(ctx context.Context, tx pkgtx.Tx, phone string) (*authStorage.AuthData, error)
+	TxGetAuthDataByEmail(ctx context.Context, tx pkgtx.Tx, email string) (*authStorage.AuthData, error)
 
 	BeginTx(ctx context.Context) (pkgtx.Tx, error)
 	NoTx() pkgtx.Tx
@@ -373,6 +377,7 @@ type LoginData struct {
 	Password string `valid:"stringlength(6|30),required"`
 }
 
+// nolint: dupl
 func (ld *LoginData) Validate() error {
 	var fieldErrors = []struct {
 		Field        string
@@ -465,7 +470,7 @@ func (c *Controller) GetAuthClaims(ctx context.Context, tokenStr string) (*AuthC
 // nolint: dupl
 func (c *Controller) UpdateEmail(ctx context.Context, accountID string, email string) (*AuthToken, error) {
 	rd := struct {
-		Email string `valid:"stringlength(5|255),custom_email,required"`
+		Email string `valid:"stringlength(5|255),custom_email"`
 	}{Email: email}
 
 	if valid, err := govalidator.ValidateStruct(rd); !valid {
@@ -487,11 +492,26 @@ func (c *Controller) UpdateEmail(ctx context.Context, accountID string, email st
 	}
 
 	ad, err := c.s.TxGetAuthDataByID(ctx, c.s.NoTx(), accountID)
-	switch err {
+	switch errors.Cause(err) {
 	case nil:
 	case storage.ErrNotFound:
 		return nil, errors.WithStack(ErrAuthEntityNotFound)
 	default:
+		return nil, errors.WithStack(err)
+	}
+
+	ad.Email = email
+	ad.UpdatedAt = time.Now()
+
+	if err := pkgtx.RunInTx(ctx, c.s, func(ctx context.Context, tx pkgtx.Tx) error {
+		switch _, err := c.s.TxGetAuthDataByEmail(ctx, tx, email); errors.Cause(err) {
+		case storage.ErrNotFound:
+		case nil:
+			return errors.WithStack(ErrAlreadyExists)
+		}
+
+		return errors.WithStack(c.s.TxPutAuth(ctx, tx, ad))
+	}); err != nil {
 		return nil, errors.WithStack(err)
 	}
 
@@ -502,15 +522,6 @@ func (c *Controller) UpdateEmail(ctx context.Context, accountID string, email st
 
 	sat, err := c.generateToken(accountID, at)
 	if err != nil {
-		return nil, errors.WithStack(err)
-	}
-
-	ad.Email = email
-	ad.UpdatedAt = time.Now()
-
-	if err := pkgtx.RunInTx(ctx, c.s, func(ctx context.Context, tx pkgtx.Tx) error {
-		return errors.WithStack(c.s.TxPutAuth(ctx, tx, ad))
-	}); err != nil {
 		return nil, errors.WithStack(err)
 	}
 
@@ -542,11 +553,26 @@ func (c *Controller) UpdatePhone(ctx context.Context, accountID string, phone st
 	}
 
 	ad, err := c.s.TxGetAuthDataByID(ctx, c.s.NoTx(), accountID)
-	switch err {
+	switch errors.Cause(err) {
 	case nil:
 	case storage.ErrNotFound:
 		return nil, errors.WithStack(ErrAuthEntityNotFound)
 	default:
+		return nil, errors.WithStack(err)
+	}
+
+	ad.Phone = phone
+	ad.UpdatedAt = time.Now()
+
+	if err := pkgtx.RunInTx(ctx, c.s, func(ctx context.Context, tx pkgtx.Tx) error {
+		switch _, err := c.s.TxGetAuthDataByPhone(ctx, tx, phone); errors.Cause(err) {
+		case storage.ErrNotFound:
+		case nil:
+			return errors.WithStack(ErrAlreadyExists)
+		}
+
+		return errors.WithStack(c.s.TxPutAuth(ctx, tx, ad))
+	}); err != nil {
 		return nil, errors.WithStack(err)
 	}
 
@@ -560,12 +586,103 @@ func (c *Controller) UpdatePhone(ctx context.Context, accountID string, phone st
 		return nil, errors.WithStack(err)
 	}
 
-	ad.Phone = phone
+	return sat, nil
+}
+
+type UpdatePasswordData struct {
+	OldPassword string `valid:"stringlength(6|30),required"`
+	NewPassword string `valid:"stringlength(6|30),required"`
+}
+
+// nolint: dupl
+func (upd *UpdatePasswordData) Validate() error {
+	var fieldErrors = []struct {
+		Field        string
+		Errors       map[string]error
+		DefaultError error
+	}{
+		{
+			Field:        "OldPassword",
+			Errors:       map[string]error{"stringlength": ErrInvalidOldPasswordLength},
+			DefaultError: ErrInvalidOldPassword,
+		},
+		{
+			Field:        "NewPassword",
+			Errors:       map[string]error{"stringlength": ErrInvalidPasswordLength},
+			DefaultError: ErrInvalidPassword,
+		},
+	}
+
+	if valid, err := govalidator.ValidateStruct(upd); !valid {
+		for _, fe := range fieldErrors {
+			if msg := govalidator.ErrorByField(err, fe.Field); msg != "" {
+				validatorError, ok := err.(govalidator.Error)
+				if !ok {
+					return errors.Wrap(fe.DefaultError, msg)
+				}
+
+				if err, ok := fe.Errors[validatorError.Validator]; ok {
+					return errors.Wrap(err, msg)
+				}
+
+				return errors.Wrap(fe.DefaultError, msg)
+			}
+		}
+
+		return errors.New("update password struct is filled with some invalid data")
+	}
+
+	return nil
+}
+
+func (c *Controller) UpdatePassword(
+	ctx context.Context,
+	accountID string,
+	upd *UpdatePasswordData,
+) (*AuthToken, error) {
+	if err := upd.Validate(); err != nil {
+		return nil, errors.WithStack(err)
+	}
+
+	ad, err := c.s.TxGetAuthDataByID(ctx, c.s.NoTx(), accountID)
+	switch err {
+	case nil:
+	case storage.ErrNotFound:
+		return nil, errors.WithStack(ErrAuthEntityNotFound)
+	default:
+		return nil, errors.WithStack(err)
+	}
+
+	oldPasswordHash, err := passwordHash(upd.OldPassword)
+	if err != nil {
+		return nil, errors.WithStack(err)
+	}
+
+	if oldPasswordHash != ad.PasswordHash {
+		return nil, errors.WithStack(ErrInvalidOldPasswordNotMatch)
+	}
+
+	newPasswordHash, err := passwordHash(upd.NewPassword)
+	if err != nil {
+		return nil, errors.WithStack(err)
+	}
+
+	ad.PasswordHash = newPasswordHash
 	ad.UpdatedAt = time.Now()
 
 	if err := pkgtx.RunInTx(ctx, c.s, func(ctx context.Context, tx pkgtx.Tx) error {
 		return errors.WithStack(c.s.TxPutAuth(ctx, tx, ad))
 	}); err != nil {
+		return nil, errors.WithStack(err)
+	}
+
+	at, err := fromStorageAccount(ad.Account)
+	if err != nil {
+		return nil, errors.WithStack(err)
+	}
+
+	sat, err := c.generateToken(accountID, at)
+	if err != nil {
 		return nil, errors.WithStack(err)
 	}
 
