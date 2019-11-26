@@ -31,9 +31,9 @@ type CompanyData struct {
 }
 
 type ActivityField struct {
-	ID    string
-	Title string
-	Alias string
+	ID      string
+	Title   string
+	IconURL string
 }
 
 func (s *Storage) TxGetCompanyByID(ctx context.Context, tx pkgtx.Tx, authID string) (*CompanyData, error) {
@@ -98,7 +98,7 @@ func (s *Storage) TxGetActivityFieldsByCompanyID(
 
 	rows, err := c.QueryContext(
 		ctx,
-		`SELECT caf.activity_field_id, af.title, af.alias
+		`SELECT caf.activity_field_id, af.title, af.icon_url
 			FROM company_activity_fields AS caf
 			INNER JOIN activity_field AS af
 			ON caf.activity_field_id = af.id
@@ -116,7 +116,7 @@ func (s *Storage) TxGetActivityFieldsByCompanyID(
 
 	for rows.Next() {
 		var af ActivityField
-		if err := rows.Scan(&af.ID, &af.Title, &af.Alias); err != nil {
+		if err := rows.Scan(&af.ID, &af.Title, &af.IconURL); err != nil {
 			_ = rows.Close()
 			return nil, errors.WithStack(err)
 		}

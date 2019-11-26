@@ -1,0 +1,151 @@
+syntax = "proto3";
+
+package personaappapi.vacancy;
+
+import "google/protobuf/wrappers.proto";
+
+option go_package = "personaapp/pkg/grpcapi/vacancy";
+option java_package = "online.personaapp.core";
+option java_outer_classname = "GrpcVacancy";
+
+service PersonaAppVacancy {
+    rpc GetVacanciesFiltersList (GetVacanciesFiltersListRequest) returns (GetVacanciesFiltersListResponse);
+    rpc GetVacanciesList (GetVacanciesListRequest) returns (GetVacanciesListResponse);
+    rpc GetVacancyDetails (GetVacancyDetailsRequest) returns (GetVacancyDetailsResponse);
+}
+
+// Get Vacancies filters list
+message GetVacanciesFiltersListRequest {}
+
+message GetVacanciesFiltersListResponse {
+    enum ErrorCode {
+        UNKNOWN_ERROR_CODE = 0;
+    }
+
+    message VacancyFilter {
+        string id = 1;
+        string title = 2;
+        string icon_url = 3;
+    }
+
+    message Body {
+        map<string, VacancyFilter> vacancy_filters = 1;
+    }
+
+    oneof response {
+        Body body = 1;
+        ErrorCode error_code = 2;
+    }
+}
+
+// Get Vacancies List
+message GetVacanciesListRequest {
+    map<string, Empty> filter_ids = 1;
+    google.protobuf.Int32Value offset = 2;
+    google.protobuf.Int32Value count = 3;
+}
+
+message GetVacanciesListResponse {
+    enum ErrorCode {
+        UNKNOWN_ERROR_CODE = 0;
+    }
+
+    message CompanyActivityField {
+        string id = 1;
+        string title = 2;
+        string icon_url = 3;
+    }
+
+    message Company {
+        string id = 1;
+        string title = 2;
+        string logo_url = 3;
+        map<string, Empty> activity_fields_ids = 4;
+    }
+
+    message Vacancy {
+        string id = 1;
+        string title = 2;
+        int32 min_salary = 3;
+        int32 max_salary = 4;
+        Currency currency = 5;
+        string image_url = 6;
+        string company_id = 7;
+    }
+
+    message Body {
+        repeated string vacancies_ids = 1;
+        map<string, Vacancy> vacancies = 2;
+        map<string, Company> companies = 3;
+        map<string, CompanyActivityField> activity_fields = 4;
+    }
+
+    oneof response {
+        Body body = 1;
+        ErrorCode error_code = 2;
+    }
+}
+
+// Get Vacancy Details
+message GetVacancyDetailsRequest {
+    string vacancy_id = 1;
+}
+
+message GetVacancyDetailsResponse {
+    enum ErrorCode {
+        UNKNOWN_ERROR_CODE = 0;
+    }
+
+    message Vacancy {
+        string id = 1;
+        Company company = 2;
+        Location location = 3;
+        string title = 4;
+        string description = 5;
+        int32 min_salary = 6;
+        int32 max_salary = 7;
+        Currency currency = 8;
+        string image_url = 9;
+        string work_experience = 10;
+        string work_schedule = 11;
+    }
+
+    message Location {
+        float latitude = 1;
+        float longitude = 2;
+    }
+
+    message Company {
+        string id = 1;
+        string title = 2;
+        string description = 3;
+        string logo_url = 4;
+        string phone = 5;
+        map<string, CompanyActivityField> activity_fields = 6;
+    }
+
+    message CompanyActivityField {
+        string id = 1;
+        string title = 2;
+        string icon_url = 3;
+    }
+
+    message Body {
+        Vacancy vacancy = 1;
+    }
+
+    oneof response {
+        Body body = 1;
+        ErrorCode error_code = 2;
+    }
+}
+
+// Entity
+message Empty {}
+
+enum Currency {
+    CURRENCY_UNKNOWN = 0;
+    CURRENCY_UAH = 1;
+    CURRENCY_USD = 2;
+    CURRENCY_EUR = 3;
+}

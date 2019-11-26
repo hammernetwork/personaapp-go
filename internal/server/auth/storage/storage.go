@@ -146,3 +146,53 @@ func (s *Storage) TxGetAuthDataByPhone(
 
 	return &ad, nil
 }
+
+func (s *Storage) TxGetAuthDataByEmail(
+	ctx context.Context,
+	tx pkgtx.Tx,
+	email string,
+) (*AuthData, error) {
+	c := postgresql.FromTx(tx)
+
+	var ad AuthData
+	err := c.QueryRowContext(
+		ctx,
+		`SELECT account_id, account_type, email, phone, password_hash, created_at, updated_at 
+			FROM auth
+			WHERE email = $1`,
+		email,
+	).Scan(&ad.AccountID, &ad.Account, &ad.Email, &ad.Phone, &ad.PasswordHash, &ad.CreatedAt, &ad.UpdatedAt)
+
+	switch err {
+	case nil:
+	case sql.ErrNoRows:
+		return nil, ErrNotFound
+	default:
+		return nil, errors.WithStack(err)
+	}
+
+	return &ad, nil
+}
+
+func (s *Storage) TxGetAuthDataByID(ctx context.Context, tx pkgtx.Tx, accountID string) (*AuthData, error) {
+	c := postgresql.FromTx(tx)
+
+	var ad AuthData
+	err := c.QueryRowContext(
+		ctx,
+		`SELECT account_id, account_type, email, phone, password_hash, created_at, updated_at 
+			FROM auth
+			WHERE account_id = $1`,
+		accountID,
+	).Scan(&ad.AccountID, &ad.Account, &ad.Email, &ad.Phone, &ad.PasswordHash, &ad.CreatedAt, &ad.UpdatedAt)
+
+	switch err {
+	case nil:
+	case sql.ErrNoRows:
+		return nil, ErrNotFound
+	default:
+		return nil, errors.WithStack(err)
+	}
+
+	return &ad, nil
+}

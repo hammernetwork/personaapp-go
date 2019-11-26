@@ -21,6 +21,7 @@ import (
 	"personaapp/pkg/flag"
 	apiauth "personaapp/pkg/grpcapi/auth"
 	apicompany "personaapp/pkg/grpcapi/company"
+	apivacancy "personaapp/pkg/grpcapi/vacancy"
 	"personaapp/pkg/postgresql"
 )
 
@@ -79,6 +80,7 @@ func run(cfg *Config) func(cmd *cobra.Command, args []string) error {
 		grpcServer := grpc.NewServer()
 		apiauth.RegisterPersonaAppAuthServer(grpcServer, srv)
 		apicompany.RegisterPersonaAppCompanyServer(grpcServer, srv)
+		apivacancy.RegisterPersonaAppVacancyServer(grpcServer, srv)
 		reflection.Register(grpcServer)
 
 		g := &errgroup.Group{}

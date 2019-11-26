@@ -78,7 +78,7 @@ endif
 
 	@${PROTOC} \
 		-I ./api \
-		./api/entities/*.proto \
+		./api/vacancy/*.proto \
 		--go_out=plugins=grpc:..
 
 	@${PROTOC} \
