@@ -5,85 +5,46 @@ package personaappapi.vacancy;
 import "google/protobuf/wrappers.proto";
 
 option go_package = "personaapp/pkg/grpcapi/vacancy";
-option java_package = "online.personaapp.core";
+option java_package = "online.personaapp";
 option java_outer_classname = "GrpcVacancy";
 
 service PersonaAppVacancy {
-    rpc GetVacanciesFiltersList (GetVacanciesFiltersListRequest) returns (GetVacanciesFiltersListResponse);
+    rpc GetVacancyCategoriesList (GetVacancyCategoriesListRequest) returns (GetVacancyCategoriesListResponse);
     rpc GetVacanciesList (GetVacanciesListRequest) returns (GetVacanciesListResponse);
     rpc GetVacancyDetails (GetVacancyDetailsRequest) returns (GetVacancyDetailsResponse);
 }
 
 // Get Vacancies filters list
-message GetVacanciesFiltersListRequest {}
+message GetVacancyCategoriesListRequest {
+}
 
-message GetVacanciesFiltersListResponse {
-    enum ErrorCode {
-        UNKNOWN_ERROR_CODE = 0;
-    }
-
-    message VacancyFilter {
+message GetVacancyCategoriesListResponse {
+    message VacancyCategory {
         string id = 1;
         string title = 2;
         string icon_url = 3;
     }
 
-    message Body {
-        map<string, VacancyFilter> vacancy_filters = 1;
-    }
-
-    oneof response {
-        Body body = 1;
-        ErrorCode error_code = 2;
-    }
+    map<string, VacancyCategory> vacancy_categories = 1;
 }
 
 // Get Vacancies List
 message GetVacanciesListRequest {
-    map<string, Empty> filter_ids = 1;
-    google.protobuf.Int32Value offset = 2;
+    map<string, Empty> categories_ids = 1;
+    google.protobuf.StringValue cursor = 2;
     google.protobuf.Int32Value count = 3;
 }
 
 message GetVacanciesListResponse {
-    enum ErrorCode {
-        UNKNOWN_ERROR_CODE = 0;
+    message VacancyDetails {
+        Vacancy vacancy = 1;
+        string image_url = 2;
     }
 
-    message CompanyActivityField {
-        string id = 1;
-        string title = 2;
-        string icon_url = 3;
-    }
-
-    message Company {
-        string id = 1;
-        string title = 2;
-        string logo_url = 3;
-        map<string, Empty> activity_fields_ids = 4;
-    }
-
-    message Vacancy {
-        string id = 1;
-        string title = 2;
-        int32 min_salary = 3;
-        int32 max_salary = 4;
-        Currency currency = 5;
-        string image_url = 6;
-        string company_id = 7;
-    }
-
-    message Body {
-        repeated string vacancies_ids = 1;
-        map<string, Vacancy> vacancies = 2;
-        map<string, Company> companies = 3;
-        map<string, CompanyActivityField> activity_fields = 4;
-    }
-
-    oneof response {
-        Body body = 1;
-        ErrorCode error_code = 2;
-    }
+    repeated string vacancies_ids = 1;
+    map<string, VacancyDetails> vacancies = 2;
+    map<string, Company> companies = 3;
+    google.protobuf.StringValue cursor = 4;
 }
 
 // Get Vacancy Details
@@ -92,52 +53,35 @@ message GetVacancyDetailsRequest {
 }
 
 message GetVacancyDetailsResponse {
-    enum ErrorCode {
-        UNKNOWN_ERROR_CODE = 0;
+    message CompanyDescription {
+        string description = 1;
     }
 
-    message Vacancy {
-        string id = 1;
-        Company company = 2;
-        Location location = 3;
-        string title = 4;
-        string description = 5;
-        int32 min_salary = 6;
-        int32 max_salary = 7;
-        Currency currency = 8;
-        string image_url = 9;
-        string work_experience = 10;
-        string work_schedule = 11;
-    }
-
-    message Location {
+    message VacancyLocation {
         float latitude = 1;
         float longitude = 2;
     }
 
-    message Company {
-        string id = 1;
-        string title = 2;
-        string description = 3;
-        string logo_url = 4;
-        string phone = 5;
-        map<string, CompanyActivityField> activity_fields = 6;
+    message VacancyDescription {
+        string description = 1;
+        uint32 work_months_experience = 2;
+        string work_schedule = 3;
     }
 
-    message CompanyActivityField {
-        string id = 1;
-        string title = 2;
-        string icon_url = 3;
+    message VacancyCompany {
+        Company company = 1;
+        CompanyDescription description = 2;
     }
 
-    message Body {
-        Vacancy vacancy = 1;
+    message VacancyImage {
+        string image_url = 1;
     }
 
-    oneof response {
-        Body body = 1;
-        ErrorCode error_code = 2;
-    }
+    Vacancy vacancy = 1;
+    VacancyImage image = 2;
+    VacancyLocation location = 3;
+    VacancyDescription description = 4;
+    VacancyCompany company = 5;
 }
 
 // Entity
@@ -146,6 +90,20 @@ message Empty {}
 enum Currency {
     CURRENCY_UNKNOWN = 0;
     CURRENCY_UAH = 1;
-    CURRENCY_USD = 2;
-    CURRENCY_EUR = 3;
+}
+
+message Company {
+    string id = 1;
+    string title = 2;
+    string logo_url = 3;
+}
+
+message Vacancy {
+    string id = 1;
+    string title = 2;
+    string phone = 3;
+    int32 min_salary = 4;
+    int32 max_salary = 5;
+    string company_id = 6;
+    Currency currency = 7;
 }

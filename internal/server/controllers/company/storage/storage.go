@@ -22,7 +22,7 @@ func New(db *postgresql.Storage) *Storage {
 }
 
 type CompanyData struct {
-	AuthID      string
+	ID          string
 	Title       string
 	Description string
 	LogoURL     string
@@ -46,7 +46,7 @@ func (s *Storage) TxGetCompanyByID(ctx context.Context, tx pkgtx.Tx, authID stri
 			FROM company 
 			WHERE auth_id = $1`,
 		authID,
-	).Scan(&cd.AuthID, &cd.Title, &cd.Description, &cd.LogoURL, &cd.CreatedAt, &cd.UpdatedAt)
+	).Scan(&cd.ID, &cd.Title, &cd.Description, &cd.LogoURL, &cd.CreatedAt, &cd.UpdatedAt)
 
 	switch err {
 	case nil:
@@ -59,24 +59,65 @@ func (s *Storage) TxGetCompanyByID(ctx context.Context, tx pkgtx.Tx, authID stri
 	return &cd, nil
 }
 
+func (s *Storage) TxGetCompaniesByID(ctx context.Context, tx pkgtx.Tx, companyIDs []string) ([]*CompanyData, error) {
+	c := postgresql.FromTx(tx)
+
+	placeholders := make([]string, len(companyIDs))
+	arguments := make([]interface{}, len(companyIDs))
+
+	for idx := range companyIDs {
+		placeholders[idx] = fmt.Sprintf("$%d", idx+1)
+		arguments[idx] = companyIDs[idx]
+	}
+
+	rows, err := c.QueryContext(
+		ctx,
+		// nolint: gosec
+		`SELECT auth_id, title, description, logo_url, created_at, updated_at
+			FROM company
+			WHERE auth_id IN (`+strings.Join(placeholders, ",")+`)`,
+		arguments...,
+	)
+
+	if err != nil {
+		return nil, errors.WithStack(err)
+	}
+
+	cs := make([]*CompanyData, 0)
+
+	for rows.Next() {
+		var cd CompanyData
+
+		err := rows.Scan(&cd.ID, &cd.Title, &cd.Description, &cd.LogoURL, &cd.CreatedAt, &cd.UpdatedAt)
+		if err != nil {
+			_ = rows.Close()
+			return nil, errors.WithStack(err)
+		}
+
+		cs = append(cs, &cd)
+	}
+
+	return cs, nil
+}
+
 func (s *Storage) TxPutCompany(ctx context.Context, tx pkgtx.Tx, cd *CompanyData) error {
 	c := postgresql.FromTx(tx)
 	if _, err := c.ExecContext(
 		ctx,
 		`WITH upsert AS (
-			UPDATE company SET
-				title = $2,
-				description = $3,
-				logo_url = $4,
-				created_at = $5,
-				updated_at = $6
-			WHERE auth_id = $1
-			RETURNING *
-		)
-		INSERT INTO company (auth_id, title, description, logo_url, created_at, updated_at)
-		SELECT $1, $2, $3, $4, $5, $6
-		WHERE NOT EXISTS (SELECT * FROM upsert)`,
-		cd.AuthID,
+				UPDATE company SET
+					title = $2,
+					description = $3,
+					logo_url = $4,
+					created_at = $5,
+					updated_at = $6
+				WHERE auth_id = $1
+				RETURNING *
+			)
+			INSERT INTO company (auth_id, title, description, logo_url, created_at, updated_at)
+			SELECT $1, $2, $3, $4, $5, $6
+			WHERE NOT EXISTS (SELECT * FROM upsert)`,
+		cd.ID,
 		cd.Title,
 		cd.Description,
 		cd.LogoURL,
@@ -135,25 +176,23 @@ func (s *Storage) TxPutCompanyActivityFields(
 ) error {
 	c := postgresql.FromTx(tx)
 
-	now := time.Now()
-
 	queryFormat := `INSERT 
-		INTO company_activity_fields (company_id, activity_field_id, created_at, updated_at)
+		INTO company_activity_fields (company_id, activity_field_id)
 		VALUES %s`
 
-	columns := 4
-	valueStrings := make([]string, 0, len(activityFieldsIDs))
-	valueArgs := make([]interface{}, 0, len(activityFieldsIDs)*columns)
+	columns := 2
+	valueStrings := make([]string, len(activityFieldsIDs))
+	valueArgs := make([]interface{}, len(activityFieldsIDs)*columns)
 
 	for i := 0; i < len(activityFieldsIDs); i++ {
 		offset := i * columns
-		valueStrings = append(valueStrings, fmt.Sprintf("($%d, $%d, $%d, $%d)", offset+1, offset+2, offset+3, offset+4))
-		valueArgs = append(valueArgs, authID, activityFieldsIDs[i], now, now)
+		valueStrings = append(valueStrings, fmt.Sprintf("($%d, $%d)", offset+1, offset+2))
+		valueArgs = append(valueArgs, authID, activityFieldsIDs[i])
 	}
 
 	if _, err := c.ExecContext(
 		ctx,
-		fmt.Sprintf(queryFormat, strings.Join(valueStrings, ",")),
+		fmt.Sprintf(queryFormat, strings.TrimSuffix(strings.Join(valueStrings, ","), ",")),
 		valueArgs...,
 	); err != nil {
 		return errors.WithStack(err)

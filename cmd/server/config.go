@@ -3,7 +3,7 @@ package server
 import (
 	"github.com/spf13/pflag"
 
-	authController "personaapp/internal/server/auth/controller"
+	authController "personaapp/internal/server/controllers/auth/controller"
 	"personaapp/pkg/grpc"
 	"personaapp/pkg/postgresql"
 )

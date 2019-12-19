@@ -46,7 +46,7 @@ func EnsurePostgres(modifiers ...OptionModifier) (*PostgresConfig, error) {
 
 func pgRunOptions(internalPort string) *dockertest.RunOptions {
 	return &dockertest.RunOptions{
-		Repository:   "postgres",
+		Repository:   "mdillon/postgis",
 		Tag:          "9.6",
 		ExposedPorts: []string{internalPort},
 		Env: []string{

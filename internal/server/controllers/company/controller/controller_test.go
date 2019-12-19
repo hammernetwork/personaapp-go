@@ -2,12 +2,12 @@ package controller_test
 
 import (
 	"context"
+	"personaapp/internal/server/controllers/company/storage"
 	"testing"
 	"time"
 
-	authController "personaapp/internal/server/auth/controller"
-	companyController "personaapp/internal/server/company/controller"
-	"personaapp/internal/server/company/storage"
+	authController "personaapp/internal/server/controllers/auth/controller"
+	companyController "personaapp/internal/server/controllers/company/controller"
 	"personaapp/internal/testutils"
 
 	sqlMigrate "github.com/rubenv/sql-migrate"
@@ -65,7 +65,7 @@ func TestGetExistingButNotCompletedCompany(t *testing.T) {
 
 	rd := authController.RegisterData{
 		Email:    "companytest@gmail.com",
-		Phone:    "+380011234567",
+		Phone:    "+380500000001",
 		Account:  authController.AccountTypeCompany,
 		Password: "Password",
 	}
@@ -103,7 +103,7 @@ func TestUpdateExistingCompany(t *testing.T) {
 
 	rd := authController.RegisterData{
 		Email:    "companytest2@gmail.com",
-		Phone:    "+380019988776",
+		Phone:    "+380500000002",
 		Account:  authController.AccountTypeCompany,
 		Password: "Password2",
 	}
@@ -118,7 +118,7 @@ func TestUpdateExistingCompany(t *testing.T) {
 	logoURL := "https://logourl.com"
 
 	cd := companyController.CompanyData{
-		AuthID:      token.AccountID,
+		ID:          token.AccountID,
 		Title:       &title,
 		Description: &description,
 		LogoURL:     &logoURL,
@@ -146,7 +146,7 @@ func TestUpdateNonExistingCompany(t *testing.T) {
 	cc := companyController.New(cs)
 
 	cd := companyController.CompanyData{
-		AuthID:      "nonexistingid",
+		ID:          "nonexistingid",
 		Title:       nil,
 		Description: nil,
 		LogoURL:     nil,

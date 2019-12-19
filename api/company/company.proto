@@ -5,7 +5,7 @@ package personaappapi.company;
 import "google/protobuf/wrappers.proto";
 
 option go_package = "personaapp/pkg/grpcapi/company";
-option java_package = "online.personaapp.core";
+option java_package = "online.personaapp";
 option java_outer_classname = "GrpcCompany";
 
 service PersonaAppCompany {
@@ -22,40 +22,14 @@ message UpdateCompanyRequest {
     google.protobuf.StringValue logo_url = 3;
 }
 
-message UpdateCompanyResponse {
-    enum ErrorCode {
-        UNKNOWN_ERROR_CODE = 0;
-        INVALID_TITLE_FORMAT = 3000;
-        INVALID_TITLE_LENGTH = 3001;
-        INVALID_DESCRIPTION_FORMAT = 3100;
-        INVALID_DESCRIPTION_LENGTH = 3101;
-        INVALID_LOGO_URL_FORMAT = 3200;
-        INVALID_LOGO_URL_LENGTH = 3201;
-    }
-
-    message Body {}
-
-    oneof response {
-        Body body = 1;
-        ErrorCode error_code = 2;
-    }
-}
+message UpdateCompanyResponse {}
 
 // Update Activity Fields
 message UpdateCompanyActivityFieldsRequest {
     map<string, Empty> activity_fields = 1;
 }
 
-message UpdateCompanyActivityFieldsResponse {
-    enum ErrorCode {
-        UNKNOWN_ERROR_CODE = 0;
-    }
-    message Body {}
-    oneof response {
-        Body body = 1;
-        ErrorCode error_code = 2;
-    }
-}
+message UpdateCompanyActivityFieldsResponse {}
 
 // Get
 message GetCompanyRequest {
@@ -63,10 +37,6 @@ message GetCompanyRequest {
 }
 
 message GetCompanyResponse {
-    enum ErrorCode {
-        UNKNOWN_ERROR_CODE = 0;
-    }
-
     message Company {
         string id = 1;
         string title = 2;
@@ -75,44 +45,21 @@ message GetCompanyResponse {
         map<string, CompanyActivityField> activity_fields = 5;
     }
 
-    message CompanyActivityField {
-        string id = 1;
-        string title = 2;
-        string icon_url = 3;
-    }
-
-    message Body {
-        Company company = 1;
-    }
-
-    oneof response {
-        Body body = 1;
-        ErrorCode error_code = 2;
-    }
+    Company company = 1;
 }
 
 // Get
 message GetCompaniesActivityFieldsListRequest {}
 
 message GetCompaniesActivityFieldsListResponse {
-    enum ErrorCode {
-        UNKNOWN_ERROR_CODE = 0;
-    }
-    message CompanyActivityField {
-        string id = 1;
-        string title = 2;
-        string icon_url = 3;
-    }
-
-    message Body {
-        map<string, CompanyActivityField> activity_fields = 1;
-    }
-
-    oneof response {
-        Body body = 1;
-        ErrorCode error_code = 2;
-    }
+    map<string, CompanyActivityField> activity_fields = 1;
 }
 
 // Entities
 message Empty {}
+
+message CompanyActivityField {
+    string id = 1;
+    string title = 2;
+    string icon_url = 3;
+}

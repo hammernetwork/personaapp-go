@@ -1,7 +1,7 @@
 version: '3.5'
 services:
   database:
-    image: postgres
+    image: mdillon/postgis
     environment:
       POSTGRES_DB: postgres
       POSTGRES_USER: postgres

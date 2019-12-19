@@ -4,7 +4,7 @@ import (
 	"context"
 	"github.com/asaskevich/govalidator"
 	"github.com/cockroachdb/errors"
-	companyStorage "personaapp/internal/server/company/storage"
+	"personaapp/internal/server/controllers/company/storage"
 	pkgtx "personaapp/pkg/tx"
 	"time"
 )
@@ -28,13 +28,14 @@ var (
 )
 
 type Storage interface {
-	TxGetCompanyByID(ctx context.Context, tx pkgtx.Tx, authID string) (*companyStorage.CompanyData, error)
-	TxPutCompany(ctx context.Context, tx pkgtx.Tx, cs *companyStorage.CompanyData) error
+	TxGetCompanyByID(ctx context.Context, tx pkgtx.Tx, authID string) (*storage.CompanyData, error)
+	TxGetCompaniesByID(ctx context.Context, tx pkgtx.Tx, companyIDs []string) ([]*storage.CompanyData, error)
+	TxPutCompany(ctx context.Context, tx pkgtx.Tx, cs *storage.CompanyData) error
 	TxGetActivityFieldsByCompanyID(
 		ctx context.Context,
 		tx pkgtx.Tx,
 		authID string,
-	) ([]*companyStorage.ActivityField, error)
+	) ([]*storage.ActivityField, error)
 	TxPutCompanyActivityFields(
 		ctx context.Context,
 		tx pkgtx.Tx,
@@ -60,14 +61,14 @@ func New(s Storage) *Controller {
 }
 
 type CompanyData struct {
-	AuthID      string
+	ID          string
 	Title       *string `valid:"stringlength(0|100)"`
 	Description *string `valid:"stringlength(0|255)"`
 	LogoURL     *string `valid:"stringlength(0|255),media_link"`
 }
 
 type Company struct {
-	AuthID         string
+	ID             string
 	ActivityFields []string
 	Title          string
 	Description    string
@@ -132,22 +133,22 @@ func (c *Controller) Update(ctx context.Context, cd *CompanyData) error {
 	}
 
 	if err := pkgtx.RunInTx(ctx, c.s, func(ctx context.Context, tx pkgtx.Tx) error {
-		var scd *companyStorage.CompanyData
+		var scd *storage.CompanyData
 		now := time.Now()
 
-		switch company, err := c.s.TxGetCompanyByID(ctx, tx, cd.AuthID); err {
+		switch company, err := c.s.TxGetCompanyByID(ctx, tx, cd.ID); err {
 		case nil:
-			scd = &companyStorage.CompanyData{
-				AuthID:      company.AuthID,
+			scd = &storage.CompanyData{
+				ID:          company.ID,
 				Title:       company.Title,
 				Description: company.Description,
 				LogoURL:     company.LogoURL,
 				CreatedAt:   company.CreatedAt,
 				UpdatedAt:   now,
 			}
-		case companyStorage.ErrNotFound:
-			scd = &companyStorage.CompanyData{
-				AuthID:      cd.AuthID,
+		case storage.ErrNotFound:
+			scd = &storage.CompanyData{
+				ID:          cd.ID,
 				Title:       "",
 				Description: "",
 				LogoURL:     "",
@@ -209,10 +210,10 @@ func (c *Controller) Get(ctx context.Context, companyID string) (*Company, error
 	if err := pkgtx.RunInTx(ctx, c.s, func(ctx context.Context, tx pkgtx.Tx) error {
 		cd, err := c.s.TxGetCompanyByID(ctx, tx, companyID)
 
-		switch err {
+		switch errors.Cause(err) {
 		case nil:
-		case companyStorage.ErrNotFound:
-			return ErrCompanyNotFound
+		case storage.ErrNotFound:
+			return errors.WithStack(ErrCompanyNotFound)
 		default:
 			return errors.WithStack(err)
 		}
@@ -229,7 +230,7 @@ func (c *Controller) Get(ctx context.Context, companyID string) (*Company, error
 		}
 
 		company = &Company{
-			AuthID:         cd.AuthID,
+			ID:             cd.ID,
 			ActivityFields: activityFieldsIDs,
 			Title:          cd.Title,
 			Description:    cd.Description,
@@ -242,4 +243,25 @@ func (c *Controller) Get(ctx context.Context, companyID string) (*Company, error
 	}
 
 	return company, nil
+}
+
+func (c *Controller) GetCompaniesList(ctx context.Context, companyIDs []string) ([]*Company, error) {
+	cds, err := c.s.TxGetCompaniesByID(ctx, c.s.NoTx(), companyIDs)
+
+	if err != nil {
+		return nil, errors.WithStack(err)
+	}
+
+	companies := make([]*Company, len(cds))
+	for _, company := range cds {
+		companies = append(companies, &Company{
+			ID:             company.ID,
+			ActivityFields: nil,
+			Title:          company.Title,
+			Description:    company.Description,
+			LogoURL:        company.LogoURL,
+		})
+	}
+
+	return companies, nil
 }

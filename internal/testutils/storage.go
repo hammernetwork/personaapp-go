@@ -9,7 +9,7 @@ import (
 	"github.com/stretchr/testify/require"
 
 	"personaapp/internal/migrate"
-	"personaapp/internal/server/auth/storage"
+	"personaapp/internal/server/controllers/auth/storage"
 	"personaapp/pkg/dockertest"
 	"personaapp/pkg/postgresql"
 )
