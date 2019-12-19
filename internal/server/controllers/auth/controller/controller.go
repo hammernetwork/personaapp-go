@@ -2,7 +2,7 @@ package controller
 
 import (
 	"context"
-	"personaapp/internal/server/company/storage"
+	"personaapp/internal/server/controllers/auth/storage"
 	"regexp"
 	"time"
 
@@ -13,7 +13,6 @@ import (
 	"github.com/spf13/pflag"
 	"golang.org/x/crypto/bcrypt"
 
-	authStorage "personaapp/internal/server/auth/storage"
 	pkgtx "personaapp/pkg/tx"
 )
 
@@ -103,11 +102,11 @@ func (c *Config) Flags(name string) *pflag.FlagSet {
 }
 
 type Storage interface {
-	TxPutAuth(ctx context.Context, tx pkgtx.Tx, ad *authStorage.AuthData) error
-	TxGetAuthDataByID(ctx context.Context, tx pkgtx.Tx, accountID string) (*authStorage.AuthData, error)
-	TxGetAuthDataByPhoneOrEmail(ctx context.Context, tx pkgtx.Tx, phone, email string) (*authStorage.AuthData, error)
-	TxGetAuthDataByPhone(ctx context.Context, tx pkgtx.Tx, phone string) (*authStorage.AuthData, error)
-	TxGetAuthDataByEmail(ctx context.Context, tx pkgtx.Tx, email string) (*authStorage.AuthData, error)
+	TxPutAuth(ctx context.Context, tx pkgtx.Tx, ad *storage.AuthData) error
+	TxGetAuthDataByID(ctx context.Context, tx pkgtx.Tx, accountID string) (*storage.AuthData, error)
+	TxGetAuthDataByPhoneOrEmail(ctx context.Context, tx pkgtx.Tx, phone, email string) (*storage.AuthData, error)
+	TxGetAuthDataByPhone(ctx context.Context, tx pkgtx.Tx, phone string) (*storage.AuthData, error)
+	TxGetAuthDataByEmail(ctx context.Context, tx pkgtx.Tx, email string) (*storage.AuthData, error)
 
 	BeginTx(ctx context.Context) (pkgtx.Tx, error)
 	NoTx() pkgtx.Tx
@@ -188,22 +187,22 @@ func (rd *RegisterData) Validate() error {
 	return nil
 }
 
-func toStorageAccount(at AccountType) (authStorage.AccountType, error) {
+func toStorageAccount(at AccountType) (storage.AccountType, error) {
 	switch at {
 	case AccountTypeCompany:
-		return authStorage.AccountTypeCompany, nil
+		return storage.AccountTypeCompany, nil
 	case AccountTypePersona:
-		return authStorage.AccountTypePersona, nil
+		return storage.AccountTypePersona, nil
 	default:
 		return "", errors.New("wrong account type")
 	}
 }
 
-func fromStorageAccount(at authStorage.AccountType) (AccountType, error) {
+func fromStorageAccount(at storage.AccountType) (AccountType, error) {
 	switch at {
-	case authStorage.AccountTypeCompany:
+	case storage.AccountTypeCompany:
 		return AccountTypeCompany, nil
-	case authStorage.AccountTypePersona:
+	case storage.AccountTypePersona:
 		return AccountTypePersona, nil
 	default:
 		return "", errors.New("wrong account type")
@@ -330,7 +329,7 @@ func (c *Controller) Register(ctx context.Context, rd *RegisterData) (*AuthToken
 		switch err {
 		case nil:
 			return errors.Wrap(ErrAlreadyExists, "account with specified phone or email already exists")
-		case authStorage.ErrNotFound:
+		case storage.ErrNotFound:
 		default:
 			return errors.WithStack(err)
 		}
@@ -355,7 +354,7 @@ func (c *Controller) Register(ctx context.Context, rd *RegisterData) (*AuthToken
 
 		now := time.Now()
 
-		ad := &authStorage.AuthData{
+		ad := &storage.AuthData{
 			AccountID:    accountID,
 			Account:      account,
 			Email:        rd.Email,
@@ -430,7 +429,7 @@ func (c *Controller) Login(ctx context.Context, ld *LoginData) (*AuthToken, erro
 	ad, err := c.s.TxGetAuthDataByPhoneOrEmail(ctx, c.s.NoTx(), ld.Login, ld.Login)
 	switch err {
 	case nil:
-	case authStorage.ErrNotFound:
+	case storage.ErrNotFound:
 		return nil, errors.Wrap(ErrUnauthorized, "specified login isn't registered")
 	default:
 		return nil, errors.WithStack(err)

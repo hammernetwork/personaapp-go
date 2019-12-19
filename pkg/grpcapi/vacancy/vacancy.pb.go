@@ -30,22 +30,16 @@ type Currency int32
 const (
 	Currency_CURRENCY_UNKNOWN Currency = 0
 	Currency_CURRENCY_UAH     Currency = 1
-	Currency_CURRENCY_USD     Currency = 2
-	Currency_CURRENCY_EUR     Currency = 3
 )
 
 var Currency_name = map[int32]string{
 	0: "CURRENCY_UNKNOWN",
 	1: "CURRENCY_UAH",
-	2: "CURRENCY_USD",
-	3: "CURRENCY_EUR",
 }
 
 var Currency_value = map[string]int32{
 	"CURRENCY_UNKNOWN": 0,
 	"CURRENCY_UAH":     1,
-	"CURRENCY_USD":     2,
-	"CURRENCY_EUR":     3,
 }
 
 func (x Currency) String() string {
@@ -56,185 +50,78 @@ func (Currency) EnumDescriptor() ([]byte, []int) {
 	return fileDescriptor_47be6d1234ea964b, []int{0}
 }
 
-type GetVacanciesFiltersListResponse_ErrorCode int32
-
-const (
-	GetVacanciesFiltersListResponse_UNKNOWN_ERROR_CODE GetVacanciesFiltersListResponse_ErrorCode = 0
-)
-
-var GetVacanciesFiltersListResponse_ErrorCode_name = map[int32]string{
-	0: "UNKNOWN_ERROR_CODE",
-}
-
-var GetVacanciesFiltersListResponse_ErrorCode_value = map[string]int32{
-	"UNKNOWN_ERROR_CODE": 0,
-}
-
-func (x GetVacanciesFiltersListResponse_ErrorCode) String() string {
-	return proto.EnumName(GetVacanciesFiltersListResponse_ErrorCode_name, int32(x))
-}
-
-func (GetVacanciesFiltersListResponse_ErrorCode) EnumDescriptor() ([]byte, []int) {
-	return fileDescriptor_47be6d1234ea964b, []int{1, 0}
-}
-
-type GetVacanciesListResponse_ErrorCode int32
-
-const (
-	GetVacanciesListResponse_UNKNOWN_ERROR_CODE GetVacanciesListResponse_ErrorCode = 0
-)
-
-var GetVacanciesListResponse_ErrorCode_name = map[int32]string{
-	0: "UNKNOWN_ERROR_CODE",
-}
-
-var GetVacanciesListResponse_ErrorCode_value = map[string]int32{
-	"UNKNOWN_ERROR_CODE": 0,
-}
-
-func (x GetVacanciesListResponse_ErrorCode) String() string {
-	return proto.EnumName(GetVacanciesListResponse_ErrorCode_name, int32(x))
-}
-
-func (GetVacanciesListResponse_ErrorCode) EnumDescriptor() ([]byte, []int) {
-	return fileDescriptor_47be6d1234ea964b, []int{3, 0}
-}
-
-type GetVacancyDetailsResponse_ErrorCode int32
-
-const (
-	GetVacancyDetailsResponse_UNKNOWN_ERROR_CODE GetVacancyDetailsResponse_ErrorCode = 0
-)
-
-var GetVacancyDetailsResponse_ErrorCode_name = map[int32]string{
-	0: "UNKNOWN_ERROR_CODE",
-}
-
-var GetVacancyDetailsResponse_ErrorCode_value = map[string]int32{
-	"UNKNOWN_ERROR_CODE": 0,
-}
-
-func (x GetVacancyDetailsResponse_ErrorCode) String() string {
-	return proto.EnumName(GetVacancyDetailsResponse_ErrorCode_name, int32(x))
-}
-
-func (GetVacancyDetailsResponse_ErrorCode) EnumDescriptor() ([]byte, []int) {
-	return fileDescriptor_47be6d1234ea964b, []int{5, 0}
-}
-
 // Get Vacancies filters list
-type GetVacanciesFiltersListRequest struct {
+type GetVacancyCategoriesListRequest struct {
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *GetVacanciesFiltersListRequest) Reset()         { *m = GetVacanciesFiltersListRequest{} }
-func (m *GetVacanciesFiltersListRequest) String() string { return proto.CompactTextString(m) }
-func (*GetVacanciesFiltersListRequest) ProtoMessage()    {}
-func (*GetVacanciesFiltersListRequest) Descriptor() ([]byte, []int) {
+func (m *GetVacancyCategoriesListRequest) Reset()         { *m = GetVacancyCategoriesListRequest{} }
+func (m *GetVacancyCategoriesListRequest) String() string { return proto.CompactTextString(m) }
+func (*GetVacancyCategoriesListRequest) ProtoMessage()    {}
+func (*GetVacancyCategoriesListRequest) Descriptor() ([]byte, []int) {
 	return fileDescriptor_47be6d1234ea964b, []int{0}
 }
 
-func (m *GetVacanciesFiltersListRequest) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_GetVacanciesFiltersListRequest.Unmarshal(m, b)
+func (m *GetVacancyCategoriesListRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetVacancyCategoriesListRequest.Unmarshal(m, b)
 }
-func (m *GetVacanciesFiltersListRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_GetVacanciesFiltersListRequest.Marshal(b, m, deterministic)
+func (m *GetVacancyCategoriesListRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetVacancyCategoriesListRequest.Marshal(b, m, deterministic)
 }
-func (m *GetVacanciesFiltersListRequest) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_GetVacanciesFiltersListRequest.Merge(m, src)
+func (m *GetVacancyCategoriesListRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetVacancyCategoriesListRequest.Merge(m, src)
 }
-func (m *GetVacanciesFiltersListRequest) XXX_Size() int {
-	return xxx_messageInfo_GetVacanciesFiltersListRequest.Size(m)
+func (m *GetVacancyCategoriesListRequest) XXX_Size() int {
+	return xxx_messageInfo_GetVacancyCategoriesListRequest.Size(m)
 }
-func (m *GetVacanciesFiltersListRequest) XXX_DiscardUnknown() {
-	xxx_messageInfo_GetVacanciesFiltersListRequest.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_GetVacanciesFiltersListRequest proto.InternalMessageInfo
-
-type GetVacanciesFiltersListResponse struct {
-	// Types that are valid to be assigned to Response:
-	//	*GetVacanciesFiltersListResponse_Body_
-	//	*GetVacanciesFiltersListResponse_ErrorCode_
-	Response             isGetVacanciesFiltersListResponse_Response `protobuf_oneof:"response"`
-	XXX_NoUnkeyedLiteral struct{}                                   `json:"-"`
-	XXX_unrecognized     []byte                                     `json:"-"`
-	XXX_sizecache        int32                                      `json:"-"`
+func (m *GetVacancyCategoriesListRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetVacancyCategoriesListRequest.DiscardUnknown(m)
 }
 
-func (m *GetVacanciesFiltersListResponse) Reset()         { *m = GetVacanciesFiltersListResponse{} }
-func (m *GetVacanciesFiltersListResponse) String() string { return proto.CompactTextString(m) }
-func (*GetVacanciesFiltersListResponse) ProtoMessage()    {}
-func (*GetVacanciesFiltersListResponse) Descriptor() ([]byte, []int) {
+var xxx_messageInfo_GetVacancyCategoriesListRequest proto.InternalMessageInfo
+
+type GetVacancyCategoriesListResponse struct {
+	VacancyCategories    map[string]*GetVacancyCategoriesListResponse_VacancyCategory `protobuf:"bytes,1,rep,name=vacancy_categories,json=vacancyCategories,proto3" json:"vacancy_categories,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
+	XXX_NoUnkeyedLiteral struct{}                                                     `json:"-"`
+	XXX_unrecognized     []byte                                                       `json:"-"`
+	XXX_sizecache        int32                                                        `json:"-"`
+}
+
+func (m *GetVacancyCategoriesListResponse) Reset()         { *m = GetVacancyCategoriesListResponse{} }
+func (m *GetVacancyCategoriesListResponse) String() string { return proto.CompactTextString(m) }
+func (*GetVacancyCategoriesListResponse) ProtoMessage()    {}
+func (*GetVacancyCategoriesListResponse) Descriptor() ([]byte, []int) {
 	return fileDescriptor_47be6d1234ea964b, []int{1}
 }
 
-func (m *GetVacanciesFiltersListResponse) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_GetVacanciesFiltersListResponse.Unmarshal(m, b)
+func (m *GetVacancyCategoriesListResponse) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetVacancyCategoriesListResponse.Unmarshal(m, b)
 }
-func (m *GetVacanciesFiltersListResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_GetVacanciesFiltersListResponse.Marshal(b, m, deterministic)
+func (m *GetVacancyCategoriesListResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetVacancyCategoriesListResponse.Marshal(b, m, deterministic)
 }
-func (m *GetVacanciesFiltersListResponse) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_GetVacanciesFiltersListResponse.Merge(m, src)
+func (m *GetVacancyCategoriesListResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetVacancyCategoriesListResponse.Merge(m, src)
 }
-func (m *GetVacanciesFiltersListResponse) XXX_Size() int {
-	return xxx_messageInfo_GetVacanciesFiltersListResponse.Size(m)
+func (m *GetVacancyCategoriesListResponse) XXX_Size() int {
+	return xxx_messageInfo_GetVacancyCategoriesListResponse.Size(m)
 }
-func (m *GetVacanciesFiltersListResponse) XXX_DiscardUnknown() {
-	xxx_messageInfo_GetVacanciesFiltersListResponse.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_GetVacanciesFiltersListResponse proto.InternalMessageInfo
-
-type isGetVacanciesFiltersListResponse_Response interface {
-	isGetVacanciesFiltersListResponse_Response()
+func (m *GetVacancyCategoriesListResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetVacancyCategoriesListResponse.DiscardUnknown(m)
 }
 
-type GetVacanciesFiltersListResponse_Body_ struct {
-	Body *GetVacanciesFiltersListResponse_Body `protobuf:"bytes,1,opt,name=body,proto3,oneof"`
-}
+var xxx_messageInfo_GetVacancyCategoriesListResponse proto.InternalMessageInfo
 
-type GetVacanciesFiltersListResponse_ErrorCode_ struct {
-	ErrorCode GetVacanciesFiltersListResponse_ErrorCode `protobuf:"varint,2,opt,name=error_code,json=errorCode,proto3,enum=personaappapi.vacancy.GetVacanciesFiltersListResponse_ErrorCode,oneof"`
-}
-
-func (*GetVacanciesFiltersListResponse_Body_) isGetVacanciesFiltersListResponse_Response() {}
-
-func (*GetVacanciesFiltersListResponse_ErrorCode_) isGetVacanciesFiltersListResponse_Response() {}
-
-func (m *GetVacanciesFiltersListResponse) GetResponse() isGetVacanciesFiltersListResponse_Response {
+func (m *GetVacancyCategoriesListResponse) GetVacancyCategories() map[string]*GetVacancyCategoriesListResponse_VacancyCategory {
 	if m != nil {
-		return m.Response
+		return m.VacancyCategories
 	}
 	return nil
 }
 
-func (m *GetVacanciesFiltersListResponse) GetBody() *GetVacanciesFiltersListResponse_Body {
-	if x, ok := m.GetResponse().(*GetVacanciesFiltersListResponse_Body_); ok {
-		return x.Body
-	}
-	return nil
-}
-
-func (m *GetVacanciesFiltersListResponse) GetErrorCode() GetVacanciesFiltersListResponse_ErrorCode {
-	if x, ok := m.GetResponse().(*GetVacanciesFiltersListResponse_ErrorCode_); ok {
-		return x.ErrorCode
-	}
-	return GetVacanciesFiltersListResponse_UNKNOWN_ERROR_CODE
-}
-
-// XXX_OneofWrappers is for the internal use of the proto package.
-func (*GetVacanciesFiltersListResponse) XXX_OneofWrappers() []interface{} {
-	return []interface{}{
-		(*GetVacanciesFiltersListResponse_Body_)(nil),
-		(*GetVacanciesFiltersListResponse_ErrorCode_)(nil),
-	}
-}
-
-type GetVacanciesFiltersListResponse_VacancyFilter struct {
+type GetVacancyCategoriesListResponse_VacancyCategory struct {
 	Id                   string   `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
 	Title                string   `protobuf:"bytes,2,opt,name=title,proto3" json:"title,omitempty"`
 	IconUrl              string   `protobuf:"bytes,3,opt,name=icon_url,json=iconUrl,proto3" json:"icon_url,omitempty"`
@@ -243,103 +130,64 @@ type GetVacanciesFiltersListResponse_VacancyFilter struct {
 	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *GetVacanciesFiltersListResponse_VacancyFilter) Reset() {
-	*m = GetVacanciesFiltersListResponse_VacancyFilter{}
+func (m *GetVacancyCategoriesListResponse_VacancyCategory) Reset() {
+	*m = GetVacancyCategoriesListResponse_VacancyCategory{}
 }
-func (m *GetVacanciesFiltersListResponse_VacancyFilter) String() string {
+func (m *GetVacancyCategoriesListResponse_VacancyCategory) String() string {
 	return proto.CompactTextString(m)
 }
-func (*GetVacanciesFiltersListResponse_VacancyFilter) ProtoMessage() {}
-func (*GetVacanciesFiltersListResponse_VacancyFilter) Descriptor() ([]byte, []int) {
+func (*GetVacancyCategoriesListResponse_VacancyCategory) ProtoMessage() {}
+func (*GetVacancyCategoriesListResponse_VacancyCategory) Descriptor() ([]byte, []int) {
 	return fileDescriptor_47be6d1234ea964b, []int{1, 0}
 }
 
-func (m *GetVacanciesFiltersListResponse_VacancyFilter) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_GetVacanciesFiltersListResponse_VacancyFilter.Unmarshal(m, b)
+func (m *GetVacancyCategoriesListResponse_VacancyCategory) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetVacancyCategoriesListResponse_VacancyCategory.Unmarshal(m, b)
 }
-func (m *GetVacanciesFiltersListResponse_VacancyFilter) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_GetVacanciesFiltersListResponse_VacancyFilter.Marshal(b, m, deterministic)
+func (m *GetVacancyCategoriesListResponse_VacancyCategory) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetVacancyCategoriesListResponse_VacancyCategory.Marshal(b, m, deterministic)
 }
-func (m *GetVacanciesFiltersListResponse_VacancyFilter) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_GetVacanciesFiltersListResponse_VacancyFilter.Merge(m, src)
+func (m *GetVacancyCategoriesListResponse_VacancyCategory) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetVacancyCategoriesListResponse_VacancyCategory.Merge(m, src)
 }
-func (m *GetVacanciesFiltersListResponse_VacancyFilter) XXX_Size() int {
-	return xxx_messageInfo_GetVacanciesFiltersListResponse_VacancyFilter.Size(m)
+func (m *GetVacancyCategoriesListResponse_VacancyCategory) XXX_Size() int {
+	return xxx_messageInfo_GetVacancyCategoriesListResponse_VacancyCategory.Size(m)
 }
-func (m *GetVacanciesFiltersListResponse_VacancyFilter) XXX_DiscardUnknown() {
-	xxx_messageInfo_GetVacanciesFiltersListResponse_VacancyFilter.DiscardUnknown(m)
+func (m *GetVacancyCategoriesListResponse_VacancyCategory) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetVacancyCategoriesListResponse_VacancyCategory.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_GetVacanciesFiltersListResponse_VacancyFilter proto.InternalMessageInfo
+var xxx_messageInfo_GetVacancyCategoriesListResponse_VacancyCategory proto.InternalMessageInfo
 
-func (m *GetVacanciesFiltersListResponse_VacancyFilter) GetId() string {
+func (m *GetVacancyCategoriesListResponse_VacancyCategory) GetId() string {
 	if m != nil {
 		return m.Id
 	}
 	return ""
 }
 
-func (m *GetVacanciesFiltersListResponse_VacancyFilter) GetTitle() string {
+func (m *GetVacancyCategoriesListResponse_VacancyCategory) GetTitle() string {
 	if m != nil {
 		return m.Title
 	}
 	return ""
 }
 
-func (m *GetVacanciesFiltersListResponse_VacancyFilter) GetIconUrl() string {
+func (m *GetVacancyCategoriesListResponse_VacancyCategory) GetIconUrl() string {
 	if m != nil {
 		return m.IconUrl
 	}
 	return ""
 }
 
-type GetVacanciesFiltersListResponse_Body struct {
-	VacancyFilters       map[string]*GetVacanciesFiltersListResponse_VacancyFilter `protobuf:"bytes,1,rep,name=vacancy_filters,json=vacancyFilters,proto3" json:"vacancy_filters,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
-	XXX_NoUnkeyedLiteral struct{}                                                  `json:"-"`
-	XXX_unrecognized     []byte                                                    `json:"-"`
-	XXX_sizecache        int32                                                     `json:"-"`
-}
-
-func (m *GetVacanciesFiltersListResponse_Body) Reset()         { *m = GetVacanciesFiltersListResponse_Body{} }
-func (m *GetVacanciesFiltersListResponse_Body) String() string { return proto.CompactTextString(m) }
-func (*GetVacanciesFiltersListResponse_Body) ProtoMessage()    {}
-func (*GetVacanciesFiltersListResponse_Body) Descriptor() ([]byte, []int) {
-	return fileDescriptor_47be6d1234ea964b, []int{1, 1}
-}
-
-func (m *GetVacanciesFiltersListResponse_Body) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_GetVacanciesFiltersListResponse_Body.Unmarshal(m, b)
-}
-func (m *GetVacanciesFiltersListResponse_Body) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_GetVacanciesFiltersListResponse_Body.Marshal(b, m, deterministic)
-}
-func (m *GetVacanciesFiltersListResponse_Body) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_GetVacanciesFiltersListResponse_Body.Merge(m, src)
-}
-func (m *GetVacanciesFiltersListResponse_Body) XXX_Size() int {
-	return xxx_messageInfo_GetVacanciesFiltersListResponse_Body.Size(m)
-}
-func (m *GetVacanciesFiltersListResponse_Body) XXX_DiscardUnknown() {
-	xxx_messageInfo_GetVacanciesFiltersListResponse_Body.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_GetVacanciesFiltersListResponse_Body proto.InternalMessageInfo
-
-func (m *GetVacanciesFiltersListResponse_Body) GetVacancyFilters() map[string]*GetVacanciesFiltersListResponse_VacancyFilter {
-	if m != nil {
-		return m.VacancyFilters
-	}
-	return nil
-}
-
 // Get Vacancies List
 type GetVacanciesListRequest struct {
-	FilterIds            map[string]*Empty    `protobuf:"bytes,1,rep,name=filter_ids,json=filterIds,proto3" json:"filter_ids,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
-	Offset               *wrappers.Int32Value `protobuf:"bytes,2,opt,name=offset,proto3" json:"offset,omitempty"`
-	Count                *wrappers.Int32Value `protobuf:"bytes,3,opt,name=count,proto3" json:"count,omitempty"`
-	XXX_NoUnkeyedLiteral struct{}             `json:"-"`
-	XXX_unrecognized     []byte               `json:"-"`
-	XXX_sizecache        int32                `json:"-"`
+	CategoriesIds        map[string]*Empty     `protobuf:"bytes,1,rep,name=categories_ids,json=categoriesIds,proto3" json:"categories_ids,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
+	Cursor               *wrappers.StringValue `protobuf:"bytes,2,opt,name=cursor,proto3" json:"cursor,omitempty"`
+	Count                *wrappers.Int32Value  `protobuf:"bytes,3,opt,name=count,proto3" json:"count,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}              `json:"-"`
+	XXX_unrecognized     []byte                `json:"-"`
+	XXX_sizecache        int32                 `json:"-"`
 }
 
 func (m *GetVacanciesListRequest) Reset()         { *m = GetVacanciesListRequest{} }
@@ -367,16 +215,16 @@ func (m *GetVacanciesListRequest) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_GetVacanciesListRequest proto.InternalMessageInfo
 
-func (m *GetVacanciesListRequest) GetFilterIds() map[string]*Empty {
+func (m *GetVacanciesListRequest) GetCategoriesIds() map[string]*Empty {
 	if m != nil {
-		return m.FilterIds
+		return m.CategoriesIds
 	}
 	return nil
 }
 
-func (m *GetVacanciesListRequest) GetOffset() *wrappers.Int32Value {
+func (m *GetVacanciesListRequest) GetCursor() *wrappers.StringValue {
 	if m != nil {
-		return m.Offset
+		return m.Cursor
 	}
 	return nil
 }
@@ -389,13 +237,13 @@ func (m *GetVacanciesListRequest) GetCount() *wrappers.Int32Value {
 }
 
 type GetVacanciesListResponse struct {
-	// Types that are valid to be assigned to Response:
-	//	*GetVacanciesListResponse_Body_
-	//	*GetVacanciesListResponse_ErrorCode_
-	Response             isGetVacanciesListResponse_Response `protobuf_oneof:"response"`
-	XXX_NoUnkeyedLiteral struct{}                            `json:"-"`
-	XXX_unrecognized     []byte                              `json:"-"`
-	XXX_sizecache        int32                               `json:"-"`
+	VacanciesIds         []string                                            `protobuf:"bytes,1,rep,name=vacancies_ids,json=vacanciesIds,proto3" json:"vacancies_ids,omitempty"`
+	Vacancies            map[string]*GetVacanciesListResponse_VacancyDetails `protobuf:"bytes,2,rep,name=vacancies,proto3" json:"vacancies,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
+	Companies            map[string]*Company                                 `protobuf:"bytes,3,rep,name=companies,proto3" json:"companies,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
+	Cursor               *wrappers.StringValue                               `protobuf:"bytes,4,opt,name=cursor,proto3" json:"cursor,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}                                            `json:"-"`
+	XXX_unrecognized     []byte                                              `json:"-"`
+	XXX_sizecache        int32                                               `json:"-"`
 }
 
 func (m *GetVacanciesListResponse) Reset()         { *m = GetVacanciesListResponse{} }
@@ -423,321 +271,81 @@ func (m *GetVacanciesListResponse) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_GetVacanciesListResponse proto.InternalMessageInfo
 
-type isGetVacanciesListResponse_Response interface {
-	isGetVacanciesListResponse_Response()
-}
-
-type GetVacanciesListResponse_Body_ struct {
-	Body *GetVacanciesListResponse_Body `protobuf:"bytes,1,opt,name=body,proto3,oneof"`
-}
-
-type GetVacanciesListResponse_ErrorCode_ struct {
-	ErrorCode GetVacanciesListResponse_ErrorCode `protobuf:"varint,2,opt,name=error_code,json=errorCode,proto3,enum=personaappapi.vacancy.GetVacanciesListResponse_ErrorCode,oneof"`
-}
-
-func (*GetVacanciesListResponse_Body_) isGetVacanciesListResponse_Response() {}
-
-func (*GetVacanciesListResponse_ErrorCode_) isGetVacanciesListResponse_Response() {}
-
-func (m *GetVacanciesListResponse) GetResponse() isGetVacanciesListResponse_Response {
-	if m != nil {
-		return m.Response
-	}
-	return nil
-}
-
-func (m *GetVacanciesListResponse) GetBody() *GetVacanciesListResponse_Body {
-	if x, ok := m.GetResponse().(*GetVacanciesListResponse_Body_); ok {
-		return x.Body
-	}
-	return nil
-}
-
-func (m *GetVacanciesListResponse) GetErrorCode() GetVacanciesListResponse_ErrorCode {
-	if x, ok := m.GetResponse().(*GetVacanciesListResponse_ErrorCode_); ok {
-		return x.ErrorCode
-	}
-	return GetVacanciesListResponse_UNKNOWN_ERROR_CODE
-}
-
-// XXX_OneofWrappers is for the internal use of the proto package.
-func (*GetVacanciesListResponse) XXX_OneofWrappers() []interface{} {
-	return []interface{}{
-		(*GetVacanciesListResponse_Body_)(nil),
-		(*GetVacanciesListResponse_ErrorCode_)(nil),
-	}
-}
-
-type GetVacanciesListResponse_CompanyActivityField struct {
-	Id                   string   `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	Title                string   `protobuf:"bytes,2,opt,name=title,proto3" json:"title,omitempty"`
-	IconUrl              string   `protobuf:"bytes,3,opt,name=icon_url,json=iconUrl,proto3" json:"icon_url,omitempty"`
-	XXX_NoUnkeyedLiteral struct{} `json:"-"`
-	XXX_unrecognized     []byte   `json:"-"`
-	XXX_sizecache        int32    `json:"-"`
-}
-
-func (m *GetVacanciesListResponse_CompanyActivityField) Reset() {
-	*m = GetVacanciesListResponse_CompanyActivityField{}
-}
-func (m *GetVacanciesListResponse_CompanyActivityField) String() string {
-	return proto.CompactTextString(m)
-}
-func (*GetVacanciesListResponse_CompanyActivityField) ProtoMessage() {}
-func (*GetVacanciesListResponse_CompanyActivityField) Descriptor() ([]byte, []int) {
-	return fileDescriptor_47be6d1234ea964b, []int{3, 0}
-}
-
-func (m *GetVacanciesListResponse_CompanyActivityField) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_GetVacanciesListResponse_CompanyActivityField.Unmarshal(m, b)
-}
-func (m *GetVacanciesListResponse_CompanyActivityField) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_GetVacanciesListResponse_CompanyActivityField.Marshal(b, m, deterministic)
-}
-func (m *GetVacanciesListResponse_CompanyActivityField) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_GetVacanciesListResponse_CompanyActivityField.Merge(m, src)
-}
-func (m *GetVacanciesListResponse_CompanyActivityField) XXX_Size() int {
-	return xxx_messageInfo_GetVacanciesListResponse_CompanyActivityField.Size(m)
-}
-func (m *GetVacanciesListResponse_CompanyActivityField) XXX_DiscardUnknown() {
-	xxx_messageInfo_GetVacanciesListResponse_CompanyActivityField.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_GetVacanciesListResponse_CompanyActivityField proto.InternalMessageInfo
-
-func (m *GetVacanciesListResponse_CompanyActivityField) GetId() string {
-	if m != nil {
-		return m.Id
-	}
-	return ""
-}
-
-func (m *GetVacanciesListResponse_CompanyActivityField) GetTitle() string {
-	if m != nil {
-		return m.Title
-	}
-	return ""
-}
-
-func (m *GetVacanciesListResponse_CompanyActivityField) GetIconUrl() string {
-	if m != nil {
-		return m.IconUrl
-	}
-	return ""
-}
-
-type GetVacanciesListResponse_Company struct {
-	Id                   string            `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	Title                string            `protobuf:"bytes,2,opt,name=title,proto3" json:"title,omitempty"`
-	LogoUrl              string            `protobuf:"bytes,3,opt,name=logo_url,json=logoUrl,proto3" json:"logo_url,omitempty"`
-	ActivityFieldsIds    map[string]*Empty `protobuf:"bytes,4,rep,name=activity_fields_ids,json=activityFieldsIds,proto3" json:"activity_fields_ids,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
-	XXX_NoUnkeyedLiteral struct{}          `json:"-"`
-	XXX_unrecognized     []byte            `json:"-"`
-	XXX_sizecache        int32             `json:"-"`
-}
-
-func (m *GetVacanciesListResponse_Company) Reset()         { *m = GetVacanciesListResponse_Company{} }
-func (m *GetVacanciesListResponse_Company) String() string { return proto.CompactTextString(m) }
-func (*GetVacanciesListResponse_Company) ProtoMessage()    {}
-func (*GetVacanciesListResponse_Company) Descriptor() ([]byte, []int) {
-	return fileDescriptor_47be6d1234ea964b, []int{3, 1}
-}
-
-func (m *GetVacanciesListResponse_Company) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_GetVacanciesListResponse_Company.Unmarshal(m, b)
-}
-func (m *GetVacanciesListResponse_Company) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_GetVacanciesListResponse_Company.Marshal(b, m, deterministic)
-}
-func (m *GetVacanciesListResponse_Company) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_GetVacanciesListResponse_Company.Merge(m, src)
-}
-func (m *GetVacanciesListResponse_Company) XXX_Size() int {
-	return xxx_messageInfo_GetVacanciesListResponse_Company.Size(m)
-}
-func (m *GetVacanciesListResponse_Company) XXX_DiscardUnknown() {
-	xxx_messageInfo_GetVacanciesListResponse_Company.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_GetVacanciesListResponse_Company proto.InternalMessageInfo
-
-func (m *GetVacanciesListResponse_Company) GetId() string {
-	if m != nil {
-		return m.Id
-	}
-	return ""
-}
-
-func (m *GetVacanciesListResponse_Company) GetTitle() string {
-	if m != nil {
-		return m.Title
-	}
-	return ""
-}
-
-func (m *GetVacanciesListResponse_Company) GetLogoUrl() string {
-	if m != nil {
-		return m.LogoUrl
-	}
-	return ""
-}
-
-func (m *GetVacanciesListResponse_Company) GetActivityFieldsIds() map[string]*Empty {
-	if m != nil {
-		return m.ActivityFieldsIds
-	}
-	return nil
-}
-
-type GetVacanciesListResponse_Vacancy struct {
-	Id                   string   `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	Title                string   `protobuf:"bytes,2,opt,name=title,proto3" json:"title,omitempty"`
-	MinSalary            int32    `protobuf:"varint,3,opt,name=min_salary,json=minSalary,proto3" json:"min_salary,omitempty"`
-	MaxSalary            int32    `protobuf:"varint,4,opt,name=max_salary,json=maxSalary,proto3" json:"max_salary,omitempty"`
-	Currency             Currency `protobuf:"varint,5,opt,name=currency,proto3,enum=personaappapi.vacancy.Currency" json:"currency,omitempty"`
-	ImageUrl             string   `protobuf:"bytes,6,opt,name=image_url,json=imageUrl,proto3" json:"image_url,omitempty"`
-	CompanyId            string   `protobuf:"bytes,7,opt,name=company_id,json=companyId,proto3" json:"company_id,omitempty"`
-	XXX_NoUnkeyedLiteral struct{} `json:"-"`
-	XXX_unrecognized     []byte   `json:"-"`
-	XXX_sizecache        int32    `json:"-"`
-}
-
-func (m *GetVacanciesListResponse_Vacancy) Reset()         { *m = GetVacanciesListResponse_Vacancy{} }
-func (m *GetVacanciesListResponse_Vacancy) String() string { return proto.CompactTextString(m) }
-func (*GetVacanciesListResponse_Vacancy) ProtoMessage()    {}
-func (*GetVacanciesListResponse_Vacancy) Descriptor() ([]byte, []int) {
-	return fileDescriptor_47be6d1234ea964b, []int{3, 2}
-}
-
-func (m *GetVacanciesListResponse_Vacancy) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_GetVacanciesListResponse_Vacancy.Unmarshal(m, b)
-}
-func (m *GetVacanciesListResponse_Vacancy) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_GetVacanciesListResponse_Vacancy.Marshal(b, m, deterministic)
-}
-func (m *GetVacanciesListResponse_Vacancy) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_GetVacanciesListResponse_Vacancy.Merge(m, src)
-}
-func (m *GetVacanciesListResponse_Vacancy) XXX_Size() int {
-	return xxx_messageInfo_GetVacanciesListResponse_Vacancy.Size(m)
-}
-func (m *GetVacanciesListResponse_Vacancy) XXX_DiscardUnknown() {
-	xxx_messageInfo_GetVacanciesListResponse_Vacancy.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_GetVacanciesListResponse_Vacancy proto.InternalMessageInfo
-
-func (m *GetVacanciesListResponse_Vacancy) GetId() string {
-	if m != nil {
-		return m.Id
-	}
-	return ""
-}
-
-func (m *GetVacanciesListResponse_Vacancy) GetTitle() string {
-	if m != nil {
-		return m.Title
-	}
-	return ""
-}
-
-func (m *GetVacanciesListResponse_Vacancy) GetMinSalary() int32 {
-	if m != nil {
-		return m.MinSalary
-	}
-	return 0
-}
-
-func (m *GetVacanciesListResponse_Vacancy) GetMaxSalary() int32 {
-	if m != nil {
-		return m.MaxSalary
-	}
-	return 0
-}
-
-func (m *GetVacanciesListResponse_Vacancy) GetCurrency() Currency {
-	if m != nil {
-		return m.Currency
-	}
-	return Currency_CURRENCY_UNKNOWN
-}
-
-func (m *GetVacanciesListResponse_Vacancy) GetImageUrl() string {
-	if m != nil {
-		return m.ImageUrl
-	}
-	return ""
-}
-
-func (m *GetVacanciesListResponse_Vacancy) GetCompanyId() string {
-	if m != nil {
-		return m.CompanyId
-	}
-	return ""
-}
-
-type GetVacanciesListResponse_Body struct {
-	VacanciesIds         []string                                                  `protobuf:"bytes,1,rep,name=vacancies_ids,json=vacanciesIds,proto3" json:"vacancies_ids,omitempty"`
-	Vacancies            map[string]*GetVacanciesListResponse_Vacancy              `protobuf:"bytes,2,rep,name=vacancies,proto3" json:"vacancies,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
-	Companies            map[string]*GetVacanciesListResponse_Company              `protobuf:"bytes,3,rep,name=companies,proto3" json:"companies,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
-	ActivityFields       map[string]*GetVacanciesListResponse_CompanyActivityField `protobuf:"bytes,4,rep,name=activity_fields,json=activityFields,proto3" json:"activity_fields,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
-	XXX_NoUnkeyedLiteral struct{}                                                  `json:"-"`
-	XXX_unrecognized     []byte                                                    `json:"-"`
-	XXX_sizecache        int32                                                     `json:"-"`
-}
-
-func (m *GetVacanciesListResponse_Body) Reset()         { *m = GetVacanciesListResponse_Body{} }
-func (m *GetVacanciesListResponse_Body) String() string { return proto.CompactTextString(m) }
-func (*GetVacanciesListResponse_Body) ProtoMessage()    {}
-func (*GetVacanciesListResponse_Body) Descriptor() ([]byte, []int) {
-	return fileDescriptor_47be6d1234ea964b, []int{3, 3}
-}
-
-func (m *GetVacanciesListResponse_Body) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_GetVacanciesListResponse_Body.Unmarshal(m, b)
-}
-func (m *GetVacanciesListResponse_Body) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_GetVacanciesListResponse_Body.Marshal(b, m, deterministic)
-}
-func (m *GetVacanciesListResponse_Body) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_GetVacanciesListResponse_Body.Merge(m, src)
-}
-func (m *GetVacanciesListResponse_Body) XXX_Size() int {
-	return xxx_messageInfo_GetVacanciesListResponse_Body.Size(m)
-}
-func (m *GetVacanciesListResponse_Body) XXX_DiscardUnknown() {
-	xxx_messageInfo_GetVacanciesListResponse_Body.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_GetVacanciesListResponse_Body proto.InternalMessageInfo
-
-func (m *GetVacanciesListResponse_Body) GetVacanciesIds() []string {
+func (m *GetVacanciesListResponse) GetVacanciesIds() []string {
 	if m != nil {
 		return m.VacanciesIds
 	}
 	return nil
 }
 
-func (m *GetVacanciesListResponse_Body) GetVacancies() map[string]*GetVacanciesListResponse_Vacancy {
+func (m *GetVacanciesListResponse) GetVacancies() map[string]*GetVacanciesListResponse_VacancyDetails {
 	if m != nil {
 		return m.Vacancies
 	}
 	return nil
 }
 
-func (m *GetVacanciesListResponse_Body) GetCompanies() map[string]*GetVacanciesListResponse_Company {
+func (m *GetVacanciesListResponse) GetCompanies() map[string]*Company {
 	if m != nil {
 		return m.Companies
 	}
 	return nil
 }
 
-func (m *GetVacanciesListResponse_Body) GetActivityFields() map[string]*GetVacanciesListResponse_CompanyActivityField {
+func (m *GetVacanciesListResponse) GetCursor() *wrappers.StringValue {
 	if m != nil {
-		return m.ActivityFields
+		return m.Cursor
 	}
 	return nil
+}
+
+type GetVacanciesListResponse_VacancyDetails struct {
+	Vacancy              *Vacancy `protobuf:"bytes,1,opt,name=vacancy,proto3" json:"vacancy,omitempty"`
+	ImageUrl             string   `protobuf:"bytes,2,opt,name=image_url,json=imageUrl,proto3" json:"image_url,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *GetVacanciesListResponse_VacancyDetails) Reset() {
+	*m = GetVacanciesListResponse_VacancyDetails{}
+}
+func (m *GetVacanciesListResponse_VacancyDetails) String() string { return proto.CompactTextString(m) }
+func (*GetVacanciesListResponse_VacancyDetails) ProtoMessage()    {}
+func (*GetVacanciesListResponse_VacancyDetails) Descriptor() ([]byte, []int) {
+	return fileDescriptor_47be6d1234ea964b, []int{3, 0}
+}
+
+func (m *GetVacanciesListResponse_VacancyDetails) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetVacanciesListResponse_VacancyDetails.Unmarshal(m, b)
+}
+func (m *GetVacanciesListResponse_VacancyDetails) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetVacanciesListResponse_VacancyDetails.Marshal(b, m, deterministic)
+}
+func (m *GetVacanciesListResponse_VacancyDetails) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetVacanciesListResponse_VacancyDetails.Merge(m, src)
+}
+func (m *GetVacanciesListResponse_VacancyDetails) XXX_Size() int {
+	return xxx_messageInfo_GetVacanciesListResponse_VacancyDetails.Size(m)
+}
+func (m *GetVacanciesListResponse_VacancyDetails) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetVacanciesListResponse_VacancyDetails.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetVacanciesListResponse_VacancyDetails proto.InternalMessageInfo
+
+func (m *GetVacanciesListResponse_VacancyDetails) GetVacancy() *Vacancy {
+	if m != nil {
+		return m.Vacancy
+	}
+	return nil
+}
+
+func (m *GetVacanciesListResponse_VacancyDetails) GetImageUrl() string {
+	if m != nil {
+		return m.ImageUrl
+	}
+	return ""
 }
 
 // Get Vacancy Details
@@ -781,13 +389,14 @@ func (m *GetVacancyDetailsRequest) GetVacancyId() string {
 }
 
 type GetVacancyDetailsResponse struct {
-	// Types that are valid to be assigned to Response:
-	//	*GetVacancyDetailsResponse_Body_
-	//	*GetVacancyDetailsResponse_ErrorCode_
-	Response             isGetVacancyDetailsResponse_Response `protobuf_oneof:"response"`
-	XXX_NoUnkeyedLiteral struct{}                             `json:"-"`
-	XXX_unrecognized     []byte                               `json:"-"`
-	XXX_sizecache        int32                                `json:"-"`
+	Vacancy              *Vacancy                                      `protobuf:"bytes,1,opt,name=vacancy,proto3" json:"vacancy,omitempty"`
+	Image                *GetVacancyDetailsResponse_VacancyImage       `protobuf:"bytes,2,opt,name=image,proto3" json:"image,omitempty"`
+	Location             *GetVacancyDetailsResponse_VacancyLocation    `protobuf:"bytes,3,opt,name=location,proto3" json:"location,omitempty"`
+	Description          *GetVacancyDetailsResponse_VacancyDescription `protobuf:"bytes,4,opt,name=description,proto3" json:"description,omitempty"`
+	Company              *GetVacancyDetailsResponse_VacancyCompany     `protobuf:"bytes,5,opt,name=company,proto3" json:"company,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}                                      `json:"-"`
+	XXX_unrecognized     []byte                                        `json:"-"`
+	XXX_sizecache        int32                                         `json:"-"`
 }
 
 func (m *GetVacancyDetailsResponse) Reset()         { *m = GetVacancyDetailsResponse{} }
@@ -815,171 +424,85 @@ func (m *GetVacancyDetailsResponse) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_GetVacancyDetailsResponse proto.InternalMessageInfo
 
-type isGetVacancyDetailsResponse_Response interface {
-	isGetVacancyDetailsResponse_Response()
-}
-
-type GetVacancyDetailsResponse_Body_ struct {
-	Body *GetVacancyDetailsResponse_Body `protobuf:"bytes,1,opt,name=body,proto3,oneof"`
-}
-
-type GetVacancyDetailsResponse_ErrorCode_ struct {
-	ErrorCode GetVacancyDetailsResponse_ErrorCode `protobuf:"varint,2,opt,name=error_code,json=errorCode,proto3,enum=personaappapi.vacancy.GetVacancyDetailsResponse_ErrorCode,oneof"`
-}
-
-func (*GetVacancyDetailsResponse_Body_) isGetVacancyDetailsResponse_Response() {}
-
-func (*GetVacancyDetailsResponse_ErrorCode_) isGetVacancyDetailsResponse_Response() {}
-
-func (m *GetVacancyDetailsResponse) GetResponse() isGetVacancyDetailsResponse_Response {
+func (m *GetVacancyDetailsResponse) GetVacancy() *Vacancy {
 	if m != nil {
-		return m.Response
+		return m.Vacancy
 	}
 	return nil
 }
 
-func (m *GetVacancyDetailsResponse) GetBody() *GetVacancyDetailsResponse_Body {
-	if x, ok := m.GetResponse().(*GetVacancyDetailsResponse_Body_); ok {
-		return x.Body
+func (m *GetVacancyDetailsResponse) GetImage() *GetVacancyDetailsResponse_VacancyImage {
+	if m != nil {
+		return m.Image
 	}
 	return nil
 }
 
-func (m *GetVacancyDetailsResponse) GetErrorCode() GetVacancyDetailsResponse_ErrorCode {
-	if x, ok := m.GetResponse().(*GetVacancyDetailsResponse_ErrorCode_); ok {
-		return x.ErrorCode
-	}
-	return GetVacancyDetailsResponse_UNKNOWN_ERROR_CODE
-}
-
-// XXX_OneofWrappers is for the internal use of the proto package.
-func (*GetVacancyDetailsResponse) XXX_OneofWrappers() []interface{} {
-	return []interface{}{
-		(*GetVacancyDetailsResponse_Body_)(nil),
-		(*GetVacancyDetailsResponse_ErrorCode_)(nil),
-	}
-}
-
-type GetVacancyDetailsResponse_Vacancy struct {
-	Id                   string                              `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	Company              *GetVacancyDetailsResponse_Company  `protobuf:"bytes,2,opt,name=company,proto3" json:"company,omitempty"`
-	Location             *GetVacancyDetailsResponse_Location `protobuf:"bytes,3,opt,name=location,proto3" json:"location,omitempty"`
-	Title                string                              `protobuf:"bytes,4,opt,name=title,proto3" json:"title,omitempty"`
-	Description          string                              `protobuf:"bytes,5,opt,name=description,proto3" json:"description,omitempty"`
-	MinSalary            int32                               `protobuf:"varint,6,opt,name=min_salary,json=minSalary,proto3" json:"min_salary,omitempty"`
-	MaxSalary            int32                               `protobuf:"varint,7,opt,name=max_salary,json=maxSalary,proto3" json:"max_salary,omitempty"`
-	Currency             Currency                            `protobuf:"varint,8,opt,name=currency,proto3,enum=personaappapi.vacancy.Currency" json:"currency,omitempty"`
-	ImageUrl             string                              `protobuf:"bytes,9,opt,name=image_url,json=imageUrl,proto3" json:"image_url,omitempty"`
-	WorkExperience       string                              `protobuf:"bytes,10,opt,name=work_experience,json=workExperience,proto3" json:"work_experience,omitempty"`
-	WorkSchedule         string                              `protobuf:"bytes,11,opt,name=work_schedule,json=workSchedule,proto3" json:"work_schedule,omitempty"`
-	XXX_NoUnkeyedLiteral struct{}                            `json:"-"`
-	XXX_unrecognized     []byte                              `json:"-"`
-	XXX_sizecache        int32                               `json:"-"`
-}
-
-func (m *GetVacancyDetailsResponse_Vacancy) Reset()         { *m = GetVacancyDetailsResponse_Vacancy{} }
-func (m *GetVacancyDetailsResponse_Vacancy) String() string { return proto.CompactTextString(m) }
-func (*GetVacancyDetailsResponse_Vacancy) ProtoMessage()    {}
-func (*GetVacancyDetailsResponse_Vacancy) Descriptor() ([]byte, []int) {
-	return fileDescriptor_47be6d1234ea964b, []int{5, 0}
-}
-
-func (m *GetVacancyDetailsResponse_Vacancy) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_GetVacancyDetailsResponse_Vacancy.Unmarshal(m, b)
-}
-func (m *GetVacancyDetailsResponse_Vacancy) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_GetVacancyDetailsResponse_Vacancy.Marshal(b, m, deterministic)
-}
-func (m *GetVacancyDetailsResponse_Vacancy) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_GetVacancyDetailsResponse_Vacancy.Merge(m, src)
-}
-func (m *GetVacancyDetailsResponse_Vacancy) XXX_Size() int {
-	return xxx_messageInfo_GetVacancyDetailsResponse_Vacancy.Size(m)
-}
-func (m *GetVacancyDetailsResponse_Vacancy) XXX_DiscardUnknown() {
-	xxx_messageInfo_GetVacancyDetailsResponse_Vacancy.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_GetVacancyDetailsResponse_Vacancy proto.InternalMessageInfo
-
-func (m *GetVacancyDetailsResponse_Vacancy) GetId() string {
-	if m != nil {
-		return m.Id
-	}
-	return ""
-}
-
-func (m *GetVacancyDetailsResponse_Vacancy) GetCompany() *GetVacancyDetailsResponse_Company {
-	if m != nil {
-		return m.Company
-	}
-	return nil
-}
-
-func (m *GetVacancyDetailsResponse_Vacancy) GetLocation() *GetVacancyDetailsResponse_Location {
+func (m *GetVacancyDetailsResponse) GetLocation() *GetVacancyDetailsResponse_VacancyLocation {
 	if m != nil {
 		return m.Location
 	}
 	return nil
 }
 
-func (m *GetVacancyDetailsResponse_Vacancy) GetTitle() string {
+func (m *GetVacancyDetailsResponse) GetDescription() *GetVacancyDetailsResponse_VacancyDescription {
 	if m != nil {
-		return m.Title
+		return m.Description
 	}
-	return ""
+	return nil
 }
 
-func (m *GetVacancyDetailsResponse_Vacancy) GetDescription() string {
+func (m *GetVacancyDetailsResponse) GetCompany() *GetVacancyDetailsResponse_VacancyCompany {
+	if m != nil {
+		return m.Company
+	}
+	return nil
+}
+
+type GetVacancyDetailsResponse_CompanyDescription struct {
+	Description          string   `protobuf:"bytes,1,opt,name=description,proto3" json:"description,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *GetVacancyDetailsResponse_CompanyDescription) Reset() {
+	*m = GetVacancyDetailsResponse_CompanyDescription{}
+}
+func (m *GetVacancyDetailsResponse_CompanyDescription) String() string {
+	return proto.CompactTextString(m)
+}
+func (*GetVacancyDetailsResponse_CompanyDescription) ProtoMessage() {}
+func (*GetVacancyDetailsResponse_CompanyDescription) Descriptor() ([]byte, []int) {
+	return fileDescriptor_47be6d1234ea964b, []int{5, 0}
+}
+
+func (m *GetVacancyDetailsResponse_CompanyDescription) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetVacancyDetailsResponse_CompanyDescription.Unmarshal(m, b)
+}
+func (m *GetVacancyDetailsResponse_CompanyDescription) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetVacancyDetailsResponse_CompanyDescription.Marshal(b, m, deterministic)
+}
+func (m *GetVacancyDetailsResponse_CompanyDescription) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetVacancyDetailsResponse_CompanyDescription.Merge(m, src)
+}
+func (m *GetVacancyDetailsResponse_CompanyDescription) XXX_Size() int {
+	return xxx_messageInfo_GetVacancyDetailsResponse_CompanyDescription.Size(m)
+}
+func (m *GetVacancyDetailsResponse_CompanyDescription) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetVacancyDetailsResponse_CompanyDescription.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetVacancyDetailsResponse_CompanyDescription proto.InternalMessageInfo
+
+func (m *GetVacancyDetailsResponse_CompanyDescription) GetDescription() string {
 	if m != nil {
 		return m.Description
 	}
 	return ""
 }
 
-func (m *GetVacancyDetailsResponse_Vacancy) GetMinSalary() int32 {
-	if m != nil {
-		return m.MinSalary
-	}
-	return 0
-}
-
-func (m *GetVacancyDetailsResponse_Vacancy) GetMaxSalary() int32 {
-	if m != nil {
-		return m.MaxSalary
-	}
-	return 0
-}
-
-func (m *GetVacancyDetailsResponse_Vacancy) GetCurrency() Currency {
-	if m != nil {
-		return m.Currency
-	}
-	return Currency_CURRENCY_UNKNOWN
-}
-
-func (m *GetVacancyDetailsResponse_Vacancy) GetImageUrl() string {
-	if m != nil {
-		return m.ImageUrl
-	}
-	return ""
-}
-
-func (m *GetVacancyDetailsResponse_Vacancy) GetWorkExperience() string {
-	if m != nil {
-		return m.WorkExperience
-	}
-	return ""
-}
-
-func (m *GetVacancyDetailsResponse_Vacancy) GetWorkSchedule() string {
-	if m != nil {
-		return m.WorkSchedule
-	}
-	return ""
-}
-
-type GetVacancyDetailsResponse_Location struct {
+type GetVacancyDetailsResponse_VacancyLocation struct {
 	Latitude             float32  `protobuf:"fixed32,1,opt,name=latitude,proto3" json:"latitude,omitempty"`
 	Longitude            float32  `protobuf:"fixed32,2,opt,name=longitude,proto3" json:"longitude,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
@@ -987,220 +510,194 @@ type GetVacancyDetailsResponse_Location struct {
 	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *GetVacancyDetailsResponse_Location) Reset()         { *m = GetVacancyDetailsResponse_Location{} }
-func (m *GetVacancyDetailsResponse_Location) String() string { return proto.CompactTextString(m) }
-func (*GetVacancyDetailsResponse_Location) ProtoMessage()    {}
-func (*GetVacancyDetailsResponse_Location) Descriptor() ([]byte, []int) {
+func (m *GetVacancyDetailsResponse_VacancyLocation) Reset() {
+	*m = GetVacancyDetailsResponse_VacancyLocation{}
+}
+func (m *GetVacancyDetailsResponse_VacancyLocation) String() string { return proto.CompactTextString(m) }
+func (*GetVacancyDetailsResponse_VacancyLocation) ProtoMessage()    {}
+func (*GetVacancyDetailsResponse_VacancyLocation) Descriptor() ([]byte, []int) {
 	return fileDescriptor_47be6d1234ea964b, []int{5, 1}
 }
 
-func (m *GetVacancyDetailsResponse_Location) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_GetVacancyDetailsResponse_Location.Unmarshal(m, b)
+func (m *GetVacancyDetailsResponse_VacancyLocation) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetVacancyDetailsResponse_VacancyLocation.Unmarshal(m, b)
 }
-func (m *GetVacancyDetailsResponse_Location) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_GetVacancyDetailsResponse_Location.Marshal(b, m, deterministic)
+func (m *GetVacancyDetailsResponse_VacancyLocation) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetVacancyDetailsResponse_VacancyLocation.Marshal(b, m, deterministic)
 }
-func (m *GetVacancyDetailsResponse_Location) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_GetVacancyDetailsResponse_Location.Merge(m, src)
+func (m *GetVacancyDetailsResponse_VacancyLocation) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetVacancyDetailsResponse_VacancyLocation.Merge(m, src)
 }
-func (m *GetVacancyDetailsResponse_Location) XXX_Size() int {
-	return xxx_messageInfo_GetVacancyDetailsResponse_Location.Size(m)
+func (m *GetVacancyDetailsResponse_VacancyLocation) XXX_Size() int {
+	return xxx_messageInfo_GetVacancyDetailsResponse_VacancyLocation.Size(m)
 }
-func (m *GetVacancyDetailsResponse_Location) XXX_DiscardUnknown() {
-	xxx_messageInfo_GetVacancyDetailsResponse_Location.DiscardUnknown(m)
+func (m *GetVacancyDetailsResponse_VacancyLocation) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetVacancyDetailsResponse_VacancyLocation.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_GetVacancyDetailsResponse_Location proto.InternalMessageInfo
+var xxx_messageInfo_GetVacancyDetailsResponse_VacancyLocation proto.InternalMessageInfo
 
-func (m *GetVacancyDetailsResponse_Location) GetLatitude() float32 {
+func (m *GetVacancyDetailsResponse_VacancyLocation) GetLatitude() float32 {
 	if m != nil {
 		return m.Latitude
 	}
 	return 0
 }
 
-func (m *GetVacancyDetailsResponse_Location) GetLongitude() float32 {
+func (m *GetVacancyDetailsResponse_VacancyLocation) GetLongitude() float32 {
 	if m != nil {
 		return m.Longitude
 	}
 	return 0
 }
 
-type GetVacancyDetailsResponse_Company struct {
-	Id                   string                                                     `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	Title                string                                                     `protobuf:"bytes,2,opt,name=title,proto3" json:"title,omitempty"`
-	Description          string                                                     `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`
-	LogoUrl              string                                                     `protobuf:"bytes,4,opt,name=logo_url,json=logoUrl,proto3" json:"logo_url,omitempty"`
-	Phone                string                                                     `protobuf:"bytes,5,opt,name=phone,proto3" json:"phone,omitempty"`
-	ActivityFields       map[string]*GetVacancyDetailsResponse_CompanyActivityField `protobuf:"bytes,6,rep,name=activity_fields,json=activityFields,proto3" json:"activity_fields,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
-	XXX_NoUnkeyedLiteral struct{}                                                   `json:"-"`
-	XXX_unrecognized     []byte                                                     `json:"-"`
-	XXX_sizecache        int32                                                      `json:"-"`
+type GetVacancyDetailsResponse_VacancyDescription struct {
+	Description          string   `protobuf:"bytes,1,opt,name=description,proto3" json:"description,omitempty"`
+	WorkMonthsExperience uint32   `protobuf:"varint,2,opt,name=work_months_experience,json=workMonthsExperience,proto3" json:"work_months_experience,omitempty"`
+	WorkSchedule         string   `protobuf:"bytes,3,opt,name=work_schedule,json=workSchedule,proto3" json:"work_schedule,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *GetVacancyDetailsResponse_Company) Reset()         { *m = GetVacancyDetailsResponse_Company{} }
-func (m *GetVacancyDetailsResponse_Company) String() string { return proto.CompactTextString(m) }
-func (*GetVacancyDetailsResponse_Company) ProtoMessage()    {}
-func (*GetVacancyDetailsResponse_Company) Descriptor() ([]byte, []int) {
+func (m *GetVacancyDetailsResponse_VacancyDescription) Reset() {
+	*m = GetVacancyDetailsResponse_VacancyDescription{}
+}
+func (m *GetVacancyDetailsResponse_VacancyDescription) String() string {
+	return proto.CompactTextString(m)
+}
+func (*GetVacancyDetailsResponse_VacancyDescription) ProtoMessage() {}
+func (*GetVacancyDetailsResponse_VacancyDescription) Descriptor() ([]byte, []int) {
 	return fileDescriptor_47be6d1234ea964b, []int{5, 2}
 }
 
-func (m *GetVacancyDetailsResponse_Company) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_GetVacancyDetailsResponse_Company.Unmarshal(m, b)
+func (m *GetVacancyDetailsResponse_VacancyDescription) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetVacancyDetailsResponse_VacancyDescription.Unmarshal(m, b)
 }
-func (m *GetVacancyDetailsResponse_Company) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_GetVacancyDetailsResponse_Company.Marshal(b, m, deterministic)
+func (m *GetVacancyDetailsResponse_VacancyDescription) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetVacancyDetailsResponse_VacancyDescription.Marshal(b, m, deterministic)
 }
-func (m *GetVacancyDetailsResponse_Company) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_GetVacancyDetailsResponse_Company.Merge(m, src)
+func (m *GetVacancyDetailsResponse_VacancyDescription) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetVacancyDetailsResponse_VacancyDescription.Merge(m, src)
 }
-func (m *GetVacancyDetailsResponse_Company) XXX_Size() int {
-	return xxx_messageInfo_GetVacancyDetailsResponse_Company.Size(m)
+func (m *GetVacancyDetailsResponse_VacancyDescription) XXX_Size() int {
+	return xxx_messageInfo_GetVacancyDetailsResponse_VacancyDescription.Size(m)
 }
-func (m *GetVacancyDetailsResponse_Company) XXX_DiscardUnknown() {
-	xxx_messageInfo_GetVacancyDetailsResponse_Company.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_GetVacancyDetailsResponse_Company proto.InternalMessageInfo
-
-func (m *GetVacancyDetailsResponse_Company) GetId() string {
-	if m != nil {
-		return m.Id
-	}
-	return ""
+func (m *GetVacancyDetailsResponse_VacancyDescription) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetVacancyDetailsResponse_VacancyDescription.DiscardUnknown(m)
 }
 
-func (m *GetVacancyDetailsResponse_Company) GetTitle() string {
-	if m != nil {
-		return m.Title
-	}
-	return ""
-}
+var xxx_messageInfo_GetVacancyDetailsResponse_VacancyDescription proto.InternalMessageInfo
 
-func (m *GetVacancyDetailsResponse_Company) GetDescription() string {
+func (m *GetVacancyDetailsResponse_VacancyDescription) GetDescription() string {
 	if m != nil {
 		return m.Description
 	}
 	return ""
 }
 
-func (m *GetVacancyDetailsResponse_Company) GetLogoUrl() string {
+func (m *GetVacancyDetailsResponse_VacancyDescription) GetWorkMonthsExperience() uint32 {
 	if m != nil {
-		return m.LogoUrl
+		return m.WorkMonthsExperience
+	}
+	return 0
+}
+
+func (m *GetVacancyDetailsResponse_VacancyDescription) GetWorkSchedule() string {
+	if m != nil {
+		return m.WorkSchedule
 	}
 	return ""
 }
 
-func (m *GetVacancyDetailsResponse_Company) GetPhone() string {
-	if m != nil {
-		return m.Phone
-	}
-	return ""
+type GetVacancyDetailsResponse_VacancyCompany struct {
+	Company              *Company                                      `protobuf:"bytes,1,opt,name=company,proto3" json:"company,omitempty"`
+	Description          *GetVacancyDetailsResponse_CompanyDescription `protobuf:"bytes,2,opt,name=description,proto3" json:"description,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}                                      `json:"-"`
+	XXX_unrecognized     []byte                                        `json:"-"`
+	XXX_sizecache        int32                                         `json:"-"`
 }
 
-func (m *GetVacancyDetailsResponse_Company) GetActivityFields() map[string]*GetVacancyDetailsResponse_CompanyActivityField {
+func (m *GetVacancyDetailsResponse_VacancyCompany) Reset() {
+	*m = GetVacancyDetailsResponse_VacancyCompany{}
+}
+func (m *GetVacancyDetailsResponse_VacancyCompany) String() string { return proto.CompactTextString(m) }
+func (*GetVacancyDetailsResponse_VacancyCompany) ProtoMessage()    {}
+func (*GetVacancyDetailsResponse_VacancyCompany) Descriptor() ([]byte, []int) {
+	return fileDescriptor_47be6d1234ea964b, []int{5, 3}
+}
+
+func (m *GetVacancyDetailsResponse_VacancyCompany) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetVacancyDetailsResponse_VacancyCompany.Unmarshal(m, b)
+}
+func (m *GetVacancyDetailsResponse_VacancyCompany) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetVacancyDetailsResponse_VacancyCompany.Marshal(b, m, deterministic)
+}
+func (m *GetVacancyDetailsResponse_VacancyCompany) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetVacancyDetailsResponse_VacancyCompany.Merge(m, src)
+}
+func (m *GetVacancyDetailsResponse_VacancyCompany) XXX_Size() int {
+	return xxx_messageInfo_GetVacancyDetailsResponse_VacancyCompany.Size(m)
+}
+func (m *GetVacancyDetailsResponse_VacancyCompany) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetVacancyDetailsResponse_VacancyCompany.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetVacancyDetailsResponse_VacancyCompany proto.InternalMessageInfo
+
+func (m *GetVacancyDetailsResponse_VacancyCompany) GetCompany() *Company {
 	if m != nil {
-		return m.ActivityFields
+		return m.Company
 	}
 	return nil
 }
 
-type GetVacancyDetailsResponse_CompanyActivityField struct {
-	Id                   string   `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	Title                string   `protobuf:"bytes,2,opt,name=title,proto3" json:"title,omitempty"`
-	IconUrl              string   `protobuf:"bytes,3,opt,name=icon_url,json=iconUrl,proto3" json:"icon_url,omitempty"`
+func (m *GetVacancyDetailsResponse_VacancyCompany) GetDescription() *GetVacancyDetailsResponse_CompanyDescription {
+	if m != nil {
+		return m.Description
+	}
+	return nil
+}
+
+type GetVacancyDetailsResponse_VacancyImage struct {
+	ImageUrl             string   `protobuf:"bytes,1,opt,name=image_url,json=imageUrl,proto3" json:"image_url,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *GetVacancyDetailsResponse_CompanyActivityField) Reset() {
-	*m = GetVacancyDetailsResponse_CompanyActivityField{}
+func (m *GetVacancyDetailsResponse_VacancyImage) Reset() {
+	*m = GetVacancyDetailsResponse_VacancyImage{}
 }
-func (m *GetVacancyDetailsResponse_CompanyActivityField) String() string {
-	return proto.CompactTextString(m)
-}
-func (*GetVacancyDetailsResponse_CompanyActivityField) ProtoMessage() {}
-func (*GetVacancyDetailsResponse_CompanyActivityField) Descriptor() ([]byte, []int) {
-	return fileDescriptor_47be6d1234ea964b, []int{5, 3}
-}
-
-func (m *GetVacancyDetailsResponse_CompanyActivityField) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_GetVacancyDetailsResponse_CompanyActivityField.Unmarshal(m, b)
-}
-func (m *GetVacancyDetailsResponse_CompanyActivityField) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_GetVacancyDetailsResponse_CompanyActivityField.Marshal(b, m, deterministic)
-}
-func (m *GetVacancyDetailsResponse_CompanyActivityField) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_GetVacancyDetailsResponse_CompanyActivityField.Merge(m, src)
-}
-func (m *GetVacancyDetailsResponse_CompanyActivityField) XXX_Size() int {
-	return xxx_messageInfo_GetVacancyDetailsResponse_CompanyActivityField.Size(m)
-}
-func (m *GetVacancyDetailsResponse_CompanyActivityField) XXX_DiscardUnknown() {
-	xxx_messageInfo_GetVacancyDetailsResponse_CompanyActivityField.DiscardUnknown(m)
-}
-
-var xxx_messageInfo_GetVacancyDetailsResponse_CompanyActivityField proto.InternalMessageInfo
-
-func (m *GetVacancyDetailsResponse_CompanyActivityField) GetId() string {
-	if m != nil {
-		return m.Id
-	}
-	return ""
-}
-
-func (m *GetVacancyDetailsResponse_CompanyActivityField) GetTitle() string {
-	if m != nil {
-		return m.Title
-	}
-	return ""
-}
-
-func (m *GetVacancyDetailsResponse_CompanyActivityField) GetIconUrl() string {
-	if m != nil {
-		return m.IconUrl
-	}
-	return ""
-}
-
-type GetVacancyDetailsResponse_Body struct {
-	Vacancy              *GetVacancyDetailsResponse_Vacancy `protobuf:"bytes,1,opt,name=vacancy,proto3" json:"vacancy,omitempty"`
-	XXX_NoUnkeyedLiteral struct{}                           `json:"-"`
-	XXX_unrecognized     []byte                             `json:"-"`
-	XXX_sizecache        int32                              `json:"-"`
-}
-
-func (m *GetVacancyDetailsResponse_Body) Reset()         { *m = GetVacancyDetailsResponse_Body{} }
-func (m *GetVacancyDetailsResponse_Body) String() string { return proto.CompactTextString(m) }
-func (*GetVacancyDetailsResponse_Body) ProtoMessage()    {}
-func (*GetVacancyDetailsResponse_Body) Descriptor() ([]byte, []int) {
+func (m *GetVacancyDetailsResponse_VacancyImage) String() string { return proto.CompactTextString(m) }
+func (*GetVacancyDetailsResponse_VacancyImage) ProtoMessage()    {}
+func (*GetVacancyDetailsResponse_VacancyImage) Descriptor() ([]byte, []int) {
 	return fileDescriptor_47be6d1234ea964b, []int{5, 4}
 }
 
-func (m *GetVacancyDetailsResponse_Body) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_GetVacancyDetailsResponse_Body.Unmarshal(m, b)
+func (m *GetVacancyDetailsResponse_VacancyImage) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetVacancyDetailsResponse_VacancyImage.Unmarshal(m, b)
 }
-func (m *GetVacancyDetailsResponse_Body) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_GetVacancyDetailsResponse_Body.Marshal(b, m, deterministic)
+func (m *GetVacancyDetailsResponse_VacancyImage) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetVacancyDetailsResponse_VacancyImage.Marshal(b, m, deterministic)
 }
-func (m *GetVacancyDetailsResponse_Body) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_GetVacancyDetailsResponse_Body.Merge(m, src)
+func (m *GetVacancyDetailsResponse_VacancyImage) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetVacancyDetailsResponse_VacancyImage.Merge(m, src)
 }
-func (m *GetVacancyDetailsResponse_Body) XXX_Size() int {
-	return xxx_messageInfo_GetVacancyDetailsResponse_Body.Size(m)
+func (m *GetVacancyDetailsResponse_VacancyImage) XXX_Size() int {
+	return xxx_messageInfo_GetVacancyDetailsResponse_VacancyImage.Size(m)
 }
-func (m *GetVacancyDetailsResponse_Body) XXX_DiscardUnknown() {
-	xxx_messageInfo_GetVacancyDetailsResponse_Body.DiscardUnknown(m)
+func (m *GetVacancyDetailsResponse_VacancyImage) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetVacancyDetailsResponse_VacancyImage.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_GetVacancyDetailsResponse_Body proto.InternalMessageInfo
+var xxx_messageInfo_GetVacancyDetailsResponse_VacancyImage proto.InternalMessageInfo
 
-func (m *GetVacancyDetailsResponse_Body) GetVacancy() *GetVacancyDetailsResponse_Vacancy {
+func (m *GetVacancyDetailsResponse_VacancyImage) GetImageUrl() string {
 	if m != nil {
-		return m.Vacancy
+		return m.ImageUrl
 	}
-	return nil
+	return ""
 }
 
 // Entity
@@ -1235,120 +732,241 @@ func (m *Empty) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_Empty proto.InternalMessageInfo
 
+type Company struct {
+	Id                   string   `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Title                string   `protobuf:"bytes,2,opt,name=title,proto3" json:"title,omitempty"`
+	LogoUrl              string   `protobuf:"bytes,3,opt,name=logo_url,json=logoUrl,proto3" json:"logo_url,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *Company) Reset()         { *m = Company{} }
+func (m *Company) String() string { return proto.CompactTextString(m) }
+func (*Company) ProtoMessage()    {}
+func (*Company) Descriptor() ([]byte, []int) {
+	return fileDescriptor_47be6d1234ea964b, []int{7}
+}
+
+func (m *Company) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_Company.Unmarshal(m, b)
+}
+func (m *Company) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_Company.Marshal(b, m, deterministic)
+}
+func (m *Company) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_Company.Merge(m, src)
+}
+func (m *Company) XXX_Size() int {
+	return xxx_messageInfo_Company.Size(m)
+}
+func (m *Company) XXX_DiscardUnknown() {
+	xxx_messageInfo_Company.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_Company proto.InternalMessageInfo
+
+func (m *Company) GetId() string {
+	if m != nil {
+		return m.Id
+	}
+	return ""
+}
+
+func (m *Company) GetTitle() string {
+	if m != nil {
+		return m.Title
+	}
+	return ""
+}
+
+func (m *Company) GetLogoUrl() string {
+	if m != nil {
+		return m.LogoUrl
+	}
+	return ""
+}
+
+type Vacancy struct {
+	Id                   string   `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Title                string   `protobuf:"bytes,2,opt,name=title,proto3" json:"title,omitempty"`
+	Phone                string   `protobuf:"bytes,3,opt,name=phone,proto3" json:"phone,omitempty"`
+	MinSalary            int32    `protobuf:"varint,4,opt,name=min_salary,json=minSalary,proto3" json:"min_salary,omitempty"`
+	MaxSalary            int32    `protobuf:"varint,5,opt,name=max_salary,json=maxSalary,proto3" json:"max_salary,omitempty"`
+	CompanyId            string   `protobuf:"bytes,6,opt,name=company_id,json=companyId,proto3" json:"company_id,omitempty"`
+	Currency             Currency `protobuf:"varint,7,opt,name=currency,proto3,enum=personaappapi.vacancy.Currency" json:"currency,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *Vacancy) Reset()         { *m = Vacancy{} }
+func (m *Vacancy) String() string { return proto.CompactTextString(m) }
+func (*Vacancy) ProtoMessage()    {}
+func (*Vacancy) Descriptor() ([]byte, []int) {
+	return fileDescriptor_47be6d1234ea964b, []int{8}
+}
+
+func (m *Vacancy) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_Vacancy.Unmarshal(m, b)
+}
+func (m *Vacancy) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_Vacancy.Marshal(b, m, deterministic)
+}
+func (m *Vacancy) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_Vacancy.Merge(m, src)
+}
+func (m *Vacancy) XXX_Size() int {
+	return xxx_messageInfo_Vacancy.Size(m)
+}
+func (m *Vacancy) XXX_DiscardUnknown() {
+	xxx_messageInfo_Vacancy.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_Vacancy proto.InternalMessageInfo
+
+func (m *Vacancy) GetId() string {
+	if m != nil {
+		return m.Id
+	}
+	return ""
+}
+
+func (m *Vacancy) GetTitle() string {
+	if m != nil {
+		return m.Title
+	}
+	return ""
+}
+
+func (m *Vacancy) GetPhone() string {
+	if m != nil {
+		return m.Phone
+	}
+	return ""
+}
+
+func (m *Vacancy) GetMinSalary() int32 {
+	if m != nil {
+		return m.MinSalary
+	}
+	return 0
+}
+
+func (m *Vacancy) GetMaxSalary() int32 {
+	if m != nil {
+		return m.MaxSalary
+	}
+	return 0
+}
+
+func (m *Vacancy) GetCompanyId() string {
+	if m != nil {
+		return m.CompanyId
+	}
+	return ""
+}
+
+func (m *Vacancy) GetCurrency() Currency {
+	if m != nil {
+		return m.Currency
+	}
+	return Currency_CURRENCY_UNKNOWN
+}
+
 func init() {
 	proto.RegisterEnum("personaappapi.vacancy.Currency", Currency_name, Currency_value)
-	proto.RegisterEnum("personaappapi.vacancy.GetVacanciesFiltersListResponse_ErrorCode", GetVacanciesFiltersListResponse_ErrorCode_name, GetVacanciesFiltersListResponse_ErrorCode_value)
-	proto.RegisterEnum("personaappapi.vacancy.GetVacanciesListResponse_ErrorCode", GetVacanciesListResponse_ErrorCode_name, GetVacanciesListResponse_ErrorCode_value)
-	proto.RegisterEnum("personaappapi.vacancy.GetVacancyDetailsResponse_ErrorCode", GetVacancyDetailsResponse_ErrorCode_name, GetVacancyDetailsResponse_ErrorCode_value)
-	proto.RegisterType((*GetVacanciesFiltersListRequest)(nil), "personaappapi.vacancy.GetVacanciesFiltersListRequest")
-	proto.RegisterType((*GetVacanciesFiltersListResponse)(nil), "personaappapi.vacancy.GetVacanciesFiltersListResponse")
-	proto.RegisterType((*GetVacanciesFiltersListResponse_VacancyFilter)(nil), "personaappapi.vacancy.GetVacanciesFiltersListResponse.VacancyFilter")
-	proto.RegisterType((*GetVacanciesFiltersListResponse_Body)(nil), "personaappapi.vacancy.GetVacanciesFiltersListResponse.Body")
-	proto.RegisterMapType((map[string]*GetVacanciesFiltersListResponse_VacancyFilter)(nil), "personaappapi.vacancy.GetVacanciesFiltersListResponse.Body.VacancyFiltersEntry")
+	proto.RegisterType((*GetVacancyCategoriesListRequest)(nil), "personaappapi.vacancy.GetVacancyCategoriesListRequest")
+	proto.RegisterType((*GetVacancyCategoriesListResponse)(nil), "personaappapi.vacancy.GetVacancyCategoriesListResponse")
+	proto.RegisterMapType((map[string]*GetVacancyCategoriesListResponse_VacancyCategory)(nil), "personaappapi.vacancy.GetVacancyCategoriesListResponse.VacancyCategoriesEntry")
+	proto.RegisterType((*GetVacancyCategoriesListResponse_VacancyCategory)(nil), "personaappapi.vacancy.GetVacancyCategoriesListResponse.VacancyCategory")
 	proto.RegisterType((*GetVacanciesListRequest)(nil), "personaappapi.vacancy.GetVacanciesListRequest")
-	proto.RegisterMapType((map[string]*Empty)(nil), "personaappapi.vacancy.GetVacanciesListRequest.FilterIdsEntry")
+	proto.RegisterMapType((map[string]*Empty)(nil), "personaappapi.vacancy.GetVacanciesListRequest.CategoriesIdsEntry")
 	proto.RegisterType((*GetVacanciesListResponse)(nil), "personaappapi.vacancy.GetVacanciesListResponse")
-	proto.RegisterType((*GetVacanciesListResponse_CompanyActivityField)(nil), "personaappapi.vacancy.GetVacanciesListResponse.CompanyActivityField")
-	proto.RegisterType((*GetVacanciesListResponse_Company)(nil), "personaappapi.vacancy.GetVacanciesListResponse.Company")
-	proto.RegisterMapType((map[string]*Empty)(nil), "personaappapi.vacancy.GetVacanciesListResponse.Company.ActivityFieldsIdsEntry")
-	proto.RegisterType((*GetVacanciesListResponse_Vacancy)(nil), "personaappapi.vacancy.GetVacanciesListResponse.Vacancy")
-	proto.RegisterType((*GetVacanciesListResponse_Body)(nil), "personaappapi.vacancy.GetVacanciesListResponse.Body")
-	proto.RegisterMapType((map[string]*GetVacanciesListResponse_CompanyActivityField)(nil), "personaappapi.vacancy.GetVacanciesListResponse.Body.ActivityFieldsEntry")
-	proto.RegisterMapType((map[string]*GetVacanciesListResponse_Company)(nil), "personaappapi.vacancy.GetVacanciesListResponse.Body.CompaniesEntry")
-	proto.RegisterMapType((map[string]*GetVacanciesListResponse_Vacancy)(nil), "personaappapi.vacancy.GetVacanciesListResponse.Body.VacanciesEntry")
+	proto.RegisterMapType((map[string]*Company)(nil), "personaappapi.vacancy.GetVacanciesListResponse.CompaniesEntry")
+	proto.RegisterMapType((map[string]*GetVacanciesListResponse_VacancyDetails)(nil), "personaappapi.vacancy.GetVacanciesListResponse.VacanciesEntry")
+	proto.RegisterType((*GetVacanciesListResponse_VacancyDetails)(nil), "personaappapi.vacancy.GetVacanciesListResponse.VacancyDetails")
 	proto.RegisterType((*GetVacancyDetailsRequest)(nil), "personaappapi.vacancy.GetVacancyDetailsRequest")
 	proto.RegisterType((*GetVacancyDetailsResponse)(nil), "personaappapi.vacancy.GetVacancyDetailsResponse")
-	proto.RegisterType((*GetVacancyDetailsResponse_Vacancy)(nil), "personaappapi.vacancy.GetVacancyDetailsResponse.Vacancy")
-	proto.RegisterType((*GetVacancyDetailsResponse_Location)(nil), "personaappapi.vacancy.GetVacancyDetailsResponse.Location")
-	proto.RegisterType((*GetVacancyDetailsResponse_Company)(nil), "personaappapi.vacancy.GetVacancyDetailsResponse.Company")
-	proto.RegisterMapType((map[string]*GetVacancyDetailsResponse_CompanyActivityField)(nil), "personaappapi.vacancy.GetVacancyDetailsResponse.Company.ActivityFieldsEntry")
-	proto.RegisterType((*GetVacancyDetailsResponse_CompanyActivityField)(nil), "personaappapi.vacancy.GetVacancyDetailsResponse.CompanyActivityField")
-	proto.RegisterType((*GetVacancyDetailsResponse_Body)(nil), "personaappapi.vacancy.GetVacancyDetailsResponse.Body")
+	proto.RegisterType((*GetVacancyDetailsResponse_CompanyDescription)(nil), "personaappapi.vacancy.GetVacancyDetailsResponse.CompanyDescription")
+	proto.RegisterType((*GetVacancyDetailsResponse_VacancyLocation)(nil), "personaappapi.vacancy.GetVacancyDetailsResponse.VacancyLocation")
+	proto.RegisterType((*GetVacancyDetailsResponse_VacancyDescription)(nil), "personaappapi.vacancy.GetVacancyDetailsResponse.VacancyDescription")
+	proto.RegisterType((*GetVacancyDetailsResponse_VacancyCompany)(nil), "personaappapi.vacancy.GetVacancyDetailsResponse.VacancyCompany")
+	proto.RegisterType((*GetVacancyDetailsResponse_VacancyImage)(nil), "personaappapi.vacancy.GetVacancyDetailsResponse.VacancyImage")
 	proto.RegisterType((*Empty)(nil), "personaappapi.vacancy.Empty")
+	proto.RegisterType((*Company)(nil), "personaappapi.vacancy.Company")
+	proto.RegisterType((*Vacancy)(nil), "personaappapi.vacancy.Vacancy")
 }
 
 func init() { proto.RegisterFile("vacancy/vacancy.proto", fileDescriptor_47be6d1234ea964b) }
 
 var fileDescriptor_47be6d1234ea964b = []byte{
-	// 1238 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xb4, 0x58, 0xdd, 0x52, 0xdb, 0xc6,
-	0x17, 0xc7, 0x5f, 0xd8, 0x3a, 0x26, 0x8e, 0xd9, 0x10, 0xfe, 0x8e, 0x12, 0x08, 0x43, 0x2e, 0xfe,
-	0x4c, 0x2f, 0xe4, 0xd6, 0x34, 0x6d, 0x48, 0xa6, 0x33, 0x05, 0xe3, 0x04, 0x1a, 0x0a, 0xa9, 0x18,
-	0x93, 0x29, 0xe9, 0x8c, 0x47, 0x48, 0x6b, 0x67, 0x07, 0xa1, 0x55, 0xf4, 0xe1, 0xa0, 0x9b, 0x5e,
-	0x75, 0xa6, 0x99, 0xf6, 0x5d, 0xfa, 0x02, 0xbd, 0xee, 0x5b, 0xb4, 0x37, 0xbd, 0x68, 0x5f, 0xa3,
-	0xa3, 0xd5, 0x4a, 0x48, 0x46, 0x0e, 0x96, 0x49, 0xae, 0x60, 0xcf, 0x39, 0x7b, 0xbe, 0xcf, 0xef,
-	0xac, 0x0c, 0xb7, 0x87, 0x8a, 0xaa, 0x18, 0xaa, 0xd7, 0xe4, 0x7f, 0x25, 0xd3, 0xa2, 0x0e, 0x45,
-	0xb7, 0x4d, 0x6c, 0xd9, 0xd4, 0x50, 0x14, 0xd3, 0x54, 0x4c, 0x22, 0x71, 0xa6, 0xb8, 0x3c, 0xa0,
-	0x74, 0xa0, 0xe3, 0x26, 0x13, 0x3a, 0x71, 0xfb, 0xcd, 0xb7, 0x96, 0x62, 0xfa, 0xa2, 0xc1, 0xb5,
-	0xd5, 0x15, 0x58, 0x7e, 0x86, 0x9d, 0x23, 0x26, 0x4d, 0xb0, 0xfd, 0x94, 0xe8, 0x0e, 0xb6, 0xec,
-	0x3d, 0x62, 0x3b, 0x32, 0x7e, 0xe3, 0x62, 0xdb, 0x59, 0xfd, 0xb7, 0x08, 0xf7, 0xc7, 0x8a, 0xd8,
-	0x26, 0x35, 0x6c, 0x8c, 0xbe, 0x83, 0xe2, 0x09, 0xd5, 0xbc, 0x46, 0x6e, 0x25, 0xb7, 0x56, 0x6d,
-	0x3d, 0x91, 0x52, 0x7d, 0x91, 0xae, 0xd0, 0x22, 0x6d, 0x51, 0xcd, 0xdb, 0x99, 0x91, 0x99, 0x2a,
-	0xa4, 0x00, 0x60, 0xcb, 0xa2, 0x56, 0x4f, 0xa5, 0x1a, 0x6e, 0xe4, 0x57, 0x72, 0x6b, 0xb5, 0xd6,
-	0xd7, 0x53, 0x2a, 0xee, 0xf8, 0x8a, 0xda, 0x54, 0xc3, 0x3b, 0x33, 0xb2, 0x80, 0xc3, 0x83, 0xf8,
-	0x02, 0x6e, 0x04, 0xd7, 0xbc, 0xe0, 0x12, 0xaa, 0x41, 0x9e, 0x68, 0x2c, 0x08, 0x41, 0xce, 0x13,
-	0x0d, 0x2d, 0x40, 0xc9, 0x21, 0x8e, 0x1e, 0x98, 0x17, 0xe4, 0xe0, 0x80, 0xee, 0x40, 0x85, 0xa8,
-	0xd4, 0xe8, 0xb9, 0x96, 0xde, 0x28, 0x30, 0x46, 0xd9, 0x3f, 0x77, 0x2d, 0x5d, 0xfc, 0x25, 0x0f,
-	0x45, 0x3f, 0x0a, 0x74, 0x0e, 0x37, 0xb9, 0x73, 0xbd, 0x7e, 0xe0, 0x50, 0x23, 0xb7, 0x52, 0x58,
-	0xab, 0xb6, 0x0e, 0xae, 0x91, 0x1b, 0x29, 0xe1, 0xad, 0xdd, 0x31, 0x1c, 0xcb, 0x93, 0x6b, 0xc3,
-	0x04, 0x51, 0xfc, 0x39, 0x07, 0xb7, 0x52, 0xe4, 0x50, 0x1d, 0x0a, 0xa7, 0xd8, 0xe3, 0xc1, 0xf9,
-	0xff, 0xa2, 0x63, 0x28, 0x0d, 0x15, 0xdd, 0x0d, 0xa2, 0xab, 0xb6, 0xb6, 0xa7, 0xf4, 0x2c, 0x61,
-	0x4c, 0x0e, 0x54, 0x3e, 0xce, 0x3f, 0xca, 0xad, 0x3e, 0x00, 0x21, 0x4a, 0x3c, 0x5a, 0x04, 0xd4,
-	0xdd, 0x7f, 0xbe, 0x7f, 0xf0, 0x72, 0xbf, 0xd7, 0x91, 0xe5, 0x03, 0xb9, 0xd7, 0x3e, 0xd8, 0xee,
-	0xd4, 0x67, 0xb6, 0x00, 0x2a, 0x16, 0xd7, 0xb4, 0xfa, 0x7b, 0x1e, 0xfe, 0x17, 0xb7, 0x16, 0xeb,
-	0x42, 0xf4, 0x03, 0x40, 0x90, 0xc8, 0x1e, 0xd1, 0xc2, 0x5c, 0x7e, 0x35, 0x81, 0xc7, 0x31, 0x1d,
-	0x52, 0xe0, 0xe2, 0xae, 0xc6, 0x33, 0x27, 0xf4, 0xc3, 0x33, 0x5a, 0x87, 0x59, 0xda, 0xef, 0xdb,
-	0xd8, 0xe1, 0xb9, 0xb8, 0x2b, 0x05, 0x63, 0x23, 0x85, 0x63, 0x23, 0xed, 0x1a, 0xce, 0x7a, 0xeb,
-	0xc8, 0x8f, 0x4d, 0xe6, 0xa2, 0xe8, 0x33, 0x28, 0xa9, 0xd4, 0x35, 0x1c, 0xd6, 0x04, 0x57, 0xdc,
-	0x09, 0x24, 0xc5, 0x63, 0xa8, 0x25, 0x9d, 0x48, 0x29, 0x4b, 0x2b, 0x59, 0x96, 0x7b, 0x63, 0x82,
-	0xec, 0x9c, 0x99, 0x8e, 0x17, 0x4f, 0xf7, 0x1f, 0x73, 0xd0, 0xb8, 0x1c, 0x39, 0x1f, 0xd0, 0x6f,
-	0x12, 0x03, 0xfa, 0xf9, 0xc4, 0x89, 0x4b, 0x9b, 0xcc, 0xe3, 0x94, 0xc9, 0xdc, 0xc8, 0xaa, 0x71,
-	0xcc, 0x48, 0xbe, 0x84, 0x85, 0x36, 0x3d, 0x33, 0x15, 0xc3, 0xdb, 0x54, 0x1d, 0x32, 0x24, 0x8e,
-	0xf7, 0x94, 0x60, 0x5d, 0xbb, 0xfe, 0x64, 0xfe, 0x96, 0x87, 0x32, 0xd7, 0x3c, 0xb9, 0x32, 0x9d,
-	0x0e, 0x68, 0x5c, 0x99, 0x7f, 0xee, 0x5a, 0x3a, 0xfa, 0x11, 0x6e, 0x29, 0xdc, 0xbd, 0x5e, 0xdf,
-	0xf7, 0xcf, 0x66, 0x5d, 0x59, 0x64, 0x5d, 0xb9, 0x9f, 0x35, 0x15, 0xdc, 0x2d, 0x29, 0x11, 0xb1,
-	0x1d, 0xb5, 0xe9, 0xbc, 0x32, 0x4a, 0x17, 0x4f, 0x60, 0x31, 0x5d, 0xf8, 0xc3, 0xb5, 0x93, 0xf8,
-	0x4f, 0x0e, 0xca, 0x7c, 0xb4, 0x27, 0x4c, 0xd8, 0x12, 0xc0, 0x19, 0x31, 0x7a, 0xb6, 0xa2, 0x2b,
-	0x96, 0xc7, 0x52, 0x56, 0x92, 0x85, 0x33, 0x62, 0x1c, 0x32, 0x02, 0x63, 0x2b, 0xe7, 0x21, 0xbb,
-	0xc8, 0xd9, 0xca, 0x39, 0x67, 0x3f, 0x81, 0x8a, 0xea, 0x5a, 0x16, 0x36, 0x54, 0xaf, 0x51, 0x62,
-	0x3d, 0x75, 0x7f, 0x8c, 0xab, 0x6d, 0x2e, 0x26, 0x47, 0x17, 0xd0, 0x5d, 0x10, 0xc8, 0x99, 0x32,
-	0xc0, 0xac, 0x58, 0xb3, 0xcc, 0xa9, 0x0a, 0x23, 0xf8, 0xd5, 0x5a, 0x02, 0x50, 0x83, 0x14, 0xf7,
-	0x88, 0xd6, 0x28, 0x33, 0xae, 0xc0, 0x29, 0xbb, 0x9a, 0xf8, 0x67, 0x89, 0x63, 0xf6, 0x03, 0xb8,
-	0x31, 0x0c, 0x0b, 0x14, 0xa1, 0x8c, 0x20, 0xcf, 0x45, 0x44, 0x1f, 0x29, 0x14, 0x10, 0xa2, 0x73,
-	0x23, 0xcf, 0x0a, 0xde, 0x9e, 0x66, 0x9a, 0xa4, 0x88, 0xc5, 0xc1, 0x28, 0xd2, 0xea, 0x9b, 0x08,
-	0xbc, 0xf3, 0x4d, 0x14, 0xae, 0x61, 0xa2, 0x1d, 0x6a, 0xe1, 0x26, 0x22, 0xad, 0xe8, 0x0d, 0xdc,
-	0x1c, 0x69, 0x60, 0xde, 0xbc, 0x3b, 0x53, 0x19, 0x4a, 0x36, 0x23, 0xdf, 0x4b, 0xc9, 0xb6, 0x15,
-	0x5d, 0xa8, 0x25, 0x43, 0x4e, 0xe9, 0xd5, 0x6f, 0x93, 0xbd, 0xfa, 0x65, 0x56, 0x67, 0x78, 0xbf,
-	0xc6, 0xdb, 0xd8, 0x85, 0x5a, 0x32, 0x0d, 0x1f, 0xc1, 0x2c, 0x1f, 0xe0, 0xb8, 0x59, 0x7f, 0x0b,
-	0xa7, 0x64, 0xe5, 0xc3, 0x6c, 0xe1, 0x34, 0xe3, 0x09, 0x63, 0xd7, 0xda, 0xc2, 0x1b, 0xb1, 0x35,
-	0xe2, 0x6d, 0x63, 0x47, 0x21, 0xba, 0x1d, 0x6e, 0xe1, 0x25, 0x80, 0xf0, 0x59, 0x13, 0x01, 0x02,
-	0xef, 0x5c, 0x6f, 0x57, 0x5b, 0xfd, 0x0b, 0xe0, 0x4e, 0xca, 0x5d, 0xbe, 0x83, 0x9e, 0x27, 0x76,
-	0xd0, 0xc3, 0xab, 0x02, 0x1d, 0xbd, 0x9f, 0x5c, 0x42, 0xaf, 0x52, 0x96, 0xd0, 0xe3, 0xcc, 0x2a,
-	0xc7, 0x6c, 0xa1, 0xbf, 0x0b, 0xe3, 0xb1, 0x4f, 0x86, 0x32, 0xc7, 0x0e, 0x5e, 0xb1, 0x47, 0x99,
-	0xad, 0x86, 0xfd, 0x12, 0x2a, 0x42, 0x5d, 0x7f, 0xd5, 0xa8, 0x8a, 0x43, 0xa8, 0xc1, 0x1f, 0x13,
-	0x1b, 0x99, 0x95, 0xee, 0x71, 0x05, 0x72, 0xa4, 0xea, 0x02, 0xa6, 0x8b, 0x71, 0x98, 0x5e, 0x81,
-	0xaa, 0x86, 0x6d, 0xd5, 0x22, 0x26, 0xb3, 0x57, 0x62, 0xbc, 0x38, 0x69, 0x04, 0xc8, 0x67, 0xdf,
-	0x0f, 0xe4, 0xe5, 0xf7, 0x01, 0x79, 0xe5, 0x5a, 0x40, 0x2e, 0x8c, 0x00, 0xf9, 0xff, 0xe1, 0xe6,
-	0x5b, 0x6a, 0x9d, 0xf6, 0xf0, 0xb9, 0x89, 0x2d, 0x82, 0x0d, 0x15, 0x37, 0x80, 0x89, 0xd4, 0x7c,
-	0x72, 0x27, 0xa2, 0xfa, 0x48, 0xce, 0x04, 0x6d, 0xf5, 0x35, 0xd6, 0x5c, 0x1d, 0x37, 0xaa, 0x4c,
-	0x6c, 0xce, 0x27, 0x1e, 0x72, 0x9a, 0xb8, 0x0d, 0x95, 0x30, 0x67, 0x48, 0x84, 0x8a, 0xae, 0x38,
-	0xc4, 0x71, 0x35, 0xcc, 0x4a, 0x9d, 0x97, 0xa3, 0x33, 0xba, 0x07, 0x82, 0x4e, 0x8d, 0x41, 0xc0,
-	0xcc, 0x33, 0xe6, 0x05, 0x41, 0xfc, 0xa9, 0x90, 0xf5, 0x5d, 0x31, 0x92, 0xff, 0xc2, 0xe5, 0xfc,
-	0xc7, 0x5f, 0x1e, 0xc5, 0xe4, 0xcb, 0x63, 0x01, 0x4a, 0xe6, 0x6b, 0x6a, 0x60, 0x5e, 0xb6, 0xe0,
-	0x80, 0xdc, 0xcb, 0x70, 0x3e, 0xcb, 0xe0, 0x7c, 0x6f, 0xda, 0xde, 0x9c, 0x08, 0xd2, 0xdf, 0x4d,
-	0x0c, 0x72, 0xaf, 0x92, 0x20, 0xd7, 0x99, 0xd6, 0xad, 0x71, 0x28, 0xf7, 0xf1, 0xde, 0x8d, 0xc7,
-	0xfc, 0x71, 0x20, 0x43, 0x99, 0x7b, 0xc9, 0xf1, 0x2b, 0xfb, 0xd8, 0x87, 0xdb, 0x29, 0x54, 0x94,
-	0x1d, 0x9a, 0xcb, 0x50, 0x62, 0xef, 0xb4, 0x4f, 0x8e, 0xa0, 0x12, 0x0e, 0x0f, 0x5a, 0x80, 0x7a,
-	0xbb, 0x2b, 0xcb, 0x9d, 0xfd, 0xf6, 0xf7, 0x3d, 0xae, 0xa1, 0x3e, 0x83, 0xea, 0x30, 0x77, 0x41,
-	0xdd, 0xdc, 0xa9, 0xe7, 0x92, 0x94, 0xc3, 0xed, 0x7a, 0x3e, 0x41, 0xe9, 0x74, 0xe5, 0x7a, 0xa1,
-	0xf5, 0x6b, 0x01, 0xe6, 0x5f, 0x04, 0x61, 0x6d, 0x9a, 0x66, 0x08, 0x81, 0xef, 0x72, 0xc9, 0xef,
-	0xb2, 0xd8, 0x57, 0x20, 0x7a, 0x98, 0xf5, 0xab, 0x91, 0x2d, 0x12, 0xf1, 0x8b, 0xe9, 0x3e, 0x36,
-	0x91, 0x0d, 0xf5, 0xd1, 0x4d, 0x88, 0xa4, 0x6c, 0x9f, 0x81, 0x62, 0x33, 0xe3, 0x8a, 0x45, 0x43,
-	0x98, 0xbf, 0x54, 0x55, 0xd4, 0x9c, 0xbc, 0xfe, 0x81, 0xd9, 0x4f, 0xb3, 0x36, 0xcc, 0x56, 0x07,
-	0x16, 0xa9, 0xa1, 0x13, 0x03, 0xc7, 0x6e, 0x4a, 0x2a, 0xb5, 0xf0, 0x56, 0xf5, 0x99, 0x65, 0xaa,
-	0xfc, 0xd6, 0xf1, 0xf2, 0x05, 0xb7, 0x69, 0x9e, 0x0e, 0x9a, 0x03, 0xcb, 0x54, 0x15, 0x93, 0x84,
-	0xbf, 0x0f, 0x9d, 0xcc, 0xb2, 0x0f, 0xd2, 0xf5, 0xff, 0x02, 0x00, 0x00, 0xff, 0xff, 0x2b, 0xc9,
-	0x57, 0xcf, 0x39, 0x12, 0x00, 0x00,
+	// 1028 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xac, 0x57, 0xdd, 0x6e, 0x1b, 0x45,
+	0x14, 0x66, 0xed, 0x3a, 0xb6, 0x8f, 0x93, 0xe0, 0x8c, 0xd2, 0xe2, 0x6e, 0x43, 0x6a, 0xcc, 0x4d,
+	0x04, 0xd2, 0x1a, 0xdc, 0xa8, 0x14, 0x10, 0xd0, 0xd4, 0x8d, 0x82, 0x69, 0x31, 0x68, 0x43, 0x8a,
+	0x8a, 0x02, 0xd6, 0x76, 0x3d, 0x6c, 0x46, 0x59, 0xef, 0x2c, 0xb3, 0xbb, 0x6e, 0x2c, 0xc1, 0x25,
+	0x57, 0x08, 0x24, 0x1e, 0x85, 0x77, 0xe0, 0x92, 0x77, 0xe0, 0x2d, 0xb8, 0x46, 0xf3, 0xb7, 0xde,
+	0x8d, 0x6d, 0xe2, 0x58, 0x5c, 0x25, 0x73, 0x7e, 0xbe, 0x73, 0xe6, 0x3b, 0x3f, 0x3b, 0x86, 0x9b,
+	0x63, 0xc7, 0x75, 0x02, 0x77, 0xd2, 0x56, 0x7f, 0xad, 0x90, 0xd1, 0x98, 0xa2, 0x9b, 0x21, 0x66,
+	0x11, 0x0d, 0x1c, 0x27, 0x0c, 0x9d, 0x90, 0x58, 0x4a, 0x69, 0xee, 0x7a, 0x94, 0x7a, 0x3e, 0x6e,
+	0x0b, 0xa3, 0x17, 0xc9, 0xf7, 0xed, 0x97, 0xcc, 0x09, 0xb9, 0xa9, 0x74, 0x6b, 0xbd, 0x01, 0x77,
+	0x8f, 0x70, 0xfc, 0x4c, 0x5a, 0x77, 0x9d, 0x18, 0x7b, 0x94, 0x11, 0x1c, 0x3d, 0x25, 0x51, 0x6c,
+	0xe3, 0x1f, 0x12, 0x1c, 0xc5, 0xad, 0x9f, 0x8b, 0xd0, 0x5c, 0x6c, 0x13, 0x85, 0x34, 0x88, 0x30,
+	0xfa, 0x09, 0x90, 0x0a, 0x39, 0x70, 0x53, 0x8b, 0x86, 0xd1, 0x2c, 0xee, 0xd5, 0x3a, 0x7d, 0x6b,
+	0x6e, 0x6e, 0xd6, 0x55, 0xa0, 0xd6, 0x8c, 0xf6, 0x30, 0x88, 0xd9, 0xc4, 0xde, 0x1a, 0x5f, 0x96,
+	0x9b, 0x36, 0xbc, 0x9a, 0x37, 0x9e, 0xa0, 0x4d, 0x28, 0x90, 0x61, 0xc3, 0x68, 0x1a, 0x7b, 0x55,
+	0xbb, 0x40, 0x86, 0x68, 0x1b, 0x4a, 0x31, 0x89, 0x7d, 0xdc, 0x28, 0x08, 0x91, 0x3c, 0xa0, 0xdb,
+	0x50, 0x21, 0x2e, 0x0d, 0x06, 0x09, 0xf3, 0x1b, 0x45, 0xa1, 0x28, 0xf3, 0xf3, 0x09, 0xf3, 0xcd,
+	0x5f, 0x0d, 0xb8, 0x35, 0x3f, 0x03, 0x54, 0x87, 0xe2, 0x39, 0x9e, 0x28, 0x70, 0xfe, 0x2f, 0xfa,
+	0x16, 0x4a, 0x63, 0xc7, 0x4f, 0x24, 0x7a, 0xad, 0x73, 0xf4, 0xff, 0x5c, 0x79, 0x62, 0x4b, 0xd4,
+	0x0f, 0x0a, 0x0f, 0x8c, 0xd6, 0x5f, 0x05, 0x78, 0x2d, 0xf5, 0xcf, 0xd7, 0x08, 0x9d, 0xc1, 0xe6,
+	0x94, 0xf6, 0x01, 0x19, 0x6a, 0xea, 0x0f, 0xae, 0xca, 0x23, 0x8f, 0x63, 0x4d, 0xb3, 0xea, 0x0d,
+	0x15, 0xdb, 0x1b, 0x6e, 0x56, 0x86, 0xf6, 0x61, 0xcd, 0x4d, 0x58, 0x44, 0x99, 0xba, 0xe9, 0x8e,
+	0x25, 0x3b, 0xcc, 0xd2, 0x1d, 0x66, 0x1d, 0xc7, 0x8c, 0x04, 0xde, 0x33, 0x9e, 0xb7, 0xad, 0x6c,
+	0xd1, 0xbb, 0x50, 0x72, 0x69, 0x12, 0xc4, 0x82, 0xe3, 0x5a, 0xe7, 0xce, 0x8c, 0x53, 0x2f, 0x88,
+	0xef, 0x75, 0xa4, 0x8f, 0xb4, 0x34, 0xbf, 0x03, 0x34, 0x9b, 0xcd, 0x1c, 0xe6, 0x3b, 0x79, 0xe6,
+	0x77, 0x16, 0xdc, 0xf8, 0x70, 0x14, 0xc6, 0x39, 0x3a, 0xff, 0xb9, 0x01, 0x8d, 0x59, 0x1a, 0x54,
+	0x3b, 0xbf, 0x09, 0x1b, 0x63, 0xad, 0x48, 0xe9, 0xac, 0xda, 0xeb, 0xa9, 0x90, 0x53, 0x71, 0x0a,
+	0xd5, 0xf4, 0xdc, 0x28, 0x08, 0xbe, 0x3f, 0x5e, 0x9a, 0xef, 0x5c, 0xbd, 0xd3, 0xd6, 0x9e, 0x02,
+	0x72, 0x74, 0x97, 0x8e, 0x42, 0x27, 0xe0, 0xe8, 0xc5, 0xd5, 0xd0, 0xbb, 0x1a, 0x40, 0xa1, 0xa7,
+	0x80, 0x99, 0x32, 0xde, 0x58, 0xbe, 0x8c, 0xa6, 0x07, 0x9b, 0xaa, 0x41, 0x1f, 0xe3, 0xd8, 0x21,
+	0x7e, 0x84, 0x1e, 0x40, 0x59, 0x65, 0x21, 0x6a, 0x52, 0xeb, 0xec, 0x2e, 0xc8, 0x51, 0xf9, 0xd9,
+	0xda, 0x1c, 0xdd, 0x81, 0x2a, 0x19, 0x39, 0x1e, 0x16, 0xa3, 0x27, 0x67, 0xb2, 0x22, 0x04, 0x7c,
+	0xf6, 0x7e, 0xd4, 0x81, 0xfe, 0x63, 0xe4, 0xbe, 0xca, 0x17, 0x7e, 0x45, 0xea, 0xf5, 0x4d, 0x32,
+	0xad, 0x61, 0x9e, 0xc2, 0x66, 0x9e, 0xb9, 0x39, 0xd1, 0xf7, 0xf3, 0xd1, 0x17, 0x5d, 0x5b, 0xe2,
+	0xe4, 0x1a, 0xef, 0xfd, 0x4c, 0xdf, 0xa5, 0xd1, 0xd5, 0x1c, 0xbf, 0x0e, 0xa0, 0xd7, 0x68, 0xba,
+	0xbc, 0x54, 0x4f, 0x4c, 0x7a, 0xc3, 0xd6, 0x9f, 0x65, 0xb8, 0x3d, 0xc7, 0x57, 0x35, 0xed, 0xea,
+	0xb5, 0x38, 0x86, 0x92, 0xa0, 0x5e, 0x5d, 0xe6, 0xa3, 0x2b, 0xb7, 0xd7, 0xa5, 0xd0, 0x1a, 0xb1,
+	0xc7, 0x41, 0x6c, 0x89, 0x85, 0x4e, 0xa1, 0xe2, 0x53, 0xd7, 0x89, 0x09, 0x0d, 0xd4, 0xd8, 0x3f,
+	0x5c, 0x15, 0xf7, 0xa9, 0xc2, 0xb1, 0x53, 0x44, 0x84, 0xa1, 0x36, 0xc4, 0x91, 0xcb, 0x48, 0x28,
+	0x02, 0xc8, 0x2e, 0xee, 0xae, 0x1a, 0xe0, 0xf1, 0x14, 0xca, 0xce, 0xe2, 0xa2, 0xe7, 0x50, 0x96,
+	0x43, 0x33, 0x69, 0x94, 0x44, 0x88, 0x4f, 0x56, 0x0d, 0xa1, 0x3b, 0x41, 0xe3, 0x99, 0xf7, 0x01,
+	0x29, 0x59, 0x26, 0x3a, 0x6a, 0xe6, 0xef, 0x25, 0x5b, 0x20, 0x2b, 0x32, 0x9f, 0xa4, 0xdf, 0x3a,
+	0x4d, 0x0b, 0x32, 0xa1, 0xe2, 0x3b, 0x31, 0x89, 0x93, 0x21, 0x16, 0x1e, 0x05, 0x3b, 0x3d, 0xa3,
+	0x1d, 0xa8, 0xfa, 0x34, 0xf0, 0xa4, 0xb2, 0x20, 0x94, 0x53, 0x81, 0xf9, 0xbb, 0x01, 0x68, 0x96,
+	0x83, 0xab, 0xb3, 0x40, 0xfb, 0x70, 0xeb, 0x25, 0x65, 0xe7, 0x83, 0x11, 0x0d, 0xe2, 0xb3, 0x68,
+	0x80, 0x2f, 0x42, 0xcc, 0x08, 0x0e, 0x5c, 0x19, 0x63, 0xc3, 0xde, 0xe6, 0xda, 0xcf, 0x85, 0xf2,
+	0x30, 0xd5, 0xf1, 0xbd, 0x2a, 0xbc, 0x22, 0xf7, 0x0c, 0x0f, 0x13, 0x1f, 0xab, 0x6f, 0xee, 0x3a,
+	0x17, 0x1e, 0x2b, 0x99, 0xf9, 0x87, 0x91, 0xae, 0x19, 0x45, 0x10, 0x6f, 0x6d, 0x5d, 0x06, 0x63,
+	0xa9, 0x79, 0xd3, 0xe6, 0x97, 0xfb, 0xa4, 0xb0, 0x62, 0x9f, 0xcc, 0x56, 0x2a, 0x5f, 0x94, 0xb7,
+	0x61, 0x3d, 0x3b, 0x03, 0xf9, 0xed, 0x66, 0xe4, 0xb7, 0x5b, 0xab, 0x0c, 0x25, 0xf1, 0x39, 0x6a,
+	0x7d, 0x06, 0x65, 0x7d, 0xc3, 0xa5, 0x9f, 0x2b, 0x3e, 0xf5, 0x68, 0xf6, 0xb9, 0xc2, 0xcf, 0x1c,
+	0xf4, 0x6f, 0x03, 0xca, 0x2a, 0x85, 0x25, 0xc1, 0xb6, 0xa1, 0x14, 0x9e, 0xd1, 0x40, 0x17, 0x41,
+	0x1e, 0xf8, 0x0a, 0x1a, 0x91, 0x60, 0x10, 0x39, 0xbe, 0xc3, 0x26, 0x62, 0xae, 0x4a, 0x76, 0x75,
+	0x44, 0x82, 0x63, 0x21, 0x10, 0x6a, 0xe7, 0x42, 0xab, 0x4b, 0x4a, 0xed, 0x5c, 0x4c, 0xd5, 0x8a,
+	0x79, 0xbe, 0xc0, 0xd6, 0xe4, 0x02, 0x53, 0x92, 0xde, 0x10, 0x7d, 0x08, 0x15, 0x37, 0x61, 0x0c,
+	0xf3, 0x1d, 0x55, 0x6e, 0x1a, 0x7b, 0x9b, 0x9d, 0xbb, 0x8b, 0x0a, 0xa9, 0xcc, 0xec, 0xd4, 0xe1,
+	0xad, 0x0e, 0x54, 0xb4, 0x14, 0x6d, 0x43, 0xbd, 0x7b, 0x62, 0xdb, 0x87, 0xfd, 0xee, 0xf3, 0xc1,
+	0x49, 0xff, 0x49, 0xff, 0x8b, 0xaf, 0xfb, 0xf5, 0x57, 0x50, 0x1d, 0xd6, 0xa7, 0xd2, 0x83, 0x4f,
+	0xeb, 0x46, 0xe7, 0xb7, 0x22, 0x6c, 0x7d, 0x29, 0x03, 0x1c, 0x84, 0xa1, 0xe6, 0xe7, 0x17, 0x23,
+	0xbb, 0x83, 0xf3, 0x4f, 0x31, 0x74, 0xff, 0xda, 0x6f, 0x37, 0xb1, 0xbb, 0xcd, 0xf7, 0x56, 0x7c,
+	0xf3, 0xa1, 0x08, 0xea, 0x97, 0x3f, 0x52, 0xc8, 0xba, 0xde, 0xc3, 0xcd, 0x6c, 0x5f, 0xf3, 0xeb,
+	0x87, 0xc6, 0xb0, 0x35, 0xd3, 0xed, 0xa8, 0xbd, 0xfc, 0x5c, 0xc8, 0xb0, 0xef, 0x5c, 0x77, 0x90,
+	0x1e, 0x3d, 0x84, 0x2d, 0x1a, 0xf8, 0x24, 0xc0, 0x19, 0xcf, 0x47, 0xb5, 0x23, 0x16, 0xba, 0xca,
+	0xe1, 0x9b, 0xdd, 0xa9, 0xa2, 0x1d, 0x9e, 0x7b, 0x6d, 0x8f, 0x85, 0xae, 0x13, 0x12, 0xfd, 0x7b,
+	0xe7, 0xc5, 0x9a, 0x78, 0xa2, 0xdc, 0xfb, 0x37, 0x00, 0x00, 0xff, 0xff, 0x50, 0xb0, 0xb9, 0x89,
+	0x09, 0x0d, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -1363,7 +981,7 @@ const _ = grpc.SupportPackageIsVersion4
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type PersonaAppVacancyClient interface {
-	GetVacanciesFiltersList(ctx context.Context, in *GetVacanciesFiltersListRequest, opts ...grpc.CallOption) (*GetVacanciesFiltersListResponse, error)
+	GetVacancyCategoriesList(ctx context.Context, in *GetVacancyCategoriesListRequest, opts ...grpc.CallOption) (*GetVacancyCategoriesListResponse, error)
 	GetVacanciesList(ctx context.Context, in *GetVacanciesListRequest, opts ...grpc.CallOption) (*GetVacanciesListResponse, error)
 	GetVacancyDetails(ctx context.Context, in *GetVacancyDetailsRequest, opts ...grpc.CallOption) (*GetVacancyDetailsResponse, error)
 }
@@ -1376,9 +994,9 @@ func NewPersonaAppVacancyClient(cc *grpc.ClientConn) PersonaAppVacancyClient {
 	return &personaAppVacancyClient{cc}
 }
 
-func (c *personaAppVacancyClient) GetVacanciesFiltersList(ctx context.Context, in *GetVacanciesFiltersListRequest, opts ...grpc.CallOption) (*GetVacanciesFiltersListResponse, error) {
-	out := new(GetVacanciesFiltersListResponse)
-	err := c.cc.Invoke(ctx, "/personaappapi.vacancy.PersonaAppVacancy/GetVacanciesFiltersList", in, out, opts...)
+func (c *personaAppVacancyClient) GetVacancyCategoriesList(ctx context.Context, in *GetVacancyCategoriesListRequest, opts ...grpc.CallOption) (*GetVacancyCategoriesListResponse, error) {
+	out := new(GetVacancyCategoriesListResponse)
+	err := c.cc.Invoke(ctx, "/personaappapi.vacancy.PersonaAppVacancy/GetVacancyCategoriesList", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1405,7 +1023,7 @@ func (c *personaAppVacancyClient) GetVacancyDetails(ctx context.Context, in *Get
 
 // PersonaAppVacancyServer is the server API for PersonaAppVacancy service.
 type PersonaAppVacancyServer interface {
-	GetVacanciesFiltersList(context.Context, *GetVacanciesFiltersListRequest) (*GetVacanciesFiltersListResponse, error)
+	GetVacancyCategoriesList(context.Context, *GetVacancyCategoriesListRequest) (*GetVacancyCategoriesListResponse, error)
 	GetVacanciesList(context.Context, *GetVacanciesListRequest) (*GetVacanciesListResponse, error)
 	GetVacancyDetails(context.Context, *GetVacancyDetailsRequest) (*GetVacancyDetailsResponse, error)
 }
@@ -1414,8 +1032,8 @@ type PersonaAppVacancyServer interface {
 type UnimplementedPersonaAppVacancyServer struct {
 }
 
-func (*UnimplementedPersonaAppVacancyServer) GetVacanciesFiltersList(ctx context.Context, req *GetVacanciesFiltersListRequest) (*GetVacanciesFiltersListResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetVacanciesFiltersList not implemented")
+func (*UnimplementedPersonaAppVacancyServer) GetVacancyCategoriesList(ctx context.Context, req *GetVacancyCategoriesListRequest) (*GetVacancyCategoriesListResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetVacancyCategoriesList not implemented")
 }
 func (*UnimplementedPersonaAppVacancyServer) GetVacanciesList(ctx context.Context, req *GetVacanciesListRequest) (*GetVacanciesListResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetVacanciesList not implemented")
@@ -1428,20 +1046,20 @@ func RegisterPersonaAppVacancyServer(s *grpc.Server, srv PersonaAppVacancyServer
 	s.RegisterService(&_PersonaAppVacancy_serviceDesc, srv)
 }
 
-func _PersonaAppVacancy_GetVacanciesFiltersList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(GetVacanciesFiltersListRequest)
+func _PersonaAppVacancy_GetVacancyCategoriesList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetVacancyCategoriesListRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(PersonaAppVacancyServer).GetVacanciesFiltersList(ctx, in)
+		return srv.(PersonaAppVacancyServer).GetVacancyCategoriesList(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/personaappapi.vacancy.PersonaAppVacancy/GetVacanciesFiltersList",
+		FullMethod: "/personaappapi.vacancy.PersonaAppVacancy/GetVacancyCategoriesList",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PersonaAppVacancyServer).GetVacanciesFiltersList(ctx, req.(*GetVacanciesFiltersListRequest))
+		return srv.(PersonaAppVacancyServer).GetVacancyCategoriesList(ctx, req.(*GetVacancyCategoriesListRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1487,8 +1105,8 @@ var _PersonaAppVacancy_serviceDesc = grpc.ServiceDesc{
 	HandlerType: (*PersonaAppVacancyServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "GetVacanciesFiltersList",
-			Handler:    _PersonaAppVacancy_GetVacanciesFiltersList_Handler,
+			MethodName: "GetVacancyCategoriesList",
+			Handler:    _PersonaAppVacancy_GetVacancyCategoriesList_Handler,
 		},
 		{
 			MethodName: "GetVacanciesList",

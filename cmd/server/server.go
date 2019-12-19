@@ -3,6 +3,7 @@ package server
 import (
 	"log"
 	"net"
+	"personaapp/internal/server"
 	"personaapp/pkg/closeable"
 
 	"github.com/cockroachdb/errors"
@@ -12,11 +13,12 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 
-	"personaapp/internal/server"
-	authController "personaapp/internal/server/auth/controller"
-	authStorage "personaapp/internal/server/auth/storage"
-	companyController "personaapp/internal/server/company/controller"
-	companyStorage "personaapp/internal/server/company/storage"
+	authController "personaapp/internal/server/controllers/auth/controller"
+	authStorage "personaapp/internal/server/controllers/auth/storage"
+	companyController "personaapp/internal/server/controllers/company/controller"
+	companyStorage "personaapp/internal/server/controllers/company/storage"
+	vacancyController "personaapp/internal/server/controllers/vacancy/controller"
+	vacancyStorage "personaapp/internal/server/controllers/vacancy/storage"
 	pkgcmd "personaapp/pkg/cmd"
 	"personaapp/pkg/flag"
 	apiauth "personaapp/pkg/grpcapi/auth"
@@ -64,13 +66,11 @@ func run(cfg *Config) func(cmd *cobra.Command, args []string) error {
 		// nolint TODO: not sure if there should be defer, but I guess so
 		defer closeable.CloseWithErrorLogging(sugar, pg)
 
-		as := authStorage.New(pg)
-		ac := authController.New(&cfg.AuthController, as)
-
-		cs := companyStorage.New(pg)
-		cc := companyController.New(cs)
-
-		srv := server.New(ac, cc)
+		srv := server.New(
+			newAuthController(pg, &cfg.AuthController),
+			newCompanyController(pg),
+			newVacancyController(pg),
+		)
 
 		ln, err := net.Listen("tcp", cfg.Server.Address)
 		if err != nil {
@@ -99,4 +99,16 @@ func run(cfg *Config) func(cmd *cobra.Command, args []string) error {
 
 		return nil
 	}
+}
+
+func newAuthController(pg *postgresql.Storage, cfg *authController.Config) *authController.Controller {
+	return authController.New(cfg, authStorage.New(pg))
+}
+
+func newCompanyController(pg *postgresql.Storage) *companyController.Controller {
+	return companyController.New(companyStorage.New(pg))
+}
+
+func newVacancyController(pg *postgresql.Storage) *vacancyController.Controller {
+	return vacancyController.New(vacancyStorage.New(pg))
 }
