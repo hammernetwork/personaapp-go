@@ -435,12 +435,7 @@ func (c *Controller) Login(ctx context.Context, ld *LoginData) (*AuthToken, erro
 		return nil, errors.WithStack(err)
 	}
 
-	ph, err := passwordHash(ld.Password)
-	if err != nil {
-		return nil, errors.WithStack(err)
-	}
-
-	if ph != ad.PasswordHash {
+	if bcrypt.CompareHashAndPassword([]byte(ad.PasswordHash), []byte(ld.Password)) != nil {
 		return nil, errors.Wrap(ErrUnauthorized, "wrong password")
 	}
 
