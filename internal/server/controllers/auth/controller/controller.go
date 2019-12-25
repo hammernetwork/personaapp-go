@@ -461,12 +461,14 @@ func (c *Controller) GetAuthClaims(ctx context.Context, tokenStr string) (*AuthC
 	return c.isAuthorized(tokenStr)
 }
 
-// nolint: dupl
-func (c *Controller) UpdateEmail(ctx context.Context, accountID string, email string) (*AuthToken, error) {
-	rd := struct {
-		Email string `valid:"stringlength(5|255),custom_email"`
-	}{Email: email}
-
+// nolint: dupl, funlen
+func (c *Controller) UpdateEmail(
+	ctx context.Context,
+	accountID string,
+	email string,
+	ac AccountType,
+) (*AuthToken, error) {
+	rd := RegisterData{Email: email, Account: ac}
 	if valid, err := govalidator.ValidateStruct(rd); !valid {
 		if msg := govalidator.ErrorByField(err, "Email"); msg != "" {
 			validatorError, ok := err.(govalidator.Error)
@@ -498,10 +500,12 @@ func (c *Controller) UpdateEmail(ctx context.Context, accountID string, email st
 	ad.UpdatedAt = time.Now()
 
 	if err := pkgtx.RunInTx(ctx, c.s, func(ctx context.Context, tx pkgtx.Tx) error {
-		switch _, err := c.s.TxGetAuthDataByEmail(ctx, tx, email); errors.Cause(err) {
-		case storage.ErrNotFound:
-		case nil:
-			return errors.WithStack(ErrAlreadyExists)
+		if email != "" {
+			switch _, err := c.s.TxGetAuthDataByEmail(ctx, tx, email); errors.Cause(err) {
+			case storage.ErrNotFound:
+			case nil:
+				return errors.WithStack(ErrAlreadyExists)
+			}
 		}
 
 		return errors.WithStack(c.s.TxPutAuth(ctx, tx, ad))
@@ -524,9 +528,7 @@ func (c *Controller) UpdateEmail(ctx context.Context, accountID string, email st
 
 // nolint: dupl
 func (c *Controller) UpdatePhone(ctx context.Context, accountID string, phone string) (*AuthToken, error) {
-	rd := struct {
-		Phone string `valid:"phone,required"`
-	}{Phone: phone}
+	rd := RegisterData{Phone: phone}
 
 	if valid, err := govalidator.ValidateStruct(rd); !valid {
 		if msg := govalidator.ErrorByField(err, "Phone"); msg != "" {

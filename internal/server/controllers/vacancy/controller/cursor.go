@@ -60,7 +60,7 @@ func toStorageCursor(cursorData *cursorData) *storage.Cursor {
 
 // cursor data
 type cursorData struct {
-	PrevCreatedAt time.Time `json:"created_at,string"`
+	PrevCreatedAt time.Time `json:"created_at,string"` //nolint: staticcheck
 	PrevPosition  int       `json:"position"`
 	CategoriesIDs []string  `json:"categories"`
 }

@@ -249,46 +249,46 @@ func (c *Controller) PutVacancy(
 	vacancy *VacancyDetails,
 	categories []string,
 ) (VacancyID, error) {
-	var ID VacancyID
+	var vid VacancyID
 
 	if err := vacancy.validate(); err != nil {
-		return ID, errors.WithStack(err)
+		return vid, errors.WithStack(err)
 	}
 
 	if err := pkgtx.RunInTx(ctx, c.s, func(ctx context.Context, tx pkgtx.Tx) error {
 		if vacancyID != nil {
 			switch _, err := c.s.TxGetVacancyDetails(ctx, tx, *vacancyID); errors.Cause(err) {
 			case nil:
-				ID = VacancyID(*vacancyID)
+				vid = VacancyID(*vacancyID)
 			case storage.ErrNotFound:
 				return errors.WithStack(ErrVacancyNotFound)
 			default:
 				return errors.WithStack(err)
 			}
 		} else {
-			ID = VacancyID(uuid.NewV4().String())
+			vid = VacancyID(uuid.NewV4().String())
 		}
 
-		v := toStorageVacancyDetails(string(ID), vacancy)
+		v := toStorageVacancyDetails(string(vid), vacancy)
 
 		if err := c.s.TxPutVacancy(ctx, tx, v); err != nil {
 			return errors.WithStack(err)
 		}
 
-		if err := c.s.TxDeleteVacancyCategories(ctx, tx, string(ID)); err != nil {
+		if err := c.s.TxDeleteVacancyCategories(ctx, tx, string(vid)); err != nil {
 			return errors.WithStack(err)
 		}
 
 		if len(categories) > 0 {
-			return errors.WithStack(c.s.TxPutVacancyCategories(ctx, tx, string(ID), categories))
+			return errors.WithStack(c.s.TxPutVacancyCategories(ctx, tx, string(vid), categories))
 		}
 
 		return nil
 	}); err != nil {
-		return ID, errors.WithStack(err)
+		return vid, errors.WithStack(err)
 	}
 
-	return ID, nil
+	return vid, nil
 }
 
 func (c *Controller) GetVacancyDetails(ctx context.Context, vacancyID string) (*VacancyDetails, error) {
@@ -374,12 +374,12 @@ func (c *Controller) GetVacanciesList(
 
 // Mappings
 
-func toStorageVacancyDetails(ID string, vd *VacancyDetails) *storage.VacancyDetails {
+func toStorageVacancyDetails(vid string, vd *VacancyDetails) *storage.VacancyDetails {
 	now := time.Now()
 
 	return &storage.VacancyDetails{
 		Vacancy: storage.Vacancy{
-			ID:        ID,
+			ID:        vid,
 			Title:     vd.Title,
 			Phone:     vd.Phone,
 			MinSalary: vd.MinSalary,

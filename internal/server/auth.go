@@ -17,7 +17,12 @@ type AuthController interface {
 	Login(ctx context.Context, ld *authController.LoginData) (*authController.AuthToken, error)
 	Refresh(ctx context.Context, tokenStr string) (*authController.AuthToken, error)
 	GetAuthClaims(ctx context.Context, tokenStr string) (*authController.AuthClaims, error)
-	UpdateEmail(ctx context.Context, accountID string, email string) (*authController.AuthToken, error)
+	UpdateEmail(
+		ctx context.Context,
+		accountID string,
+		email string,
+		ac authController.AccountType,
+	) (*authController.AuthToken, error)
 	UpdatePhone(ctx context.Context, accountID string, phone string) (*authController.AuthToken, error)
 	UpdatePassword(
 		ctx context.Context,
@@ -199,7 +204,7 @@ func (s *Server) UpdateEmail(
 		return nil, status.Error(codes.Unauthenticated, "unauthorized")
 	}
 
-	token, updateErr := s.ac.UpdateEmail(ctx, claims.AccountID, req.Email)
+	token, updateErr := s.ac.UpdateEmail(ctx, claims.AccountID, req.Email, claims.AccountType)
 
 	var fv *errdetails.BadRequest_FieldViolation
 

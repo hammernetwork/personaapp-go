@@ -57,5 +57,6 @@ func fieldViolationStatus(fieldViolation *errdetails.BadRequest_FieldViolation) 
 	if err != nil {
 		return status.New(codes.Internal, err.Error())
 	}
+
 	return st
 }
