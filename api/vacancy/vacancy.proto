@@ -41,10 +41,17 @@ message GetVacanciesListResponse {
         string image_url = 2;
     }
 
+    message VacancyCategory {
+        string id = 1;
+        string title = 2;
+        string icon_url = 3;
+    }
+
     repeated string vacancies_ids = 1;
     map<string, VacancyDetails> vacancies = 2;
     map<string, Company> companies = 3;
-    google.protobuf.StringValue cursor = 4;
+    map<string, VacancyCategory> vacancy_categories = 4;
+    google.protobuf.StringValue cursor = 5;
 }
 
 // Get Vacancy Details
@@ -77,15 +84,23 @@ message GetVacancyDetailsResponse {
         string image_url = 1;
     }
 
+    message VacancyCategory {
+        string id = 1;
+        string title = 2;
+        string icon_url = 3;
+    }
+
     Vacancy vacancy = 1;
     VacancyImage image = 2;
     VacancyLocation location = 3;
     VacancyDescription description = 4;
     VacancyCompany company = 5;
+    VacancyCategory category = 6;
 }
 
 // Entity
-message Empty {}
+message Empty {
+}
 
 enum Currency {
     CURRENCY_UNKNOWN = 0;
