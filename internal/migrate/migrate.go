@@ -155,6 +155,21 @@ var migrations = []*migrate.Migration{
 			`DROP TABLE IF EXISTS vacancies_categories;`,
 		},
 	},
+	{
+		Id: "09 - Create vacancies images table",
+		Up: []string{
+			`CREATE TABLE IF NOT EXISTS vacancies_images (
+				vacancy_id         	uuid            	REFERENCES vacancy (id) ON DELETE CASCADE,
+				position	  		INTEGER				NOT NULL,
+				image_url			VARCHAR(255)     	NOT NULL
+			);`,
+			`CREATE INDEX vacancies_images_vacancy_id_idx ON vacancies_images (vacancy_id);`,
+		},
+		Down: []string{
+			`DROP INDEX IF EXISTS vacancies_images_vacancy_id_idx;`,
+			`DROP TABLE IF EXISTS vacancies_images;`,
+		},
+	},
 }
 
 func GetMigrations() []*migrate.Migration {

@@ -20,6 +20,7 @@ func init() {
 var (
 	ErrVacancyNotFound                    = errors.New("vacancy not found")
 	ErrVacancyCategoryNotFound            = errors.New("vacancy category not found")
+	ErrVacancyImagesNotFound              = errors.New("vacancy image not found")
 	ErrInvalidCursor                      = errors.New("invalid cursor")
 	ErrInvalidVacancyCategory             = errors.New("invalid vacancy category struct")
 	ErrInvalidVacancyCategoryTitle        = errors.New("invalid vacancy category title")
@@ -45,6 +46,10 @@ type Storage interface {
 
 	TxPutVacancyCategories(ctx context.Context, tx pkgtx.Tx, vacancyID string, categoriesIDs []string) error
 	TxDeleteVacancyCategories(ctx context.Context, tx pkgtx.Tx, vacancyID string) error
+
+	TxGetVacanciesImages(ctx context.Context, tx pkgtx.Tx, vacancyIDs []string) (map[string][]string, error)
+	TxPutVacancyImages(ctx context.Context, tx pkgtx.Tx, vacancyID string, imageUrls []string, ) error
+	TxDeleteVacancyImages(ctx context.Context, tx pkgtx.Tx, vacancyID string) error
 
 	TxGetVacancyDetails(ctx context.Context, tx pkgtx.Tx, vacancyID string) (*storage.VacancyDetails, error)
 	TxPutVacancy(ctx context.Context, tx pkgtx.Tx, vacancy *storage.VacancyDetails) error
@@ -84,8 +89,9 @@ type Vacancy struct {
 	Phone     string `valid:"phone,required"`
 	MinSalary int32  `valid:"range(0|1000000000),required"`
 	MaxSalary int32  `valid:"range(0|1000000000),required"`
-	ImageURL  string `valid:"stringlength(0|255),media_link"`
-	CompanyID string `valid:"required"`
+	//ImageURL  string `valid:"stringlength(0|255),media_link"`
+	ImageURLs []string `valid:"stringlength(0|255),media_link"`
+	CompanyID string   `valid:"required"`
 }
 
 type VacancyDetails struct {
@@ -248,6 +254,7 @@ func (c *Controller) PutVacancy(
 	vacancyID *string,
 	vacancy *VacancyDetails,
 	categories []string,
+	imageURLs []string,
 ) (VacancyID, error) {
 	var vid VacancyID
 
@@ -256,6 +263,7 @@ func (c *Controller) PutVacancy(
 	}
 
 	if err := pkgtx.RunInTx(ctx, c.s, func(ctx context.Context, tx pkgtx.Tx) error {
+		//Look for vacancy id
 		if vacancyID != nil {
 			switch _, err := c.s.TxGetVacancyDetails(ctx, tx, *vacancyID); errors.Cause(err) {
 			case nil:
@@ -271,16 +279,27 @@ func (c *Controller) PutVacancy(
 
 		v := toStorageVacancyDetails(string(vid), vacancy)
 
+		//Update vacancy
 		if err := c.s.TxPutVacancy(ctx, tx, v); err != nil {
 			return errors.WithStack(err)
 		}
 
+		//Update vacancy categories
 		if err := c.s.TxDeleteVacancyCategories(ctx, tx, string(vid)); err != nil {
 			return errors.WithStack(err)
 		}
 
 		if len(categories) > 0 {
 			return errors.WithStack(c.s.TxPutVacancyCategories(ctx, tx, string(vid), categories))
+		}
+
+		//Update vacancy images
+		if err := c.s.TxDeleteVacancyImages(ctx, tx, string(vid)); err != nil {
+			return errors.WithStack(err)
+		}
+
+		if len(imageURLs) > 0 {
+			return errors.WithStack(c.s.TxPutVacancyImages(ctx, tx, string(vid), imageURLs))
 		}
 
 		return nil
@@ -291,13 +310,43 @@ func (c *Controller) PutVacancy(
 	return vid, nil
 }
 
+// Equal tells whether a and b contain the same elements.
+// A nil argument is equivalent to an empty slice.
+func Equal(a, b []string) bool {
+	if len(a) != len(b) {
+		return false
+	}
+	for i, v := range a {
+		if v != b[i] {
+			return false
+		}
+	}
+	return true
+}
+
 func (c *Controller) GetVacancyDetails(ctx context.Context, vacancyID string) (*VacancyDetails, error) {
+	// Get vacancy details from DB
 	vd, err := c.s.TxGetVacancyDetails(ctx, c.s.NoTx(), vacancyID)
 
 	switch errors.Cause(err) {
 	case nil:
 	case storage.ErrNotFound:
 		return nil, errors.WithStack(ErrVacancyNotFound)
+	default:
+		return nil, errors.WithStack(err)
+	}
+
+
+	// Get vacancy images from DB
+
+	vacancyIDs := make([]string, 1)
+	vacancyIDs[0] = vacancyID
+	vi, err := c.s.TxGetVacanciesImages(ctx, c.s.NoTx(), vacancyIDs)
+
+	switch errors.Cause(err) {
+	case nil:
+	case storage.ErrNotFound:
+		return nil, errors.WithStack(ErrVacancyImagesNotFound)
 	default:
 		return nil, errors.WithStack(err)
 	}
@@ -309,7 +358,7 @@ func (c *Controller) GetVacancyDetails(ctx context.Context, vacancyID string) (*
 			Phone:     vd.Phone,
 			MinSalary: vd.MinSalary,
 			MaxSalary: vd.MaxSalary,
-			ImageURL:  vd.ImageURL,
+			ImageURLs: vi[vacancyID],
 			CompanyID: vd.CompanyID,
 		},
 		Description:          vd.Description,
@@ -355,6 +404,18 @@ func (c *Controller) GetVacanciesList(
 		return nil, nil, errors.WithStack(err)
 	}
 
+	vacancyIDs := extractVacancyIDs(vcs)
+
+	vacanciesImagesMap, err := c.s.TxGetVacanciesImages(ctx, c.s.NoTx(), vacancyIDs)
+
+	switch errors.Cause(err) {
+	case nil:
+	case storage.ErrNotFound:
+		return nil, nil, errors.WithStack(ErrVacancyImagesNotFound)
+	default:
+		return nil, nil, errors.WithStack(err)
+	}
+
 	controllerVacancies := make([]*Vacancy, len(vcs))
 
 	for idx, v := range vcs {
@@ -364,12 +425,20 @@ func (c *Controller) GetVacanciesList(
 			Phone:     v.Phone,
 			MinSalary: v.MinSalary,
 			MaxSalary: v.MaxSalary,
-			ImageURL:  v.ImageURL,
+			ImageURLs: vacanciesImagesMap[v.ID],
 			CompanyID: v.CompanyID,
 		}
 	}
 
 	return controllerVacancies, controllerCursor, nil
+}
+
+func extractVacancyIDs(vcs []*storage.Vacancy) []string {
+	vacancyIDs := make([]string, len(vcs))
+	for idx := range vcs {
+		vacancyIDs[idx] = vcs[idx].ID
+	}
+	return vacancyIDs
 }
 
 // Mappings
@@ -384,7 +453,6 @@ func toStorageVacancyDetails(vid string, vd *VacancyDetails) *storage.VacancyDet
 			Phone:     vd.Phone,
 			MinSalary: vd.MinSalary,
 			MaxSalary: vd.MaxSalary,
-			ImageURL:  vd.ImageURL,
 			CompanyID: vd.CompanyID,
 			CreatedAt: now,
 			UpdatedAt: now,
