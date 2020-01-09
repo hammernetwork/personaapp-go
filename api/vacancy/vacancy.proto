@@ -92,8 +92,7 @@ message GetVacancyDetailsResponse {
 }
 
 // Entity
-message Empty {
-}
+message Empty {}
 
 enum Currency {
     CURRENCY_UNKNOWN = 0;
