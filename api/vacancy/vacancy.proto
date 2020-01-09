@@ -88,7 +88,7 @@ message GetVacancyDetailsResponse {
     VacancyLocation location = 3;
     VacancyDescription description = 4;
     VacancyCompany company = 5;
-    VacancyCategory category = 6;
+    map<string, VacancyCategory> categories = 6;
 }
 
 // Entity
@@ -113,5 +113,5 @@ message Vacancy {
     int32 max_salary = 5;
     string company_id = 6;
     Currency currency = 7;
-    string vacancy_category_id = 8;
+    repeated string vacancy_category_id = 8;
 }
