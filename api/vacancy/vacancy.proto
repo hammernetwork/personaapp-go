@@ -39,6 +39,7 @@ message GetVacanciesListResponse {
     message VacancyDetails {
         Vacancy vacancy = 1;
         string image_url = 2;
+        repeated string category_ids = 3;
     }
 
     repeated string vacancies_ids = 1;
@@ -113,5 +114,4 @@ message Vacancy {
     int32 max_salary = 5;
     string company_id = 6;
     Currency currency = 7;
-    repeated string category_ids = 8;
 }
