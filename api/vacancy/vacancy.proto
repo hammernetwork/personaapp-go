@@ -113,5 +113,5 @@ message Vacancy {
     int32 max_salary = 5;
     string company_id = 6;
     Currency currency = 7;
-    repeated string vacancy_category_id = 8;
+    repeated string category_ids = 8;
 }
