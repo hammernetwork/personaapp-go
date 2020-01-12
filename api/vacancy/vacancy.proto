@@ -39,7 +39,6 @@ message GetVacanciesListResponse {
     message VacancyDetails {
         Vacancy vacancy = 1;
         string image_url = 2;
-        repeated string category_ids = 3;
     }
 
     repeated string vacancies_ids = 1;
@@ -78,18 +77,11 @@ message GetVacancyDetailsResponse {
         string image_url = 1;
     }
 
-    message VacancyCategory {
-        string id = 1;
-        string title = 2;
-        string icon_url = 3;
-    }
-
     Vacancy vacancy = 1;
     VacancyImage image = 2;
     VacancyLocation location = 3;
     VacancyDescription description = 4;
     VacancyCompany company = 5;
-    map<string, VacancyCategory> categories = 6;
 }
 
 // Entity
@@ -114,4 +106,5 @@ message Vacancy {
     int32 max_salary = 5;
     string company_id = 6;
     Currency currency = 7;
+    map<string, string> categories = 8;
 }

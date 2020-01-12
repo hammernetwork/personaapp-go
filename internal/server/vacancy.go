@@ -26,13 +26,13 @@ type VacancyController interface {
 		vacancy *vacancyController.VacancyDetails,
 		categories []string,
 	) (vacancyController.VacancyID, error)
-	GetVacancyDetails(ctx context.Context, vacancyID string) (*vacancyController.VacancyDetails, error)
+	GetVacancyDetails(ctx context.Context, vacancyID string) (*vacancyController.VacancyDetailsExt, error)
 	GetVacanciesList(
 		ctx context.Context,
 		categoriesIDs []string,
 		cursor *vacancyController.Cursor,
 		limit int,
-	) ([]*vacancyController.Vacancy, *vacancyController.Cursor, error)
+	) ([]*vacancyController.VacancyExt, *vacancyController.Cursor, error)
 }
 
 // Vacancy
@@ -137,13 +137,14 @@ func (s *Server) GetVacanciesList(
 		vacanciesIDs[idx] = v.ID
 		vacancies[v.ID] = &vacancyapi.GetVacanciesListResponse_VacancyDetails{
 			Vacancy: &vacancyapi.Vacancy{
-				Id:        v.ID,
-				Title:     v.Title,
-				Phone:     v.Phone,
-				MinSalary: v.MinSalary,
-				MaxSalary: v.MaxSalary,
-				CompanyId: v.CompanyID,
-				Currency:  vacancyapi.Currency_CURRENCY_UAH,
+				Id:         v.ID,
+				Title:      v.Title,
+				Phone:      v.Phone,
+				MinSalary:  v.MinSalary,
+				MaxSalary:  v.MaxSalary,
+				CompanyId:  v.CompanyID,
+				Currency:   vacancyapi.Currency_CURRENCY_UAH,
+				Categories: v.Categories,
 			},
 			ImageUrl: "",
 		}
@@ -179,15 +180,16 @@ func (s *Server) GetVacanciesList(
 }
 
 // Mappings
-func toServerVacancy(vd *vacancyController.VacancyDetails) *vacancyapi.Vacancy {
+func toServerVacancy(vd *vacancyController.VacancyDetailsExt) *vacancyapi.Vacancy {
 	return &vacancyapi.Vacancy{
-		Id:        vd.ID,
-		Title:     vd.Title,
-		Phone:     vd.Phone,
-		MinSalary: vd.MinSalary,
-		MaxSalary: vd.MaxSalary,
-		CompanyId: vd.CompanyID,
-		Currency:  vacancyapi.Currency_CURRENCY_UAH,
+		Id:         vd.ID,
+		Title:      vd.Title,
+		Phone:      vd.Phone,
+		MinSalary:  vd.MinSalary,
+		MaxSalary:  vd.MaxSalary,
+		CompanyId:  vd.CompanyID,
+		Currency:   vacancyapi.Currency_CURRENCY_UAH,
+		Categories: vd.Categories,
 	}
 }
 
