@@ -103,22 +103,22 @@ type VacancyDetails struct {
 // Vacancy models for get
 type VacancyExt struct {
 	ID         string
-	Title      string `valid:"stringlength(5|80),required"`
-	Phone      string `valid:"phone,required"`
-	MinSalary  int32  `valid:"range(0|1000000000),required"`
-	MaxSalary  int32  `valid:"range(0|1000000000),required"`
-	ImageURL   string `valid:"stringlength(0|255),media_link"`
-	CompanyID  string `valid:"required"`
+	Title      string
+	Phone      string
+	MinSalary  int32
+	MaxSalary  int32
+	ImageURL   string
+	CompanyID  string
 	Categories map[string]string
 }
 
 type VacancyDetailsExt struct {
 	VacancyExt
 	Description          string
-	WorkMonthsExperience int32   `valid:"range(0|1200),required"`
-	WorkSchedule         string  `valid:"stringlength(0|100)"`
-	LocationLatitude     float32 `valid:"latitude"`
-	LocationLongitude    float32 `valid:"longitude"`
+	WorkMonthsExperience int32
+	WorkSchedule         string
+	LocationLatitude     float32
+	LocationLongitude    float32
 }
 
 type Cursor string
@@ -328,8 +328,7 @@ func (c *Controller) GetVacancyDetails(ctx context.Context, vacancyID string) (*
 	}
 
 	// Get categories
-	vacancyIDs := make([]string, 1)
-	vacancyIDs[0] = vacancyID
+	vacancyIDs := []string{vacancyID}
 
 	vscs, err := c.s.TxGetVacanciesCategories(ctx, c.s.NoTx(), vacancyIDs)
 
