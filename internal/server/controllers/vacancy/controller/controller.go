@@ -81,13 +81,13 @@ type VacancyID string
 
 // Vacancy models for put
 type Vacancy struct {
-	ID         string
-	Title      string `valid:"stringlength(5|80),required"`
-	Phone      string `valid:"phone,required"`
-	MinSalary  int32  `valid:"range(0|1000000000),required"`
-	MaxSalary  int32  `valid:"range(0|1000000000),required"`
-	ImageURL   string `valid:"stringlength(0|255),media_link"`
-	CompanyID  string `valid:"required"`
+	ID        string
+	Title     string `valid:"stringlength(5|80),required"`
+	Phone     string `valid:"phone,required"`
+	MinSalary int32  `valid:"range(0|1000000000),required"`
+	MaxSalary int32  `valid:"range(0|1000000000),required"`
+	ImageURL  string `valid:"stringlength(0|255),media_link"`
+	CompanyID string `valid:"required"`
 }
 
 type VacancyDetails struct {
