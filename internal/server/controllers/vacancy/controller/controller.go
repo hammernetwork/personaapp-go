@@ -88,7 +88,6 @@ type Vacancy struct {
 	MaxSalary  int32  `valid:"range(0|1000000000),required"`
 	ImageURL   string `valid:"stringlength(0|255),media_link"`
 	CompanyID  string `valid:"required"`
-	Categories map[string]string
 }
 
 type VacancyDetails struct {
