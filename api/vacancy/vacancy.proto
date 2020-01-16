@@ -106,4 +106,5 @@ message Vacancy {
     int32 max_salary = 5;
     string company_id = 6;
     Currency currency = 7;
+    map<string, string> categories = 8;
 }

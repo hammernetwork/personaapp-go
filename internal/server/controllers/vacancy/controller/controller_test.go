@@ -210,6 +210,7 @@ func TestController_PutVacancy(t *testing.T) {
 		require.Equal(t, vacancy.WorkSchedule, vd.WorkSchedule)
 		require.Equal(t, vacancy.LocationLatitude, vd.LocationLatitude)
 		require.Equal(t, vacancy.LocationLongitude, vd.LocationLongitude)
+		require.Equal(t, category.Title, vd.Categories[string(categoryID)])
 	})
 }
 
@@ -294,8 +295,8 @@ func TestController_GetVacanciesList(t *testing.T) {
 			Title: &companyTitle,
 		}))
 
-		categoriesCount := 3
-		categoriesIDs := make([]string, 3)
+		categoriesCount := 4
+		categoriesIDs := make([]string, categoriesCount)
 		categoriesMap := make(map[string]*controller.VacancyCategory)
 		for i := 0; i < categoriesCount; i++ {
 			category := &controller.VacancyCategory{
@@ -311,7 +312,7 @@ func TestController_GetVacanciesList(t *testing.T) {
 		}
 
 		vacanciesCount := 3
-		vacanciesIDs := make([]string, 3)
+		vacanciesIDs := make([]string, vacanciesCount)
 		vacanciesMap := make(map[string]*controller.VacancyDetails)
 		for i := 0; i < vacanciesCount; i++ {
 			vacancy := &controller.VacancyDetails{
@@ -330,7 +331,7 @@ func TestController_GetVacanciesList(t *testing.T) {
 				LocationLongitude:    float32(i) * 2.055,
 			}
 
-			ID, err := c.PutVacancy(context.TODO(), nil, vacancy, []string{categoriesIDs[i]})
+			ID, err := c.PutVacancy(context.TODO(), nil, vacancy, []string{categoriesIDs[i], categoriesIDs[i+1]})
 			require.NoError(t, err)
 			require.NotNil(t, ID)
 
@@ -341,10 +342,18 @@ func TestController_GetVacanciesList(t *testing.T) {
 		t.Run("get all without filters", func(t *testing.T) {
 			vacancies, _, err := c.GetVacanciesList(context.TODO(), []string{}, nil, 100)
 			require.NoError(t, err)
+			// Check vacancies
 			require.Equal(t, 3, len(vacancies))
 			require.Equal(t, vacanciesIDs[2], vacancies[0].ID)
 			require.Equal(t, vacanciesIDs[1], vacancies[1].ID)
 			require.Equal(t, vacanciesIDs[0], vacancies[2].ID)
+			// Check vacancy categories
+			require.Equal(t, categoriesMap[categoriesIDs[3]].Title, vacancies[0].Categories[categoriesIDs[3]])
+			require.Equal(t, categoriesMap[categoriesIDs[2]].Title, vacancies[0].Categories[categoriesIDs[2]])
+			require.Equal(t, categoriesMap[categoriesIDs[2]].Title, vacancies[1].Categories[categoriesIDs[2]])
+			require.Equal(t, categoriesMap[categoriesIDs[1]].Title, vacancies[1].Categories[categoriesIDs[1]])
+			require.Equal(t, categoriesMap[categoriesIDs[1]].Title, vacancies[2].Categories[categoriesIDs[1]])
+			require.Equal(t, categoriesMap[categoriesIDs[0]].Title, vacancies[2].Categories[categoriesIDs[0]])
 		})
 
 		t.Run("get all with invalid filter", func(t *testing.T) {
@@ -378,10 +387,15 @@ func TestController_GetVacanciesList(t *testing.T) {
 
 			vacancies, _, err = c.GetVacanciesList(context.TODO(), []string{categoriesIDs[1]}, nil, 100)
 			require.NoError(t, err)
-			require.Equal(t, 1, len(vacancies))
+			require.Equal(t, 2, len(vacancies))
 			require.Equal(t, vacanciesIDs[1], vacancies[0].ID)
 
 			vacancies, _, err = c.GetVacanciesList(context.TODO(), []string{categoriesIDs[2]}, nil, 100)
+			require.NoError(t, err)
+			require.Equal(t, 2, len(vacancies))
+			require.Equal(t, vacanciesIDs[2], vacancies[0].ID)
+
+			vacancies, _, err = c.GetVacanciesList(context.TODO(), []string{categoriesIDs[3]}, nil, 100)
 			require.NoError(t, err)
 			require.Equal(t, 1, len(vacancies))
 			require.Equal(t, vacanciesIDs[2], vacancies[0].ID)
