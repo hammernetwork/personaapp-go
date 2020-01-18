@@ -324,7 +324,6 @@ func (c *Controller) GetVacancyDetails(ctx context.Context, vacancyID string) (*
 			MaxSalary: vd.MaxSalary,
 			ImageURL:  vd.ImageURL,
 			CompanyID: vd.CompanyID,
-			//Categories: categoryMap,
 		},
 		Description:          vd.Description,
 		WorkMonthsExperience: vd.WorkMonthsExperience,
@@ -395,8 +394,6 @@ func (c *Controller) GetVacanciesCategories(
 
 	switch errors.Cause(err) {
 	case nil:
-	case storage.ErrNotFound:
-		return nil, errors.WithStack(ErrVacancyCategoryNotFound)
 	default:
 		return nil, errors.WithStack(err)
 	}

@@ -169,7 +169,7 @@ func (s *Server) GetVacanciesList(
 				MaxSalary:  v.MaxSalary,
 				CompanyId:  v.CompanyID,
 				Currency:   vacancyapi.Currency_CURRENCY_UAH,
-				Categories: make([]string, 0),
+				Categories: []string{},
 			},
 			ImageUrl: "",
 		}
