@@ -224,8 +224,6 @@ func (c *Controller) GetVacancyCategory(ctx context.Context, categoryID string) 
 
 	switch errors.Cause(err) {
 	case nil:
-	case storage.ErrNotFound:
-		return nil, errors.WithStack(ErrVacancyCategoryNotFound)
 	default:
 		return nil, errors.WithStack(err)
 	}
