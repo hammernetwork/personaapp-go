@@ -43,7 +43,11 @@ type Storage interface {
 	TxPutVacancyCategory(ctx context.Context, tx pkgtx.Tx, category *storage.VacancyCategory) error
 	TxGetVacanciesCategoriesList(ctx context.Context, tx pkgtx.Tx) ([]*storage.VacancyCategory, error)
 
-	TxGetVacanciesCategories(ctx context.Context, tx pkgtx.Tx, vacancyIDs []string) ([]*storage.VacancyCategoryExt, error)
+	TxGetVacanciesCategories(
+		ctx context.Context,
+		tx pkgtx.Tx,
+		vacancyIDs []string,
+	) ([]*storage.VacancyCategoryShort, error)
 	TxPutVacancyCategories(ctx context.Context, tx pkgtx.Tx, vacancyID string, categoriesIDs []string) error
 	TxDeleteVacancyCategories(ctx context.Context, tx pkgtx.Tx, vacancyID string) error
 
@@ -99,25 +103,10 @@ type VacancyDetails struct {
 	LocationLongitude    float32 `valid:"longitude"`
 }
 
-// Vacancy models for get
-type VacancyExt struct {
-	ID         string
-	Title      string
-	Phone      string
-	MinSalary  int32
-	MaxSalary  int32
-	ImageURL   string
-	CompanyID  string
-	Categories map[string]string
-}
-
-type VacancyDetailsExt struct {
-	VacancyExt
-	Description          string
-	WorkMonthsExperience int32
-	WorkSchedule         string
-	LocationLatitude     float32
-	LocationLongitude    float32
+type VacancyCategoryShort struct {
+	VacancyID string
+	ID        string
+	Title     string
 }
 
 type Cursor string
@@ -314,7 +303,7 @@ func (c *Controller) PutVacancy(
 	return vid, nil
 }
 
-func (c *Controller) GetVacancyDetails(ctx context.Context, vacancyID string) (*VacancyDetailsExt, error) {
+func (c *Controller) GetVacancyDetails(ctx context.Context, vacancyID string) (*VacancyDetails, error) {
 	// Get vacancy details
 	vd, err := c.s.TxGetVacancyDetails(ctx, c.s.NoTx(), vacancyID)
 
@@ -326,31 +315,15 @@ func (c *Controller) GetVacancyDetails(ctx context.Context, vacancyID string) (*
 		return nil, errors.WithStack(err)
 	}
 
-	// Get categories
-	vacancyIDs := []string{vacancyID}
-
-	vscs, err := c.s.TxGetVacanciesCategories(ctx, c.s.NoTx(), vacancyIDs)
-
-	switch errors.Cause(err) {
-	case nil:
-	case storage.ErrNotFound:
-		return nil, errors.WithStack(ErrVacancyCategoryNotFound)
-	default:
-		return nil, errors.WithStack(err)
-	}
-
-	categoryMap := toVacancyCategoriesMap(vscs, vacancyID)
-
-	return &VacancyDetailsExt{
-		VacancyExt: VacancyExt{
-			ID:         vd.ID,
-			Title:      vd.Title,
-			Phone:      vd.Phone,
-			MinSalary:  vd.MinSalary,
-			MaxSalary:  vd.MaxSalary,
-			ImageURL:   vd.ImageURL,
-			CompanyID:  vd.CompanyID,
-			Categories: categoryMap,
+	return &VacancyDetails{
+		Vacancy: Vacancy{
+			ID:        vd.ID,
+			Title:     vd.Title,
+			Phone:     vd.Phone,
+			MinSalary: vd.MinSalary,
+			MaxSalary: vd.MaxSalary,
+			ImageURL:  vd.ImageURL,
+			CompanyID: vd.CompanyID,
 		},
 		Description:          vd.Description,
 		WorkMonthsExperience: vd.WorkMonthsExperience,
@@ -360,24 +333,12 @@ func (c *Controller) GetVacancyDetails(ctx context.Context, vacancyID string) (*
 	}, nil
 }
 
-func toVacancyCategoriesMap(cs []*storage.VacancyCategoryExt, vacancyID string) map[string]string {
-	categoryMap := make(map[string]string)
-
-	for _, category := range cs {
-		if category.VacancyID == vacancyID {
-			categoryMap[category.ID] = category.Title
-		}
-	}
-
-	return categoryMap
-}
-
 func (c *Controller) GetVacanciesList(
 	ctx context.Context,
 	categoriesIDs []string,
 	cursor *Cursor,
 	limit int,
-) ([]*VacancyExt, *Cursor, error) {
+) ([]*Vacancy, *Cursor, error) {
 	cursorData, err := toCursorData(cursor)
 	if err != nil || (cursorData != nil && !equal(cursorData.CategoriesIDs, categoriesIDs)) {
 		return nil, nil, errors.WithStack(ErrInvalidCursor)
@@ -407,41 +368,46 @@ func (c *Controller) GetVacanciesList(
 		return nil, nil, errors.WithStack(err)
 	}
 
-	// Get categories by vacancy ids
-	vacancyIDs := toVacancyIDs(vcs)
-	vscs, err := c.s.TxGetVacanciesCategories(ctx, c.s.NoTx(), vacancyIDs)
-
-	switch err {
-	case nil:
-	default:
-		return nil, nil, errors.WithStack(err)
-	}
-
-	controllerVacancies := make([]*VacancyExt, len(vcs))
+	controllerVacancies := make([]*Vacancy, len(vcs))
 
 	for idx, v := range vcs {
-		controllerVacancies[idx] = &VacancyExt{
-			ID:         v.ID,
-			Title:      v.Title,
-			Phone:      v.Phone,
-			MinSalary:  v.MinSalary,
-			MaxSalary:  v.MaxSalary,
-			ImageURL:   v.ImageURL,
-			CompanyID:  v.CompanyID,
-			Categories: toVacancyCategoriesMap(vscs, v.ID),
+		controllerVacancies[idx] = &Vacancy{
+			ID:        v.ID,
+			Title:     v.Title,
+			Phone:     v.Phone,
+			MinSalary: v.MinSalary,
+			MaxSalary: v.MaxSalary,
+			ImageURL:  v.ImageURL,
+			CompanyID: v.CompanyID,
 		}
 	}
 
 	return controllerVacancies, controllerCursor, nil
 }
 
-func toVacancyIDs(vcs []*storage.Vacancy) []string {
-	vacancyIDs := make([]string, len(vcs))
-	for idx, v := range vcs {
-		vacancyIDs[idx] = v.ID
+func (c *Controller) GetVacanciesCategories(
+	ctx context.Context,
+	vacancyIDs []string,
+) ([]*VacancyCategoryShort, error) {
+	// Get categories
+	vscs, err := c.s.TxGetVacanciesCategories(ctx, c.s.NoTx(), vacancyIDs)
+
+	switch errors.Cause(err) {
+	case nil:
+	default:
+		return nil, errors.WithStack(err)
 	}
 
-	return vacancyIDs
+	categories := make([]*VacancyCategoryShort, len(vscs))
+	for idx, vacancy := range vscs {
+		categories[idx] = &VacancyCategoryShort{
+			VacancyID: vacancy.VacancyID,
+			ID:        vacancy.ID,
+			Title:     vacancy.Title,
+		}
+	}
+
+	return categories, nil
 }
 
 // Mappings

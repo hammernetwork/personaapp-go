@@ -30,13 +30,10 @@ type VacancyCategory struct {
 	UpdatedAt time.Time
 }
 
-type VacancyCategoryExt struct {
+type VacancyCategoryShort struct {
 	VacancyID string
 	ID        string
 	Title     string
-	IconURL   string
-	CreatedAt time.Time
-	UpdatedAt time.Time
 }
 
 type Vacancy struct {
@@ -287,12 +284,12 @@ func (s *Storage) TxGetVacanciesCategories(
 	ctx context.Context,
 	tx pkgtx.Tx,
 	vacancyIDs []string,
-) ([]*VacancyCategoryExt, error) {
+) ([]*VacancyCategoryShort, error) {
 	c := postgresql.FromTx(tx)
 
 	rows, err := c.QueryContext(
 		ctx,
-		`SELECT vscs.vacancy_id, vc.id, vc.title, vc.icon_url
+		`SELECT vscs.vacancy_id, vc.id, vc.title
 			FROM vacancies_categories AS vscs
 			INNER JOIN vacancy_category AS vc
 			ON vscs.category_id = vc.id
@@ -303,11 +300,11 @@ func (s *Storage) TxGetVacanciesCategories(
 		return nil, errors.WithStack(err)
 	}
 
-	vcs := make([]*VacancyCategoryExt, 0)
+	vcs := make([]*VacancyCategoryShort, 0)
 
 	for rows.Next() {
-		var vc VacancyCategoryExt
-		if err := rows.Scan(&vc.VacancyID, &vc.ID, &vc.Title, &vc.IconURL); err != nil {
+		var vc VacancyCategoryShort
+		if err := rows.Scan(&vc.VacancyID, &vc.ID, &vc.Title); err != nil {
 			_ = rows.Close()
 			return nil, errors.WithStack(err)
 		}
