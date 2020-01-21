@@ -30,6 +30,12 @@ type VacancyCategory struct {
 	UpdatedAt time.Time
 }
 
+type VacancyCategoryShort struct {
+	VacancyID string
+	ID        string
+	Title     string
+}
+
 type Vacancy struct {
 	ID        string
 	Title     string
@@ -271,6 +277,41 @@ func (s *Storage) TxGetVacanciesList(
 		PrevCreatedAt: lastCreatedAt,
 		PrevPosition:  lastPosition,
 	}, nil
+}
+
+func (s *Storage) TxGetVacanciesCategories(
+	ctx context.Context,
+	tx pkgtx.Tx,
+	vacancyIDs []string,
+) ([]*VacancyCategoryShort, error) {
+	c := postgresql.FromTx(tx)
+
+	rows, err := c.QueryContext(
+		ctx,
+		`SELECT vscs.vacancy_id, vc.id, vc.title
+			FROM vacancies_categories AS vscs
+			INNER JOIN vacancy_category AS vc
+			ON vscs.category_id = vc.id
+			WHERE vacancy_id = ANY($1::uuid[])`,
+		pq.Array(vacancyIDs),
+	)
+	if err != nil {
+		return nil, errors.WithStack(err)
+	}
+
+	vcs := make([]*VacancyCategoryShort, 0)
+
+	for rows.Next() {
+		var vc VacancyCategoryShort
+		if err := rows.Scan(&vc.VacancyID, &vc.ID, &vc.Title); err != nil {
+			_ = rows.Close()
+			return nil, errors.WithStack(err)
+		}
+
+		vcs = append(vcs, &vc)
+	}
+
+	return vcs, nil
 }
 
 func (s *Storage) TxPutVacancyCategories(

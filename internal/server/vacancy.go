@@ -33,6 +33,7 @@ type VacancyController interface {
 		cursor *vacancyController.Cursor,
 		limit int,
 	) ([]*vacancyController.Vacancy, *vacancyController.Cursor, error)
+	GetVacanciesCategories(ctx context.Context, vacancyIDs []string) ([]*vacancyController.VacancyCategoryShort, error)
 }
 
 // Vacancy
@@ -79,6 +80,7 @@ func (s *Server) GetVacancyDetails(
 		return nil, status.Error(codes.NotFound, err.Error())
 	}
 
+	// Get companies
 	cd, err := s.cc.Get(ctx, vd.CompanyID)
 	switch errors.Cause(err) {
 	case nil:
@@ -86,8 +88,30 @@ func (s *Server) GetVacancyDetails(
 		return nil, status.Error(codes.NotFound, err.Error())
 	}
 
+	// Get vacancy categories
+	categories, err := s.vc.GetVacanciesCategories(
+		ctx,
+		[]string{req.VacancyId},
+	)
+
+	switch errors.Cause(err) {
+	case nil:
+	case companyController.ErrCategoryNotFound:
+		return nil, status.Error(codes.NotFound, err.Error())
+	}
+
+	categoriesMap := map[string]*vacancyapi.VacancyCategory{}
+	vc := make([]string, len(categories))
+
+	for idx, c := range categories {
+		vc[idx] = c.Title
+		categoriesMap[c.ID] = &vacancyapi.VacancyCategory{
+			Title: c.Title,
+		}
+	}
+
 	return &vacancyapi.GetVacancyDetailsResponse{
-		Vacancy: toServerVacancy(vd),
+		Vacancy: toServerVacancy(vd, vc),
 		Image:   &vacancyapi.GetVacancyDetailsResponse_VacancyImage{ImageUrl: vd.ImageURL},
 		Location: &vacancyapi.GetVacancyDetailsResponse_VacancyLocation{
 			Latitude:  vd.LocationLatitude,
@@ -98,7 +122,8 @@ func (s *Server) GetVacancyDetails(
 			WorkMonthsExperience: uint32(vd.WorkMonthsExperience),
 			WorkSchedule:         vd.WorkSchedule,
 		},
-		Company: toServerCompany(cd),
+		Company:    toServerCompany(cd),
+		Categories: categoriesMap,
 	}, nil
 }
 
@@ -137,19 +162,44 @@ func (s *Server) GetVacanciesList(
 		vacanciesIDs[idx] = v.ID
 		vacancies[v.ID] = &vacancyapi.GetVacanciesListResponse_VacancyDetails{
 			Vacancy: &vacancyapi.Vacancy{
-				Id:        v.ID,
-				Title:     v.Title,
-				Phone:     v.Phone,
-				MinSalary: v.MinSalary,
-				MaxSalary: v.MaxSalary,
-				CompanyId: v.CompanyID,
-				Currency:  vacancyapi.Currency_CURRENCY_UAH,
+				Id:         v.ID,
+				Title:      v.Title,
+				Phone:      v.Phone,
+				MinSalary:  v.MinSalary,
+				MaxSalary:  v.MaxSalary,
+				CompanyId:  v.CompanyID,
+				Currency:   vacancyapi.Currency_CURRENCY_UAH,
+				Categories: []string{},
 			},
 			ImageUrl: "",
 		}
 		companyIdsMap[v.CompanyID] = true
 	}
 
+	// Get vacancy categories
+	categories, err := s.vc.GetVacanciesCategories(
+		ctx,
+		vacanciesIDs,
+	)
+
+	switch errors.Cause(err) {
+	case nil:
+	case companyController.ErrCategoryNotFound:
+		return nil, status.Error(codes.NotFound, err.Error())
+	}
+
+	categoriesMap := map[string]*vacancyapi.VacancyCategory{}
+
+	for _, c := range categories {
+		vc := vacancies[c.VacancyID].Vacancy.Categories
+		vca := append(vc, c.Title)
+		vacancies[c.VacancyID].Vacancy.Categories = vca
+		categoriesMap[c.ID] = &vacancyapi.VacancyCategory{
+			Title: c.Title,
+		}
+	}
+
+	// Get companies
 	companyIds := make([]string, 0)
 	for companyID := range companyIdsMap {
 		companyIds = append(companyIds, companyID)
@@ -179,15 +229,16 @@ func (s *Server) GetVacanciesList(
 }
 
 // Mappings
-func toServerVacancy(vd *vacancyController.VacancyDetails) *vacancyapi.Vacancy {
+func toServerVacancy(vd *vacancyController.VacancyDetails, vc []string) *vacancyapi.Vacancy {
 	return &vacancyapi.Vacancy{
-		Id:        vd.ID,
-		Title:     vd.Title,
-		Phone:     vd.Phone,
-		MinSalary: vd.MinSalary,
-		MaxSalary: vd.MaxSalary,
-		CompanyId: vd.CompanyID,
-		Currency:  vacancyapi.Currency_CURRENCY_UAH,
+		Id:         vd.ID,
+		Title:      vd.Title,
+		Phone:      vd.Phone,
+		MinSalary:  vd.MinSalary,
+		MaxSalary:  vd.MaxSalary,
+		CompanyId:  vd.CompanyID,
+		Currency:   vacancyapi.Currency_CURRENCY_UAH,
+		Categories: vc,
 	}
 }
 

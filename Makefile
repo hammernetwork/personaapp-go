@@ -74,7 +74,7 @@ endif
 
 	@echo " [$(GREEN_COLOR)grpc$(DEFAULT_COLOR)]"
 		@-rm -rf ./pkg/grpcapi
-		@mkdir -p ./pkg/grpcapi/entities ./pkg/grpcapi/auth ./pkg/grpcapi/company
+		@mkdir -p ./pkg/grpcapi/vacancy ./pkg/grpcapi/auth ./pkg/grpcapi/company
 
 	@${PROTOC} \
 		-I ./api \

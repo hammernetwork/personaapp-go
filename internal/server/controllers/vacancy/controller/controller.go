@@ -44,6 +44,11 @@ type Storage interface {
 	TxPutVacancyCategory(ctx context.Context, tx pkgtx.Tx, category *storage.VacancyCategory) error
 	TxGetVacanciesCategoriesList(ctx context.Context, tx pkgtx.Tx) ([]*storage.VacancyCategory, error)
 
+	TxGetVacanciesCategories(
+		ctx context.Context,
+		tx pkgtx.Tx,
+		vacancyIDs []string,
+	) ([]*storage.VacancyCategoryShort, error)
 	TxPutVacancyCategories(ctx context.Context, tx pkgtx.Tx, vacancyID string, categoriesIDs []string) error
 	TxDeleteVacancyCategories(ctx context.Context, tx pkgtx.Tx, vacancyID string) error
 
@@ -83,6 +88,7 @@ type VacancyCategory struct {
 
 type VacancyID string
 
+// Vacancy models for put
 type Vacancy struct {
 	ID        string
 	Title     string `valid:"stringlength(5|80),required"`
@@ -101,6 +107,12 @@ type VacancyDetails struct {
 	WorkSchedule         string  `valid:"stringlength(0|100)"`
 	LocationLatitude     float32 `valid:"latitude"`
 	LocationLongitude    float32 `valid:"longitude"`
+}
+
+type VacancyCategoryShort struct {
+	VacancyID string
+	ID        string
+	Title     string
 }
 
 type Cursor string
@@ -218,8 +230,6 @@ func (c *Controller) GetVacancyCategory(ctx context.Context, categoryID string) 
 
 	switch errors.Cause(err) {
 	case nil:
-	case storage.ErrNotFound:
-		return nil, errors.WithStack(ErrVacancyCategoryNotFound)
 	default:
 		return nil, errors.WithStack(err)
 	}
@@ -336,7 +346,6 @@ func (c *Controller) GetVacancyDetails(ctx context.Context, vacancyID string) (*
 		return nil, errors.WithStack(err)
 	}
 
-
 	// Get vacancy images from DB
 
 	vacancyIDs := make([]string, 1)
@@ -439,6 +448,31 @@ func extractVacancyIDs(vcs []*storage.Vacancy) []string {
 		vacancyIDs[idx] = vcs[idx].ID
 	}
 	return vacancyIDs
+}
+
+func (c *Controller) GetVacanciesCategories(
+	ctx context.Context,
+	vacancyIDs []string,
+) ([]*VacancyCategoryShort, error) {
+	// Get categories
+	vscs, err := c.s.TxGetVacanciesCategories(ctx, c.s.NoTx(), vacancyIDs)
+
+	switch errors.Cause(err) {
+	case nil:
+	default:
+		return nil, errors.WithStack(err)
+	}
+
+	categories := make([]*VacancyCategoryShort, len(vscs))
+	for idx, vacancy := range vscs {
+		categories[idx] = &VacancyCategoryShort{
+			VacancyID: vacancy.VacancyID,
+			ID:        vacancy.ID,
+			Title:     vacancy.Title,
+		}
+	}
+
+	return categories, nil
 }
 
 // Mappings
