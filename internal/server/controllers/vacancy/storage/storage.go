@@ -434,7 +434,6 @@ func (s *Storage) TxGetVacanciesImages(ctx context.Context, tx pkgtx.Tx, vacancy
 		}
 
 		images := vacancyImageMap[vacancyID]
-
 		images = append(images, imageUrl)
 
 	}

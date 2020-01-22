@@ -347,10 +347,7 @@ func (c *Controller) GetVacancyDetails(ctx context.Context, vacancyID string) (*
 	}
 
 	// Get vacancy images from DB
-
-	vacancyIDs := make([]string, 1)
-	vacancyIDs[0] = vacancyID
-	vi, err := c.s.TxGetVacanciesImages(ctx, c.s.NoTx(), vacancyIDs)
+	vi, err := c.s.TxGetVacanciesImages(ctx, c.s.NoTx(), []string{vacancyID})
 
 	switch errors.Cause(err) {
 	case nil:

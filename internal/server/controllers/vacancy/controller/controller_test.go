@@ -182,7 +182,7 @@ func TestController_PutVacancy(t *testing.T) {
 				Phone:     "+380503000002",
 				MinSalary: 10000,
 				MaxSalary: 20000,
-				ImageURL:  "https://s3.bucket.org/new_vacancy.jpg",
+				ImageURLs:  "https://s3.bucket.org/new_vacancy.jpg",
 				CompanyID: claims.AccountID,
 			},
 			Description:          "Description",
