@@ -356,6 +356,10 @@ func TestController_GetVacanciesList(t *testing.T) {
 			// Check images
 			require.Equal(t, fmt.Sprintf(imagePlaceholder, 1), vacancies[2].ImageURLs[0])
 			require.Equal(t, fmt.Sprintf(imagePlaceholder, 2), vacancies[2].ImageURLs[1])
+			require.Equal(t, fmt.Sprintf(imagePlaceholder, 2), vacancies[1].ImageURLs[0])
+			require.Equal(t, fmt.Sprintf(imagePlaceholder, 3), vacancies[1].ImageURLs[1])
+			require.Equal(t, fmt.Sprintf(imagePlaceholder, 3), vacancies[0].ImageURLs[0])
+			require.Equal(t, fmt.Sprintf(imagePlaceholder, 4), vacancies[0].ImageURLs[1])
 		})
 
 		t.Run("get categories by vacancy ids", func(t *testing.T) {
