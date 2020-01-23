@@ -38,7 +38,7 @@ message GetVacanciesListRequest {
 message GetVacanciesListResponse {
     message VacancyDetails {
         Vacancy vacancy = 1;
-        repeated string image_url = 2;
+        repeated string image_urls = 2;
     }
 
     repeated string vacancies_ids = 1;
@@ -75,7 +75,7 @@ message GetVacancyDetailsResponse {
     }
 
     message VacancyImage {
-        repeated string image_url = 1;
+        repeated string image_urls = 1;
     }
 
     Vacancy vacancy = 1;
