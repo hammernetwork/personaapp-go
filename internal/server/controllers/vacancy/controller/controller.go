@@ -53,7 +53,7 @@ type Storage interface {
 	TxDeleteVacancyCategories(ctx context.Context, tx pkgtx.Tx, vacancyID string) error
 
 	TxGetVacanciesImages(ctx context.Context, tx pkgtx.Tx, vacancyIDs []string) (map[string][]string, error)
-	TxPutVacancyImages(ctx context.Context, tx pkgtx.Tx, vacancyID string, imageUrls []string, ) error
+	TxPutVacancyImages(ctx context.Context, tx pkgtx.Tx, vacancyID string, imageUrls []string) error
 	TxDeleteVacancyImages(ctx context.Context, tx pkgtx.Tx, vacancyID string) error
 
 	TxGetVacancyDetails(ctx context.Context, tx pkgtx.Tx, vacancyID string) (*storage.VacancyDetails, error)
@@ -91,11 +91,10 @@ type VacancyID string
 // Vacancy models for put
 type Vacancy struct {
 	ID        string
-	Title     string `valid:"stringlength(5|80),required"`
-	Phone     string `valid:"phone,required"`
-	MinSalary int32  `valid:"range(0|1000000000),required"`
-	MaxSalary int32  `valid:"range(0|1000000000),required"`
-	//ImageURL  string `valid:"stringlength(0|255),media_link"`
+	Title     string   `valid:"stringlength(5|80),required"`
+	Phone     string   `valid:"phone,required"`
+	MinSalary int32    `valid:"range(0|1000000000),required"`
+	MaxSalary int32    `valid:"range(0|1000000000),required"`
 	ImageURLs []string `valid:"stringlength(0|255),media_link"`
 	CompanyID string   `valid:"required"`
 }
@@ -264,7 +263,6 @@ func (c *Controller) PutVacancy(
 	vacancyID *string,
 	vacancy *VacancyDetails,
 	categories []string,
-	imageURLs []string,
 ) (VacancyID, error) {
 	var vid VacancyID
 
@@ -273,7 +271,7 @@ func (c *Controller) PutVacancy(
 	}
 
 	if err := pkgtx.RunInTx(ctx, c.s, func(ctx context.Context, tx pkgtx.Tx) error {
-		//Look for vacancy id
+		// Look for vacancy id
 		if vacancyID != nil {
 			switch _, err := c.s.TxGetVacancyDetails(ctx, tx, *vacancyID); errors.Cause(err) {
 			case nil:
@@ -289,27 +287,29 @@ func (c *Controller) PutVacancy(
 
 		v := toStorageVacancyDetails(string(vid), vacancy)
 
-		//Update vacancy
+		// Update vacancy
 		if err := c.s.TxPutVacancy(ctx, tx, v); err != nil {
 			return errors.WithStack(err)
 		}
 
-		//Update vacancy categories
+		// Update vacancy categories
 		if err := c.s.TxDeleteVacancyCategories(ctx, tx, string(vid)); err != nil {
 			return errors.WithStack(err)
 		}
 
 		if len(categories) > 0 {
-			return errors.WithStack(c.s.TxPutVacancyCategories(ctx, tx, string(vid), categories))
+			if err := c.s.TxPutVacancyCategories(ctx, tx, string(vid), categories); err != nil {
+				return errors.WithStack(err)
+			}
 		}
 
-		//Update vacancy images
+		// Update vacancy images
 		if err := c.s.TxDeleteVacancyImages(ctx, tx, string(vid)); err != nil {
 			return errors.WithStack(err)
 		}
 
-		if len(imageURLs) > 0 {
-			return errors.WithStack(c.s.TxPutVacancyImages(ctx, tx, string(vid), imageURLs))
+		if len(vacancy.ImageURLs) > 0 {
+			return errors.WithStack(c.s.TxPutVacancyImages(ctx, tx, string(vid), vacancy.ImageURLs))
 		}
 
 		return nil
@@ -322,17 +322,19 @@ func (c *Controller) PutVacancy(
 
 // Equal tells whether a and b contain the same elements.
 // A nil argument is equivalent to an empty slice.
-func Equal(a, b []string) bool {
-	if len(a) != len(b) {
-		return false
-	}
-	for i, v := range a {
-		if v != b[i] {
-			return false
-		}
-	}
-	return true
-}
+// func Equal(a, b []string) bool {
+//	if len(a) != len(b) {
+//		return false
+//	}
+//
+//	for i, v := range a {
+//		if v != b[i] {
+//			return false
+//		}
+//	}
+//
+//	return true
+// }
 
 func (c *Controller) GetVacancyDetails(ctx context.Context, vacancyID string) (*VacancyDetails, error) {
 	// Get vacancy details from DB
@@ -411,7 +413,6 @@ func (c *Controller) GetVacanciesList(
 	}
 
 	vacancyIDs := extractVacancyIDs(vcs)
-
 	vacanciesImagesMap, err := c.s.TxGetVacanciesImages(ctx, c.s.NoTx(), vacancyIDs)
 
 	switch errors.Cause(err) {
@@ -444,6 +445,7 @@ func extractVacancyIDs(vcs []*storage.Vacancy) []string {
 	for idx := range vcs {
 		vacancyIDs[idx] = vcs[idx].ID
 	}
+
 	return vacancyIDs
 }
 

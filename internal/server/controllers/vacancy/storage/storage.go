@@ -42,8 +42,6 @@ type Vacancy struct {
 	Phone     string
 	MinSalary int32
 	MaxSalary int32
-	//ImageURL  string // nolint: todo TODO: implement get image URL from multiple relations taple
-	//ImageURL  []string
 	CompanyID string
 	CreatedAt time.Time
 	UpdatedAt time.Time
@@ -149,7 +147,7 @@ func (s *Storage) TxGetVacancyDetails(ctx context.Context, tx pkgtx.Tx, vacancyI
 				WHERE id = $1`,
 		vacancyID,
 	).Scan(&vd.ID, &vd.Title, &vd.Description, &vd.Phone, &vd.MinSalary, &vd.MaxSalary, &vd.CompanyID,
-		&vd.WorkMonthsExperience, &vd.WorkSchedule, &vd.LocationLongitude, &vd.LocationLatitude, //&vd.ImageURL,
+		&vd.WorkMonthsExperience, &vd.WorkSchedule, &vd.LocationLongitude, &vd.LocationLatitude,
 		&vd.CreatedAt, &vd.UpdatedAt)
 
 	switch err {
@@ -182,10 +180,10 @@ func (s *Storage) TxPutVacancy(ctx context.Context, tx pkgtx.Tx, vacancy *Vacanc
 					updated_at = $13
 				WHERE id = $1
 				RETURNING id, title, description, phone, min_salary, max_salary, company_id, work_months_experience, 
-					work_schedule, location, image_url, created_at, updated_at
+					work_schedule, location, created_at, updated_at
 			)
 			INSERT INTO vacancy (id, title, description, phone, min_salary, max_salary, company_id, work_months_experience, 
-					work_schedule, location, image_url, created_at, updated_at)
+					work_schedule, location, created_at, updated_at)
 			SELECT $1, $2, $3, $4, $5, $6, $7, $8, $9, ST_SetSRID(ST_MakePoint($10, $11), 4326), $12, $13
 			WHERE NOT EXISTS (SELECT * FROM upsert)`,
 		vacancy.ID,
@@ -232,7 +230,7 @@ func (s *Storage) TxGetVacanciesList(
 			FROM vacancies_categories
 			WHERE category_id = ANY($1::uuid[])
 		)
-		SELECT v.id, v.title, v.phone, v.min_salary, v.max_salary, v.company_id, v.image_url, v.position, v.created_at
+		SELECT v.id, v.title, v.phone, v.min_salary, v.max_salary, v.company_id, v.position, v.created_at
 		FROM vacancy AS v
 		WHERE ($1 = '{}' OR v.id IN (SELECT vacancy_id FROM filtered_categories))
 		AND ($3 < 0 OR (v.created_at, v.position) < ($4, $3))
@@ -259,7 +257,7 @@ func (s *Storage) TxGetVacanciesList(
 	for rows.Next() {
 		var v Vacancy
 
-		err := rows.Scan(&v.ID, &v.Title, &v.Phone, &v.MinSalary, &v.MaxSalary, &v.CompanyID, //&v.ImageURL,
+		err := rows.Scan(&v.ID, &v.Title, &v.Phone, &v.MinSalary, &v.MaxSalary, &v.CompanyID,
 			&lastPosition, &lastCreatedAt)
 		if err != nil {
 			_ = rows.Close()
@@ -367,36 +365,18 @@ func (s *Storage) TxDeleteVacancyCategories(ctx context.Context, tx pkgtx.Tx, va
 Vacancy images part start
 */
 
-func (s *Storage) TxGetVacanciesImages(ctx context.Context, tx pkgtx.Tx, vacancyIDs []string) (map[string][]string, error) {
-	//c := postgresql.FromTx(tx)
-	//
-	//rows, err := c.QueryContext(
-	//	ctx,
-	//	`SELECT image_url
-	//	FROM vacancies_images
-	//	WHERE vacancy_id = $1
-	//	ORDER BY position ASC`,
-	//	vacancyID,
-	//)
-	//if err != nil {
-	//	return nil, errors.WithStack(err)
-	//}
-	//
-	//vis := make([]string, 0)
-	//
-	//for rows.Next() {
-	//	var vi string
-	//	if err := rows.Scan(vi); err != nil {
-	//		_ = rows.Close()
-	//		return nil, errors.WithStack(err)
-	//	}
-	//
-	//	vis = append(vis, vi)
-	//}
-	//
-	//return vis, nil
-
+func (s *Storage) TxGetVacanciesImages(
+	ctx context.Context,
+	tx pkgtx.Tx,
+	vacancyIDs []string,
+) (map[string][]string, error) {
 	c := postgresql.FromTx(tx)
+
+	vacancyImageMap := make(map[string][]string, len(vacancyIDs))
+
+	if len(vacancyIDs) == 0 {
+		return vacancyImageMap, nil
+	}
 
 	placeholders := make([]string, len(vacancyIDs))
 	arguments := make([]interface{}, len(vacancyIDs))
@@ -412,8 +392,7 @@ func (s *Storage) TxGetVacanciesImages(ctx context.Context, tx pkgtx.Tx, vacancy
 		`SELECT vacancy_id, image_url
 			FROM vacancies_images
 			WHERE vacancy_id IN (`+strings.Join(placeholders, ",")+`)
-			GROUP BY vacancy_id 
-			ORDER BY position ASC`,
+			ORDER BY vacancy_id ASC, position ASC`,
 		arguments...,
 	)
 
@@ -421,21 +400,19 @@ func (s *Storage) TxGetVacanciesImages(ctx context.Context, tx pkgtx.Tx, vacancy
 		return nil, errors.WithStack(err)
 	}
 
-	vacancyImageMap := make(map[string][]string, len(vacancyIDs))
-
 	for rows.Next() {
-		var vacancyID string
-		var imageUrl string
+		var (
+			vacancyID string
+			imageURL  string
+		)
 
-		err := rows.Scan(vacancyID, imageUrl)
+		err := rows.Scan(&vacancyID, &imageURL)
 		if err != nil {
 			_ = rows.Close()
 			return nil, errors.WithStack(err)
 		}
 
-		images := vacancyImageMap[vacancyID]
-		images = append(images, imageUrl)
-
+		vacancyImageMap[vacancyID] = append(vacancyImageMap[vacancyID], imageURL)
 	}
 
 	return vacancyImageMap, nil

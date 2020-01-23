@@ -118,7 +118,6 @@ var migrations = []*migrate.Migration{
 				title		  			VARCHAR(255)			NOT NULL,
 				description	  			VARCHAR(255)			NOT NULL,
 				phone					VARCHAR(30)     		NOT NULL,
-				image_url				VARCHAR(255)     		NOT NULL,
 				min_salary	  			INTEGER					NULL,
 				max_salary	  			INTEGER					NULL,
 				location	  			GEOGRAPHY(POINT,4326)	NULL,

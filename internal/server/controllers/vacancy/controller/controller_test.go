@@ -182,7 +182,10 @@ func TestController_PutVacancy(t *testing.T) {
 				Phone:     "+380503000002",
 				MinSalary: 10000,
 				MaxSalary: 20000,
-				ImageURLs:  "https://s3.bucket.org/new_vacancy.jpg",
+				ImageURLs: []string{
+					"https://s3.bucket.org/new_vacancy.jpg",
+					"https://s3.bucket.org/new_vacancy.jpg",
+				},
 				CompanyID: claims.AccountID,
 			},
 			Description:          "Description",
@@ -203,7 +206,7 @@ func TestController_PutVacancy(t *testing.T) {
 		require.Equal(t, vacancy.Phone, vd.Phone)
 		require.Equal(t, vacancy.MinSalary, vd.MinSalary)
 		require.Equal(t, vacancy.MaxSalary, vd.MaxSalary)
-		require.Equal(t, vacancy.ImageURL, vd.ImageURL)
+		require.Equal(t, vacancy.ImageURLs, vd.ImageURLs)
 		require.Equal(t, vacancy.CompanyID, vd.CompanyID)
 		require.Equal(t, vacancy.Description, vd.Description)
 		require.Equal(t, vacancy.WorkMonthsExperience, vd.WorkMonthsExperience)
@@ -311,6 +314,7 @@ func TestController_GetVacanciesList(t *testing.T) {
 		}
 
 		vacanciesCount := 3
+		imagePlaceholder := "https://s3.bucket.org/vacancy_%d.jpg"
 		vacanciesIDs := make([]string, vacanciesCount)
 		vacanciesMap := make(map[string]*controller.VacancyDetails)
 		for i := 0; i < vacanciesCount; i++ {
@@ -320,7 +324,10 @@ func TestController_GetVacanciesList(t *testing.T) {
 					Phone:     fmt.Sprintf("+38050100000%d", i+1),
 					MinSalary: int32(i+1) * 1000,
 					MaxSalary: int32(i+1) * 2000,
-					ImageURL:  fmt.Sprintf("https://s3.bucket.org/vacancy_%d.jpg", i+1),
+					ImageURLs: []string{
+						fmt.Sprintf(imagePlaceholder, i+1),
+						fmt.Sprintf(imagePlaceholder, i+2),
+					},
 					CompanyID: claims.AccountID,
 				},
 				Description:          fmt.Sprintf("Description %d", i+1),
@@ -346,6 +353,9 @@ func TestController_GetVacanciesList(t *testing.T) {
 			require.Equal(t, vacanciesIDs[2], vacancies[0].ID)
 			require.Equal(t, vacanciesIDs[1], vacancies[1].ID)
 			require.Equal(t, vacanciesIDs[0], vacancies[2].ID)
+			// Check images
+			require.Equal(t, fmt.Sprintf(imagePlaceholder, 1), vacancies[2].ImageURLs[0])
+			require.Equal(t, fmt.Sprintf(imagePlaceholder, 2), vacancies[2].ImageURLs[1])
 		})
 
 		t.Run("get categories by vacancy ids", func(t *testing.T) {
@@ -387,21 +397,33 @@ func TestController_GetVacanciesList(t *testing.T) {
 			require.NoError(t, err)
 			require.Equal(t, 1, len(vacancies))
 			require.Equal(t, vacanciesIDs[0], vacancies[0].ID)
+			require.Equal(t, fmt.Sprintf(imagePlaceholder, 1), vacancies[0].ImageURLs[0])
+			require.Equal(t, fmt.Sprintf(imagePlaceholder, 2), vacancies[0].ImageURLs[1])
 
 			vacancies, _, err = c.GetVacanciesList(context.TODO(), []string{categoriesIDs[1]}, nil, 100)
 			require.NoError(t, err)
 			require.Equal(t, 2, len(vacancies))
 			require.Equal(t, vacanciesIDs[1], vacancies[0].ID)
+			require.Equal(t, fmt.Sprintf(imagePlaceholder, 2), vacancies[0].ImageURLs[0])
+			require.Equal(t, fmt.Sprintf(imagePlaceholder, 3), vacancies[0].ImageURLs[1])
+			require.Equal(t, fmt.Sprintf(imagePlaceholder, 1), vacancies[1].ImageURLs[0])
+			require.Equal(t, fmt.Sprintf(imagePlaceholder, 2), vacancies[1].ImageURLs[1])
 
 			vacancies, _, err = c.GetVacanciesList(context.TODO(), []string{categoriesIDs[2]}, nil, 100)
 			require.NoError(t, err)
 			require.Equal(t, 2, len(vacancies))
 			require.Equal(t, vacanciesIDs[2], vacancies[0].ID)
+			require.Equal(t, fmt.Sprintf(imagePlaceholder, 3), vacancies[0].ImageURLs[0])
+			require.Equal(t, fmt.Sprintf(imagePlaceholder, 4), vacancies[0].ImageURLs[1])
+			require.Equal(t, fmt.Sprintf(imagePlaceholder, 2), vacancies[1].ImageURLs[0])
+			require.Equal(t, fmt.Sprintf(imagePlaceholder, 3), vacancies[1].ImageURLs[1])
 
 			vacancies, _, err = c.GetVacanciesList(context.TODO(), []string{categoriesIDs[3]}, nil, 100)
 			require.NoError(t, err)
 			require.Equal(t, 1, len(vacancies))
 			require.Equal(t, vacanciesIDs[2], vacancies[0].ID)
+			require.Equal(t, fmt.Sprintf(imagePlaceholder, 3), vacancies[0].ImageURLs[0])
+			require.Equal(t, fmt.Sprintf(imagePlaceholder, 4), vacancies[0].ImageURLs[1])
 		})
 
 		t.Run("get 1 vacancy without filter and test pagination", func(t *testing.T) {
@@ -410,18 +432,24 @@ func TestController_GetVacanciesList(t *testing.T) {
 			require.NotNil(t, cursor)
 			require.Equal(t, 1, len(vacancies))
 			require.Equal(t, vacanciesIDs[2], vacancies[0].ID)
+			require.Equal(t, fmt.Sprintf(imagePlaceholder, 3), vacancies[0].ImageURLs[0])
+			require.Equal(t, fmt.Sprintf(imagePlaceholder, 4), vacancies[0].ImageURLs[1])
 
 			vacancies, cursor, err = c.GetVacanciesList(context.TODO(), []string{}, cursor, 1)
 			require.NoError(t, err)
 			require.NotNil(t, cursor)
 			require.Equal(t, 1, len(vacancies))
 			require.Equal(t, vacanciesIDs[1], vacancies[0].ID)
+			require.Equal(t, fmt.Sprintf(imagePlaceholder, 2), vacancies[0].ImageURLs[0])
+			require.Equal(t, fmt.Sprintf(imagePlaceholder, 3), vacancies[0].ImageURLs[1])
 
 			vacancies, cursor, err = c.GetVacanciesList(context.TODO(), []string{}, cursor, 1)
 			require.NoError(t, err)
 			require.NotNil(t, cursor)
 			require.Equal(t, 1, len(vacancies))
 			require.Equal(t, vacanciesIDs[0], vacancies[0].ID)
+			require.Equal(t, fmt.Sprintf(imagePlaceholder, 1), vacancies[0].ImageURLs[0])
+			require.Equal(t, fmt.Sprintf(imagePlaceholder, 2), vacancies[0].ImageURLs[1])
 
 			vacancies, cursor, err = c.GetVacanciesList(context.TODO(), []string{}, cursor, 1)
 			require.NoError(t, err)
