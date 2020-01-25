@@ -304,12 +304,9 @@ func (c *Controller) PutVacancy(
 		}
 
 		// Update vacancy images
-		if err := c.s.TxDeleteVacancyImages(ctx, tx, string(vid)); err != nil {
+		err := updateVacancyImages(ctx, c, tx, vid, vacancy)
+		if err != nil {
 			return errors.WithStack(err)
-		}
-
-		if len(vacancy.ImageURLs) > 0 {
-			return errors.WithStack(c.s.TxPutVacancyImages(ctx, tx, string(vid), vacancy.ImageURLs))
 		}
 
 		return nil
@@ -320,21 +317,32 @@ func (c *Controller) PutVacancy(
 	return vid, nil
 }
 
-// Equal tells whether a and b contain the same elements.
-// A nil argument is equivalent to an empty slice.
-// func Equal(a, b []string) bool {
-//	if len(a) != len(b) {
-//		return false
-//	}
-//
-//	for i, v := range a {
-//		if v != b[i] {
-//			return false
-//		}
-//	}
-//
-//	return true
-// }
+func updateVacancyImages(
+	ctx context.Context,
+	c *Controller,
+	tx pkgtx.Tx,
+	vid VacancyID,
+	vacancy *VacancyDetails,
+) error {
+	gvi, err := c.s.TxGetVacanciesImages(ctx, tx, []string{string(vid)})
+	if err != nil {
+		return errors.WithStack(err)
+	}
+
+	if equal(gvi[string(vid)], vacancy.ImageURLs) {
+		return nil
+	}
+
+	if err := c.s.TxDeleteVacancyImages(ctx, tx, string(vid)); err != nil {
+		return errors.WithStack(err)
+	}
+
+	if len(vacancy.ImageURLs) > 0 {
+		return errors.WithStack(c.s.TxPutVacancyImages(ctx, tx, string(vid), vacancy.ImageURLs))
+	}
+
+	return nil
+}
 
 func (c *Controller) GetVacancyDetails(ctx context.Context, vacancyID string) (*VacancyDetails, error) {
 	// Get vacancy details from DB
