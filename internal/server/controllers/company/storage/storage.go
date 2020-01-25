@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"fmt"
 	"github.com/cockroachdb/errors"
+	"github.com/lib/pq"
 	"personaapp/pkg/postgresql"
 	pkgtx "personaapp/pkg/tx"
 	"strings"
@@ -62,21 +63,13 @@ func (s *Storage) TxGetCompanyByID(ctx context.Context, tx pkgtx.Tx, authID stri
 func (s *Storage) TxGetCompaniesByID(ctx context.Context, tx pkgtx.Tx, companyIDs []string) ([]*CompanyData, error) {
 	c := postgresql.FromTx(tx)
 
-	placeholders := make([]string, len(companyIDs))
-	arguments := make([]interface{}, len(companyIDs))
-
-	for idx := range companyIDs {
-		placeholders[idx] = fmt.Sprintf("$%d", idx+1)
-		arguments[idx] = companyIDs[idx]
-	}
-
 	rows, err := c.QueryContext(
 		ctx,
 		// nolint: gosec
 		`SELECT auth_id, title, description, logo_url, created_at, updated_at
 			FROM company
-			WHERE auth_id IN (`+strings.Join(placeholders, ",")+`)`,
-		arguments...,
+			WHERE auth_id = ANY($1::uuid[])`,
+		pq.Array(companyIDs),
 	)
 
 	if err != nil {

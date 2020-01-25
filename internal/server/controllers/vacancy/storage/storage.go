@@ -378,22 +378,14 @@ func (s *Storage) TxGetVacanciesImages(
 		return vacancyImageMap, nil
 	}
 
-	placeholders := make([]string, len(vacancyIDs))
-	arguments := make([]interface{}, len(vacancyIDs))
-
-	for idx := range vacancyIDs {
-		placeholders[idx] = fmt.Sprintf("$%d", idx+1)
-		arguments[idx] = vacancyIDs[idx]
-	}
-
 	rows, err := c.QueryContext(
 		ctx,
 		// nolint: gosec
 		`SELECT vacancy_id, image_url
 			FROM vacancies_images
-			WHERE vacancy_id IN (`+strings.Join(placeholders, ",")+`)
+			WHERE vacancy_id = ANY($1::uuid[])
 			ORDER BY vacancy_id ASC, position ASC`,
-		arguments...,
+		pq.Array(vacancyIDs),
 	)
 
 	if err != nil {

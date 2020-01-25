@@ -162,6 +162,7 @@ var migrations = []*migrate.Migration{
 				position	  		INTEGER				NOT NULL,
 				image_url			VARCHAR(255)     	NOT NULL
 			);`,
+			`CREATE UNIQUE INDEX vacancies_images_unique_idx ON vacancies_images (vacancy_id, position);`,
 			`CREATE INDEX vacancies_images_vacancy_id_idx ON vacancies_images (vacancy_id);`,
 		},
 		Down: []string{
