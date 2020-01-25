@@ -118,7 +118,6 @@ var migrations = []*migrate.Migration{
 				title		  			VARCHAR(255)			NOT NULL,
 				description	  			VARCHAR(255)			NOT NULL,
 				phone					VARCHAR(30)     		NOT NULL,
-				image_url				VARCHAR(255)     		NOT NULL,
 				min_salary	  			INTEGER					NULL,
 				max_salary	  			INTEGER					NULL,
 				location	  			GEOGRAPHY(POINT,4326)	NULL,
@@ -153,6 +152,22 @@ var migrations = []*migrate.Migration{
 			`DROP INDEX IF EXISTS vacancies_categories_vacancy_id_idx;`,
 			`DROP INDEX IF EXISTS vacancies_categories_category_id_idx;`,
 			`DROP TABLE IF EXISTS vacancies_categories;`,
+		},
+	},
+	{
+		Id: "09 - Create vacancies images table",
+		Up: []string{
+			`CREATE TABLE IF NOT EXISTS vacancies_images (
+				vacancy_id         	uuid            	REFERENCES vacancy (id) ON DELETE CASCADE,
+				position	  		INTEGER				NOT NULL,
+				image_url			VARCHAR(255)     	NOT NULL
+			);`,
+			`CREATE UNIQUE INDEX vacancies_images_unique_idx ON vacancies_images (vacancy_id, position);`,
+			`CREATE INDEX vacancies_images_vacancy_id_idx ON vacancies_images (vacancy_id);`,
+		},
+		Down: []string{
+			`DROP INDEX IF EXISTS vacancies_images_vacancy_id_idx;`,
+			`DROP TABLE IF EXISTS vacancies_images;`,
 		},
 	},
 }

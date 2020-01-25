@@ -112,7 +112,7 @@ func (s *Server) GetVacancyDetails(
 
 	return &vacancyapi.GetVacancyDetailsResponse{
 		Vacancy: toServerVacancy(vd, vc),
-		Image:   &vacancyapi.GetVacancyDetailsResponse_VacancyImage{ImageUrl: vd.ImageURL},
+		Image:   &vacancyapi.GetVacancyDetailsResponse_VacancyImage{ImageUrls: vd.ImageURLs},
 		Location: &vacancyapi.GetVacancyDetailsResponse_VacancyLocation{
 			Latitude:  vd.LocationLatitude,
 			Longitude: vd.LocationLongitude,
@@ -171,7 +171,7 @@ func (s *Server) GetVacanciesList(
 				Currency:   vacancyapi.Currency_CURRENCY_UAH,
 				Categories: []string{},
 			},
-			ImageUrl: "",
+			ImageUrls: v.ImageURLs,
 		}
 		companyIdsMap[v.CompanyID] = true
 	}

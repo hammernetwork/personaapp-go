@@ -20,6 +20,7 @@ func init() {
 var (
 	ErrVacancyNotFound                    = errors.New("vacancy not found")
 	ErrVacancyCategoryNotFound            = errors.New("vacancy category not found")
+	ErrVacancyImagesNotFound              = errors.New("vacancy image not found")
 	ErrInvalidCursor                      = errors.New("invalid cursor")
 	ErrInvalidVacancyCategory             = errors.New("invalid vacancy category struct")
 	ErrInvalidVacancyCategoryTitle        = errors.New("invalid vacancy category title")
@@ -50,6 +51,10 @@ type Storage interface {
 	) ([]*storage.VacancyCategoryShort, error)
 	TxPutVacancyCategories(ctx context.Context, tx pkgtx.Tx, vacancyID string, categoriesIDs []string) error
 	TxDeleteVacancyCategories(ctx context.Context, tx pkgtx.Tx, vacancyID string) error
+
+	TxGetVacanciesImages(ctx context.Context, tx pkgtx.Tx, vacancyIDs []string) (map[string][]string, error)
+	TxPutVacancyImages(ctx context.Context, tx pkgtx.Tx, vacancyID string, imageUrls []string) error
+	TxDeleteVacancyImages(ctx context.Context, tx pkgtx.Tx, vacancyID string) error
 
 	TxGetVacancyDetails(ctx context.Context, tx pkgtx.Tx, vacancyID string) (*storage.VacancyDetails, error)
 	TxPutVacancy(ctx context.Context, tx pkgtx.Tx, vacancy *storage.VacancyDetails) error
@@ -86,12 +91,12 @@ type VacancyID string
 // Vacancy models for put
 type Vacancy struct {
 	ID        string
-	Title     string `valid:"stringlength(5|80),required"`
-	Phone     string `valid:"phone,required"`
-	MinSalary int32  `valid:"range(0|1000000000),required"`
-	MaxSalary int32  `valid:"range(0|1000000000),required"`
-	ImageURL  string `valid:"stringlength(0|255),media_link"`
-	CompanyID string `valid:"required"`
+	Title     string   `valid:"stringlength(5|80),required"`
+	Phone     string   `valid:"phone,required"`
+	MinSalary int32    `valid:"range(0|1000000000),required"`
+	MaxSalary int32    `valid:"range(0|1000000000),required"`
+	ImageURLs []string `valid:"stringlength(0|255),media_link"`
+	CompanyID string   `valid:"required"`
 }
 
 type VacancyDetails struct {
@@ -266,6 +271,7 @@ func (c *Controller) PutVacancy(
 	}
 
 	if err := pkgtx.RunInTx(ctx, c.s, func(ctx context.Context, tx pkgtx.Tx) error {
+		// Look for vacancy id
 		if vacancyID != nil {
 			switch _, err := c.s.TxGetVacancyDetails(ctx, tx, *vacancyID); errors.Cause(err) {
 			case nil:
@@ -281,16 +287,26 @@ func (c *Controller) PutVacancy(
 
 		v := toStorageVacancyDetails(string(vid), vacancy)
 
+		// Update vacancy
 		if err := c.s.TxPutVacancy(ctx, tx, v); err != nil {
 			return errors.WithStack(err)
 		}
 
+		// Update vacancy categories
 		if err := c.s.TxDeleteVacancyCategories(ctx, tx, string(vid)); err != nil {
 			return errors.WithStack(err)
 		}
 
 		if len(categories) > 0 {
-			return errors.WithStack(c.s.TxPutVacancyCategories(ctx, tx, string(vid), categories))
+			if err := c.s.TxPutVacancyCategories(ctx, tx, string(vid), categories); err != nil {
+				return errors.WithStack(err)
+			}
+		}
+
+		// Update vacancy images
+		err := updateVacancyImages(ctx, c, tx, vid, vacancy)
+		if err != nil {
+			return errors.WithStack(err)
 		}
 
 		return nil
@@ -301,14 +317,52 @@ func (c *Controller) PutVacancy(
 	return vid, nil
 }
 
+func updateVacancyImages(
+	ctx context.Context,
+	c *Controller,
+	tx pkgtx.Tx,
+	vid VacancyID,
+	vacancy *VacancyDetails,
+) error {
+	gvi, err := c.s.TxGetVacanciesImages(ctx, tx, []string{string(vid)})
+	if err != nil {
+		return errors.WithStack(err)
+	}
+
+	if equal(gvi[string(vid)], vacancy.ImageURLs) {
+		return nil
+	}
+
+	if err := c.s.TxDeleteVacancyImages(ctx, tx, string(vid)); err != nil {
+		return errors.WithStack(err)
+	}
+
+	if len(vacancy.ImageURLs) > 0 {
+		return errors.WithStack(c.s.TxPutVacancyImages(ctx, tx, string(vid), vacancy.ImageURLs))
+	}
+
+	return nil
+}
+
 func (c *Controller) GetVacancyDetails(ctx context.Context, vacancyID string) (*VacancyDetails, error) {
-	// Get vacancy details
+	// Get vacancy details from DB
 	vd, err := c.s.TxGetVacancyDetails(ctx, c.s.NoTx(), vacancyID)
 
 	switch errors.Cause(err) {
 	case nil:
 	case storage.ErrNotFound:
 		return nil, errors.WithStack(ErrVacancyNotFound)
+	default:
+		return nil, errors.WithStack(err)
+	}
+
+	// Get vacancy images from DB
+	vi, err := c.s.TxGetVacanciesImages(ctx, c.s.NoTx(), []string{vacancyID})
+
+	switch errors.Cause(err) {
+	case nil:
+	case storage.ErrNotFound:
+		return nil, errors.WithStack(ErrVacancyImagesNotFound)
 	default:
 		return nil, errors.WithStack(err)
 	}
@@ -320,7 +374,7 @@ func (c *Controller) GetVacancyDetails(ctx context.Context, vacancyID string) (*
 			Phone:     vd.Phone,
 			MinSalary: vd.MinSalary,
 			MaxSalary: vd.MaxSalary,
-			ImageURL:  vd.ImageURL,
+			ImageURLs: vi[vacancyID],
 			CompanyID: vd.CompanyID,
 		},
 		Description:          vd.Description,
@@ -366,6 +420,17 @@ func (c *Controller) GetVacanciesList(
 		return nil, nil, errors.WithStack(err)
 	}
 
+	vacancyIDs := extractVacancyIDs(vcs)
+	vacanciesImagesMap, err := c.s.TxGetVacanciesImages(ctx, c.s.NoTx(), vacancyIDs)
+
+	switch errors.Cause(err) {
+	case nil:
+	case storage.ErrNotFound:
+		return nil, nil, errors.WithStack(ErrVacancyImagesNotFound)
+	default:
+		return nil, nil, errors.WithStack(err)
+	}
+
 	controllerVacancies := make([]*Vacancy, len(vcs))
 
 	for idx, v := range vcs {
@@ -375,12 +440,21 @@ func (c *Controller) GetVacanciesList(
 			Phone:     v.Phone,
 			MinSalary: v.MinSalary,
 			MaxSalary: v.MaxSalary,
-			ImageURL:  v.ImageURL,
+			ImageURLs: vacanciesImagesMap[v.ID],
 			CompanyID: v.CompanyID,
 		}
 	}
 
 	return controllerVacancies, controllerCursor, nil
+}
+
+func extractVacancyIDs(vcs []*storage.Vacancy) []string {
+	vacancyIDs := make([]string, len(vcs))
+	for idx := range vcs {
+		vacancyIDs[idx] = vcs[idx].ID
+	}
+
+	return vacancyIDs
 }
 
 func (c *Controller) GetVacanciesCategories(
@@ -420,7 +494,6 @@ func toStorageVacancyDetails(vid string, vd *VacancyDetails) *storage.VacancyDet
 			Phone:     vd.Phone,
 			MinSalary: vd.MinSalary,
 			MaxSalary: vd.MaxSalary,
-			ImageURL:  vd.ImageURL,
 			CompanyID: vd.CompanyID,
 			CreatedAt: now,
 			UpdatedAt: now,
