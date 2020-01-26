@@ -100,12 +100,12 @@ func (s *Server) GetVacancyDetails(
 		return nil, status.Error(codes.NotFound, err.Error())
 	}
 
-	categoriesMap := map[string]*vacancyapi.VacancyCategory{}
+	categoriesMap := map[string]*vacancyapi.VacancyCategoryShort{}
 	vc := make([]string, len(categories))
 
 	for idx, c := range categories {
 		vc[idx] = c.Title
-		categoriesMap[c.ID] = &vacancyapi.VacancyCategory{
+		categoriesMap[c.ID] = &vacancyapi.VacancyCategoryShort{
 			Title: c.Title,
 		}
 	}
@@ -162,14 +162,14 @@ func (s *Server) GetVacanciesList(
 		vacanciesIDs[idx] = v.ID
 		vacancies[v.ID] = &vacancyapi.GetVacanciesListResponse_VacancyDetails{
 			Vacancy: &vacancyapi.Vacancy{
-				Id:         v.ID,
-				Title:      v.Title,
-				Phone:      v.Phone,
-				MinSalary:  v.MinSalary,
-				MaxSalary:  v.MaxSalary,
-				CompanyId:  v.CompanyID,
-				Currency:   vacancyapi.Currency_CURRENCY_UAH,
-				Categories: []string{},
+				Id:            v.ID,
+				Title:         v.Title,
+				Phone:         v.Phone,
+				MinSalary:     v.MinSalary,
+				MaxSalary:     v.MaxSalary,
+				CompanyId:     v.CompanyID,
+				Currency:      vacancyapi.Currency_CURRENCY_UAH,
+				CategoriesIds: []string{},
 			},
 			ImageUrls: v.ImageURLs,
 		}
@@ -188,13 +188,13 @@ func (s *Server) GetVacanciesList(
 		return nil, status.Error(codes.NotFound, err.Error())
 	}
 
-	categoriesMap := map[string]*vacancyapi.VacancyCategory{}
+	categoriesMap := map[string]*vacancyapi.VacancyCategoryShort{}
 
 	for _, c := range categories {
-		vc := vacancies[c.VacancyID].Vacancy.Categories
+		vc := vacancies[c.VacancyID].Vacancy.CategoriesIds
 		vca := append(vc, c.Title)
-		vacancies[c.VacancyID].Vacancy.Categories = vca
-		categoriesMap[c.ID] = &vacancyapi.VacancyCategory{
+		vacancies[c.VacancyID].Vacancy.CategoriesIds = vca
+		categoriesMap[c.ID] = &vacancyapi.VacancyCategoryShort{
 			Title: c.Title,
 		}
 	}
@@ -231,14 +231,14 @@ func (s *Server) GetVacanciesList(
 // Mappings
 func toServerVacancy(vd *vacancyController.VacancyDetails, vc []string) *vacancyapi.Vacancy {
 	return &vacancyapi.Vacancy{
-		Id:         vd.ID,
-		Title:      vd.Title,
-		Phone:      vd.Phone,
-		MinSalary:  vd.MinSalary,
-		MaxSalary:  vd.MaxSalary,
-		CompanyId:  vd.CompanyID,
-		Currency:   vacancyapi.Currency_CURRENCY_UAH,
-		Categories: vc,
+		Id:            vd.ID,
+		Title:         vd.Title,
+		Phone:         vd.Phone,
+		MinSalary:     vd.MinSalary,
+		MaxSalary:     vd.MaxSalary,
+		CompanyId:     vd.CompanyID,
+		Currency:      vacancyapi.Currency_CURRENCY_UAH,
+		CategoriesIds: vc,
 	}
 }
 
