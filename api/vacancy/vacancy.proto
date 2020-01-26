@@ -44,7 +44,7 @@ message GetVacanciesListResponse {
     repeated string vacancies_ids = 1;
     map<string, VacancyDetails> vacancies = 2;
     map<string, Company> companies = 3;
-    map<string, VacancyCategory> categories = 4;
+    map<string, VacancyCategoryShort> categories = 4;
     google.protobuf.StringValue cursor = 5;
 }
 
@@ -83,7 +83,7 @@ message GetVacancyDetailsResponse {
     VacancyLocation location = 3;
     VacancyDescription description = 4;
     VacancyCompany company = 5;
-    map<string, VacancyCategory> categories = 6;
+    map<string, VacancyCategoryShort> categories = 6;
 }
 
 // Entity
@@ -109,9 +109,9 @@ message Vacancy {
     int32 max_salary = 5;
     string company_id = 6;
     Currency currency = 7;
-    repeated string categories = 8;
+    repeated string categories_ids = 8;
 }
 
-message VacancyCategory {
+message VacancyCategoryShort {
     string title = 1;
 }
