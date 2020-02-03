@@ -1,0 +1,27 @@
+image: golang:latest
+
+variables:
+  REPO_NAME: gitlab.com/persona_app_online/personaapp-go
+
+before_script:
+  - mkdir -p $GOPATH/src/$(dirname $REPO_NAME)
+  - ln -svf $CI_PROJECT_DIR $GOPATH/src/$REPO_NAME
+  - cd $GOPATH/src/$REPO_NAME
+
+stages:
+  - test
+  - build
+  - deploy
+
+testing:
+  stage: test
+  script:
+    - make all
+
+compile:
+  stage: build
+  script:
+    - make build
+  artifacts:
+    paths:
+      - api/personaapp
