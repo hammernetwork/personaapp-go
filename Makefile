@@ -55,7 +55,8 @@ clean:
 
 test:
 	@echo -e [$(GREEN_COLOR)test$(DEFAULT_COLOR)]
-	@$(GOTEST) -race -v -count=1 ./...
+	# TODO: -race flag seems not working in Alpine, so it disabled for now. Ping me to investigate further. Maksym Hilliaka
+	@$(GOTEST) -v -count=1 ./...
 
 lint:
 	@echo -e [$(GREEN_COLOR)lint$(DEFAULT_COLOR)]
