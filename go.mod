@@ -20,12 +20,10 @@ require (
 	github.com/go-sql-driver/mysql v1.4.1 // indirect
 	github.com/gobuffalo/packr v1.30.1 // indirect
 	github.com/gogo/protobuf v1.3.1 // indirect
-	github.com/golang/mock v1.3.1 // indirect
+	github.com/golang/mock v1.3.1
 	github.com/golang/protobuf v1.3.2
-	github.com/golangci/go-tools v0.0.0-20190124090046-35a9f45a5db0 // indirect
 	github.com/golangci/gocyclo v0.0.0-20180528144436-0a533e8fa43d // indirect
 	github.com/golangci/golangci-lint v1.21.0
-	github.com/golangci/gosec v0.0.0-20180901114220-8afd9cbb6cfb // indirect
 	github.com/golangci/revgrep v0.0.0-20180812185044-276a5c0a1039 // indirect
 	github.com/google/go-cmp v0.3.1 // indirect
 	github.com/gostaticanalysis/analysisutil v0.0.3 // indirect
@@ -50,7 +48,6 @@ require (
 	github.com/pkg/errors v0.8.1
 	github.com/prometheus/client_golang v1.2.1 // indirect
 	github.com/rubenv/sql-migrate v0.0.0-20190902133344-8926f37f0bc1
-	github.com/ryanuber/go-glob v0.0.0-20170128012129-256dc444b735 // indirect
 	github.com/satori/go.uuid v1.2.0
 	github.com/securego/gosec v0.0.0-20191008095658-28c1128b7336 // indirect
 	github.com/spf13/afero v1.2.2 // indirect
@@ -59,6 +56,7 @@ require (
 	github.com/spf13/pflag v1.0.5
 	github.com/stretchr/testify v1.4.0
 	github.com/uudashr/gocognit v1.0.0 // indirect
+	github.com/vektra/mockery v0.0.0-20181123154057-e78b021dcbb5 // indirect
 	github.com/ziutek/mymysql v1.5.4 // indirect
 	go.uber.org/multierr v1.2.0 // indirect
 	go.uber.org/zap v1.10.0
@@ -69,8 +67,6 @@ require (
 	golang.org/x/tools v0.0.0-20191018212557-ed542cd5b28a // indirect
 	google.golang.org/genproto v0.0.0-20191009194640-548a555dbc03
 	google.golang.org/grpc v1.24.0
-	gopkg.in/airbrake/gobrake.v2 v2.0.9 // indirect
-	gopkg.in/gemnasium/logrus-airbrake-hook.v2 v2.1.2 // indirect
 	gopkg.in/gorp.v1 v1.7.2 // indirect
 	gotest.tools v2.2.0+incompatible // indirect
 	mvdan.cc/unparam v0.0.0-20190917161559-b83a221c10a2 // indirect

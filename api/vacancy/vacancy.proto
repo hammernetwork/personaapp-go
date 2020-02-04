@@ -4,7 +4,6 @@ package personaappapi.vacancy;
 
 import "google/protobuf/wrappers.proto";
 
-option go_package = "personaapp/pkg/grpcapi/vacancy";
 option java_package = "online.personaapp";
 option java_outer_classname = "GrpcVacancy";
 
