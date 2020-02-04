@@ -7,6 +7,7 @@ require (
 	github.com/Microsoft/go-winio v0.4.14 // indirect
 	github.com/Nvveen/Gotty v0.0.0-20120604004816-cd527374f1e5 // indirect
 	github.com/asaskevich/govalidator v0.0.0-20190424111038-f61b66f89f4a
+	github.com/bombsimon/wsl v1.2.5 // indirect
 	github.com/cenkalti/backoff v2.2.1+incompatible // indirect
 	github.com/certifi/gocertifi v0.0.0-20190905060710-a5e0173ced67 // indirect
 	github.com/cockroachdb/errors v1.2.3
@@ -23,7 +24,7 @@ require (
 	github.com/golang/mock v1.3.1
 	github.com/golang/protobuf v1.3.2
 	github.com/golangci/gocyclo v0.0.0-20180528144436-0a533e8fa43d // indirect
-	github.com/golangci/golangci-lint v1.21.0
+	github.com/golangci/golangci-lint v1.23.3
 	github.com/golangci/revgrep v0.0.0-20180812185044-276a5c0a1039 // indirect
 	github.com/google/go-cmp v0.3.1 // indirect
 	github.com/gostaticanalysis/analysisutil v0.0.3 // indirect
@@ -31,7 +32,6 @@ require (
 	github.com/grpc-ecosystem/go-grpc-middleware v1.1.0
 	github.com/grpc-ecosystem/go-grpc-prometheus v1.2.0
 	github.com/lib/pq v1.2.0
-	github.com/magiconair/properties v1.8.1 // indirect
 	github.com/mattn/go-isatty v0.0.10 // indirect
 	github.com/mattn/go-runewidth v0.0.4 // indirect
 	github.com/mattn/go-sqlite3 v1.11.0 // indirect
@@ -49,13 +49,11 @@ require (
 	github.com/prometheus/client_golang v1.2.1 // indirect
 	github.com/rubenv/sql-migrate v0.0.0-20190902133344-8926f37f0bc1
 	github.com/satori/go.uuid v1.2.0
-	github.com/securego/gosec v0.0.0-20191008095658-28c1128b7336 // indirect
 	github.com/spf13/afero v1.2.2 // indirect
 	github.com/spf13/cobra v0.0.5
 	github.com/spf13/jwalterweatherman v1.1.0 // indirect
 	github.com/spf13/pflag v1.0.5
 	github.com/stretchr/testify v1.4.0
-	github.com/uudashr/gocognit v1.0.0 // indirect
 	github.com/ziutek/mymysql v1.5.4 // indirect
 	go.uber.org/multierr v1.2.0 // indirect
 	go.uber.org/zap v1.10.0
@@ -63,7 +61,6 @@ require (
 	golang.org/x/net v0.0.0-20191014212845-da9a3fd4c582 // indirect
 	golang.org/x/sync v0.0.0-20190911185100-cd5d95a43a6e
 	golang.org/x/sys v0.0.0-20191018095205-727590c5006e // indirect
-	golang.org/x/tools v0.0.0-20191018212557-ed542cd5b28a // indirect
 	google.golang.org/genproto v0.0.0-20191009194640-548a555dbc03
 	google.golang.org/grpc v1.24.0
 	gopkg.in/gorp.v1 v1.7.2 // indirect
