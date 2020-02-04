@@ -4,14 +4,14 @@ import (
 	"context"
 	"github.com/asaskevich/govalidator"
 	"github.com/cockroachdb/errors"
-	"personaapp/internal/server/controllers/company/storage"
+	"personaapp/internal/controllers/company/storage"
 	pkgtx "personaapp/pkg/tx"
 	"time"
 )
 
 func init() {
 	govalidator.CustomTypeTagMap.Set("media_link", func(i interface{}, o interface{}) bool {
-		// nolint TODO: Implement CDN link check
+		// nolint:godox // TODO: Implement CDN link check
 		return true
 	})
 }

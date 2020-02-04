@@ -60,21 +60,34 @@ func (s *Storage) TxGetCompanyByID(ctx context.Context, tx pkgtx.Tx, authID stri
 	return &cd, nil
 }
 
-func (s *Storage) TxGetCompaniesByID(ctx context.Context, tx pkgtx.Tx, companyIDs []string) ([]*CompanyData, error) {
+func (s *Storage) TxGetCompaniesByID(
+	ctx context.Context,
+	tx pkgtx.Tx,
+	companyIDs []string,
+) (_ []*CompanyData, rerr error) {
 	c := postgresql.FromTx(tx)
 
 	rows, err := c.QueryContext(
 		ctx,
-		// nolint: gosec
 		`SELECT auth_id, title, description, logo_url, created_at, updated_at
 			FROM company
 			WHERE auth_id = ANY($1::uuid[])`,
 		pq.Array(companyIDs),
 	)
-
 	if err != nil {
 		return nil, errors.WithStack(err)
 	}
+
+	defer func() {
+		if err := rows.Close(); err != nil {
+			if rerr != nil {
+				rerr = errors.WithSecondaryError(rerr, err)
+				return
+			}
+
+			rerr = errors.WithStack(err)
+		}
+	}()
 
 	cs := make([]*CompanyData, 0)
 
@@ -83,11 +96,14 @@ func (s *Storage) TxGetCompaniesByID(ctx context.Context, tx pkgtx.Tx, companyID
 
 		err := rows.Scan(&cd.ID, &cd.Title, &cd.Description, &cd.LogoURL, &cd.CreatedAt, &cd.UpdatedAt)
 		if err != nil {
-			_ = rows.Close()
 			return nil, errors.WithStack(err)
 		}
 
 		cs = append(cs, &cd)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, errors.WithStack(err)
 	}
 
 	return cs, nil
@@ -127,7 +143,7 @@ func (s *Storage) TxGetActivityFieldsByCompanyID(
 	ctx context.Context,
 	tx pkgtx.Tx,
 	authID string,
-) ([]*ActivityField, error) {
+) (_ []*ActivityField, rerr error) {
 	c := postgresql.FromTx(tx)
 
 	rows, err := c.QueryContext(
@@ -139,23 +155,34 @@ func (s *Storage) TxGetActivityFieldsByCompanyID(
 			WHERE caf.company_id = $1`,
 		authID,
 	)
-
-	switch err {
-	case nil:
-	default:
+	if err != nil {
 		return nil, errors.WithStack(err)
 	}
+
+	defer func() {
+		if err := rows.Close(); err != nil {
+			if rerr != nil {
+				rerr = errors.WithSecondaryError(rerr, err)
+				return
+			}
+
+			rerr = errors.WithStack(err)
+		}
+	}()
 
 	afs := make([]*ActivityField, 0)
 
 	for rows.Next() {
 		var af ActivityField
 		if err := rows.Scan(&af.ID, &af.Title, &af.IconURL); err != nil {
-			_ = rows.Close()
 			return nil, errors.WithStack(err)
 		}
 
 		afs = append(afs, &af)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, errors.WithStack(err)
 	}
 
 	return afs, nil

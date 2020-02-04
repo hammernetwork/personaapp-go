@@ -3,7 +3,7 @@ package controller
 import (
 	"encoding/base64"
 	"encoding/json"
-	"personaapp/internal/server/controllers/vacancy/storage"
+	"personaapp/internal/controllers/vacancy/storage"
 	"time"
 )
 
@@ -60,7 +60,7 @@ func toStorageCursor(cursorData *cursorData) *storage.Cursor {
 
 // cursor data
 type cursorData struct {
-	PrevCreatedAt time.Time `json:"created_at,string"` //nolint: staticcheck
+	PrevCreatedAt time.Time `json:"created_at,string"` //nolint:staticcheck // will rework
 	PrevPosition  int       `json:"position"`
 	CategoriesIDs []string  `json:"categories"`
 }

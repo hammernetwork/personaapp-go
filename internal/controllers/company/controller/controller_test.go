@@ -2,12 +2,12 @@ package controller_test
 
 import (
 	"context"
-	"personaapp/internal/server/controllers/company/storage"
+	"personaapp/internal/controllers/company/storage"
 	"testing"
 	"time"
 
-	authController "personaapp/internal/server/controllers/auth/controller"
-	companyController "personaapp/internal/server/controllers/company/controller"
+	authController "personaapp/internal/controllers/auth/controller"
+	companyController "personaapp/internal/controllers/company/controller"
 	"personaapp/internal/testutils"
 
 	sqlMigrate "github.com/rubenv/sql-migrate"

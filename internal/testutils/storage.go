@@ -8,8 +8,8 @@ import (
 	sqlMigrate "github.com/rubenv/sql-migrate"
 	"github.com/stretchr/testify/require"
 
+	"personaapp/internal/controllers/auth/storage"
 	"personaapp/internal/migrate"
-	"personaapp/internal/server/controllers/auth/storage"
 	"personaapp/pkg/dockertest"
 	"personaapp/pkg/postgresql"
 )

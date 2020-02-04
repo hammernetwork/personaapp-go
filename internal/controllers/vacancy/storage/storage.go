@@ -61,24 +61,36 @@ type Cursor struct {
 	PrevPosition  int
 }
 
-func (s *Storage) TxGetVacanciesCategoriesList(ctx context.Context, tx pkgtx.Tx) ([]*VacancyCategory, error) {
+func (s *Storage) TxGetVacanciesCategoriesList(ctx context.Context, tx pkgtx.Tx) (_ []*VacancyCategory, rerr error) {
 	c := postgresql.FromTx(tx)
 
 	rows, err := c.QueryContext(ctx, `SELECT id, title, icon_url FROM vacancy_category`)
 	if err != nil {
 		return nil, errors.WithStack(err)
 	}
+	defer func() {
+		if err := rows.Close(); err != nil {
+			if rerr != nil {
+				rerr = errors.WithSecondaryError(rerr, err)
+				return
+			}
+
+			rerr = errors.WithStack(err)
+		}
+	}()
 
 	vcs := make([]*VacancyCategory, 0)
 
 	for rows.Next() {
 		var vc VacancyCategory
 		if err := rows.Scan(&vc.ID, &vc.Title, &vc.IconURL); err != nil {
-			_ = rows.Close()
 			return nil, errors.WithStack(err)
 		}
 
 		vcs = append(vcs, &vc)
+	}
+	if rows.Err() != nil {
+		return nil, errors.WithStack(rows.Err())
 	}
 
 	return vcs, nil
@@ -206,14 +218,14 @@ func (s *Storage) TxPutVacancy(ctx context.Context, tx pkgtx.Tx, vacancy *Vacanc
 	return nil
 }
 
-// nolint: funlen
+// nolint:funlen // will rework
 func (s *Storage) TxGetVacanciesList(
 	ctx context.Context,
 	tx pkgtx.Tx,
 	categoriesIDs []string,
 	limit int,
 	cursor *Cursor,
-) ([]*Vacancy, *Cursor, error) {
+) (_ []*Vacancy, _ *Cursor, rerr error) {
 	cursorCreatedAt := time.Now()
 	cursorPosition := -1
 
@@ -241,30 +253,48 @@ func (s *Storage) TxGetVacanciesList(
 		cursorPosition,
 		cursorCreatedAt,
 	)
-
-	switch err {
-	case nil:
-	default:
+	if err != nil {
 		return nil, nil, errors.WithStack(err)
 	}
+
+	defer func() {
+		if err := rows.Close(); err != nil {
+			if rerr != nil {
+				rerr = errors.WithSecondaryError(rerr, err)
+				return
+			}
+
+			rerr = errors.WithStack(err)
+		}
+	}()
 
 	vs := make([]*Vacancy, 0)
 
 	var lastCreatedAt time.Time
-
 	var lastPosition int
 
 	for rows.Next() {
 		var v Vacancy
 
-		err := rows.Scan(&v.ID, &v.Title, &v.Phone, &v.MinSalary, &v.MaxSalary, &v.CompanyID,
-			&lastPosition, &lastCreatedAt)
+		err := rows.Scan(
+			&v.ID,
+			&v.Title,
+			&v.Phone,
+			&v.MinSalary,
+			&v.MaxSalary,
+			&v.CompanyID,
+			&lastPosition,
+			&lastCreatedAt,
+		)
 		if err != nil {
-			_ = rows.Close()
 			return nil, nil, errors.WithStack(err)
 		}
 
 		vs = append(vs, &v)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, nil, errors.WithStack(err)
 	}
 
 	if len(vs) == 0 || len(vs) < limit {
@@ -380,7 +410,7 @@ func (s *Storage) TxGetVacanciesImages(
 
 	rows, err := c.QueryContext(
 		ctx,
-		// nolint: gosec
+		// nolint:gosec // will rework
 		`SELECT vacancy_id, image_url
 			FROM vacancies_images
 			WHERE vacancy_id = ANY($1::uuid[])

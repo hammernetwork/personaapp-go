@@ -8,7 +8,7 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
-	authController "personaapp/internal/server/controllers/auth/controller"
+	authController "personaapp/internal/controllers/auth/controller"
 	apiauth "personaapp/pkg/grpcapi/auth"
 )
 

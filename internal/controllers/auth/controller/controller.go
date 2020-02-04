@@ -2,7 +2,7 @@ package controller
 
 import (
 	"context"
-	"personaapp/internal/server/controllers/auth/storage"
+	"personaapp/internal/controllers/auth/storage"
 	"regexp"
 	"time"
 
@@ -376,7 +376,7 @@ type LoginData struct {
 	Password string `valid:"stringlength(6|30),required"`
 }
 
-// nolint: dupl
+// nolint:dupl // will rework
 func (ld *LoginData) Validate() error {
 	var fieldErrors = []struct {
 		Field        string
@@ -461,7 +461,7 @@ func (c *Controller) GetAuthClaims(ctx context.Context, tokenStr string) (*AuthC
 	return c.isAuthorized(tokenStr)
 }
 
-// nolint: dupl, funlen
+// nolint:dupl,funlen // will rework
 func (c *Controller) UpdateEmail(
 	ctx context.Context,
 	accountID string,
@@ -526,7 +526,7 @@ func (c *Controller) UpdateEmail(
 	return sat, nil
 }
 
-// nolint: dupl
+// nolint:dupl // will rework
 func (c *Controller) UpdatePhone(ctx context.Context, accountID string, phone string) (*AuthToken, error) {
 	rd := RegisterData{Phone: phone}
 
@@ -590,7 +590,7 @@ type UpdatePasswordData struct {
 	NewPassword string `valid:"stringlength(6|30),required"`
 }
 
-// nolint: dupl
+// nolint:dupl // will rework
 func (upd *UpdatePasswordData) Validate() error {
 	var fieldErrors = []struct {
 		Field        string
