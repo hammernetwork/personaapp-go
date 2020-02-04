@@ -1,6 +1,4 @@
-image: docker:latest
-services:
-  - docker:dind
+image: registry.gitlab.com/persona_app_online/devops/images/golangci:latest
 
 variables:
   DOCKER_DRIVER: overlay
@@ -36,3 +34,4 @@ build_image_master:
     - docker push $CONTAINER_IMAGE_MASTER
   only:
     - master
+
