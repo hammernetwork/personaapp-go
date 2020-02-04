@@ -1,0 +1,38 @@
+image: docker:latest
+services:
+  - docker:dind
+
+variables:
+  DOCKER_DRIVER: overlay
+  REGISTRY: registry.gitlab.com
+  SERVICE_NAMESPACE: persona_app_online
+  PROJECT_NAME: personaapp-go
+  IMAGE_NAME: personaapp
+  CONTAINER_IMAGE_MASTER: $REGISTRY/$SERVICE_NAMESPACE/$PROJECT_NAME/$IMAGE_NAME:master
+
+before_script:
+  - docker login $REGISTRY -u $GITLAB_REGISTRY_USER -p $GITLAB_REGISTRY_TOKEN
+
+stages:
+  - lint
+  - test
+  - build_image_master
+  - deploy
+
+lint:
+  stage: lint
+  script:
+    - make all
+
+test:
+  stage: test
+  script:
+    - make test
+
+build_image_master:
+  stage: build_image_master
+  script:
+    - docker build -t $CONTAINER_IMAGE_MASTER .
+    - docker push $CONTAINER_IMAGE_MASTER
+  only:
+    - master

@@ -27,7 +27,7 @@ DEFAULT_COLOR = \033[m
 
 .PHONY: all help clean test lint fmt build grpc
 
-all: clean fmt build lint test
+all: clean fmt build lint
 
 help:
 	@echo 'Usage: make <TARGETS> ... <OPTIONS>'
