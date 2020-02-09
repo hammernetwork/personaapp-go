@@ -65,7 +65,7 @@ var migrations = []*migrate.Migration{
 			`CREATE TABLE IF NOT EXISTS company (
 				auth_id			uuid			NOT NULL REFERENCES auth (account_id) ON DELETE CASCADE,
 				title			VARCHAR(255)	NULL,
-				description		VARCHAR(255)	NULL,
+				description		TEXT			NULL,
 				logo_url		VARCHAR(255)	NULL,
 				created_at      TIMESTAMPTZ     NOT NULL,
 				updated_at      TIMESTAMPTZ     NOT NULL
@@ -116,7 +116,7 @@ var migrations = []*migrate.Migration{
 			`CREATE TABLE IF NOT EXISTS vacancy (
 				id            			uuid					PRIMARY KEY,
 				title		  			VARCHAR(255)			NOT NULL,
-				description	  			VARCHAR(255)			NOT NULL,
+				description	  			TEXT					NOT NULL,
 				phone					VARCHAR(30)     		NOT NULL,
 				min_salary	  			INTEGER					NULL,
 				max_salary	  			INTEGER					NULL,
