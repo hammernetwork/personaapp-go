@@ -13,6 +13,7 @@ before_script:
 
 stages:
   - test
+  - build
   - build_image_master
   - deploy
 
@@ -20,6 +21,13 @@ test:
   stage: test
   script:
     - make all
+
+build:
+  stage: build
+  script:
+    - docker build -t $CONTAINER_IMAGE_MASTER .
+  except:
+    - master
 
 build_image_master:
   stage: build_image_master
