@@ -1,4 +1,4 @@
-image: registry.gitlab.com/persona_app_online/devops/images/golangci:latest
+image: registry.gitlab.com/persona_app_online/devops/golangci:latest
 
 variables:
   DOCKER_DRIVER: overlay
@@ -12,20 +12,22 @@ before_script:
   - docker login $REGISTRY -u $GITLAB_REGISTRY_USER -p $GITLAB_REGISTRY_TOKEN
 
 stages:
-  - lint
   - test
+  - build
   - build_image_master
   - deploy
-
-lint:
-  stage: lint
-  script:
-    - make all
 
 test:
   stage: test
   script:
-    - make test
+    - make all
+
+build:
+  stage: build
+  script:
+    - docker build -t $CONTAINER_IMAGE_MASTER .
+  except:
+    - master
 
 build_image_master:
   stage: build_image_master
@@ -34,4 +36,3 @@ build_image_master:
     - docker push $CONTAINER_IMAGE_MASTER
   only:
     - master
-
