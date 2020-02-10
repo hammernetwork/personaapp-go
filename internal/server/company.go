@@ -6,7 +6,7 @@ import (
 	"google.golang.org/genproto/googleapis/rpc/errdetails"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	companyController "personaapp/internal/server/controllers/company/controller"
+	companyController "personaapp/internal/controllers/company/controller"
 	apicompany "personaapp/pkg/grpcapi/company"
 )
 
@@ -22,11 +22,11 @@ func (s *Server) GetCompaniesActivityFieldsList(
 	context.Context,
 	*apicompany.GetCompaniesActivityFieldsListRequest,
 ) (*apicompany.GetCompaniesActivityFieldsListResponse, error) {
-	// nolint: TODO: implement
+	// nolint:godox // TODO: implement
 	return nil, nil
 }
 
-// nolint: funlen
+// nolint:funlen // will rework
 func (s *Server) UpdateCompany(
 	ctx context.Context,
 	req *apicompany.UpdateCompanyRequest,
