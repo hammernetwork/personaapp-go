@@ -4,7 +4,6 @@ package personaappapi.auth;
 
 import "google/protobuf/timestamp.proto";
 
-option go_package = "personaapp/pkg/grpcapi/auth";
 option java_package = "online.personaapp";
 option java_outer_classname = "GrpcAuth";
 

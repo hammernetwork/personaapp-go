@@ -1,9 +1,31 @@
-FROM golang:1.12
 
-RUN mkdir -p /go/bitbucket/personaapp
 
-WORKDIR /go/bitbucket.org/personaapp
+FROM registry.gitlab.com/persona_app_online/devops/images/base:latest as build
 
-COPY . /go/bitbucket.org/personaapp
+ARG PACKAGE_NAME=personaapp-go
+ARG APP_NAME=personapp
+ARG PROJECT_NAMESPACE=persona_app_online
 
-RUN make build
+WORKDIR ./src/gitlab.com/${PROJECT_NAMESPACE}/${PACKAGE_NAME}
+
+COPY go.mod go.sum ./
+RUN go mod download
+
+COPY Makefile ./main.go ./
+COPY ./cmd ./cmd
+COPY ./internal ./internal
+COPY ./pkg ./pkg
+
+RUN make build && \
+    cp ./bin/${APP_NAME} /usr/local/bin/ && \
+    rm -rf /go/src/gitlab.com
+
+FROM golang:1.13.7-alpine3.11
+
+COPY --from=build /usr/local/bin/${APP_NAME} /usr/local/bin/${APP_NAME}
+
+ENV BIND 0.0.0.0:8000
+
+EXPOSE 8000
+
+ENTRYPOINT ["personapp"]

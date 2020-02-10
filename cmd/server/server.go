@@ -13,12 +13,12 @@ import (
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"
 
-	authController "personaapp/internal/server/controllers/auth/controller"
-	authStorage "personaapp/internal/server/controllers/auth/storage"
-	companyController "personaapp/internal/server/controllers/company/controller"
-	companyStorage "personaapp/internal/server/controllers/company/storage"
-	vacancyController "personaapp/internal/server/controllers/vacancy/controller"
-	vacancyStorage "personaapp/internal/server/controllers/vacancy/storage"
+	authController "personaapp/internal/controllers/auth/controller"
+	authStorage "personaapp/internal/controllers/auth/storage"
+	companyController "personaapp/internal/controllers/company/controller"
+	companyStorage "personaapp/internal/controllers/company/storage"
+	vacancyController "personaapp/internal/controllers/vacancy/controller"
+	vacancyStorage "personaapp/internal/controllers/vacancy/storage"
 	pkgcmd "personaapp/pkg/cmd"
 	"personaapp/pkg/flag"
 	apiauth "personaapp/pkg/grpcapi/auth"
@@ -50,9 +50,10 @@ func run(cfg *Config) func(cmd *cobra.Command, args []string) error {
 				log.Println(err) //nolint todo think about errors mapper/parser service
 			}
 		}()
-		sugar := logger.Sugar()
 
+		sugar := logger.Sugar()
 		sugar.Info("starting server")
+
 		defer sugar.Info("stopping server")
 
 		if err := flag.BindEnv(cmd); err != nil {
@@ -93,6 +94,7 @@ func run(cfg *Config) func(cmd *cobra.Command, args []string) error {
 
 		pkgcmd.Await()
 		grpcServer.GracefulStop()
+
 		if err := g.Wait(); err != nil {
 			return errors.WithStack(err)
 		}

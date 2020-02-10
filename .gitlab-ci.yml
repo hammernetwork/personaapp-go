@@ -1,27 +1,37 @@
-image: golang:latest
+image: registry.gitlab.com/persona_app_online/devops/images/golangci:latest
 
 variables:
-  REPO_NAME: gitlab.com/persona_app_online/personaapp-go
+  DOCKER_DRIVER: overlay
+  REGISTRY: registry.gitlab.com
+  SERVICE_NAMESPACE: persona_app_online
+  PROJECT_NAME: personaapp-go
+  IMAGE_NAME: personaapp
+  CONTAINER_IMAGE_MASTER: $REGISTRY/$SERVICE_NAMESPACE/$PROJECT_NAME/$IMAGE_NAME:master
 
 before_script:
-  - mkdir -p $GOPATH/src/$(dirname $REPO_NAME)
-  - ln -svf $CI_PROJECT_DIR $GOPATH/src/$REPO_NAME
-  - cd $GOPATH/src/$REPO_NAME
+  - docker login $REGISTRY -u $GITLAB_REGISTRY_USER -p $GITLAB_REGISTRY_TOKEN
 
 stages:
+  - lint
   - test
-  - build
+  - build_image_master
   - deploy
 
-testing:
-  stage: test
+lint:
+  stage: lint
   script:
     - make all
 
-compile:
-  stage: build
+test:
+  stage: test
   script:
-    - make build
-  artifacts:
-    paths:
-      - api/personaapp
+    - make test
+
+build_image_master:
+  stage: build_image_master
+  script:
+    - docker build -t $CONTAINER_IMAGE_MASTER .
+    - docker push $CONTAINER_IMAGE_MASTER
+  only:
+    - master
+

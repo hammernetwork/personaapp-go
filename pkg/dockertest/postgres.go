@@ -79,6 +79,7 @@ func initPostgresComponent(
 		if rerr == nil {
 			return
 		}
+
 		if err := pool.Purge(resource); err != nil {
 			log.Println("failed to purge a pg resource", errors.WithStack(err))
 		}

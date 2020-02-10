@@ -7,8 +7,8 @@ import (
 	"google.golang.org/genproto/googleapis/rpc/errdetails"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	companyController "personaapp/internal/server/controllers/company/controller"
-	vacancyController "personaapp/internal/server/controllers/vacancy/controller"
+	companyController "personaapp/internal/controllers/company/controller"
+	vacancyController "personaapp/internal/controllers/vacancy/controller"
 	vacancyapi "personaapp/pkg/grpcapi/vacancy"
 )
 
@@ -127,7 +127,7 @@ func (s *Server) GetVacancyDetails(
 	}, nil
 }
 
-// nolint: funlen
+// nolint:funlen // will rework
 func (s *Server) GetVacanciesList(
 	ctx context.Context,
 	req *vacancyapi.GetVacanciesListRequest,

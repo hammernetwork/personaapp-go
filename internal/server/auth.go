@@ -8,7 +8,7 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
-	authController "personaapp/internal/server/controllers/auth/controller"
+	authController "personaapp/internal/controllers/auth/controller"
 	apiauth "personaapp/pkg/grpcapi/auth"
 )
 
@@ -68,7 +68,7 @@ func toServerToken(at *authController.AuthToken) (*apiauth.Token, error) {
 	}, nil
 }
 
-// nolint: funlen
+// nolint:funlen // will rework
 func (s *Server) Register(
 	ctx context.Context,
 	req *apiauth.RegisterRequest,
@@ -194,7 +194,7 @@ func (s *Server) Refresh(
 	return &apiauth.RefreshResponse{Token: sat}, nil
 }
 
-// nolint: dupl
+// nolint:dupl // will rework
 func (s *Server) UpdateEmail(
 	ctx context.Context,
 	req *apiauth.UpdateEmailRequest,
@@ -236,7 +236,7 @@ func (s *Server) UpdateEmail(
 	return &apiauth.UpdateEmailResponse{Token: sat}, nil
 }
 
-// nolint: dupl
+// nolint:dupl // will rework
 func (s *Server) UpdatePhone(
 	ctx context.Context,
 	req *apiauth.UpdatePhoneRequest,
@@ -278,7 +278,7 @@ func (s *Server) UpdatePhone(
 	return &apiauth.UpdatePhoneResponse{Token: sat}, nil
 }
 
-// nolint: dupl
+// nolint:dupl // will rework
 func (s *Server) UpdatePassword(
 	ctx context.Context,
 	req *apiauth.UpdatePasswordRequest,
