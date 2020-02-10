@@ -1,9 +1,7 @@
-
-
-FROM registry.gitlab.com/persona_app_online/devops/images/base:latest as build
+FROM registry.gitlab.com/persona_app_online/devops/golangci:latest as build
 
 ARG PACKAGE_NAME=personaapp-go
-ARG APP_NAME=personapp
+ARG APP_NAME=personaapp
 ARG PROJECT_NAMESPACE=persona_app_online
 
 WORKDIR ./src/gitlab.com/${PROJECT_NAMESPACE}/${PACKAGE_NAME}
@@ -20,7 +18,7 @@ RUN make build && \
     cp ./bin/${APP_NAME} /usr/local/bin/ && \
     rm -rf /go/src/gitlab.com
 
-FROM golang:1.13.7-alpine3.11
+FROM registry.gitlab.com/persona_app_online/devops/base_image:latest
 
 COPY --from=build /usr/local/bin/${APP_NAME} /usr/local/bin/${APP_NAME}
 

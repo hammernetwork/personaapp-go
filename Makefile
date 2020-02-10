@@ -31,7 +31,7 @@ DEFAULT_COLOR = "\033[m"
 
 .PHONY: all help clean test lint fmt build grpc
 
-all: clean fmt build lint
+all: clean fmt build lint test
 
 help:
 	@echo 'Usage: make <TARGETS> ... <OPTIONS>'
@@ -55,8 +55,7 @@ clean:
 
 test:
 	@echo -e [$(GREEN_COLOR)test$(DEFAULT_COLOR)]
-	# TODO: -race flag seems not working in Alpine, so it disabled for now. Ping me to investigate further. Maksym Hilliaka
-	@$(GOTEST) -v -count=1 ./...
+	@$(GOTEST) -v -race -count=1 ./...
 
 lint:
 	@echo -e [$(GREEN_COLOR)lint$(DEFAULT_COLOR)]
