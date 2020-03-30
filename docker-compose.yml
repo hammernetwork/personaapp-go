@@ -16,7 +16,7 @@ services:
       start_period: 20s
   migrate:
     build: .
-    command: bin/personaapp migrate --postgres_database=postgres --postgres_password=postgres --postgres_user=postgres --postgres_host=database up
+    command: migrate --postgres_database=postgres --postgres_password=postgres --postgres_user=postgres --postgres_host=database up
     restart: on-failure
     depends_on:
       - database
@@ -24,7 +24,7 @@ services:
       - database
   app:
     build: .
-    command: bin/personaapp server --postgres_database=postgres --postgres_password=postgres --postgres_user=postgres --postgres_host=database --postgres_port=5432 --server.address="app:8000" --token_validity_gap=5m --token_expiration=5m
+    command: server --postgres_database=postgres --postgres_password=postgres --postgres_user=postgres --postgres_host=database --postgres_port=5432 --server.address="app:8000" --token_validity_gap=5m --token_expiration=5m
     restart: on-failure
     ports:
       - "8000:8000"
