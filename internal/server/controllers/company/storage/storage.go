@@ -76,7 +76,7 @@ func (s *Storage) TxGetCompaniesByID(ctx context.Context, tx pkgtx.Tx, companyID
 		return nil, errors.WithStack(err)
 	}
 
-	cs := make([]*CompanyData, 0)
+	var cs []*CompanyData
 
 	for rows.Next() {
 		var cd CompanyData

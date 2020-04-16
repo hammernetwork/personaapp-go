@@ -132,7 +132,7 @@ func (s *Server) GetVacanciesList(
 	ctx context.Context,
 	req *vacancyapi.GetVacanciesListRequest,
 ) (*vacancyapi.GetVacanciesListResponse, error) {
-	categoriesIds := make([]string, len(req.CategoriesIds))
+	categoriesIds := make([]string, 0, len(req.CategoriesIds))
 	for id := range req.CategoriesIds {
 		categoriesIds = append(categoriesIds, id)
 	}
@@ -200,7 +200,7 @@ func (s *Server) GetVacanciesList(
 	}
 
 	// Get companies
-	companyIds := make([]string, 0)
+	companyIds := make([]string, 0, len(companyIdsMap))
 	for companyID := range companyIdsMap {
 		companyIds = append(companyIds, companyID)
 	}
@@ -211,12 +211,12 @@ func (s *Server) GetVacanciesList(
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
-	companiesMap := make(map[string]*vacancyapi.Company)
+	companiesMap := make(map[string]*vacancyapi.Company, len(companies))
 	for _, company := range companies {
 		companiesMap[company.ID] = &vacancyapi.Company{
 			Id:      company.ID,
 			Title:   company.Title,
-			LogoUrl: company.Description,
+			LogoUrl: company.LogoURL,
 		}
 	}
 
