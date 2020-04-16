@@ -89,7 +89,7 @@ func (s *Storage) TxGetCompaniesByID(
 		}
 	}()
 
-	cs := make([]*CompanyData, 0)
+	var cs []*CompanyData
 
 	for rows.Next() {
 		var cd CompanyData

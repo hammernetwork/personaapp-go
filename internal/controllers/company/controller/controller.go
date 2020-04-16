@@ -253,7 +253,7 @@ func (c *Controller) GetCompaniesList(ctx context.Context, companyIDs []string) 
 		return nil, errors.WithStack(err)
 	}
 
-	companies := make([]*Company, len(cds))
+	companies := make([]*Company, 0, len(cds))
 	for _, company := range cds {
 		companies = append(companies, &Company{
 			ID:             company.ID,
