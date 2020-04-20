@@ -26,4 +26,4 @@ ENV BIND 0.0.0.0:8000
 
 EXPOSE 8000
 
-ENTRYPOINT ["personapp"]
+ENTRYPOINT ["/usr/local/bin/personaapp"]
