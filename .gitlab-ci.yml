@@ -18,7 +18,6 @@ stages:
 test:
   stage: test
   before_script:
-    - echo -n -e $SSH_KEY
     - docker login $REGISTRY -u $GITLAB_REGISTRY_USER -p $GITLAB_REGISTRY_TOKEN
   script:
     -  make clean fmt build lint # testing is disable for now in ci cause of inability to start a docker in docker
@@ -52,7 +51,7 @@ deploy:
   image: kroniak/ssh-client
   stage: deploy
   script:
-    - mkdir ~/.ssh && echo ${SSH_KEY} > ~/.ssh/persona_key && chmod 600 ~/.ssh/persona_key
+    - mkdir ~/.ssh && echo -n -e ${SSH_KEY} > ~/.ssh/persona_key && chmod 600 ~/.ssh/persona_key
     - ssh -o StrictHostKeyChecking=no -i ~/.ssh/persona_key root@api.hirepersona.online /root/run.sh $CI_PIPELINE_ID
   only:
     - master
