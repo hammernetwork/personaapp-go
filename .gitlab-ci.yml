@@ -53,7 +53,7 @@ deploy:
   image: kroniak/ssh-client
   stage: deploy
   script:
-    - echo ${SSH_KEY} > /root/.ssh/id_rsa && chmod 600 /root/.ssh/id_rsa
+    - echo ${SSH_KEY} > ~/.ssh/persona_key && chmod 600 ~/.ssh/persona_key
     - ssh -o StrictHostKeyChecking=no -i ~/.ssh/persona_key root@api.hirepersona.online /root/run.sh $CI_PIPELINE_ID
   only:
     - master
