@@ -10,7 +10,7 @@ variables:
 
 
 stages:
-#  - test
+  - test
   - build
   - build_image_master
   - deploy
