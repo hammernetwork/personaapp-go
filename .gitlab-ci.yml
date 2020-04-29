@@ -1,6 +1,4 @@
 image: registry.gitlab.com/persona_app_online/devops/golangci:latest
-services:
-  - docker:dind
 
 variables:
   DOCKER_DRIVER: overlay
