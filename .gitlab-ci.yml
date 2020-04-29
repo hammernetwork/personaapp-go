@@ -1,6 +1,4 @@
 image: registry.gitlab.com/persona_app_online/devops/golangci:latest
-services:
-  - docker:dind
 
 variables:
   DOCKER_DRIVER: overlay
@@ -53,7 +51,7 @@ deploy:
   image: kroniak/ssh-client
   stage: deploy
   script:
-    - mkdir ~/.ssh && echo ${SSH_KEY} > ~/.ssh/persona_key && chmod 600 ~/.ssh/persona_key
+    - mkdir ~/.ssh && echo -n -e ${SSH_KEY} > ~/.ssh/persona_key && chmod 600 ~/.ssh/persona_key
     - ssh -o StrictHostKeyChecking=no -i ~/.ssh/persona_key root@api.hirepersona.online /root/run.sh $CI_PIPELINE_ID
   only:
     - master
