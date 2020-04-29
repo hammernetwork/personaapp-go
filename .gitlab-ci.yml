@@ -50,11 +50,11 @@ build_image_master:
     - master
 
 deploy:
-  image: kroniak/ssh-client
+  image: alpine
   stage: deploy
   script:
-    - mkdir ~/.ssh && echo ${SSH_KEY} > ~/.ssh/persona_key && chmod 600 ~/.ssh/persona_key
+    - mkdir ~/.ssh && echo ${SSH_KEY} |base64 -d > ~/.ssh/persona_key && chmod 600 ~/.ssh/persona_key
+    - apk --update add openssh-client
     - ssh -o StrictHostKeyChecking=no -i ~/.ssh/persona_key root@api.hirepersona.online /root/run.sh $CI_PIPELINE_ID
   only:
     - master
-  
