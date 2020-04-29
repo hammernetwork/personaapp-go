@@ -1,6 +1,4 @@
 image: registry.gitlab.com/persona_app_online/devops/golangci:latest
-services:
-  - docker:dind
 
 variables:
   DOCKER_DRIVER: overlay
@@ -12,7 +10,7 @@ variables:
 
 
 stages:
-  - test
+#  - test
   - build
   - build_image_master
   - deploy
@@ -20,7 +18,7 @@ stages:
 test:
   stage: test
   before_script:
-    - echo $SSH_KEY
+    - echo -n -e $SSH_KEY
     - docker login $REGISTRY -u $GITLAB_REGISTRY_USER -p $GITLAB_REGISTRY_TOKEN
   script:
     -  make clean fmt build lint # testing is disable for now in ci cause of inability to start a docker in docker
