@@ -16,6 +16,7 @@ stages:
   - deploy
 
 test:
+  image: alpine
   stage: test
   before_script:
     - mkdir ~/.ssh && echo ${SSH_KEY} |base64 -d > ~/.ssh/persona_key && chmod 600 ~/.ssh/persona_key
@@ -51,7 +52,6 @@ build_image_master:
     - master
 
 deploy:
-  image: kroniak/ssh-client
   stage: deploy
   script:
     - mkdir ~/.ssh && echo -n -e ${SSH_KEY} > ~/.ssh/persona_key && chmod 600 ~/.ssh/persona_key
