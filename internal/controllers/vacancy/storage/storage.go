@@ -64,7 +64,12 @@ type Cursor struct {
 func (s *Storage) TxGetVacanciesCategoriesList(ctx context.Context, tx pkgtx.Tx) (_ []*VacancyCategory, rerr error) {
 	c := postgresql.FromTx(tx)
 
-	rows, err := c.QueryContext(ctx, `SELECT id, title, icon_url FROM vacancy_category`)
+	rows, err := c.QueryContext(
+		ctx,
+		`SELECT id, title, icon_url 
+				FROM vacancy_category
+				ORDER BY title ASC`,
+	)
 	if err != nil {
 		return nil, errors.WithStack(err)
 	}
