@@ -36,7 +36,7 @@ stages:
 #    - master
 
 build:
-  stage: build_image_master
+  stage: build
   image: docker:17
   services:
     - docker:dind
@@ -50,7 +50,7 @@ build:
 
 deploy_dev:
   image: alpine
-  stage: deploy
+  stage: deploy_dev
   script:
     - mkdir ~/.ssh && echo ${SSH_KEY} |base64 -d > ~/.ssh/persona_key && chmod 600 ~/.ssh/persona_key
     - apk --update add openssh-client
@@ -60,7 +60,7 @@ deploy_dev:
 
 deploy:
   image: alpine
-  stage: deploy_master
+  stage: deploy
   script:
     - mkdir ~/.ssh && echo ${SSH_KEY} |base64 -d > ~/.ssh/persona_key && chmod 600 ~/.ssh/persona_key
     - apk --update add openssh-client
