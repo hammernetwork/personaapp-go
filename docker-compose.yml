@@ -24,7 +24,7 @@ services:
       - database
   app:
     build: .
-    command: server --postgres_database=postgres --postgres_password=postgres --postgres_user=postgres --postgres_host=database --postgres_port=5432 --server.address="app:8000" --token_validity_gap=43200m --token_expiration=1440m
+    command: server --postgres_database=postgres --postgres_password=postgres --postgres_user=postgres --postgres_host=database --postgres_port=5432 --server.address="app:8000" --token_validity_gap=43200m --token_expiration=43200m
     restart: on-failure
     ports:
       - "8000:8000"
