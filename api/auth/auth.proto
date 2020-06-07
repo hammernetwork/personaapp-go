@@ -12,6 +12,7 @@ service PersonaAppAuth {
     rpc Login (LoginRequest) returns (LoginResponse);
     rpc Logout (LogoutRequest) returns (LogoutResponse);
     rpc Refresh (RefreshRequest) returns (RefreshResponse);
+    rpc GetSelf (GetSelfRequest) returns (GetSelfResponse);
     rpc UpdateEmail (UpdateEmailRequest) returns (UpdateEmailResponse);
     rpc UpdatePhone (UpdatePhoneRequest) returns (UpdatePhoneResponse);
     rpc UpdatePassword (UpdatePasswordRequest) returns (UpdatePasswordResponse);
@@ -40,20 +41,34 @@ message LoginResponse {
 }
 
 // Logout
-message LogoutRequest {}
+message LogoutRequest {
+}
 
-message LogoutResponse {}
+message LogoutResponse {
+}
 
 // Refresh
-message RefreshRequest {}
+message RefreshRequest {
+}
 
 message RefreshResponse {
     Token token = 1;
 }
 
+// GetSelf
+message GetSelfRequest {
+}
+
+message GetSelfResponse {
+    string email = 1;
+    string phone = 2; // optional for persona
+    AccountType account_type = 3;
+}
+
 // Update email
 message UpdateEmailRequest {
     string email = 1;
+    string password = 2;
 }
 
 message UpdateEmailResponse {
@@ -63,6 +78,7 @@ message UpdateEmailResponse {
 // Update phone
 message UpdatePhoneRequest {
     string phone = 1;
+    string password = 2;
 }
 
 message UpdatePhoneResponse {

@@ -9,6 +9,7 @@ import (
 	"google.golang.org/grpc/metadata"
 	"google.golang.org/grpc/status"
 	authController "personaapp/internal/controllers/auth/controller"
+	companyController "personaapp/internal/controllers/company/controller"
 	apiauth "personaapp/pkg/grpcapi/auth"
 )
 
@@ -17,13 +18,15 @@ type AuthController interface {
 	Login(ctx context.Context, ld *authController.LoginData) (*authController.AuthToken, error)
 	Refresh(ctx context.Context, tokenStr string) (*authController.AuthToken, error)
 	GetAuthClaims(ctx context.Context, tokenStr string) (*authController.AuthClaims, error)
+	GetSelf(ctx context.Context, accountID string) (*authController.AuthData, error)
 	UpdateEmail(
 		ctx context.Context,
 		accountID string,
 		email string,
+		password string,
 		ac authController.AccountType,
 	) (*authController.AuthToken, error)
-	UpdatePhone(ctx context.Context, accountID string, phone string) (*authController.AuthToken, error)
+	UpdatePhone(ctx context.Context, accountID string, phone string, password string) (*authController.AuthToken, error)
 	UpdatePassword(
 		ctx context.Context,
 		accountID string,
@@ -194,6 +197,31 @@ func (s *Server) Refresh(
 	return &apiauth.RefreshResponse{Token: sat}, nil
 }
 
+func (s *Server) GetSelf(
+	ctx context.Context,
+	req *apiauth.GetSelfRequest,
+) (*apiauth.GetSelfResponse, error) {
+	claims, err := s.getAuthClaims(ctx)
+	if err != nil {
+		return nil, status.Error(codes.Unauthenticated, "unauthorized")
+	}
+
+	self, err := s.ac.GetSelf(ctx, claims.AccountID)
+	switch errors.Cause(err) {
+	case nil:
+	case companyController.ErrCompanyNotFound:
+		return nil, status.Error(codes.NotFound, err.Error())
+	default:
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	return &apiauth.GetSelfResponse{
+		Email:       self.Email,
+		Phone:       self.Phone,
+		AccountType: toServerAccount(self.Account),
+	}, nil
+}
+
 // nolint:dupl // will rework
 func (s *Server) UpdateEmail(
 	ctx context.Context,
@@ -204,7 +232,7 @@ func (s *Server) UpdateEmail(
 		return nil, status.Error(codes.Unauthenticated, "unauthorized")
 	}
 
-	token, updateErr := s.ac.UpdateEmail(ctx, claims.AccountID, req.Email, claims.AccountType)
+	token, updateErr := s.ac.UpdateEmail(ctx, claims.AccountID, req.Email, req.Password, claims.AccountType)
 
 	var fv *errdetails.BadRequest_FieldViolation
 
@@ -216,6 +244,8 @@ func (s *Server) UpdateEmail(
 		fv = &errdetails.BadRequest_FieldViolation{Field: "Email", Description: causeErr.Error()}
 	case authController.ErrInvalidEmail:
 		fv = &errdetails.BadRequest_FieldViolation{Field: "Email", Description: causeErr.Error()}
+	case authController.ErrInvalidPassword:
+		fv = &errdetails.BadRequest_FieldViolation{Field: "Password", Description: causeErr.Error()}
 	case authController.ErrAuthEntityNotFound:
 		return nil, status.Error(codes.NotFound, updateErr.Error())
 	case authController.ErrAlreadyExists:
@@ -246,7 +276,7 @@ func (s *Server) UpdatePhone(
 		return nil, status.Error(codes.Unauthenticated, "unauthorized")
 	}
 
-	token, updateErr := s.ac.UpdatePhone(ctx, claims.AccountID, req.Phone)
+	token, updateErr := s.ac.UpdatePhone(ctx, claims.AccountID, req.Phone, req.Password)
 
 	var fv *errdetails.BadRequest_FieldViolation
 
