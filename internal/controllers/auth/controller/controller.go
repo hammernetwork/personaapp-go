@@ -128,6 +128,12 @@ type RegisterData struct {
 	Password string      `valid:"stringlength(6|30),required"`
 }
 
+type AuthData struct {
+	Email   string
+	Phone   string
+	Account AccountType
+}
+
 func (rd *RegisterData) Validate() error {
 	var fieldErrors = []struct {
 		Field        string
@@ -461,11 +467,45 @@ func (c *Controller) GetAuthClaims(ctx context.Context, tokenStr string) (*AuthC
 	return c.isAuthorized(tokenStr)
 }
 
+func (c *Controller) GetSelf(ctx context.Context, accountID string) (*AuthData, error) {
+	var authData *AuthData
+
+	if err := pkgtx.RunInTx(ctx, c.s, func(ctx context.Context, tx pkgtx.Tx) error {
+		ad, err := c.s.TxGetAuthDataByID(ctx, tx, accountID)
+
+		switch errors.Cause(err) {
+		case nil:
+		case storage.ErrNotFound:
+			return errors.WithStack(ErrInvalidAccount)
+		default:
+			return errors.WithStack(err)
+		}
+
+		account, err := fromStorageAccount(ad.Account)
+		if err != nil {
+			return errors.WithStack(err)
+		}
+
+		authData = &AuthData{
+			Email:   ad.Email,
+			Phone:   ad.Phone,
+			Account: account,
+		}
+
+		return nil
+	}); err != nil {
+		return nil, errors.WithStack(err)
+	}
+
+	return authData, nil
+}
+
 // nolint:dupl,funlen // will rework
 func (c *Controller) UpdateEmail(
 	ctx context.Context,
 	accountID string,
 	email string,
+	password string,
 	ac AccountType,
 ) (*AuthToken, error) {
 	rd := RegisterData{Email: email, Account: ac}
@@ -496,20 +536,14 @@ func (c *Controller) UpdateEmail(
 		return nil, errors.WithStack(err)
 	}
 
+	if bcrypt.CompareHashAndPassword([]byte(ad.PasswordHash), []byte(password)) != nil {
+		return nil, errors.Wrap(ErrInvalidPassword, "wrong password")
+	}
+
 	ad.Email = email
 	ad.UpdatedAt = time.Now()
 
-	if err := pkgtx.RunInTx(ctx, c.s, func(ctx context.Context, tx pkgtx.Tx) error {
-		if email != "" {
-			switch _, err := c.s.TxGetAuthDataByEmail(ctx, tx, email); errors.Cause(err) {
-			case storage.ErrNotFound:
-			case nil:
-				return errors.WithStack(ErrAlreadyExists)
-			}
-		}
-
-		return errors.WithStack(c.s.TxPutAuth(ctx, tx, ad))
-	}); err != nil {
+	if err := pkgtx.RunInTx(ctx, c.s, putAuthUpdatedMail(email, c, ad)); err != nil {
 		return nil, errors.WithStack(err)
 	}
 
@@ -526,10 +560,32 @@ func (c *Controller) UpdateEmail(
 	return sat, nil
 }
 
-// nolint:dupl // will rework
-func (c *Controller) UpdatePhone(ctx context.Context, accountID string, phone string) (*AuthToken, error) {
-	rd := RegisterData{Phone: phone}
+func putAuthUpdatedMail(
+	email string,
+	c *Controller,
+	ad *storage.AuthData,
+) func(ctx context.Context, tx pkgtx.Tx) error {
+	return func(ctx context.Context, tx pkgtx.Tx) error {
+		if email != "" {
+			switch _, err := c.s.TxGetAuthDataByEmail(ctx, tx, email); errors.Cause(err) {
+			case storage.ErrNotFound:
+			case nil:
+				return errors.WithStack(ErrAlreadyExists)
+			}
+		}
 
+		return errors.WithStack(c.s.TxPutAuth(ctx, tx, ad))
+	}
+}
+
+// nolint:dupl // will rework
+func (c *Controller) UpdatePhone(
+	ctx context.Context,
+	accountID string,
+	phone string,
+	password string,
+) (*AuthToken, error) {
+	rd := RegisterData{Phone: phone}
 	if valid, err := govalidator.ValidateStruct(rd); !valid {
 		if msg := govalidator.ErrorByField(err, "Phone"); msg != "" {
 			validatorError, ok := err.(govalidator.Error)
@@ -557,18 +613,14 @@ func (c *Controller) UpdatePhone(ctx context.Context, accountID string, phone st
 		return nil, errors.WithStack(err)
 	}
 
+	if bcrypt.CompareHashAndPassword([]byte(ad.PasswordHash), []byte(password)) != nil {
+		return nil, errors.Wrap(ErrInvalidPassword, "wrong password")
+	}
+
 	ad.Phone = phone
 	ad.UpdatedAt = time.Now()
 
-	if err := pkgtx.RunInTx(ctx, c.s, func(ctx context.Context, tx pkgtx.Tx) error {
-		switch _, err := c.s.TxGetAuthDataByPhone(ctx, tx, phone); errors.Cause(err) {
-		case storage.ErrNotFound:
-		case nil:
-			return errors.WithStack(ErrAlreadyExists)
-		}
-
-		return errors.WithStack(c.s.TxPutAuth(ctx, tx, ad))
-	}); err != nil {
+	if err := pkgtx.RunInTx(ctx, c.s, putAuthUpdatedPhone(c, phone, ad)); err != nil {
 		return nil, errors.WithStack(err)
 	}
 
@@ -583,6 +635,22 @@ func (c *Controller) UpdatePhone(ctx context.Context, accountID string, phone st
 	}
 
 	return sat, nil
+}
+
+func putAuthUpdatedPhone(
+	c *Controller,
+	phone string,
+	ad *storage.AuthData,
+) func(ctx context.Context, tx pkgtx.Tx) error {
+	return func(ctx context.Context, tx pkgtx.Tx) error {
+		switch _, err := c.s.TxGetAuthDataByPhone(ctx, tx, phone); errors.Cause(err) {
+		case storage.ErrNotFound:
+		case nil:
+			return errors.WithStack(ErrAlreadyExists)
+		}
+
+		return errors.WithStack(c.s.TxPutAuth(ctx, tx, ad))
+	}
 }
 
 type UpdatePasswordData struct {

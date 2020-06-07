@@ -52,3 +52,48 @@ func TestRegister(t *testing.T) {
 		require.Nil(t, err)
 	})
 }
+
+func TestUpdateAuthEmailAndPhone(t *testing.T) {
+	as, authCloser := testutils.InitAuthStorage(t)
+	defer func() {
+		if err := authCloser(); err != nil {
+			t.Error(err)
+		}
+	}()
+
+	ac := controller.New(authCfg, as)
+
+	rd := controller.RegisterData{
+		Email:    "companytest1@gmail.com",
+		Phone:    "+380500000002",
+		Account:  controller.AccountTypePersona,
+		Password: "Password2",
+	}
+
+	token, err := ac.Register(context.Background(), &rd)
+	if err != nil {
+		t.Error(err)
+	}
+
+	newEmail := "companytest2@gmail.com"
+
+	t.Run("update email", func(t *testing.T) {
+		_, err := ac.UpdateEmail(context.Background(), token.AccountID, newEmail, rd.Password, rd.Account)
+		require.NoError(t, err)
+
+		self, err := ac.GetSelf(context.Background(), token.AccountID)
+		require.NoError(t, err)
+		require.Equal(t, newEmail, self.Email)
+	})
+
+	newPhone := "+380500000004"
+
+	t.Run("update phone", func(t *testing.T) {
+		_, err := ac.UpdatePhone(context.Background(), token.AccountID, newPhone, rd.Password)
+		require.NoError(t, err)
+
+		self, err := ac.GetSelf(context.Background(), token.AccountID)
+		require.NoError(t, err)
+		require.Equal(t, newPhone, self.Phone)
+	})
+}
