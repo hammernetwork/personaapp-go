@@ -96,4 +96,14 @@ func TestUpdateAuthEmailAndPhone(t *testing.T) {
 		require.NoError(t, err)
 		require.Equal(t, newPhone, self.Phone)
 	})
+
+	pd := controller.UpdatePasswordData{
+		OldPassword: rd.Password,
+		NewPassword: "Password3",
+	}
+
+	t.Run("update password", func(t *testing.T) {
+		_, err := ac.UpdatePassword(context.Background(), token.AccountID, &pd)
+		require.NoError(t, err)
+	})
 }

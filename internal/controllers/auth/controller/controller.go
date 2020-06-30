@@ -717,12 +717,7 @@ func (c *Controller) UpdatePassword(
 		return nil, errors.WithStack(err)
 	}
 
-	oldPasswordHash, err := passwordHash(upd.OldPassword)
-	if err != nil {
-		return nil, errors.WithStack(err)
-	}
-
-	if oldPasswordHash != ad.PasswordHash {
+	if bcrypt.CompareHashAndPassword([]byte(ad.PasswordHash), []byte(upd.OldPassword)) != nil {
 		return nil, errors.WithStack(ErrInvalidOldPasswordNotMatch)
 	}
 
