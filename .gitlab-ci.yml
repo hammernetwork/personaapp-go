@@ -10,18 +10,17 @@ variables:
 
 
 stages:
-#  - test
+  - test
   - build
 #  - build_image_master
   - deploy_dev
   - deploy
 
-#test:
-#  stage: test
-#  before_script:
-#    - docker login $REGISTRY -u $GITLAB_REGISTRY_USER -p $GITLAB_REGISTRY_TOKEN
-#  script:
-#    -  make clean fmt build lint # testing is disable for now in ci cause of inability to start a docker in docker
+test:
+  image: golang:1.14-alpine
+  stage: test
+  script:
+    -  go test -v -race -count=1 ./
 
 #build:
 #  stage: build
