@@ -10,19 +10,19 @@ variables:
 
 
 stages:
-  - test
+#  - test
   - build
 #  - build_image_master
   - deploy_dev
   - deploy
 
-test:
-  image: docker:17
-  stage: test
-  before_script:
-    - apk --update add go gcc g++
-  script:
-    -  go test -v -race -count=1 ./...
+#test:
+#  image: docker:17
+#  stage: test
+#  before_script:
+#    - apk --update add go gcc g++
+#  script:
+#    -  go test -v -race -count=1 ./...
 
 #build:
 #  stage: build
