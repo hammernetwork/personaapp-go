@@ -19,6 +19,8 @@ stages:
 test:
   image: golang:1.14-alpine
   stage: test
+  before_script:
+    - apk --update add gcc
   script:
     -  go test -v -race -count=1 ./
 
