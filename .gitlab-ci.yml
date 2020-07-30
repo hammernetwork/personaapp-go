@@ -22,7 +22,7 @@ test:
   before_script:
     - apk --update add gcc
   script:
-    -  go test -v -race -count=1 ./
+    -  go test -v -race -count=1 ./...
 
 #build:
 #  stage: build
