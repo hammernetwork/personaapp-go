@@ -20,7 +20,7 @@ test:
   image: golang:1.14-alpine
   stage: test
   before_script:
-    - apk --update add gcc
+    - apk --update add gcc g++
   script:
     -  go test -v -race -count=1 ./...
 
