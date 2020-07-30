@@ -17,10 +17,10 @@ stages:
   - deploy
 
 test:
-  image: golang:1.14-alpine
+  image: docker:17
   stage: test
   before_script:
-    - apk --update add gcc g++
+    - apk --update add go gcc g++
   script:
     -  go test -v -race -count=1 ./...
 
