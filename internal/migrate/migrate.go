@@ -113,6 +113,10 @@ var migrations = []*migrate.Migration{
 		Id: "07 - Create vacancy table",
 		Up: []string{
 			`CREATE EXTENSION IF NOT EXISTS "postgis";`,
+			`CREATE TYPE e_vacancy_type AS ENUM (
+				'vacancy_type_remote',
+				'vacancy_type_normal'
+			);`,
 			`CREATE TABLE IF NOT EXISTS vacancy (
 				id            			uuid					PRIMARY KEY,
 				title		  			VARCHAR(255)			NOT NULL,
@@ -122,9 +126,12 @@ var migrations = []*migrate.Migration{
 				max_salary	  			INTEGER					NULL,
 				location	  			GEOGRAPHY(POINT,4326)	NULL,
 				work_months_experience  INTEGER					NOT NULL,
-				work_schedule			VARCHAR(100)			NOT NULL,
+				work_schedule			TEXT					NOT NULL,
 				company_id	  			uuid					REFERENCES company (auth_id) ON DELETE CASCADE,
 				position				SERIAL					NOT NULL,
+				type					e_vacancy_type			NOT NULL,
+				address					TEXT					NULL,
+				country_code			INTEGER					NOT NULL,
 				created_at       		TIMESTAMPTZ     		NOT NULL,
 				updated_at       		TIMESTAMPTZ     		NOT NULL
 			);`,
@@ -133,6 +140,7 @@ var migrations = []*migrate.Migration{
 		Down: []string{
 			`DROP INDEX IF EXISTS created_at_position_vacancy_idx;`,
 			`DROP TABLE IF EXISTS vacancy;`,
+			`DROP TYPE IF EXISTS e_vacancy_type;`,
 		},
 	},
 	{
@@ -166,8 +174,42 @@ var migrations = []*migrate.Migration{
 			`CREATE INDEX vacancies_images_vacancy_id_idx ON vacancies_images (vacancy_id);`,
 		},
 		Down: []string{
+			`DROP INDEX IF EXISTS vacancies_images_unique_idx;`,
 			`DROP INDEX IF EXISTS vacancies_images_vacancy_id_idx;`,
 			`DROP TABLE IF EXISTS vacancies_images;`,
+		},
+	},
+	{
+		Id: "10 - Create city table",
+		Up: []string{
+			`CREATE TABLE IF NOT EXISTS city (
+				id         			uuid            	PRIMARY KEY,
+				name				VARCHAR(255)     	NOT NULL,
+				country_code	  	INTEGER				NOT NULL,
+				rating	  			INTEGER				NOT NULL
+			);`,
+		},
+		Down: []string{
+			`DROP TABLE IF EXISTS city;`,
+		},
+	},
+	{
+		Id: "11 - Create vacancy cities table",
+		Up: []string{
+			`CREATE TABLE IF NOT EXISTS vacancy_cities (
+				vacancy_id           uuid            REFERENCES vacancy (id) ON DELETE CASCADE,
+				city_id    		 	 uuid            REFERENCES city (id) ON DELETE CASCADE,
+				CONSTRAINT vacancy_cities_pkey PRIMARY KEY (vacancy_id, city_id)
+			);`,
+			`CREATE UNIQUE INDEX vacancy_cities_unique_idx ON vacancy_cities (vacancy_id, city_id);`,
+			`CREATE INDEX vacancy_cities_vacancy_id_idx ON vacancy_cities (vacancy_id);`,
+			`CREATE INDEX vacancy_cities_city_id_idx ON vacancy_cities (city_id);`,
+		},
+		Down: []string{
+			`DROP INDEX IF EXISTS vacancy_cities_unique_idx;`,
+			`DROP INDEX IF EXISTS vacancy_cities_vacancy_id_idx;`,
+			`DROP INDEX IF EXISTS vacancy_cities_city_id_idx;`,
+			`DROP TABLE IF EXISTS vacancy_cities;`,
 		},
 	},
 }

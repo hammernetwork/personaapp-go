@@ -21,16 +21,18 @@ message UpdateCompanyRequest {
     google.protobuf.StringValue logo_url = 3;
 }
 
-message UpdateCompanyResponse {}
+message UpdateCompanyResponse {
+}
 
 // Update Activity Fields
 message UpdateCompanyActivityFieldsRequest {
     map<string, Empty> activity_fields = 1;
 }
 
-message UpdateCompanyActivityFieldsResponse {}
+message UpdateCompanyActivityFieldsResponse {
+}
 
-// Get
+// Get company
 message GetCompanyRequest {
     string id = 1;
 }
@@ -47,15 +49,17 @@ message GetCompanyResponse {
     Company company = 1;
 }
 
-// Get
-message GetCompaniesActivityFieldsListRequest {}
+// Get activity fields list
+message GetCompaniesActivityFieldsListRequest {
+}
 
 message GetCompaniesActivityFieldsListResponse {
     map<string, CompanyActivityField> activity_fields = 1;
 }
 
 // Entities
-message Empty {}
+message Empty {
+}
 
 message CompanyActivityField {
     string id = 1;

@@ -19,6 +19,7 @@ func init() {
 var (
 	ErrCompanyNotFound          = errors.New("company not found")
 	ErrCategoryNotFound         = errors.New("category not found")
+	ErrCityNotFound             = errors.New("city not found")
 	ErrInvalidTitle             = errors.New("invalid title")
 	ErrInvalidTitleLength       = errors.New("invalid title length")
 	ErrInvalidDescription       = errors.New("invalid description")

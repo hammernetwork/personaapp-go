@@ -8,9 +8,13 @@ option java_package = "online.personaapp";
 option java_outer_classname = "GrpcVacancy";
 
 service PersonaAppVacancy {
+    // Vacancy categories
     rpc GetVacancyCategoriesList (GetVacancyCategoriesListRequest) returns (GetVacancyCategoriesListResponse);
+    // Vacancy
     rpc GetVacanciesList (GetVacanciesListRequest) returns (GetVacanciesListResponse);
     rpc GetVacancyDetails (GetVacancyDetailsRequest) returns (GetVacancyDetailsResponse);
+    // Cities
+    rpc GetCities (GetCitiesRequest) returns (GetCitiesResponse);
 }
 
 // Get Vacancies filters list
@@ -66,6 +70,9 @@ message GetVacancyDetailsResponse {
         string description = 1;
         uint32 work_months_experience = 2;
         string work_schedule = 3;
+        VacancyType type = 4;
+        string address = 5;
+        int32 country_code = 6;
     }
 
     message VacancyCompany {
@@ -82,10 +89,27 @@ message GetVacancyDetailsResponse {
     VacancyLocation location = 3;
     VacancyDescription description = 4;
     VacancyCompany company = 5;
-    map<string, VacancyCategoryShort> categories = 6;
+    City city = 6;
+    map<string, VacancyCategoryShort> categories = 7;
+}
+
+// Get cities
+message GetCitiesRequest {
+    google.protobuf.Int32Value rating = 1;
+    google.protobuf.StringValue filter = 2;
+}
+
+message GetCitiesResponse {
+    repeated City cities = 1;
 }
 
 // Entity
+enum VacancyType {
+    VACANCY_TYPE_UNKNOWN = 0;
+    VACANCY_TYPE_REMOTE = 1;
+    VACANCY_TYPE_NORMAL = 2;
+}
+
 message Empty {
 }
 
@@ -113,4 +137,11 @@ message Vacancy {
 
 message VacancyCategoryShort {
     string title = 1;
+}
+
+message City {
+    string id = 1;
+    string name = 2;
+    int32 country_code = 3;
+    int32 rating = 4;
 }
