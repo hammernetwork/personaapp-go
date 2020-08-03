@@ -48,7 +48,7 @@ var (
 	ErrInvalidVacancyLocationLatitude     = errors.New("invalid vacancy location latitude")
 	ErrInvalidVacancyLocationLongitude    = errors.New("invalid vacancy location longitude")
 	ErrInvalidCity                        = errors.New("invalid city struct")
-	ErrInvalidCityTitle                   = errors.New("invalid city title")
+	ErrInvalidCityName                    = errors.New("invalid city name")
 )
 
 type Storage interface {
@@ -246,7 +246,7 @@ func (vc *City) validate() error {
 		Field        string
 		DefaultError error
 	}{
-		{Field: "Name", DefaultError: ErrInvalidCityTitle},
+		{Field: "Name", DefaultError: ErrInvalidCityName},
 	}
 
 	if valid, err := govalidator.ValidateStruct(vc); !valid {

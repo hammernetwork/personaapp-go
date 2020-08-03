@@ -206,7 +206,7 @@ func TestController_PutCity(t *testing.T) {
 			CountryCode: 0,
 			Rating:      0,
 		})
-		require.EqualError(t, errors.Cause(err), controller.ErrInvalidCityTitle.Error())
+		require.EqualError(t, errors.Cause(err), controller.ErrInvalidCityName.Error())
 
 		_, err = c.PutCity(context.TODO(), nil, &controller.City{
 			Name: "Abcd abcd abcd abcd abcd abcd abcd abcd abcd abcdef" +
@@ -218,7 +218,7 @@ func TestController_PutCity(t *testing.T) {
 			CountryCode: 0,
 			Rating:      0,
 		})
-		require.EqualError(t, errors.Cause(err), controller.ErrInvalidCityTitle.Error())
+		require.EqualError(t, errors.Cause(err), controller.ErrInvalidCityName.Error())
 	})
 }
 
