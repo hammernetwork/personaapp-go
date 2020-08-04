@@ -183,7 +183,7 @@ func (m *UpdateCompanyActivityFieldsResponse) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_UpdateCompanyActivityFieldsResponse proto.InternalMessageInfo
 
-// Get
+// Get company
 type GetCompanyRequest struct {
 	Id                   string   `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
@@ -333,7 +333,7 @@ func (m *GetCompanyResponse_Company) GetActivityFields() map[string]*CompanyActi
 	return nil
 }
 
-// Get
+// Get activity fields list
 type GetCompaniesActivityFieldsListRequest struct {
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`

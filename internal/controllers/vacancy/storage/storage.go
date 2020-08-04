@@ -22,6 +22,13 @@ func New(db *postgresql.Storage) *Storage {
 	return &Storage{db}
 }
 
+type VacancyType string
+
+const (
+	VacancyTypeRemote VacancyType = "vacancy_type_remote"
+	VacancyTypeNormal VacancyType = "vacancy_type_normal"
+)
+
 type VacancyCategory struct {
 	ID        string
 	Title     string
@@ -34,6 +41,18 @@ type VacancyCategoryShort struct {
 	VacancyID string
 	ID        string
 	Title     string
+}
+
+type City struct {
+	ID          string
+	Name        string
+	CountryCode int32
+	Rating      int32
+}
+
+type VacancyCity struct {
+	VacancyID string
+	City
 }
 
 type Vacancy struct {
@@ -54,6 +73,9 @@ type VacancyDetails struct {
 	WorkSchedule         string
 	LocationLatitude     float32
 	LocationLongitude    float32
+	Type                 VacancyType
+	Address              string
+	CountryCode          int32
 }
 
 type Cursor struct {
@@ -158,12 +180,14 @@ func (s *Storage) TxGetVacancyDetails(ctx context.Context, tx pkgtx.Tx, vacancyI
 	var vd VacancyDetails
 	err := c.QueryRowContext(
 		ctx,
-		`SELECT id, title, description, phone, min_salary, max_salary, company_id, work_months_experience, 
+		`SELECT id, title, description, phone, min_salary, max_salary, company_id, 
+					type, address, country_code, work_months_experience, 
 					work_schedule, ST_X(location::geometry), ST_Y(location::geometry), created_at, updated_at
 				FROM vacancy
 				WHERE id = $1`,
 		vacancyID,
 	).Scan(&vd.ID, &vd.Title, &vd.Description, &vd.Phone, &vd.MinSalary, &vd.MaxSalary, &vd.CompanyID,
+		&vd.Type, &vd.Address, &vd.CountryCode,
 		&vd.WorkMonthsExperience, &vd.WorkSchedule, &vd.LocationLongitude, &vd.LocationLatitude,
 		&vd.CreatedAt, &vd.UpdatedAt)
 
@@ -194,14 +218,17 @@ func (s *Storage) TxPutVacancy(ctx context.Context, tx pkgtx.Tx, vacancy *Vacanc
 					work_months_experience = $8,
 					work_schedule = $9,
 					location = ST_SetSRID(ST_MakePoint($10, $11), 4326),
-					updated_at = $13
+					type = $12,
+					address = $13,
+					country_code = $14,
+					updated_at = $16
 				WHERE id = $1
 				RETURNING id, title, description, phone, min_salary, max_salary, company_id, work_months_experience, 
-					work_schedule, location, created_at, updated_at
+					work_schedule, location, type, address, country_code, created_at, updated_at
 			)
 			INSERT INTO vacancy (id, title, description, phone, min_salary, max_salary, company_id, work_months_experience, 
-					work_schedule, location, created_at, updated_at)
-			SELECT $1, $2, $3, $4, $5, $6, $7, $8, $9, ST_SetSRID(ST_MakePoint($10, $11), 4326), $12, $13
+					work_schedule, location, type, address, country_code, created_at, updated_at)
+			SELECT $1, $2, $3, $4, $5, $6, $7, $8, $9, ST_SetSRID(ST_MakePoint($10, $11), 4326), $12, $13, $14, $15, $16
 			WHERE NOT EXISTS (SELECT * FROM upsert)`,
 		vacancy.ID,
 		vacancy.Title,
@@ -214,6 +241,9 @@ func (s *Storage) TxPutVacancy(ctx context.Context, tx pkgtx.Tx, vacancy *Vacanc
 		vacancy.WorkSchedule,
 		vacancy.LocationLongitude,
 		vacancy.LocationLatitude,
+		vacancy.Type,
+		vacancy.Address,
+		vacancy.CountryCode,
 		vacancy.CreatedAt,
 		vacancy.UpdatedAt,
 	); err != nil {
@@ -497,4 +527,220 @@ func (s *Storage) TxDeleteVacancyImages(ctx context.Context, tx pkgtx.Tx, vacanc
 
 /**
 Vacancy images part end
+*/
+
+/**
+Cities part start
+*/
+func (s *Storage) TxGetCitiesList(
+	ctx context.Context,
+	tx pkgtx.Tx,
+	countryCodes []int32,
+	rating int32,
+	filter string,
+) (_ []*City, rerr error) {
+	c := postgresql.FromTx(tx)
+
+	like := "%" + filter + "%"
+	rows, err := c.QueryContext(
+		ctx,
+		`SELECT id, name, country_code, rating
+				FROM city
+				WHERE ($1 = '{}' OR country_code = ANY($1::INTEGER[]))
+					AND rating >= $2
+					AND ($3 = '' OR name LIKE $3)
+				ORDER BY name ASC`,
+		pq.Array(countryCodes),
+		rating,
+		like,
+	)
+	if err != nil {
+		return nil, errors.WithStack(err)
+	}
+	defer func() {
+		if err := rows.Close(); err != nil {
+			if rerr != nil {
+				rerr = errors.WithSecondaryError(rerr, err)
+				return
+			}
+
+			rerr = errors.WithStack(err)
+		}
+	}()
+
+	cities := make([]*City, 0)
+
+	for rows.Next() {
+		var city City
+		if err := rows.Scan(&city.ID, &city.Name, &city.CountryCode, &city.Rating); err != nil {
+			return nil, errors.WithStack(err)
+		}
+
+		cities = append(cities, &city)
+	}
+	if rows.Err() != nil {
+		return nil, errors.WithStack(rows.Err())
+	}
+
+	return cities, nil
+}
+
+func (s *Storage) TxPutCity(ctx context.Context, tx pkgtx.Tx, city *City) error {
+	c := postgresql.FromTx(tx)
+
+	if _, err := c.ExecContext(
+		ctx,
+		`WITH upsert AS (
+				UPDATE city SET
+					name = $2,
+					country_code = $3,
+					rating = $4
+				WHERE id = $1
+				RETURNING id, name, country_code, rating
+			)
+			INSERT INTO city (id, name, country_code, rating)
+			SELECT $1, $2, $3, $4
+			WHERE NOT EXISTS (SELECT * FROM upsert)`,
+		city.ID,
+		city.Name,
+		city.CountryCode,
+		city.Rating,
+	); err != nil {
+		return errors.WithStack(err)
+	}
+
+	return nil
+}
+
+func (s *Storage) TxGetCity(ctx context.Context, tx pkgtx.Tx, cityID string) (*City, error) {
+	c := postgresql.FromTx(tx)
+
+	var city City
+	err := c.QueryRowContext(
+		ctx,
+		`SELECT id, name, country_code, rating
+				FROM city
+				WHERE id = $1`,
+		cityID,
+	).Scan(&city.ID, &city.Name, &city.CountryCode, &city.Rating)
+
+	switch err {
+	case nil:
+	case sql.ErrNoRows:
+		return nil, errors.WithStack(ErrNotFound)
+	default:
+		return nil, errors.WithStack(err)
+	}
+
+	return &city, nil
+}
+
+func (s *Storage) TxDeleteCity(ctx context.Context, tx pkgtx.Tx, cityID string) error {
+	c := postgresql.FromTx(tx)
+
+	if _, err := c.ExecContext(
+		ctx,
+		`DELETE FROM city 
+			WHERE id = $1`,
+		cityID,
+	); err != nil {
+		return errors.WithStack(err)
+	}
+
+	return nil
+}
+
+/**
+Cities part end
+*/
+
+/**
+Vacancy cities part start
+*/
+func (s *Storage) TxGetVacancyCities(
+	ctx context.Context,
+	tx pkgtx.Tx,
+	vacancyIDs []string,
+) ([]*VacancyCity, error) {
+	c := postgresql.FromTx(tx)
+
+	rows, err := c.QueryContext(
+		ctx,
+		`SELECT vscs.vacancy_id, c.id, c.name, country_code, rating
+			FROM vacancy_cities AS vscs
+			INNER JOIN city AS c
+			ON vscs.city_id = c.id
+			WHERE vacancy_id = ANY($1::uuid[])`,
+		pq.Array(vacancyIDs),
+	)
+	if err != nil {
+		return nil, errors.WithStack(err)
+	}
+
+	vcs := make([]*VacancyCity, 0)
+
+	for rows.Next() {
+		var vc VacancyCity
+		if err := rows.Scan(&vc.VacancyID, &vc.ID, &vc.Name, &vc.CountryCode, &vc.Rating); err != nil {
+			_ = rows.Close()
+			return nil, errors.WithStack(err)
+		}
+
+		vcs = append(vcs, &vc)
+	}
+
+	return vcs, nil
+}
+
+func (s *Storage) TxPutVacancyCities(
+	ctx context.Context,
+	tx pkgtx.Tx,
+	vacancyID string,
+	cityIDs []string,
+) error {
+	c := postgresql.FromTx(tx)
+
+	queryFormat := `INSERT 
+		INTO vacancy_cities (vacancy_id, city_id)
+		VALUES %s`
+
+	columns := 2
+	valueStrings := make([]string, len(cityIDs))
+	valueArgs := make([]interface{}, len(cityIDs)*columns)
+
+	for i := 0; i < len(cityIDs); i++ {
+		offset := i * columns
+		valueStrings[i] = fmt.Sprintf("($%d, $%d)", offset+1, offset+2)
+		valueArgs[offset] = vacancyID
+		valueArgs[offset+1] = cityIDs[i]
+	}
+
+	if _, err := c.ExecContext(
+		ctx,
+		fmt.Sprintf(queryFormat, strings.TrimSuffix(strings.Join(valueStrings, ","), ",")),
+		valueArgs...,
+	); err != nil {
+		return errors.WithStack(err)
+	}
+
+	return nil
+}
+
+func (s *Storage) TxDeleteVacancyCities(ctx context.Context, tx pkgtx.Tx, vacancyID string) error {
+	c := postgresql.FromTx(tx)
+
+	if _, err := c.ExecContext(
+		ctx,
+		`DELETE FROM vacancy_cities 
+			WHERE vacancy_id = $1`,
+		vacancyID,
+	); err != nil {
+		return errors.WithStack(err)
+	}
+
+	return nil
+}
+
+/**
+Vacancy cities part end
 */

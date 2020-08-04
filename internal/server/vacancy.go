@@ -25,6 +25,7 @@ type VacancyController interface {
 		vacancyID *string,
 		vacancy *vacancyController.VacancyDetails,
 		categories []string,
+		cityIDs []string,
 	) (vacancyController.VacancyID, error)
 	GetVacancyDetails(ctx context.Context, vacancyID string) (*vacancyController.VacancyDetails, error)
 	GetVacanciesList(
@@ -34,6 +35,8 @@ type VacancyController interface {
 		limit int,
 	) ([]*vacancyController.Vacancy, *vacancyController.Cursor, error)
 	GetVacanciesCategories(ctx context.Context, vacancyIDs []string) ([]*vacancyController.VacancyCategoryShort, error)
+	GetVacancyCities(ctx context.Context, vacancyIDs []string) ([]*vacancyController.VacancyCity, error)
+	GetCities(ctx context.Context, countryCodes []int32, rating int32, filter string) ([]*vacancyController.City, error)
 }
 
 // Vacancy
@@ -89,25 +92,15 @@ func (s *Server) GetVacancyDetails(
 	}
 
 	// Get vacancy categories
-	categories, err := s.vc.GetVacanciesCategories(
-		ctx,
-		[]string{req.VacancyId},
-	)
-
-	switch errors.Cause(err) {
-	case nil:
-	case companyController.ErrCategoryNotFound:
-		return nil, status.Error(codes.NotFound, err.Error())
+	categoriesMap, vc, err := getVacancyCategoriesFromStorage(ctx, req, s)
+	if err != nil {
+		return nil, errors.WithStack(err)
 	}
 
-	categoriesMap := map[string]*vacancyapi.VacancyCategoryShort{}
-	vc := make([]string, len(categories))
-
-	for idx, c := range categories {
-		vc[idx] = c.Title
-		categoriesMap[c.ID] = &vacancyapi.VacancyCategoryShort{
-			Title: c.Title,
-		}
+	// Get vacancy categories
+	c, err := getVacancyCityFromStorage(ctx, req, s)
+	if err != nil {
+		return nil, errors.WithStack(err)
 	}
 
 	return &vacancyapi.GetVacancyDetailsResponse{
@@ -121,10 +114,59 @@ func (s *Server) GetVacancyDetails(
 			Description:          vd.Description,
 			WorkMonthsExperience: uint32(vd.WorkMonthsExperience),
 			WorkSchedule:         vd.WorkSchedule,
+			Type:                 toServerVacancyType(vd.Type),
+			Address:              vd.Address,
+			CountryCode:          vd.CountryCode,
 		},
 		Company:    toServerCompany(cd),
 		Categories: categoriesMap,
+		City:       c,
 	}, nil
+}
+
+func getVacancyCategoriesFromStorage(
+	ctx context.Context,
+	req *vacancyapi.GetVacancyDetailsRequest,
+	s *Server,
+) (categoriesMap map[string]*vacancyapi.VacancyCategoryShort, vc []string, err error) {
+	categories, err := s.vc.GetVacanciesCategories(ctx, []string{req.VacancyId})
+	switch errors.Cause(err) {
+	case nil:
+	case companyController.ErrCategoryNotFound:
+		return nil, nil, status.Error(codes.NotFound, err.Error())
+	}
+
+	categoriesMap = map[string]*vacancyapi.VacancyCategoryShort{}
+	vc = make([]string, len(categories))
+
+	for idx, c := range categories {
+		vc[idx] = c.Title
+		categoriesMap[c.ID] = &vacancyapi.VacancyCategoryShort{
+			Title: c.Title,
+		}
+	}
+	return categoriesMap, vc, nil
+}
+
+func getVacancyCityFromStorage(
+	ctx context.Context,
+	req *vacancyapi.GetVacancyDetailsRequest,
+	s *Server,
+) (*vacancyapi.City, error) {
+	cities, err := s.vc.GetVacancyCities(ctx, []string{req.VacancyId})
+	switch errors.Cause(err) {
+	case nil:
+	case companyController.ErrCityNotFound:
+		return nil, status.Error(codes.NotFound, err.Error())
+	}
+	vacancyCity := cities[0]
+	c := &vacancyapi.City{
+		Id:          vacancyCity.ID,
+		Name:        vacancyCity.Name,
+		CountryCode: vacancyCity.CountryCode,
+		Rating:      vacancyCity.Rating,
+	}
+	return c, nil
 }
 
 // nolint:funlen // will rework
@@ -228,6 +270,37 @@ func (s *Server) GetVacanciesList(
 	}, nil
 }
 
+func (s *Server) GetCities(
+	ctx context.Context,
+	req *vacancyapi.GetCitiesRequest,
+) (*vacancyapi.GetCitiesResponse, error) {
+	_, err := s.getAuthClaims(ctx)
+	if err != nil {
+		return nil, status.Error(codes.Unauthenticated, "unauthorized")
+	}
+
+	cs, err := s.vc.GetCities(ctx, []int32{}, req.Rating.GetValue(), req.Filter.GetValue())
+	switch errors.Cause(err) {
+	case nil:
+	case vacancyController.ErrCitiesNotFound:
+		return nil, status.Error(codes.NotFound, err.Error())
+	}
+
+	cities := make([]*vacancyapi.City, len(cs))
+	for idx, c := range cs {
+		cities[idx] = &vacancyapi.City{
+			Id:          c.ID,
+			Name:        c.Name,
+			CountryCode: c.CountryCode,
+			Rating:      c.Rating,
+		}
+	}
+
+	return &vacancyapi.GetCitiesResponse{
+		Cities: cities,
+	}, nil
+}
+
 // Mappings
 func toServerVacancy(vd *vacancyController.VacancyDetails, vc []string) *vacancyapi.Vacancy {
 	return &vacancyapi.Vacancy{
@@ -277,4 +350,15 @@ func toServerCursor(cursor *vacancyController.Cursor) *wrappers.StringValue {
 	}
 
 	return &wrappers.StringValue{Value: cursor.String()}
+}
+
+func toServerVacancyType(at vacancyController.VacancyType) vacancyapi.VacancyType {
+	switch at {
+	case vacancyController.VacancyTypeNormal:
+		return vacancyapi.VacancyType_VACANCY_TYPE_NORMAL
+	case vacancyController.VacancyTypeRemote:
+		return vacancyapi.VacancyType_VACANCY_TYPE_REMOTE
+	default:
+		return vacancyapi.VacancyType_VACANCY_TYPE_UNKNOWN
+	}
 }
