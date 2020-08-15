@@ -174,6 +174,21 @@ func (s *Storage) TxGetVacancyCategory(ctx context.Context, tx pkgtx.Tx, categor
 	return &vc, nil
 }
 
+func (s *Storage) TxDeleteVacancyCategory(ctx context.Context, tx pkgtx.Tx, categoryID string) error {
+	c := postgresql.FromTx(tx)
+
+	if _, err := c.ExecContext(
+		ctx,
+		`DELETE FROM vacancy_category 
+			WHERE id = $1`,
+		categoryID,
+	); err != nil {
+		return errors.WithStack(err)
+	}
+
+	return nil
+}
+
 func (s *Storage) TxGetVacancyDetails(ctx context.Context, tx pkgtx.Tx, vacancyID string) (*VacancyDetails, error) {
 	c := postgresql.FromTx(tx)
 
@@ -418,6 +433,21 @@ func (s *Storage) TxDeleteVacancyCategories(ctx context.Context, tx pkgtx.Tx, va
 		ctx,
 		`DELETE FROM vacancies_categories 
 			WHERE vacancy_id = $1`,
+		vacancyID,
+	); err != nil {
+		return errors.WithStack(err)
+	}
+
+	return nil
+}
+
+func (s *Storage) TxDeleteVacancy(ctx context.Context, tx pkgtx.Tx, vacancyID string) error {
+	c := postgresql.FromTx(tx)
+
+	if _, err := c.ExecContext(
+		ctx,
+		`DELETE FROM vacancy 
+			WHERE id = $1`,
 		vacancyID,
 	); err != nil {
 		return errors.WithStack(err)

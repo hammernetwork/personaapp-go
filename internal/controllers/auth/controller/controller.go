@@ -21,13 +21,14 @@ type AccountType string
 const (
 	AccountTypeCompany AccountType = "company"
 	AccountTypePersona AccountType = "persona"
+	AccountTypeAdmin   AccountType = "admin"
 )
 
 func init() {
 	govalidator.CustomTypeTagMap.Set("account_type", func(i interface{}, o interface{}) bool {
 		if at, ok := i.(AccountType); ok {
 			switch at {
-			case AccountTypeCompany, AccountTypePersona:
+			case AccountTypeCompany, AccountTypePersona, AccountTypeAdmin:
 				return true
 			}
 		}
@@ -199,6 +200,8 @@ func toStorageAccount(at AccountType) (storage.AccountType, error) {
 		return storage.AccountTypeCompany, nil
 	case AccountTypePersona:
 		return storage.AccountTypePersona, nil
+	case AccountTypeAdmin:
+		return storage.AccountTypeAdmin, nil
 	default:
 		return "", errors.New("wrong account type")
 	}
@@ -210,6 +213,8 @@ func fromStorageAccount(at storage.AccountType) (AccountType, error) {
 		return AccountTypeCompany, nil
 	case storage.AccountTypePersona:
 		return AccountTypePersona, nil
+	case storage.AccountTypeAdmin:
+		return AccountTypeAdmin, nil
 	default:
 		return "", errors.New("wrong account type")
 	}

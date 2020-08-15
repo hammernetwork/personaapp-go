@@ -55,6 +55,7 @@ type Storage interface {
 	TxGetVacancyCategory(ctx context.Context, tx pkgtx.Tx, categoryID string) (*storage.VacancyCategory, error)
 	TxPutVacancyCategory(ctx context.Context, tx pkgtx.Tx, category *storage.VacancyCategory) error
 	TxGetVacanciesCategoriesList(ctx context.Context, tx pkgtx.Tx) ([]*storage.VacancyCategory, error)
+	TxDeleteVacancyCategory(ctx context.Context, tx pkgtx.Tx, categoryID string) error
 
 	TxGetVacanciesCategories(
 		ctx context.Context,
@@ -77,6 +78,7 @@ type Storage interface {
 		limit int,
 		cursor *storage.Cursor,
 	) ([]*storage.Vacancy, *storage.Cursor, error)
+	TxDeleteVacancy(ctx context.Context, tx pkgtx.Tx, vacancyID string) error
 
 	TxGetCitiesList(
 		ctx context.Context,
@@ -359,6 +361,27 @@ func (c *Controller) GetVacanciesCategoriesList(ctx context.Context) ([]*Vacancy
 	}
 
 	return cvcs, nil
+}
+
+func (c *Controller) DeleteVacancyCategory(
+	ctx context.Context,
+	categoryID string,
+) error {
+	if err := pkgtx.RunInTx(ctx, c.s, func(ctx context.Context, tx pkgtx.Tx) error {
+		switch err := c.s.TxDeleteVacancyCategory(ctx, tx, categoryID); errors.Cause(err) {
+		case nil:
+		case storage.ErrNotFound:
+			return errors.WithStack(ErrVacancyCategoryNotFound)
+		default:
+			return errors.WithStack(err)
+		}
+
+		return nil
+	}); err != nil {
+		return errors.WithStack(err)
+	}
+
+	return nil
 }
 
 func (c *Controller) PutVacancy(
@@ -662,6 +685,27 @@ func (c *Controller) GetVacancyCities(
 	return cities, nil
 }
 
+func (c *Controller) DeleteVacancy(
+	ctx context.Context,
+	vacancyID string,
+) error {
+	if err := pkgtx.RunInTx(ctx, c.s, func(ctx context.Context, tx pkgtx.Tx) error {
+		switch err := c.s.TxDeleteVacancy(ctx, tx, vacancyID); errors.Cause(err) {
+		case nil:
+		case storage.ErrNotFound:
+			return errors.WithStack(ErrVacancyNotFound)
+		default:
+			return errors.WithStack(err)
+		}
+
+		return nil
+	}); err != nil {
+		return errors.WithStack(err)
+	}
+
+	return nil
+}
+
 func (c *Controller) GetCities(
 	ctx context.Context,
 	countryCodes []int32,
@@ -728,6 +772,27 @@ func (c *Controller) PutCity(
 	}
 
 	return ID, nil
+}
+
+func (c *Controller) DeleteCity(
+	ctx context.Context,
+	id string,
+) error {
+	if err := pkgtx.RunInTx(ctx, c.s, func(ctx context.Context, tx pkgtx.Tx) error {
+		switch err := c.s.TxDeleteCity(ctx, tx, id); errors.Cause(err) {
+		case nil:
+		case storage.ErrNotFound:
+			return errors.WithStack(ErrCityNotFound)
+		default:
+			return errors.WithStack(err)
+		}
+
+		return nil
+	}); err != nil {
+		return errors.WithStack(err)
+	}
+
+	return nil
 }
 
 // Mappings

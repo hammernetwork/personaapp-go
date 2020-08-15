@@ -44,6 +44,10 @@ func (s *Server) isCompanyAccountType(c *authController.AuthClaims) bool {
 	return toServerAccount(c.AccountType) == apiauth.AccountType_ACCOUNT_TYPE_COMPANY
 }
 
+func (s *Server) isAdminAccountType(c *authController.AuthClaims) bool {
+	return toServerAccount(c.AccountType) == apiauth.AccountType_ACCOUNT_TYPE_ADMIN
+}
+
 func getOptionalString(sw *wrappers.StringValue) *string {
 	if sw == nil {
 		return nil

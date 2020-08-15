@@ -79,6 +79,251 @@ func (Currency) EnumDescriptor() ([]byte, []int) {
 	return fileDescriptor_47be6d1234ea964b, []int{1}
 }
 
+// Get vacancy category
+type GetVacancyCategoryRequest struct {
+	Id                   string   `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *GetVacancyCategoryRequest) Reset()         { *m = GetVacancyCategoryRequest{} }
+func (m *GetVacancyCategoryRequest) String() string { return proto.CompactTextString(m) }
+func (*GetVacancyCategoryRequest) ProtoMessage()    {}
+func (*GetVacancyCategoryRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_47be6d1234ea964b, []int{0}
+}
+
+func (m *GetVacancyCategoryRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetVacancyCategoryRequest.Unmarshal(m, b)
+}
+func (m *GetVacancyCategoryRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetVacancyCategoryRequest.Marshal(b, m, deterministic)
+}
+func (m *GetVacancyCategoryRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetVacancyCategoryRequest.Merge(m, src)
+}
+func (m *GetVacancyCategoryRequest) XXX_Size() int {
+	return xxx_messageInfo_GetVacancyCategoryRequest.Size(m)
+}
+func (m *GetVacancyCategoryRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetVacancyCategoryRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetVacancyCategoryRequest proto.InternalMessageInfo
+
+func (m *GetVacancyCategoryRequest) GetId() string {
+	if m != nil {
+		return m.Id
+	}
+	return ""
+}
+
+type GetVacancyCategoryResponse struct {
+	Category             *VacancyCategory `protobuf:"bytes,1,opt,name=category,proto3" json:"category,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}         `json:"-"`
+	XXX_unrecognized     []byte           `json:"-"`
+	XXX_sizecache        int32            `json:"-"`
+}
+
+func (m *GetVacancyCategoryResponse) Reset()         { *m = GetVacancyCategoryResponse{} }
+func (m *GetVacancyCategoryResponse) String() string { return proto.CompactTextString(m) }
+func (*GetVacancyCategoryResponse) ProtoMessage()    {}
+func (*GetVacancyCategoryResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_47be6d1234ea964b, []int{1}
+}
+
+func (m *GetVacancyCategoryResponse) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_GetVacancyCategoryResponse.Unmarshal(m, b)
+}
+func (m *GetVacancyCategoryResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_GetVacancyCategoryResponse.Marshal(b, m, deterministic)
+}
+func (m *GetVacancyCategoryResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_GetVacancyCategoryResponse.Merge(m, src)
+}
+func (m *GetVacancyCategoryResponse) XXX_Size() int {
+	return xxx_messageInfo_GetVacancyCategoryResponse.Size(m)
+}
+func (m *GetVacancyCategoryResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_GetVacancyCategoryResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_GetVacancyCategoryResponse proto.InternalMessageInfo
+
+func (m *GetVacancyCategoryResponse) GetCategory() *VacancyCategory {
+	if m != nil {
+		return m.Category
+	}
+	return nil
+}
+
+// Upsert vacancy category
+type UpsertVacancyCategoryRequest struct {
+	Id                   *wrappers.StringValue `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Title                string                `protobuf:"bytes,2,opt,name=title,proto3" json:"title,omitempty"`
+	IconUrl              string                `protobuf:"bytes,3,opt,name=icon_url,json=iconUrl,proto3" json:"icon_url,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}              `json:"-"`
+	XXX_unrecognized     []byte                `json:"-"`
+	XXX_sizecache        int32                 `json:"-"`
+}
+
+func (m *UpsertVacancyCategoryRequest) Reset()         { *m = UpsertVacancyCategoryRequest{} }
+func (m *UpsertVacancyCategoryRequest) String() string { return proto.CompactTextString(m) }
+func (*UpsertVacancyCategoryRequest) ProtoMessage()    {}
+func (*UpsertVacancyCategoryRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_47be6d1234ea964b, []int{2}
+}
+
+func (m *UpsertVacancyCategoryRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_UpsertVacancyCategoryRequest.Unmarshal(m, b)
+}
+func (m *UpsertVacancyCategoryRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_UpsertVacancyCategoryRequest.Marshal(b, m, deterministic)
+}
+func (m *UpsertVacancyCategoryRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_UpsertVacancyCategoryRequest.Merge(m, src)
+}
+func (m *UpsertVacancyCategoryRequest) XXX_Size() int {
+	return xxx_messageInfo_UpsertVacancyCategoryRequest.Size(m)
+}
+func (m *UpsertVacancyCategoryRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_UpsertVacancyCategoryRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_UpsertVacancyCategoryRequest proto.InternalMessageInfo
+
+func (m *UpsertVacancyCategoryRequest) GetId() *wrappers.StringValue {
+	if m != nil {
+		return m.Id
+	}
+	return nil
+}
+
+func (m *UpsertVacancyCategoryRequest) GetTitle() string {
+	if m != nil {
+		return m.Title
+	}
+	return ""
+}
+
+func (m *UpsertVacancyCategoryRequest) GetIconUrl() string {
+	if m != nil {
+		return m.IconUrl
+	}
+	return ""
+}
+
+type UpsertVacancyCategoryResponse struct {
+	Id                   string   `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *UpsertVacancyCategoryResponse) Reset()         { *m = UpsertVacancyCategoryResponse{} }
+func (m *UpsertVacancyCategoryResponse) String() string { return proto.CompactTextString(m) }
+func (*UpsertVacancyCategoryResponse) ProtoMessage()    {}
+func (*UpsertVacancyCategoryResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_47be6d1234ea964b, []int{3}
+}
+
+func (m *UpsertVacancyCategoryResponse) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_UpsertVacancyCategoryResponse.Unmarshal(m, b)
+}
+func (m *UpsertVacancyCategoryResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_UpsertVacancyCategoryResponse.Marshal(b, m, deterministic)
+}
+func (m *UpsertVacancyCategoryResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_UpsertVacancyCategoryResponse.Merge(m, src)
+}
+func (m *UpsertVacancyCategoryResponse) XXX_Size() int {
+	return xxx_messageInfo_UpsertVacancyCategoryResponse.Size(m)
+}
+func (m *UpsertVacancyCategoryResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_UpsertVacancyCategoryResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_UpsertVacancyCategoryResponse proto.InternalMessageInfo
+
+func (m *UpsertVacancyCategoryResponse) GetId() string {
+	if m != nil {
+		return m.Id
+	}
+	return ""
+}
+
+// Delete vacancy
+type DeleteVacancyCategoryRequest struct {
+	Id                   string   `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *DeleteVacancyCategoryRequest) Reset()         { *m = DeleteVacancyCategoryRequest{} }
+func (m *DeleteVacancyCategoryRequest) String() string { return proto.CompactTextString(m) }
+func (*DeleteVacancyCategoryRequest) ProtoMessage()    {}
+func (*DeleteVacancyCategoryRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_47be6d1234ea964b, []int{4}
+}
+
+func (m *DeleteVacancyCategoryRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_DeleteVacancyCategoryRequest.Unmarshal(m, b)
+}
+func (m *DeleteVacancyCategoryRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_DeleteVacancyCategoryRequest.Marshal(b, m, deterministic)
+}
+func (m *DeleteVacancyCategoryRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_DeleteVacancyCategoryRequest.Merge(m, src)
+}
+func (m *DeleteVacancyCategoryRequest) XXX_Size() int {
+	return xxx_messageInfo_DeleteVacancyCategoryRequest.Size(m)
+}
+func (m *DeleteVacancyCategoryRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_DeleteVacancyCategoryRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_DeleteVacancyCategoryRequest proto.InternalMessageInfo
+
+func (m *DeleteVacancyCategoryRequest) GetId() string {
+	if m != nil {
+		return m.Id
+	}
+	return ""
+}
+
+type DeleteVacancyCategoryResponse struct {
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *DeleteVacancyCategoryResponse) Reset()         { *m = DeleteVacancyCategoryResponse{} }
+func (m *DeleteVacancyCategoryResponse) String() string { return proto.CompactTextString(m) }
+func (*DeleteVacancyCategoryResponse) ProtoMessage()    {}
+func (*DeleteVacancyCategoryResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_47be6d1234ea964b, []int{5}
+}
+
+func (m *DeleteVacancyCategoryResponse) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_DeleteVacancyCategoryResponse.Unmarshal(m, b)
+}
+func (m *DeleteVacancyCategoryResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_DeleteVacancyCategoryResponse.Marshal(b, m, deterministic)
+}
+func (m *DeleteVacancyCategoryResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_DeleteVacancyCategoryResponse.Merge(m, src)
+}
+func (m *DeleteVacancyCategoryResponse) XXX_Size() int {
+	return xxx_messageInfo_DeleteVacancyCategoryResponse.Size(m)
+}
+func (m *DeleteVacancyCategoryResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_DeleteVacancyCategoryResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_DeleteVacancyCategoryResponse proto.InternalMessageInfo
+
 // Get Vacancies filters list
 type GetVacancyCategoriesListRequest struct {
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
@@ -90,7 +335,7 @@ func (m *GetVacancyCategoriesListRequest) Reset()         { *m = GetVacancyCateg
 func (m *GetVacancyCategoriesListRequest) String() string { return proto.CompactTextString(m) }
 func (*GetVacancyCategoriesListRequest) ProtoMessage()    {}
 func (*GetVacancyCategoriesListRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_47be6d1234ea964b, []int{0}
+	return fileDescriptor_47be6d1234ea964b, []int{6}
 }
 
 func (m *GetVacancyCategoriesListRequest) XXX_Unmarshal(b []byte) error {
@@ -112,17 +357,17 @@ func (m *GetVacancyCategoriesListRequest) XXX_DiscardUnknown() {
 var xxx_messageInfo_GetVacancyCategoriesListRequest proto.InternalMessageInfo
 
 type GetVacancyCategoriesListResponse struct {
-	VacancyCategories    map[string]*GetVacancyCategoriesListResponse_VacancyCategory `protobuf:"bytes,1,rep,name=vacancy_categories,json=vacancyCategories,proto3" json:"vacancy_categories,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
-	XXX_NoUnkeyedLiteral struct{}                                                     `json:"-"`
-	XXX_unrecognized     []byte                                                       `json:"-"`
-	XXX_sizecache        int32                                                        `json:"-"`
+	VacancyCategories    map[string]*VacancyCategory `protobuf:"bytes,1,rep,name=vacancy_categories,json=vacancyCategories,proto3" json:"vacancy_categories,omitempty" protobuf_key:"bytes,1,opt,name=key,proto3" protobuf_val:"bytes,2,opt,name=value,proto3"`
+	XXX_NoUnkeyedLiteral struct{}                    `json:"-"`
+	XXX_unrecognized     []byte                      `json:"-"`
+	XXX_sizecache        int32                       `json:"-"`
 }
 
 func (m *GetVacancyCategoriesListResponse) Reset()         { *m = GetVacancyCategoriesListResponse{} }
 func (m *GetVacancyCategoriesListResponse) String() string { return proto.CompactTextString(m) }
 func (*GetVacancyCategoriesListResponse) ProtoMessage()    {}
 func (*GetVacancyCategoriesListResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_47be6d1234ea964b, []int{1}
+	return fileDescriptor_47be6d1234ea964b, []int{7}
 }
 
 func (m *GetVacancyCategoriesListResponse) XXX_Unmarshal(b []byte) error {
@@ -143,68 +388,343 @@ func (m *GetVacancyCategoriesListResponse) XXX_DiscardUnknown() {
 
 var xxx_messageInfo_GetVacancyCategoriesListResponse proto.InternalMessageInfo
 
-func (m *GetVacancyCategoriesListResponse) GetVacancyCategories() map[string]*GetVacancyCategoriesListResponse_VacancyCategory {
+func (m *GetVacancyCategoriesListResponse) GetVacancyCategories() map[string]*VacancyCategory {
 	if m != nil {
 		return m.VacancyCategories
 	}
 	return nil
 }
 
-type GetVacancyCategoriesListResponse_VacancyCategory struct {
-	Id                   string   `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
-	Title                string   `protobuf:"bytes,2,opt,name=title,proto3" json:"title,omitempty"`
-	IconUrl              string   `protobuf:"bytes,3,opt,name=icon_url,json=iconUrl,proto3" json:"icon_url,omitempty"`
+// Upsert vacancy
+type UpsertVacancyRequest struct {
+	Vacancy              *UpsertVacancyRequest_Vacancy            `protobuf:"bytes,1,opt,name=vacancy,proto3" json:"vacancy,omitempty"`
+	ImageURLs            []string                                 `protobuf:"bytes,2,rep,name=imageURLs,proto3" json:"imageURLs,omitempty"`
+	Location             *UpsertVacancyRequest_VacancyLocation    `protobuf:"bytes,3,opt,name=location,proto3" json:"location,omitempty"`
+	Description          *UpsertVacancyRequest_VacancyDescription `protobuf:"bytes,4,opt,name=description,proto3" json:"description,omitempty"`
+	CityIDs              []string                                 `protobuf:"bytes,5,rep,name=cityIDs,proto3" json:"cityIDs,omitempty"`
+	CategoryIDs          []string                                 `protobuf:"bytes,6,rep,name=categoryIDs,proto3" json:"categoryIDs,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}                                 `json:"-"`
+	XXX_unrecognized     []byte                                   `json:"-"`
+	XXX_sizecache        int32                                    `json:"-"`
+}
+
+func (m *UpsertVacancyRequest) Reset()         { *m = UpsertVacancyRequest{} }
+func (m *UpsertVacancyRequest) String() string { return proto.CompactTextString(m) }
+func (*UpsertVacancyRequest) ProtoMessage()    {}
+func (*UpsertVacancyRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_47be6d1234ea964b, []int{8}
+}
+
+func (m *UpsertVacancyRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_UpsertVacancyRequest.Unmarshal(m, b)
+}
+func (m *UpsertVacancyRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_UpsertVacancyRequest.Marshal(b, m, deterministic)
+}
+func (m *UpsertVacancyRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_UpsertVacancyRequest.Merge(m, src)
+}
+func (m *UpsertVacancyRequest) XXX_Size() int {
+	return xxx_messageInfo_UpsertVacancyRequest.Size(m)
+}
+func (m *UpsertVacancyRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_UpsertVacancyRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_UpsertVacancyRequest proto.InternalMessageInfo
+
+func (m *UpsertVacancyRequest) GetVacancy() *UpsertVacancyRequest_Vacancy {
+	if m != nil {
+		return m.Vacancy
+	}
+	return nil
+}
+
+func (m *UpsertVacancyRequest) GetImageURLs() []string {
+	if m != nil {
+		return m.ImageURLs
+	}
+	return nil
+}
+
+func (m *UpsertVacancyRequest) GetLocation() *UpsertVacancyRequest_VacancyLocation {
+	if m != nil {
+		return m.Location
+	}
+	return nil
+}
+
+func (m *UpsertVacancyRequest) GetDescription() *UpsertVacancyRequest_VacancyDescription {
+	if m != nil {
+		return m.Description
+	}
+	return nil
+}
+
+func (m *UpsertVacancyRequest) GetCityIDs() []string {
+	if m != nil {
+		return m.CityIDs
+	}
+	return nil
+}
+
+func (m *UpsertVacancyRequest) GetCategoryIDs() []string {
+	if m != nil {
+		return m.CategoryIDs
+	}
+	return nil
+}
+
+type UpsertVacancyRequest_VacancyLocation struct {
+	Latitude             float32  `protobuf:"fixed32,1,opt,name=latitude,proto3" json:"latitude,omitempty"`
+	Longitude            float32  `protobuf:"fixed32,2,opt,name=longitude,proto3" json:"longitude,omitempty"`
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
 	XXX_sizecache        int32    `json:"-"`
 }
 
-func (m *GetVacancyCategoriesListResponse_VacancyCategory) Reset() {
-	*m = GetVacancyCategoriesListResponse_VacancyCategory{}
-}
-func (m *GetVacancyCategoriesListResponse_VacancyCategory) String() string {
-	return proto.CompactTextString(m)
-}
-func (*GetVacancyCategoriesListResponse_VacancyCategory) ProtoMessage() {}
-func (*GetVacancyCategoriesListResponse_VacancyCategory) Descriptor() ([]byte, []int) {
-	return fileDescriptor_47be6d1234ea964b, []int{1, 0}
+func (m *UpsertVacancyRequest_VacancyLocation) Reset()         { *m = UpsertVacancyRequest_VacancyLocation{} }
+func (m *UpsertVacancyRequest_VacancyLocation) String() string { return proto.CompactTextString(m) }
+func (*UpsertVacancyRequest_VacancyLocation) ProtoMessage()    {}
+func (*UpsertVacancyRequest_VacancyLocation) Descriptor() ([]byte, []int) {
+	return fileDescriptor_47be6d1234ea964b, []int{8, 0}
 }
 
-func (m *GetVacancyCategoriesListResponse_VacancyCategory) XXX_Unmarshal(b []byte) error {
-	return xxx_messageInfo_GetVacancyCategoriesListResponse_VacancyCategory.Unmarshal(m, b)
+func (m *UpsertVacancyRequest_VacancyLocation) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_UpsertVacancyRequest_VacancyLocation.Unmarshal(m, b)
 }
-func (m *GetVacancyCategoriesListResponse_VacancyCategory) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
-	return xxx_messageInfo_GetVacancyCategoriesListResponse_VacancyCategory.Marshal(b, m, deterministic)
+func (m *UpsertVacancyRequest_VacancyLocation) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_UpsertVacancyRequest_VacancyLocation.Marshal(b, m, deterministic)
 }
-func (m *GetVacancyCategoriesListResponse_VacancyCategory) XXX_Merge(src proto.Message) {
-	xxx_messageInfo_GetVacancyCategoriesListResponse_VacancyCategory.Merge(m, src)
+func (m *UpsertVacancyRequest_VacancyLocation) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_UpsertVacancyRequest_VacancyLocation.Merge(m, src)
 }
-func (m *GetVacancyCategoriesListResponse_VacancyCategory) XXX_Size() int {
-	return xxx_messageInfo_GetVacancyCategoriesListResponse_VacancyCategory.Size(m)
+func (m *UpsertVacancyRequest_VacancyLocation) XXX_Size() int {
+	return xxx_messageInfo_UpsertVacancyRequest_VacancyLocation.Size(m)
 }
-func (m *GetVacancyCategoriesListResponse_VacancyCategory) XXX_DiscardUnknown() {
-	xxx_messageInfo_GetVacancyCategoriesListResponse_VacancyCategory.DiscardUnknown(m)
+func (m *UpsertVacancyRequest_VacancyLocation) XXX_DiscardUnknown() {
+	xxx_messageInfo_UpsertVacancyRequest_VacancyLocation.DiscardUnknown(m)
 }
 
-var xxx_messageInfo_GetVacancyCategoriesListResponse_VacancyCategory proto.InternalMessageInfo
+var xxx_messageInfo_UpsertVacancyRequest_VacancyLocation proto.InternalMessageInfo
 
-func (m *GetVacancyCategoriesListResponse_VacancyCategory) GetId() string {
+func (m *UpsertVacancyRequest_VacancyLocation) GetLatitude() float32 {
 	if m != nil {
-		return m.Id
+		return m.Latitude
+	}
+	return 0
+}
+
+func (m *UpsertVacancyRequest_VacancyLocation) GetLongitude() float32 {
+	if m != nil {
+		return m.Longitude
+	}
+	return 0
+}
+
+type UpsertVacancyRequest_VacancyDescription struct {
+	Description          string      `protobuf:"bytes,1,opt,name=description,proto3" json:"description,omitempty"`
+	WorkMonthsExperience uint32      `protobuf:"varint,2,opt,name=work_months_experience,json=workMonthsExperience,proto3" json:"work_months_experience,omitempty"`
+	WorkSchedule         string      `protobuf:"bytes,3,opt,name=work_schedule,json=workSchedule,proto3" json:"work_schedule,omitempty"`
+	Type                 VacancyType `protobuf:"varint,4,opt,name=type,proto3,enum=personaappapi.vacancy.VacancyType" json:"type,omitempty"`
+	Address              string      `protobuf:"bytes,5,opt,name=address,proto3" json:"address,omitempty"`
+	CountryCode          int32       `protobuf:"varint,6,opt,name=country_code,json=countryCode,proto3" json:"country_code,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}    `json:"-"`
+	XXX_unrecognized     []byte      `json:"-"`
+	XXX_sizecache        int32       `json:"-"`
+}
+
+func (m *UpsertVacancyRequest_VacancyDescription) Reset() {
+	*m = UpsertVacancyRequest_VacancyDescription{}
+}
+func (m *UpsertVacancyRequest_VacancyDescription) String() string { return proto.CompactTextString(m) }
+func (*UpsertVacancyRequest_VacancyDescription) ProtoMessage()    {}
+func (*UpsertVacancyRequest_VacancyDescription) Descriptor() ([]byte, []int) {
+	return fileDescriptor_47be6d1234ea964b, []int{8, 1}
+}
+
+func (m *UpsertVacancyRequest_VacancyDescription) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_UpsertVacancyRequest_VacancyDescription.Unmarshal(m, b)
+}
+func (m *UpsertVacancyRequest_VacancyDescription) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_UpsertVacancyRequest_VacancyDescription.Marshal(b, m, deterministic)
+}
+func (m *UpsertVacancyRequest_VacancyDescription) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_UpsertVacancyRequest_VacancyDescription.Merge(m, src)
+}
+func (m *UpsertVacancyRequest_VacancyDescription) XXX_Size() int {
+	return xxx_messageInfo_UpsertVacancyRequest_VacancyDescription.Size(m)
+}
+func (m *UpsertVacancyRequest_VacancyDescription) XXX_DiscardUnknown() {
+	xxx_messageInfo_UpsertVacancyRequest_VacancyDescription.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_UpsertVacancyRequest_VacancyDescription proto.InternalMessageInfo
+
+func (m *UpsertVacancyRequest_VacancyDescription) GetDescription() string {
+	if m != nil {
+		return m.Description
 	}
 	return ""
 }
 
-func (m *GetVacancyCategoriesListResponse_VacancyCategory) GetTitle() string {
+func (m *UpsertVacancyRequest_VacancyDescription) GetWorkMonthsExperience() uint32 {
+	if m != nil {
+		return m.WorkMonthsExperience
+	}
+	return 0
+}
+
+func (m *UpsertVacancyRequest_VacancyDescription) GetWorkSchedule() string {
+	if m != nil {
+		return m.WorkSchedule
+	}
+	return ""
+}
+
+func (m *UpsertVacancyRequest_VacancyDescription) GetType() VacancyType {
+	if m != nil {
+		return m.Type
+	}
+	return VacancyType_VACANCY_TYPE_UNKNOWN
+}
+
+func (m *UpsertVacancyRequest_VacancyDescription) GetAddress() string {
+	if m != nil {
+		return m.Address
+	}
+	return ""
+}
+
+func (m *UpsertVacancyRequest_VacancyDescription) GetCountryCode() int32 {
+	if m != nil {
+		return m.CountryCode
+	}
+	return 0
+}
+
+type UpsertVacancyRequest_Vacancy struct {
+	Id                   *wrappers.StringValue `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Title                string                `protobuf:"bytes,2,opt,name=title,proto3" json:"title,omitempty"`
+	Phone                string                `protobuf:"bytes,3,opt,name=phone,proto3" json:"phone,omitempty"`
+	MinSalary            int32                 `protobuf:"varint,4,opt,name=min_salary,json=minSalary,proto3" json:"min_salary,omitempty"`
+	MaxSalary            int32                 `protobuf:"varint,5,opt,name=max_salary,json=maxSalary,proto3" json:"max_salary,omitempty"`
+	CompanyId            string                `protobuf:"bytes,6,opt,name=company_id,json=companyId,proto3" json:"company_id,omitempty"`
+	Currency             Currency              `protobuf:"varint,7,opt,name=currency,proto3,enum=personaappapi.vacancy.Currency" json:"currency,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}              `json:"-"`
+	XXX_unrecognized     []byte                `json:"-"`
+	XXX_sizecache        int32                 `json:"-"`
+}
+
+func (m *UpsertVacancyRequest_Vacancy) Reset()         { *m = UpsertVacancyRequest_Vacancy{} }
+func (m *UpsertVacancyRequest_Vacancy) String() string { return proto.CompactTextString(m) }
+func (*UpsertVacancyRequest_Vacancy) ProtoMessage()    {}
+func (*UpsertVacancyRequest_Vacancy) Descriptor() ([]byte, []int) {
+	return fileDescriptor_47be6d1234ea964b, []int{8, 2}
+}
+
+func (m *UpsertVacancyRequest_Vacancy) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_UpsertVacancyRequest_Vacancy.Unmarshal(m, b)
+}
+func (m *UpsertVacancyRequest_Vacancy) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_UpsertVacancyRequest_Vacancy.Marshal(b, m, deterministic)
+}
+func (m *UpsertVacancyRequest_Vacancy) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_UpsertVacancyRequest_Vacancy.Merge(m, src)
+}
+func (m *UpsertVacancyRequest_Vacancy) XXX_Size() int {
+	return xxx_messageInfo_UpsertVacancyRequest_Vacancy.Size(m)
+}
+func (m *UpsertVacancyRequest_Vacancy) XXX_DiscardUnknown() {
+	xxx_messageInfo_UpsertVacancyRequest_Vacancy.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_UpsertVacancyRequest_Vacancy proto.InternalMessageInfo
+
+func (m *UpsertVacancyRequest_Vacancy) GetId() *wrappers.StringValue {
+	if m != nil {
+		return m.Id
+	}
+	return nil
+}
+
+func (m *UpsertVacancyRequest_Vacancy) GetTitle() string {
 	if m != nil {
 		return m.Title
 	}
 	return ""
 }
 
-func (m *GetVacancyCategoriesListResponse_VacancyCategory) GetIconUrl() string {
+func (m *UpsertVacancyRequest_Vacancy) GetPhone() string {
 	if m != nil {
-		return m.IconUrl
+		return m.Phone
+	}
+	return ""
+}
+
+func (m *UpsertVacancyRequest_Vacancy) GetMinSalary() int32 {
+	if m != nil {
+		return m.MinSalary
+	}
+	return 0
+}
+
+func (m *UpsertVacancyRequest_Vacancy) GetMaxSalary() int32 {
+	if m != nil {
+		return m.MaxSalary
+	}
+	return 0
+}
+
+func (m *UpsertVacancyRequest_Vacancy) GetCompanyId() string {
+	if m != nil {
+		return m.CompanyId
+	}
+	return ""
+}
+
+func (m *UpsertVacancyRequest_Vacancy) GetCurrency() Currency {
+	if m != nil {
+		return m.Currency
+	}
+	return Currency_CURRENCY_UNKNOWN
+}
+
+type UpsertVacancyResponse struct {
+	Id                   string   `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *UpsertVacancyResponse) Reset()         { *m = UpsertVacancyResponse{} }
+func (m *UpsertVacancyResponse) String() string { return proto.CompactTextString(m) }
+func (*UpsertVacancyResponse) ProtoMessage()    {}
+func (*UpsertVacancyResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_47be6d1234ea964b, []int{9}
+}
+
+func (m *UpsertVacancyResponse) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_UpsertVacancyResponse.Unmarshal(m, b)
+}
+func (m *UpsertVacancyResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_UpsertVacancyResponse.Marshal(b, m, deterministic)
+}
+func (m *UpsertVacancyResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_UpsertVacancyResponse.Merge(m, src)
+}
+func (m *UpsertVacancyResponse) XXX_Size() int {
+	return xxx_messageInfo_UpsertVacancyResponse.Size(m)
+}
+func (m *UpsertVacancyResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_UpsertVacancyResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_UpsertVacancyResponse proto.InternalMessageInfo
+
+func (m *UpsertVacancyResponse) GetId() string {
+	if m != nil {
+		return m.Id
 	}
 	return ""
 }
@@ -223,7 +743,7 @@ func (m *GetVacanciesListRequest) Reset()         { *m = GetVacanciesListRequest
 func (m *GetVacanciesListRequest) String() string { return proto.CompactTextString(m) }
 func (*GetVacanciesListRequest) ProtoMessage()    {}
 func (*GetVacanciesListRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_47be6d1234ea964b, []int{2}
+	return fileDescriptor_47be6d1234ea964b, []int{10}
 }
 
 func (m *GetVacanciesListRequest) XXX_Unmarshal(b []byte) error {
@@ -280,7 +800,7 @@ func (m *GetVacanciesListResponse) Reset()         { *m = GetVacanciesListRespon
 func (m *GetVacanciesListResponse) String() string { return proto.CompactTextString(m) }
 func (*GetVacanciesListResponse) ProtoMessage()    {}
 func (*GetVacanciesListResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_47be6d1234ea964b, []int{3}
+	return fileDescriptor_47be6d1234ea964b, []int{11}
 }
 
 func (m *GetVacanciesListResponse) XXX_Unmarshal(b []byte) error {
@@ -350,7 +870,7 @@ func (m *GetVacanciesListResponse_VacancyDetails) Reset() {
 func (m *GetVacanciesListResponse_VacancyDetails) String() string { return proto.CompactTextString(m) }
 func (*GetVacanciesListResponse_VacancyDetails) ProtoMessage()    {}
 func (*GetVacanciesListResponse_VacancyDetails) Descriptor() ([]byte, []int) {
-	return fileDescriptor_47be6d1234ea964b, []int{3, 0}
+	return fileDescriptor_47be6d1234ea964b, []int{11, 0}
 }
 
 func (m *GetVacanciesListResponse_VacancyDetails) XXX_Unmarshal(b []byte) error {
@@ -397,7 +917,7 @@ func (m *GetVacancyDetailsRequest) Reset()         { *m = GetVacancyDetailsReque
 func (m *GetVacancyDetailsRequest) String() string { return proto.CompactTextString(m) }
 func (*GetVacancyDetailsRequest) ProtoMessage()    {}
 func (*GetVacancyDetailsRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_47be6d1234ea964b, []int{4}
+	return fileDescriptor_47be6d1234ea964b, []int{12}
 }
 
 func (m *GetVacancyDetailsRequest) XXX_Unmarshal(b []byte) error {
@@ -442,7 +962,7 @@ func (m *GetVacancyDetailsResponse) Reset()         { *m = GetVacancyDetailsResp
 func (m *GetVacancyDetailsResponse) String() string { return proto.CompactTextString(m) }
 func (*GetVacancyDetailsResponse) ProtoMessage()    {}
 func (*GetVacancyDetailsResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_47be6d1234ea964b, []int{5}
+	return fileDescriptor_47be6d1234ea964b, []int{13}
 }
 
 func (m *GetVacancyDetailsResponse) XXX_Unmarshal(b []byte) error {
@@ -527,7 +1047,7 @@ func (m *GetVacancyDetailsResponse_CompanyDescription) String() string {
 }
 func (*GetVacancyDetailsResponse_CompanyDescription) ProtoMessage() {}
 func (*GetVacancyDetailsResponse_CompanyDescription) Descriptor() ([]byte, []int) {
-	return fileDescriptor_47be6d1234ea964b, []int{5, 0}
+	return fileDescriptor_47be6d1234ea964b, []int{13, 0}
 }
 
 func (m *GetVacancyDetailsResponse_CompanyDescription) XXX_Unmarshal(b []byte) error {
@@ -569,7 +1089,7 @@ func (m *GetVacancyDetailsResponse_VacancyLocation) Reset() {
 func (m *GetVacancyDetailsResponse_VacancyLocation) String() string { return proto.CompactTextString(m) }
 func (*GetVacancyDetailsResponse_VacancyLocation) ProtoMessage()    {}
 func (*GetVacancyDetailsResponse_VacancyLocation) Descriptor() ([]byte, []int) {
-	return fileDescriptor_47be6d1234ea964b, []int{5, 1}
+	return fileDescriptor_47be6d1234ea964b, []int{13, 1}
 }
 
 func (m *GetVacancyDetailsResponse_VacancyLocation) XXX_Unmarshal(b []byte) error {
@@ -624,7 +1144,7 @@ func (m *GetVacancyDetailsResponse_VacancyDescription) String() string {
 }
 func (*GetVacancyDetailsResponse_VacancyDescription) ProtoMessage() {}
 func (*GetVacancyDetailsResponse_VacancyDescription) Descriptor() ([]byte, []int) {
-	return fileDescriptor_47be6d1234ea964b, []int{5, 2}
+	return fileDescriptor_47be6d1234ea964b, []int{13, 2}
 }
 
 func (m *GetVacancyDetailsResponse_VacancyDescription) XXX_Unmarshal(b []byte) error {
@@ -701,7 +1221,7 @@ func (m *GetVacancyDetailsResponse_VacancyCompany) Reset() {
 func (m *GetVacancyDetailsResponse_VacancyCompany) String() string { return proto.CompactTextString(m) }
 func (*GetVacancyDetailsResponse_VacancyCompany) ProtoMessage()    {}
 func (*GetVacancyDetailsResponse_VacancyCompany) Descriptor() ([]byte, []int) {
-	return fileDescriptor_47be6d1234ea964b, []int{5, 3}
+	return fileDescriptor_47be6d1234ea964b, []int{13, 3}
 }
 
 func (m *GetVacancyDetailsResponse_VacancyCompany) XXX_Unmarshal(b []byte) error {
@@ -749,7 +1269,7 @@ func (m *GetVacancyDetailsResponse_VacancyImage) Reset() {
 func (m *GetVacancyDetailsResponse_VacancyImage) String() string { return proto.CompactTextString(m) }
 func (*GetVacancyDetailsResponse_VacancyImage) ProtoMessage()    {}
 func (*GetVacancyDetailsResponse_VacancyImage) Descriptor() ([]byte, []int) {
-	return fileDescriptor_47be6d1234ea964b, []int{5, 4}
+	return fileDescriptor_47be6d1234ea964b, []int{13, 4}
 }
 
 func (m *GetVacancyDetailsResponse_VacancyImage) XXX_Unmarshal(b []byte) error {
@@ -777,6 +1297,77 @@ func (m *GetVacancyDetailsResponse_VacancyImage) GetImageUrls() []string {
 	return nil
 }
 
+// Delete Vacancy
+type DeleteVacancyRequest struct {
+	Id                   string   `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *DeleteVacancyRequest) Reset()         { *m = DeleteVacancyRequest{} }
+func (m *DeleteVacancyRequest) String() string { return proto.CompactTextString(m) }
+func (*DeleteVacancyRequest) ProtoMessage()    {}
+func (*DeleteVacancyRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_47be6d1234ea964b, []int{14}
+}
+
+func (m *DeleteVacancyRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_DeleteVacancyRequest.Unmarshal(m, b)
+}
+func (m *DeleteVacancyRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_DeleteVacancyRequest.Marshal(b, m, deterministic)
+}
+func (m *DeleteVacancyRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_DeleteVacancyRequest.Merge(m, src)
+}
+func (m *DeleteVacancyRequest) XXX_Size() int {
+	return xxx_messageInfo_DeleteVacancyRequest.Size(m)
+}
+func (m *DeleteVacancyRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_DeleteVacancyRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_DeleteVacancyRequest proto.InternalMessageInfo
+
+func (m *DeleteVacancyRequest) GetId() string {
+	if m != nil {
+		return m.Id
+	}
+	return ""
+}
+
+type DeleteVacancyResponse struct {
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *DeleteVacancyResponse) Reset()         { *m = DeleteVacancyResponse{} }
+func (m *DeleteVacancyResponse) String() string { return proto.CompactTextString(m) }
+func (*DeleteVacancyResponse) ProtoMessage()    {}
+func (*DeleteVacancyResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_47be6d1234ea964b, []int{15}
+}
+
+func (m *DeleteVacancyResponse) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_DeleteVacancyResponse.Unmarshal(m, b)
+}
+func (m *DeleteVacancyResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_DeleteVacancyResponse.Marshal(b, m, deterministic)
+}
+func (m *DeleteVacancyResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_DeleteVacancyResponse.Merge(m, src)
+}
+func (m *DeleteVacancyResponse) XXX_Size() int {
+	return xxx_messageInfo_DeleteVacancyResponse.Size(m)
+}
+func (m *DeleteVacancyResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_DeleteVacancyResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_DeleteVacancyResponse proto.InternalMessageInfo
+
 // Get cities
 type GetCitiesRequest struct {
 	Rating               *wrappers.Int32Value  `protobuf:"bytes,1,opt,name=rating,proto3" json:"rating,omitempty"`
@@ -790,7 +1381,7 @@ func (m *GetCitiesRequest) Reset()         { *m = GetCitiesRequest{} }
 func (m *GetCitiesRequest) String() string { return proto.CompactTextString(m) }
 func (*GetCitiesRequest) ProtoMessage()    {}
 func (*GetCitiesRequest) Descriptor() ([]byte, []int) {
-	return fileDescriptor_47be6d1234ea964b, []int{6}
+	return fileDescriptor_47be6d1234ea964b, []int{16}
 }
 
 func (m *GetCitiesRequest) XXX_Unmarshal(b []byte) error {
@@ -836,7 +1427,7 @@ func (m *GetCitiesResponse) Reset()         { *m = GetCitiesResponse{} }
 func (m *GetCitiesResponse) String() string { return proto.CompactTextString(m) }
 func (*GetCitiesResponse) ProtoMessage()    {}
 func (*GetCitiesResponse) Descriptor() ([]byte, []int) {
-	return fileDescriptor_47be6d1234ea964b, []int{7}
+	return fileDescriptor_47be6d1234ea964b, []int{17}
 }
 
 func (m *GetCitiesResponse) XXX_Unmarshal(b []byte) error {
@@ -864,6 +1455,180 @@ func (m *GetCitiesResponse) GetCities() []*City {
 	return nil
 }
 
+// Upsert city
+type UpsertCityRequest struct {
+	Id                   *wrappers.StringValue `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Name                 string                `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
+	CountryCode          int32                 `protobuf:"varint,3,opt,name=country_code,json=countryCode,proto3" json:"country_code,omitempty"`
+	Rating               int32                 `protobuf:"varint,4,opt,name=rating,proto3" json:"rating,omitempty"`
+	XXX_NoUnkeyedLiteral struct{}              `json:"-"`
+	XXX_unrecognized     []byte                `json:"-"`
+	XXX_sizecache        int32                 `json:"-"`
+}
+
+func (m *UpsertCityRequest) Reset()         { *m = UpsertCityRequest{} }
+func (m *UpsertCityRequest) String() string { return proto.CompactTextString(m) }
+func (*UpsertCityRequest) ProtoMessage()    {}
+func (*UpsertCityRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_47be6d1234ea964b, []int{18}
+}
+
+func (m *UpsertCityRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_UpsertCityRequest.Unmarshal(m, b)
+}
+func (m *UpsertCityRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_UpsertCityRequest.Marshal(b, m, deterministic)
+}
+func (m *UpsertCityRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_UpsertCityRequest.Merge(m, src)
+}
+func (m *UpsertCityRequest) XXX_Size() int {
+	return xxx_messageInfo_UpsertCityRequest.Size(m)
+}
+func (m *UpsertCityRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_UpsertCityRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_UpsertCityRequest proto.InternalMessageInfo
+
+func (m *UpsertCityRequest) GetId() *wrappers.StringValue {
+	if m != nil {
+		return m.Id
+	}
+	return nil
+}
+
+func (m *UpsertCityRequest) GetName() string {
+	if m != nil {
+		return m.Name
+	}
+	return ""
+}
+
+func (m *UpsertCityRequest) GetCountryCode() int32 {
+	if m != nil {
+		return m.CountryCode
+	}
+	return 0
+}
+
+func (m *UpsertCityRequest) GetRating() int32 {
+	if m != nil {
+		return m.Rating
+	}
+	return 0
+}
+
+type UpsertCityResponse struct {
+	Id                   string   `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *UpsertCityResponse) Reset()         { *m = UpsertCityResponse{} }
+func (m *UpsertCityResponse) String() string { return proto.CompactTextString(m) }
+func (*UpsertCityResponse) ProtoMessage()    {}
+func (*UpsertCityResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_47be6d1234ea964b, []int{19}
+}
+
+func (m *UpsertCityResponse) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_UpsertCityResponse.Unmarshal(m, b)
+}
+func (m *UpsertCityResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_UpsertCityResponse.Marshal(b, m, deterministic)
+}
+func (m *UpsertCityResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_UpsertCityResponse.Merge(m, src)
+}
+func (m *UpsertCityResponse) XXX_Size() int {
+	return xxx_messageInfo_UpsertCityResponse.Size(m)
+}
+func (m *UpsertCityResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_UpsertCityResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_UpsertCityResponse proto.InternalMessageInfo
+
+func (m *UpsertCityResponse) GetId() string {
+	if m != nil {
+		return m.Id
+	}
+	return ""
+}
+
+// Delete city
+type DeleteCityRequest struct {
+	Id                   string   `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *DeleteCityRequest) Reset()         { *m = DeleteCityRequest{} }
+func (m *DeleteCityRequest) String() string { return proto.CompactTextString(m) }
+func (*DeleteCityRequest) ProtoMessage()    {}
+func (*DeleteCityRequest) Descriptor() ([]byte, []int) {
+	return fileDescriptor_47be6d1234ea964b, []int{20}
+}
+
+func (m *DeleteCityRequest) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_DeleteCityRequest.Unmarshal(m, b)
+}
+func (m *DeleteCityRequest) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_DeleteCityRequest.Marshal(b, m, deterministic)
+}
+func (m *DeleteCityRequest) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_DeleteCityRequest.Merge(m, src)
+}
+func (m *DeleteCityRequest) XXX_Size() int {
+	return xxx_messageInfo_DeleteCityRequest.Size(m)
+}
+func (m *DeleteCityRequest) XXX_DiscardUnknown() {
+	xxx_messageInfo_DeleteCityRequest.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_DeleteCityRequest proto.InternalMessageInfo
+
+func (m *DeleteCityRequest) GetId() string {
+	if m != nil {
+		return m.Id
+	}
+	return ""
+}
+
+type DeleteCityResponse struct {
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *DeleteCityResponse) Reset()         { *m = DeleteCityResponse{} }
+func (m *DeleteCityResponse) String() string { return proto.CompactTextString(m) }
+func (*DeleteCityResponse) ProtoMessage()    {}
+func (*DeleteCityResponse) Descriptor() ([]byte, []int) {
+	return fileDescriptor_47be6d1234ea964b, []int{21}
+}
+
+func (m *DeleteCityResponse) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_DeleteCityResponse.Unmarshal(m, b)
+}
+func (m *DeleteCityResponse) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_DeleteCityResponse.Marshal(b, m, deterministic)
+}
+func (m *DeleteCityResponse) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_DeleteCityResponse.Merge(m, src)
+}
+func (m *DeleteCityResponse) XXX_Size() int {
+	return xxx_messageInfo_DeleteCityResponse.Size(m)
+}
+func (m *DeleteCityResponse) XXX_DiscardUnknown() {
+	xxx_messageInfo_DeleteCityResponse.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_DeleteCityResponse proto.InternalMessageInfo
+
 type Empty struct {
 	XXX_NoUnkeyedLiteral struct{} `json:"-"`
 	XXX_unrecognized     []byte   `json:"-"`
@@ -874,7 +1639,7 @@ func (m *Empty) Reset()         { *m = Empty{} }
 func (m *Empty) String() string { return proto.CompactTextString(m) }
 func (*Empty) ProtoMessage()    {}
 func (*Empty) Descriptor() ([]byte, []int) {
-	return fileDescriptor_47be6d1234ea964b, []int{8}
+	return fileDescriptor_47be6d1234ea964b, []int{22}
 }
 
 func (m *Empty) XXX_Unmarshal(b []byte) error {
@@ -908,7 +1673,7 @@ func (m *Company) Reset()         { *m = Company{} }
 func (m *Company) String() string { return proto.CompactTextString(m) }
 func (*Company) ProtoMessage()    {}
 func (*Company) Descriptor() ([]byte, []int) {
-	return fileDescriptor_47be6d1234ea964b, []int{9}
+	return fileDescriptor_47be6d1234ea964b, []int{23}
 }
 
 func (m *Company) XXX_Unmarshal(b []byte) error {
@@ -950,6 +1715,61 @@ func (m *Company) GetLogoUrl() string {
 	return ""
 }
 
+type VacancyCategory struct {
+	Id                   string   `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
+	Title                string   `protobuf:"bytes,2,opt,name=title,proto3" json:"title,omitempty"`
+	IconUrl              string   `protobuf:"bytes,3,opt,name=icon_url,json=iconUrl,proto3" json:"icon_url,omitempty"`
+	XXX_NoUnkeyedLiteral struct{} `json:"-"`
+	XXX_unrecognized     []byte   `json:"-"`
+	XXX_sizecache        int32    `json:"-"`
+}
+
+func (m *VacancyCategory) Reset()         { *m = VacancyCategory{} }
+func (m *VacancyCategory) String() string { return proto.CompactTextString(m) }
+func (*VacancyCategory) ProtoMessage()    {}
+func (*VacancyCategory) Descriptor() ([]byte, []int) {
+	return fileDescriptor_47be6d1234ea964b, []int{24}
+}
+
+func (m *VacancyCategory) XXX_Unmarshal(b []byte) error {
+	return xxx_messageInfo_VacancyCategory.Unmarshal(m, b)
+}
+func (m *VacancyCategory) XXX_Marshal(b []byte, deterministic bool) ([]byte, error) {
+	return xxx_messageInfo_VacancyCategory.Marshal(b, m, deterministic)
+}
+func (m *VacancyCategory) XXX_Merge(src proto.Message) {
+	xxx_messageInfo_VacancyCategory.Merge(m, src)
+}
+func (m *VacancyCategory) XXX_Size() int {
+	return xxx_messageInfo_VacancyCategory.Size(m)
+}
+func (m *VacancyCategory) XXX_DiscardUnknown() {
+	xxx_messageInfo_VacancyCategory.DiscardUnknown(m)
+}
+
+var xxx_messageInfo_VacancyCategory proto.InternalMessageInfo
+
+func (m *VacancyCategory) GetId() string {
+	if m != nil {
+		return m.Id
+	}
+	return ""
+}
+
+func (m *VacancyCategory) GetTitle() string {
+	if m != nil {
+		return m.Title
+	}
+	return ""
+}
+
+func (m *VacancyCategory) GetIconUrl() string {
+	if m != nil {
+		return m.IconUrl
+	}
+	return ""
+}
+
 type Vacancy struct {
 	Id                   string   `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
 	Title                string   `protobuf:"bytes,2,opt,name=title,proto3" json:"title,omitempty"`
@@ -968,7 +1788,7 @@ func (m *Vacancy) Reset()         { *m = Vacancy{} }
 func (m *Vacancy) String() string { return proto.CompactTextString(m) }
 func (*Vacancy) ProtoMessage()    {}
 func (*Vacancy) Descriptor() ([]byte, []int) {
-	return fileDescriptor_47be6d1234ea964b, []int{10}
+	return fileDescriptor_47be6d1234ea964b, []int{25}
 }
 
 func (m *Vacancy) XXX_Unmarshal(b []byte) error {
@@ -1056,7 +1876,7 @@ func (m *VacancyCategoryShort) Reset()         { *m = VacancyCategoryShort{} }
 func (m *VacancyCategoryShort) String() string { return proto.CompactTextString(m) }
 func (*VacancyCategoryShort) ProtoMessage()    {}
 func (*VacancyCategoryShort) Descriptor() ([]byte, []int) {
-	return fileDescriptor_47be6d1234ea964b, []int{11}
+	return fileDescriptor_47be6d1234ea964b, []int{26}
 }
 
 func (m *VacancyCategoryShort) XXX_Unmarshal(b []byte) error {
@@ -1098,7 +1918,7 @@ func (m *City) Reset()         { *m = City{} }
 func (m *City) String() string { return proto.CompactTextString(m) }
 func (*City) ProtoMessage()    {}
 func (*City) Descriptor() ([]byte, []int) {
-	return fileDescriptor_47be6d1234ea964b, []int{12}
+	return fileDescriptor_47be6d1234ea964b, []int{27}
 }
 
 func (m *City) XXX_Unmarshal(b []byte) error {
@@ -1150,10 +1970,20 @@ func (m *City) GetRating() int32 {
 func init() {
 	proto.RegisterEnum("personaappapi.vacancy.VacancyType", VacancyType_name, VacancyType_value)
 	proto.RegisterEnum("personaappapi.vacancy.Currency", Currency_name, Currency_value)
+	proto.RegisterType((*GetVacancyCategoryRequest)(nil), "personaappapi.vacancy.GetVacancyCategoryRequest")
+	proto.RegisterType((*GetVacancyCategoryResponse)(nil), "personaappapi.vacancy.GetVacancyCategoryResponse")
+	proto.RegisterType((*UpsertVacancyCategoryRequest)(nil), "personaappapi.vacancy.UpsertVacancyCategoryRequest")
+	proto.RegisterType((*UpsertVacancyCategoryResponse)(nil), "personaappapi.vacancy.UpsertVacancyCategoryResponse")
+	proto.RegisterType((*DeleteVacancyCategoryRequest)(nil), "personaappapi.vacancy.DeleteVacancyCategoryRequest")
+	proto.RegisterType((*DeleteVacancyCategoryResponse)(nil), "personaappapi.vacancy.DeleteVacancyCategoryResponse")
 	proto.RegisterType((*GetVacancyCategoriesListRequest)(nil), "personaappapi.vacancy.GetVacancyCategoriesListRequest")
 	proto.RegisterType((*GetVacancyCategoriesListResponse)(nil), "personaappapi.vacancy.GetVacancyCategoriesListResponse")
-	proto.RegisterMapType((map[string]*GetVacancyCategoriesListResponse_VacancyCategory)(nil), "personaappapi.vacancy.GetVacancyCategoriesListResponse.VacancyCategoriesEntry")
-	proto.RegisterType((*GetVacancyCategoriesListResponse_VacancyCategory)(nil), "personaappapi.vacancy.GetVacancyCategoriesListResponse.VacancyCategory")
+	proto.RegisterMapType((map[string]*VacancyCategory)(nil), "personaappapi.vacancy.GetVacancyCategoriesListResponse.VacancyCategoriesEntry")
+	proto.RegisterType((*UpsertVacancyRequest)(nil), "personaappapi.vacancy.UpsertVacancyRequest")
+	proto.RegisterType((*UpsertVacancyRequest_VacancyLocation)(nil), "personaappapi.vacancy.UpsertVacancyRequest.VacancyLocation")
+	proto.RegisterType((*UpsertVacancyRequest_VacancyDescription)(nil), "personaappapi.vacancy.UpsertVacancyRequest.VacancyDescription")
+	proto.RegisterType((*UpsertVacancyRequest_Vacancy)(nil), "personaappapi.vacancy.UpsertVacancyRequest.Vacancy")
+	proto.RegisterType((*UpsertVacancyResponse)(nil), "personaappapi.vacancy.UpsertVacancyResponse")
 	proto.RegisterType((*GetVacanciesListRequest)(nil), "personaappapi.vacancy.GetVacanciesListRequest")
 	proto.RegisterMapType((map[string]*Empty)(nil), "personaappapi.vacancy.GetVacanciesListRequest.CategoriesIdsEntry")
 	proto.RegisterType((*GetVacanciesListResponse)(nil), "personaappapi.vacancy.GetVacanciesListResponse")
@@ -1169,10 +1999,17 @@ func init() {
 	proto.RegisterType((*GetVacancyDetailsResponse_VacancyDescription)(nil), "personaappapi.vacancy.GetVacancyDetailsResponse.VacancyDescription")
 	proto.RegisterType((*GetVacancyDetailsResponse_VacancyCompany)(nil), "personaappapi.vacancy.GetVacancyDetailsResponse.VacancyCompany")
 	proto.RegisterType((*GetVacancyDetailsResponse_VacancyImage)(nil), "personaappapi.vacancy.GetVacancyDetailsResponse.VacancyImage")
+	proto.RegisterType((*DeleteVacancyRequest)(nil), "personaappapi.vacancy.DeleteVacancyRequest")
+	proto.RegisterType((*DeleteVacancyResponse)(nil), "personaappapi.vacancy.DeleteVacancyResponse")
 	proto.RegisterType((*GetCitiesRequest)(nil), "personaappapi.vacancy.GetCitiesRequest")
 	proto.RegisterType((*GetCitiesResponse)(nil), "personaappapi.vacancy.GetCitiesResponse")
+	proto.RegisterType((*UpsertCityRequest)(nil), "personaappapi.vacancy.UpsertCityRequest")
+	proto.RegisterType((*UpsertCityResponse)(nil), "personaappapi.vacancy.UpsertCityResponse")
+	proto.RegisterType((*DeleteCityRequest)(nil), "personaappapi.vacancy.DeleteCityRequest")
+	proto.RegisterType((*DeleteCityResponse)(nil), "personaappapi.vacancy.DeleteCityResponse")
 	proto.RegisterType((*Empty)(nil), "personaappapi.vacancy.Empty")
 	proto.RegisterType((*Company)(nil), "personaappapi.vacancy.Company")
+	proto.RegisterType((*VacancyCategory)(nil), "personaappapi.vacancy.VacancyCategory")
 	proto.RegisterType((*Vacancy)(nil), "personaappapi.vacancy.Vacancy")
 	proto.RegisterType((*VacancyCategoryShort)(nil), "personaappapi.vacancy.VacancyCategoryShort")
 	proto.RegisterType((*City)(nil), "personaappapi.vacancy.City")
@@ -1181,89 +2018,112 @@ func init() {
 func init() { proto.RegisterFile("vacancy/vacancy.proto", fileDescriptor_47be6d1234ea964b) }
 
 var fileDescriptor_47be6d1234ea964b = []byte{
-	// 1310 bytes of a gzipped FileDescriptorProto
-	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xbc, 0x57, 0x5b, 0x8f, 0xdb, 0x44,
-	0x14, 0xc6, 0xce, 0xfd, 0x64, 0xbb, 0xcd, 0x0e, 0x69, 0x9b, 0x9a, 0x5e, 0xb6, 0x41, 0x88, 0xaa,
-	0x40, 0x02, 0xd9, 0xaa, 0x14, 0x10, 0x94, 0x34, 0x8d, 0xb6, 0x4b, 0xbb, 0xd9, 0x6a, 0xf6, 0x82,
-	0x56, 0x5a, 0x1a, 0x5c, 0x7b, 0x9a, 0x1d, 0xea, 0xd8, 0xc6, 0x9e, 0x6c, 0xd7, 0x12, 0x7d, 0xa4,
-	0x2f, 0x88, 0x1f, 0xc3, 0x2b, 0xef, 0xbc, 0xf1, 0x5b, 0xf8, 0x0d, 0xc8, 0xe3, 0xb1, 0x63, 0xe7,
-	0x9e, 0x08, 0xf1, 0x94, 0xcc, 0x39, 0x67, 0xbe, 0x99, 0xf9, 0xe6, 0x3b, 0x67, 0x8e, 0xe1, 0xd2,
-	0x99, 0xaa, 0xa9, 0xa6, 0xe6, 0xd5, 0xc5, 0x6f, 0xcd, 0x76, 0x2c, 0x66, 0xa1, 0x4b, 0x36, 0x71,
-	0x5c, 0xcb, 0x54, 0x55, 0xdb, 0x56, 0x6d, 0x5a, 0x13, 0x4e, 0xe5, 0x46, 0xcf, 0xb2, 0x7a, 0x06,
-	0xa9, 0xf3, 0xa0, 0x17, 0x83, 0x97, 0xf5, 0xd7, 0x8e, 0x6a, 0xfb, 0xa1, 0xc1, 0xb4, 0xea, 0x2d,
-	0xb8, 0xb9, 0x4d, 0xd8, 0x51, 0x10, 0xdd, 0x52, 0x19, 0xe9, 0x59, 0x0e, 0x25, 0xee, 0x53, 0xea,
-	0x32, 0x4c, 0x7e, 0x1e, 0x10, 0x97, 0x55, 0x7f, 0x4d, 0xc1, 0xe6, 0xf4, 0x18, 0xd7, 0xb6, 0x4c,
-	0x97, 0xa0, 0x37, 0x80, 0xc4, 0x92, 0x5d, 0x2d, 0x8a, 0xa8, 0x48, 0x9b, 0xa9, 0xdb, 0xc5, 0x46,
-	0xa7, 0x36, 0x71, 0x6f, 0xb5, 0x79, 0xa0, 0xb5, 0x31, 0x6f, 0xdb, 0x64, 0x8e, 0x87, 0x37, 0xce,
-	0x46, 0xed, 0x0a, 0x86, 0x8b, 0xc9, 0x60, 0x0f, 0xad, 0x83, 0x4c, 0xf5, 0x8a, 0xb4, 0x29, 0xdd,
-	0x2e, 0x60, 0x99, 0xea, 0xa8, 0x0c, 0x19, 0x46, 0x99, 0x41, 0x2a, 0x32, 0x37, 0x05, 0x03, 0x74,
-	0x15, 0xf2, 0x54, 0xb3, 0xcc, 0xee, 0xc0, 0x31, 0x2a, 0x29, 0xee, 0xc8, 0xf9, 0xe3, 0x43, 0xc7,
-	0x50, 0x7e, 0x97, 0xe0, 0xf2, 0xe4, 0x1d, 0xa0, 0x12, 0xa4, 0x5e, 0x11, 0x4f, 0x80, 0xfb, 0x7f,
-	0xd1, 0x0f, 0x90, 0x39, 0x53, 0x8d, 0x41, 0x80, 0x5e, 0x6c, 0x6c, 0xff, 0x37, 0x47, 0xf6, 0x70,
-	0x80, 0xfa, 0xa5, 0x7c, 0x5f, 0xaa, 0xfe, 0x2d, 0xc3, 0x95, 0x68, 0x7e, 0xf2, 0x8e, 0xd0, 0x29,
-	0xac, 0x0f, 0x69, 0xef, 0x52, 0x3d, 0xa4, 0xbe, 0x39, 0x6f, 0x1f, 0x49, 0x9c, 0xda, 0x70, 0x57,
-	0x3b, 0xba, 0x60, 0xfb, 0x82, 0x16, 0xb7, 0xa1, 0xbb, 0x90, 0xd5, 0x06, 0x8e, 0x6b, 0x39, 0xe2,
-	0xa4, 0xd7, 0x6a, 0x81, 0xc2, 0x6a, 0xa1, 0xc2, 0x6a, 0xfb, 0xcc, 0xa1, 0x66, 0xef, 0xc8, 0xdf,
-	0x37, 0x16, 0xb1, 0xe8, 0x33, 0xc8, 0x68, 0xd6, 0xc0, 0x64, 0x9c, 0xe3, 0x62, 0xe3, 0xbd, 0xb1,
-	0x49, 0x3b, 0x26, 0xdb, 0x6a, 0x04, 0x73, 0x82, 0x48, 0xe5, 0x39, 0xa0, 0xf1, 0xdd, 0x4c, 0x60,
-	0xbe, 0x91, 0x64, 0xfe, 0xda, 0x94, 0x13, 0xb7, 0xfb, 0x36, 0x4b, 0xd0, 0xf9, 0x57, 0x16, 0x2a,
-	0xe3, 0x34, 0x08, 0x39, 0xbf, 0x0f, 0x17, 0xce, 0x42, 0x47, 0x44, 0x67, 0x01, 0xaf, 0x45, 0x46,
-	0x9f, 0x8a, 0x13, 0x28, 0x44, 0xe3, 0x8a, 0xcc, 0xf9, 0xfe, 0x66, 0x61, 0xbe, 0x13, 0xf7, 0x1d,
-	0x49, 0x7b, 0x08, 0xe8, 0xa3, 0x6b, 0x56, 0xdf, 0x56, 0x4d, 0x1f, 0x3d, 0xb5, 0x1a, 0x7a, 0x2b,
-	0x04, 0x10, 0xe8, 0x11, 0x20, 0xea, 0x02, 0xc4, 0xf2, 0x34, 0xcd, 0xe1, 0x1f, 0x2c, 0x0d, 0x3f,
-	0x92, 0x98, 0x31, 0xc8, 0x98, 0x4e, 0x32, 0x8b, 0xeb, 0x44, 0xa1, 0xb0, 0x2e, 0x32, 0xe0, 0x11,
-	0x61, 0x2a, 0x35, 0x5c, 0x74, 0x1f, 0x72, 0x62, 0x1f, 0xfc, 0xd2, 0x8b, 0x8d, 0x1b, 0x53, 0x76,
-	0x29, 0xe6, 0xe1, 0x30, 0x1c, 0x5d, 0x07, 0xa0, 0x7d, 0xb5, 0x47, 0xfc, 0xdc, 0x0e, 0xee, 0xa7,
-	0x80, 0x0b, 0xdc, 0x72, 0xe8, 0x18, 0xae, 0xf2, 0x4b, 0xb8, 0xd4, 0x8c, 0xac, 0x3e, 0x48, 0x6a,
-	0x6b, 0xc5, 0xdb, 0x0d, 0xcf, 0x12, 0x53, 0x9f, 0x72, 0x02, 0xeb, 0xc9, 0xcb, 0x99, 0xb0, 0xfa,
-	0xdd, 0xe4, 0xea, 0xd3, 0x0e, 0x1e, 0xe0, 0xc4, 0xb5, 0xad, 0xfc, 0x04, 0x17, 0xe7, 0x97, 0xac,
-	0x66, 0x12, 0xfe, 0xa3, 0xd9, 0xbc, 0x86, 0x15, 0x69, 0xff, 0xd4, 0x72, 0x58, 0x3c, 0x8f, 0xbe,
-	0x88, 0xa5, 0x51, 0x74, 0x52, 0x51, 0x96, 0xae, 0x03, 0x84, 0xaf, 0x42, 0x54, 0x8b, 0x85, 0xc4,
-	0xbd, 0x1d, 0xbd, 0xfa, 0x27, 0xc0, 0xd5, 0x09, 0x73, 0x45, 0x0e, 0xae, 0x7e, 0xf3, 0xfb, 0x90,
-	0xe1, 0xf7, 0x2c, 0x4e, 0xf6, 0xf5, 0xdc, 0x62, 0x3c, 0xb2, 0x74, 0x88, 0xb8, 0xe3, 0x83, 0xe0,
-	0x00, 0x0b, 0x9d, 0x40, 0xde, 0xb0, 0x34, 0x95, 0x51, 0xcb, 0x14, 0x55, 0xec, 0xdb, 0x55, 0x71,
-	0x9f, 0x0a, 0x1c, 0x1c, 0x21, 0x22, 0x02, 0x45, 0x9d, 0xb8, 0x9a, 0x43, 0x6d, 0xbe, 0x40, 0x9a,
-	0x2f, 0xd0, 0x5a, 0x75, 0x81, 0x47, 0x43, 0x28, 0x1c, 0xc7, 0x45, 0xc7, 0x90, 0x0b, 0x6a, 0x80,
-	0x27, 0xd2, 0xf2, 0xc1, 0xaa, 0x4b, 0x84, 0xaa, 0x0b, 0xf1, 0x50, 0x1d, 0xd2, 0x1a, 0x65, 0x5e,
-	0x25, 0x2b, 0x2a, 0xfc, 0x14, 0xb1, 0x52, 0xe6, 0x61, 0x1e, 0x88, 0x7e, 0x4c, 0x94, 0xa0, 0x1c,
-	0x2f, 0x41, 0xcb, 0x53, 0x3a, 0xa3, 0x06, 0x29, 0xf7, 0x00, 0x89, 0x6d, 0xc6, 0x08, 0x41, 0x9b,
-	0x49, 0xaa, 0x03, 0x55, 0xc6, 0x4d, 0xca, 0x93, 0xa8, 0x9b, 0x08, 0x6f, 0x0a, 0x29, 0x90, 0x37,
-	0x54, 0x46, 0xd9, 0x40, 0x27, 0x7c, 0x86, 0x8c, 0xa3, 0x31, 0xba, 0x06, 0x05, 0xc3, 0x32, 0x7b,
-	0x81, 0x53, 0xe6, 0xce, 0xa1, 0x41, 0x79, 0x2b, 0x03, 0x1a, 0xbf, 0x96, 0xf9, 0xbb, 0x40, 0x77,
-	0xe1, 0xf2, 0x6b, 0xcb, 0x79, 0xd5, 0xed, 0x5b, 0x26, 0x3b, 0x75, 0xbb, 0xe4, 0xdc, 0x26, 0x0e,
-	0x25, 0xa6, 0x16, 0xac, 0x71, 0x01, 0x97, 0x7d, 0xef, 0x2e, 0x77, 0xb6, 0x23, 0x9f, 0xff, 0x72,
-	0xf1, 0x59, 0xae, 0x76, 0x4a, 0xf4, 0x81, 0x41, 0x44, 0x57, 0xb3, 0xe6, 0x1b, 0xf7, 0x85, 0x0d,
-	0xdd, 0x83, 0x34, 0xf3, 0x6c, 0xc2, 0x65, 0xb6, 0xde, 0xa8, 0xce, 0xce, 0xab, 0x03, 0xcf, 0x26,
-	0x98, 0xc7, 0xa3, 0x0a, 0xe4, 0x54, 0x5d, 0x77, 0x88, 0xeb, 0x72, 0xf9, 0x14, 0x70, 0x38, 0x44,
-	0xb7, 0x60, 0x8d, 0x3f, 0xdb, 0x8e, 0xd7, 0xd5, 0x2c, 0x9d, 0x70, 0x15, 0x64, 0x70, 0x51, 0xd8,
-	0x5a, 0x96, 0x4e, 0x94, 0x3f, 0xa4, 0xa8, 0xb8, 0x8b, 0x5b, 0xf1, 0x53, 0x3c, 0x94, 0xa3, 0xb4,
-	0x50, 0x8d, 0x8b, 0xd4, 0x36, 0x92, 0x2f, 0xf2, 0x8a, 0xf9, 0x32, 0x2e, 0x8f, 0xa4, 0x12, 0x3e,
-	0x81, 0xb5, 0x78, 0x2d, 0x18, 0x79, 0x53, 0xa4, 0xd1, 0x37, 0xe5, 0xff, 0xac, 0xbb, 0x6f, 0xa0,
-	0xb4, 0x4d, 0x58, 0x8b, 0x32, 0x4a, 0xa2, 0x7a, 0xbb, 0x05, 0x59, 0x47, 0x65, 0xd4, 0xec, 0x09,
-	0x3a, 0x67, 0xf6, 0x59, 0x22, 0xd4, 0x7f, 0xa9, 0x5f, 0x52, 0x83, 0x91, 0x05, 0x3b, 0xba, 0x20,
-	0xb6, 0xfa, 0x18, 0x36, 0x62, 0xcb, 0x8b, 0x92, 0xbd, 0x05, 0x59, 0x8d, 0x5b, 0x44, 0xfb, 0x39,
-	0xb3, 0x0a, 0x88, 0xd0, 0x6a, 0x0e, 0x32, 0xbc, 0x39, 0xab, 0x7e, 0x07, 0xb9, 0x50, 0x18, 0x0b,
-	0x37, 0xef, 0x86, 0xd5, 0xb3, 0xe2, 0xcd, 0xbb, 0x3f, 0x3e, 0x74, 0x8c, 0xea, 0x5b, 0x19, 0x72,
-	0x82, 0xc1, 0x05, 0xc1, 0xca, 0x90, 0xb1, 0x4f, 0x2d, 0x33, 0x4c, 0x98, 0x60, 0xe0, 0x5f, 0x78,
-	0x9f, 0x9a, 0x5d, 0x57, 0x35, 0x54, 0xc7, 0xe3, 0xf9, 0x92, 0xc1, 0x85, 0x3e, 0x35, 0xf7, 0xb9,
-	0x81, 0xbb, 0xd5, 0xf3, 0xd0, 0x9d, 0x11, 0x6e, 0xf5, 0x7c, 0xe8, 0x16, 0x82, 0xf5, 0xdf, 0xbf,
-	0x6c, 0xf0, 0xfe, 0x09, 0xcb, 0x8e, 0x8e, 0xbe, 0x82, 0xbc, 0x36, 0x70, 0x1c, 0xe2, 0x3f, 0x71,
-	0x39, 0x9e, 0x8a, 0x37, 0xa7, 0x11, 0x26, 0xc2, 0x70, 0x34, 0x01, 0x7d, 0x30, 0xd6, 0xf2, 0xe7,
-	0xb9, 0x1c, 0x93, 0xfd, 0x7a, 0xf5, 0x63, 0x28, 0x4f, 0x52, 0xd2, 0x90, 0x04, 0x29, 0x46, 0x42,
-	0x95, 0x40, 0xda, 0xbf, 0x9b, 0x31, 0xca, 0x10, 0xa4, 0x4d, 0xb5, 0x1f, 0x32, 0xc6, 0xff, 0x8f,
-	0xa5, 0x7c, 0x6a, 0x2c, 0xe5, 0xd1, 0xe5, 0x48, 0x8f, 0x01, 0x73, 0x62, 0x74, 0xe7, 0x18, 0x8a,
-	0xb1, 0xe2, 0x82, 0x2a, 0x50, 0x3e, 0x6a, 0xb6, 0x9a, 0x9d, 0xd6, 0x71, 0xf7, 0xe0, 0xf8, 0x59,
-	0xbb, 0x7b, 0xd8, 0x79, 0xd2, 0xd9, 0xfb, 0xbe, 0x53, 0x7a, 0x07, 0x5d, 0x81, 0x77, 0x13, 0x1e,
-	0xdc, 0xde, 0xdd, 0x3b, 0x68, 0x97, 0xa4, 0x31, 0x47, 0x67, 0x0f, 0xef, 0x36, 0x9f, 0x96, 0xe4,
-	0x3b, 0x0d, 0xc8, 0x87, 0x64, 0xa1, 0x32, 0x94, 0x5a, 0x87, 0x18, 0xb7, 0xfd, 0xa8, 0x21, 0x66,
-	0x09, 0xd6, 0x86, 0xd6, 0xe6, 0xe3, 0x92, 0xd4, 0xf8, 0x27, 0x05, 0x1b, 0xcf, 0x02, 0xde, 0x9b,
-	0xb6, 0x1d, 0xca, 0xe6, 0x37, 0x29, 0xde, 0xd9, 0x24, 0xbf, 0xd7, 0xd0, 0xbd, 0xa5, 0x3f, 0xf0,
-	0x78, 0x86, 0x2a, 0x9f, 0xaf, 0xf8, 0x61, 0x88, 0x5c, 0x9e, 0xee, 0x89, 0x36, 0x13, 0xd5, 0x96,
-	0xfb, 0xba, 0x53, 0xea, 0x4b, 0xf6, 0xaf, 0xe8, 0x8c, 0x27, 0xf9, 0x48, 0x47, 0x5e, 0x5f, 0xbc,
-	0xca, 0x06, 0xcb, 0x7e, 0xba, 0x6c, 0x59, 0x46, 0xcf, 0xa1, 0x10, 0x15, 0x17, 0xf4, 0xe1, 0xf4,
-	0xe9, 0x89, 0xea, 0xa7, 0xdc, 0x9e, 0x1f, 0x18, 0xe0, 0x3f, 0xdc, 0x84, 0x0d, 0xcb, 0x34, 0xa8,
-	0x49, 0x62, 0x33, 0x1e, 0x16, 0xb7, 0x1d, 0x5b, 0x13, 0x1b, 0x7a, 0x91, 0xe5, 0xc5, 0x6f, 0xeb,
-	0xdf, 0x00, 0x00, 0x00, 0xff, 0xff, 0x2e, 0x09, 0x0f, 0x93, 0x6e, 0x11, 0x00, 0x00,
+	// 1667 bytes of a gzipped FileDescriptorProto
+	0x1f, 0x8b, 0x08, 0x00, 0x00, 0x00, 0x00, 0x00, 0x02, 0xff, 0xec, 0x58, 0xcf, 0x73, 0xd3, 0xc6,
+	0x17, 0xff, 0xca, 0x89, 0x63, 0xfb, 0x39, 0x09, 0xce, 0x7e, 0x1d, 0x30, 0x6a, 0x02, 0x46, 0xb4,
+	0x90, 0x02, 0xb5, 0xc1, 0xc9, 0x50, 0x5a, 0xda, 0x52, 0x63, 0x3c, 0x90, 0x92, 0x04, 0x46, 0x49,
+	0x60, 0x32, 0xc3, 0x60, 0x84, 0xb4, 0x38, 0x02, 0x59, 0x52, 0x25, 0x39, 0xe0, 0x99, 0x72, 0xe9,
+	0x81, 0x4b, 0x0f, 0x6d, 0xff, 0x94, 0x5e, 0x7b, 0xef, 0xad, 0x87, 0xfe, 0x43, 0x9d, 0xe9, 0xec,
+	0x6a, 0xf5, 0xdb, 0x72, 0x6c, 0x0f, 0xed, 0x4c, 0x67, 0x7a, 0xb2, 0xb5, 0xef, 0xed, 0xe7, 0xbd,
+	0x7d, 0xfb, 0xf6, 0xf3, 0xde, 0x2e, 0x2c, 0x1f, 0x49, 0xb2, 0xa4, 0xcb, 0x83, 0x3a, 0xfb, 0xad,
+	0x99, 0x96, 0xe1, 0x18, 0x68, 0xd9, 0xc4, 0x96, 0x6d, 0xe8, 0x92, 0x64, 0x9a, 0x92, 0xa9, 0xd6,
+	0x98, 0x90, 0x3f, 0xd3, 0x35, 0x8c, 0xae, 0x86, 0xeb, 0x54, 0xe9, 0x79, 0xff, 0x45, 0xfd, 0xb5,
+	0x25, 0x99, 0x44, 0xd5, 0x9d, 0x26, 0x5c, 0x86, 0xd3, 0x77, 0xb1, 0xf3, 0xc8, 0xd5, 0x6e, 0x49,
+	0x0e, 0xee, 0x1a, 0xd6, 0x40, 0xc4, 0xdf, 0xf6, 0xb1, 0xed, 0xa0, 0x45, 0xc8, 0xa8, 0x4a, 0x85,
+	0xab, 0x72, 0x6b, 0x05, 0x31, 0xa3, 0x2a, 0xc2, 0x33, 0xe0, 0x87, 0x29, 0xdb, 0xa6, 0xa1, 0xdb,
+	0x18, 0xdd, 0x86, 0xbc, 0xcc, 0xc6, 0xe8, 0x9c, 0x62, 0xe3, 0x42, 0x6d, 0xa8, 0x53, 0xb5, 0x38,
+	0x82, 0x3f, 0x4f, 0x78, 0x0b, 0x2b, 0xfb, 0xa6, 0x8d, 0xad, 0x34, 0x8f, 0xae, 0xf8, 0x1e, 0x15,
+	0x1b, 0x2b, 0x35, 0x77, 0x6d, 0x35, 0x6f, 0x6d, 0xb5, 0x5d, 0xc7, 0x52, 0xf5, 0xee, 0x23, 0x49,
+	0xeb, 0x63, 0xe2, 0x2f, 0x2a, 0x43, 0xd6, 0x51, 0x1d, 0x0d, 0x57, 0x32, 0x74, 0x09, 0xee, 0x07,
+	0x3a, 0x0d, 0x79, 0x55, 0x36, 0xf4, 0x4e, 0xdf, 0xd2, 0x2a, 0x33, 0x54, 0x90, 0x23, 0xdf, 0xfb,
+	0x96, 0x26, 0xd4, 0x61, 0x35, 0xc5, 0x3c, 0x5b, 0x63, 0x3c, 0x22, 0x35, 0x58, 0xb9, 0x83, 0x35,
+	0xec, 0xe0, 0x31, 0x23, 0x78, 0x16, 0x56, 0x53, 0xf4, 0x5d, 0x03, 0xc2, 0x39, 0x38, 0x9b, 0x08,
+	0xb1, 0x8a, 0xed, 0x2d, 0xd5, 0x76, 0x18, 0xa6, 0xf0, 0x63, 0x06, 0xaa, 0xe9, 0x3a, 0xcc, 0xd1,
+	0xb7, 0x80, 0x58, 0xb4, 0x3b, 0xb2, 0xaf, 0x51, 0xe1, 0xaa, 0x33, 0x6b, 0xc5, 0xc6, 0x4e, 0xca,
+	0xb6, 0x1c, 0x07, 0x5a, 0x4b, 0x48, 0xdb, 0xba, 0x63, 0x0d, 0xc4, 0xa5, 0xa3, 0xf8, 0x38, 0xaf,
+	0xc1, 0xc9, 0xe1, 0xca, 0xa8, 0x04, 0x33, 0xaf, 0xf0, 0x80, 0x85, 0x84, 0xfc, 0x45, 0x5f, 0x40,
+	0xf6, 0x88, 0x6c, 0x19, 0xdd, 0xa5, 0xf1, 0x93, 0xc6, 0x9d, 0xf4, 0x79, 0xe6, 0x06, 0x27, 0xfc,
+	0x91, 0x83, 0x72, 0x64, 0xdf, 0xbc, 0xf0, 0x6f, 0x43, 0x8e, 0x4d, 0x67, 0x39, 0xb3, 0x9e, 0x02,
+	0x3e, 0x6c, 0xb6, 0x67, 0x51, 0xf4, 0x30, 0xd0, 0x0a, 0x14, 0xd4, 0x9e, 0xd4, 0xc5, 0xfb, 0xe2,
+	0x96, 0x5d, 0xc9, 0x54, 0x67, 0xd6, 0x0a, 0x62, 0x30, 0x80, 0x1e, 0x43, 0x5e, 0x33, 0x64, 0xc9,
+	0x51, 0x0d, 0x9d, 0xe6, 0x55, 0xb1, 0x71, 0x73, 0x0a, 0x6b, 0x5b, 0x0c, 0x42, 0xf4, 0xc1, 0xd0,
+	0x33, 0x28, 0x2a, 0xd8, 0x96, 0x2d, 0xd5, 0xa4, 0xd8, 0xb3, 0x14, 0xfb, 0xab, 0x29, 0xb0, 0xef,
+	0x04, 0x28, 0x62, 0x18, 0x12, 0x55, 0x20, 0x27, 0xab, 0xce, 0x60, 0xf3, 0x8e, 0x5d, 0xc9, 0xd2,
+	0x65, 0x79, 0x9f, 0xa8, 0x0a, 0x45, 0xef, 0x70, 0x12, 0xe9, 0x1c, 0x95, 0x86, 0x87, 0xf8, 0xfb,
+	0x70, 0x22, 0xe6, 0x3a, 0xe2, 0x21, 0xaf, 0x49, 0x8e, 0xea, 0xf4, 0x15, 0x4c, 0xe3, 0x9e, 0x11,
+	0xfd, 0x6f, 0x12, 0x43, 0xcd, 0xd0, 0xbb, 0xae, 0x30, 0x43, 0x85, 0xc1, 0x00, 0xff, 0x2e, 0x03,
+	0x28, 0xe9, 0x2c, 0xf1, 0x22, 0x1c, 0x01, 0x37, 0x79, 0x22, 0x2b, 0xd8, 0x80, 0x93, 0xaf, 0x0d,
+	0xeb, 0x55, 0xa7, 0x67, 0xe8, 0xce, 0xa1, 0xdd, 0xc1, 0x6f, 0x4c, 0x6c, 0xa9, 0x58, 0x97, 0x5d,
+	0x1b, 0x0b, 0x62, 0x99, 0x48, 0xb7, 0xa9, 0xb0, 0xed, 0xcb, 0xd0, 0x79, 0x58, 0xa0, 0xb3, 0x6c,
+	0xf9, 0x10, 0x2b, 0x7d, 0x0d, 0x33, 0x3e, 0x98, 0x27, 0x83, 0xbb, 0x6c, 0x0c, 0x5d, 0x87, 0x59,
+	0x67, 0x60, 0x62, 0x1a, 0xf7, 0xc5, 0x86, 0x30, 0x3a, 0x3d, 0xf7, 0x06, 0x26, 0x16, 0xa9, 0x3e,
+	0x09, 0xaa, 0xa4, 0x28, 0x16, 0xb6, 0x49, 0x50, 0x29, 0xcd, 0xb0, 0x4f, 0x74, 0x0e, 0xe6, 0x65,
+	0xa3, 0x4f, 0x8e, 0x43, 0x47, 0x36, 0x14, 0x5c, 0x99, 0xab, 0x72, 0x6b, 0x59, 0xb1, 0xc8, 0xc6,
+	0x5a, 0x86, 0x82, 0xf9, 0x3f, 0x39, 0xc8, 0x31, 0xc8, 0xf7, 0x42, 0x7a, 0x65, 0xc8, 0x9a, 0x87,
+	0x86, 0xee, 0xad, 0xd0, 0xfd, 0x40, 0xab, 0x00, 0x3d, 0x55, 0xef, 0xd8, 0x92, 0x26, 0x59, 0x03,
+	0xba, 0xc0, 0xac, 0x58, 0xe8, 0xa9, 0xfa, 0x2e, 0x1d, 0xa0, 0x62, 0xe9, 0x8d, 0x27, 0xce, 0x32,
+	0xb1, 0xf4, 0x26, 0x10, 0xcb, 0x46, 0xcf, 0x94, 0xf4, 0x41, 0x47, 0x55, 0xe8, 0x22, 0x0a, 0x62,
+	0x81, 0x8d, 0x6c, 0x2a, 0xe8, 0x26, 0xe4, 0xe5, 0xbe, 0x65, 0x61, 0x72, 0xfa, 0x72, 0x34, 0x76,
+	0x67, 0x53, 0x62, 0xd7, 0x62, 0x6a, 0xa2, 0x3f, 0x41, 0xb8, 0x08, 0xcb, 0xb1, 0x4c, 0x4e, 0x61,
+	0xe0, 0xdf, 0x33, 0x70, 0xca, 0x27, 0xae, 0x28, 0x53, 0xa2, 0x43, 0x58, 0x0c, 0xc8, 0xaf, 0xa3,
+	0x2a, 0x1e, 0x01, 0x36, 0x8f, 0x23, 0xc0, 0x28, 0x4e, 0x2d, 0xe0, 0xb0, 0x4d, 0x85, 0x71, 0xde,
+	0x82, 0x1c, 0x1e, 0x43, 0x1b, 0x30, 0x27, 0xf7, 0x2d, 0xdb, 0xb0, 0x18, 0x89, 0x8d, 0xde, 0x26,
+	0xa6, 0x8b, 0xae, 0x41, 0x96, 0xee, 0x39, 0xa3, 0x8b, 0x0f, 0x12, 0x93, 0x36, 0x75, 0x67, 0xbd,
+	0xe1, 0xce, 0x71, 0x35, 0xf9, 0xa7, 0x80, 0x92, 0xde, 0x0c, 0x21, 0xd5, 0x46, 0x94, 0x54, 0x57,
+	0x52, 0x56, 0xdc, 0xee, 0x99, 0x4e, 0x84, 0x4a, 0x7f, 0x9b, 0x83, 0x4a, 0x32, 0x0c, 0x2c, 0xf6,
+	0xe7, 0x61, 0xe1, 0xc8, 0x13, 0xf8, 0xe1, 0x2c, 0x88, 0xf3, 0xfe, 0x20, 0x09, 0xc5, 0x13, 0x28,
+	0xf8, 0xdf, 0x94, 0x24, 0xd3, 0xb9, 0x2a, 0xcd, 0x50, 0xcd, 0x1f, 0x75, 0x83, 0x1d, 0x00, 0x12,
+	0x74, 0x37, 0xc3, 0x08, 0xfa, 0xcc, 0x74, 0xe8, 0x2d, 0x0f, 0x80, 0xa1, 0xfb, 0x80, 0xa8, 0x03,
+	0x10, 0xaa, 0x96, 0xb3, 0x14, 0xfe, 0xd6, 0xc4, 0xf0, 0xb1, 0xf2, 0x18, 0x82, 0x0c, 0xe5, 0x49,
+	0x76, 0xfc, 0x3c, 0xe1, 0x55, 0x58, 0xf4, 0x49, 0xd1, 0x91, 0x54, 0xcd, 0x46, 0x37, 0xe2, 0x85,
+	0xed, 0xcc, 0x68, 0x5a, 0x0a, 0x6a, 0xd8, 0x2a, 0x00, 0x2d, 0x59, 0xa4, 0xfd, 0x89, 0x15, 0x31,
+	0x4b, 0xb3, 0xf9, 0xef, 0x3c, 0x53, 0x23, 0x0a, 0xf6, 0x5e, 0x34, 0xb7, 0xa6, 0xdc, 0x5d, 0x6f,
+	0x2d, 0xa1, 0xec, 0xe3, 0x9f, 0xc0, 0x62, 0x74, 0x73, 0x86, 0x58, 0xdf, 0x88, 0x5a, 0x4f, 0x5b,
+	0xb8, 0x8b, 0x13, 0xce, 0x6d, 0xfe, 0x25, 0x9c, 0x38, 0xbe, 0x1b, 0x69, 0x46, 0xe1, 0x2f, 0x8f,
+	0xd7, 0x8d, 0xec, 0x1e, 0x1a, 0x96, 0x13, 0x3e, 0x47, 0x9f, 0x85, 0x8e, 0x91, 0xbf, 0x52, 0x46,
+	0x4b, 0xab, 0x00, 0x5e, 0x6f, 0xe6, 0x53, 0x19, 0x4b, 0xf1, 0xc1, 0xa6, 0x22, 0xfc, 0x0a, 0xe1,
+	0x9e, 0xdc, 0x9f, 0xcb, 0xce, 0xe0, 0xf4, 0x3b, 0xbf, 0x0b, 0x59, 0xba, 0xcf, 0x6c, 0x65, 0x5f,
+	0x1e, 0xdb, 0x05, 0xc6, 0x4c, 0x7b, 0x88, 0x9b, 0x04, 0x44, 0x74, 0xb1, 0xd0, 0x93, 0x44, 0xd3,
+	0xf3, 0xf5, 0xb4, 0xb8, 0x43, 0x3a, 0x1f, 0x3c, 0xac, 0xf3, 0x69, 0x4d, 0x6b, 0x20, 0xb5, 0xfd,
+	0x39, 0x80, 0x1c, 0x2b, 0x5b, 0xec, 0x58, 0xde, 0x9a, 0xd6, 0x84, 0x97, 0x75, 0x1e, 0x1e, 0xaa,
+	0xc3, 0x2c, 0x69, 0xa5, 0x68, 0x75, 0x24, 0x0c, 0x9f, 0x92, 0xac, 0xaa, 0x33, 0x10, 0xa9, 0x22,
+	0x7a, 0x16, 0xa1, 0xa0, 0x1c, 0xa5, 0xa0, 0xc9, 0x43, 0x3a, 0x82, 0x83, 0xf8, 0xeb, 0x80, 0x98,
+	0x9b, 0x13, 0xb5, 0x58, 0xff, 0x35, 0x7a, 0x7f, 0x4b, 0xa3, 0xf7, 0x0b, 0xe7, 0x93, 0x3b, 0xdb,
+	0x15, 0x72, 0xc4, 0xbd, 0x74, 0xe4, 0xc6, 0xe2, 0x38, 0x3f, 0xdb, 0x62, 0xe7, 0x25, 0x33, 0xe5,
+	0x79, 0x49, 0xa6, 0x47, 0x34, 0x13, 0x3e, 0x81, 0xf9, 0x30, 0x17, 0xc4, 0x6a, 0x0a, 0x17, 0xaf,
+	0x29, 0xff, 0x24, 0xef, 0x5e, 0x80, 0x72, 0xe4, 0x82, 0x9d, 0x76, 0x11, 0x3f, 0x05, 0xcb, 0x31,
+	0x3d, 0x76, 0x01, 0x7f, 0x0b, 0xa5, 0xbb, 0xd8, 0x69, 0xa9, 0x8e, 0x8a, 0x7d, 0xc2, 0x5e, 0x87,
+	0x39, 0x4b, 0x72, 0x54, 0xbd, 0xcb, 0xf6, 0x63, 0x64, 0xa3, 0xc6, 0x54, 0x49, 0xa9, 0x7f, 0xa1,
+	0x6a, 0x0e, 0x1e, 0xb3, 0x25, 0x74, 0x75, 0x85, 0x7b, 0xb0, 0x14, 0x32, 0xcf, 0x38, 0x7f, 0x1d,
+	0xe6, 0x64, 0x3a, 0xc2, 0xfa, 0xd7, 0x91, 0x34, 0xc2, 0x54, 0x85, 0x9f, 0x38, 0x58, 0x72, 0x5b,
+	0x68, 0x3a, 0x3c, 0xd5, 0x03, 0x0a, 0x82, 0x59, 0x5d, 0xea, 0x79, 0x57, 0x09, 0xfa, 0x3f, 0x91,
+	0xd3, 0x33, 0x89, 0x9c, 0x46, 0x27, 0xfd, 0x78, 0xb9, 0x57, 0x0a, 0xf6, 0x25, 0x7c, 0x08, 0x28,
+	0xec, 0x51, 0x4a, 0x47, 0x7f, 0x1e, 0x96, 0xdc, 0xad, 0x09, 0xfb, 0x1d, 0x57, 0x2a, 0x03, 0x0a,
+	0x2b, 0xb1, 0xcd, 0xcb, 0x41, 0x96, 0x76, 0xb4, 0xc2, 0x37, 0x90, 0xf3, 0x4e, 0x53, 0x6c, 0x66,
+	0xfa, 0xa3, 0x90, 0x66, 0x74, 0x8d, 0xf0, 0xa3, 0x10, 0xf9, 0xde, 0xb7, 0x34, 0x41, 0xf4, 0x79,
+	0xcf, 0xcb, 0xba, 0xf1, 0x31, 0xd3, 0x1e, 0x9a, 0xde, 0x65, 0x82, 0xeb, 0xdd, 0x78, 0x60, 0xff,
+	0xb2, 0x0b, 0x1c, 0xfa, 0x28, 0x71, 0xf7, 0xca, 0x53, 0x5e, 0x88, 0x5e, 0x9c, 0x84, 0x2b, 0x50,
+	0x1e, 0x76, 0xa4, 0x83, 0x20, 0x70, 0xa1, 0x20, 0x08, 0x18, 0x66, 0xc9, 0x7e, 0x27, 0x42, 0xf6,
+	0x7e, 0xf3, 0xf4, 0xd2, 0x01, 0x14, 0x43, 0x2c, 0x8f, 0x2a, 0x50, 0x7e, 0xd4, 0x6c, 0x35, 0x77,
+	0x5a, 0x07, 0x9d, 0xbd, 0x83, 0x87, 0xed, 0xce, 0xfe, 0xce, 0xfd, 0x9d, 0x07, 0x8f, 0x77, 0x4a,
+	0xff, 0x43, 0xa7, 0xe0, 0xff, 0x11, 0x89, 0xd8, 0xde, 0x7e, 0xb0, 0xd7, 0x2e, 0x71, 0x09, 0xc1,
+	0xce, 0x03, 0x71, 0xbb, 0xb9, 0x55, 0xca, 0x5c, 0x6a, 0x40, 0xde, 0x0b, 0x16, 0x2a, 0x43, 0xa9,
+	0xb5, 0x2f, 0x8a, 0x6d, 0xa2, 0x15, 0x60, 0x96, 0x60, 0x3e, 0x18, 0x6d, 0xde, 0x2b, 0x71, 0x8d,
+	0x9f, 0x01, 0x96, 0x1e, 0xba, 0x71, 0x6f, 0x9a, 0xa6, 0x97, 0x36, 0x03, 0x40, 0xc9, 0xc7, 0x58,
+	0x74, 0x75, 0xdc, 0xb7, 0x3d, 0xef, 0x64, 0xf1, 0xd7, 0x26, 0x98, 0xc1, 0x4e, 0xec, 0xf7, 0x5c,
+	0xec, 0x76, 0xee, 0x9b, 0x1f, 0xeb, 0x7d, 0x2d, 0xee, 0xc1, 0xc6, 0x64, 0x93, 0x42, 0x4e, 0x0c,
+	0x7d, 0x4b, 0x4d, 0x75, 0x62, 0xd4, 0x4b, 0x6d, 0xaa, 0x13, 0x23, 0x9f, 0x6b, 0xd1, 0x0f, 0x5c,
+	0xb8, 0xcf, 0x8f, 0x3e, 0x9b, 0xa2, 0xeb, 0x13, 0xbf, 0xb3, 0xba, 0xae, 0x7c, 0x3a, 0xe5, 0xfb,
+	0x2c, 0x7a, 0x09, 0x0b, 0x91, 0x98, 0xa1, 0xcb, 0x13, 0x3c, 0x12, 0xf2, 0x57, 0xc6, 0x53, 0x66,
+	0xb6, 0x6c, 0x5a, 0x27, 0x23, 0x17, 0x3c, 0x54, 0x9b, 0xec, 0x5d, 0x85, 0xaf, 0x4f, 0x78, 0x73,
+	0x44, 0x47, 0xb4, 0x3a, 0xc6, 0xee, 0xc2, 0xf5, 0xf1, 0xfb, 0x1b, 0xd7, 0xec, 0xd5, 0x49, 0x1b,
+	0x22, 0x12, 0xd8, 0x48, 0x1e, 0xa4, 0x06, 0x76, 0x58, 0xef, 0x91, 0x1a, 0xd8, 0xa1, 0x0d, 0x08,
+	0x7a, 0x0a, 0x05, 0xbf, 0x03, 0x40, 0x17, 0xd3, 0x5d, 0x8d, 0xb4, 0x28, 0xfc, 0xda, 0xf1, 0x8a,
+	0x0c, 0x5f, 0x02, 0x08, 0x8a, 0x30, 0x5a, 0x1b, 0xb9, 0xe9, 0xa1, 0x0a, 0xcc, 0x7f, 0x3c, 0x86,
+	0x66, 0x60, 0x22, 0x28, 0xce, 0xa9, 0x26, 0x12, 0x45, 0x3e, 0xd5, 0x44, 0xb2, 0xd2, 0xdf, 0xae,
+	0xc2, 0x92, 0xa1, 0x6b, 0xaa, 0x8e, 0x43, 0x53, 0x6e, 0x17, 0xef, 0x5a, 0xa6, 0xcc, 0xe2, 0xf9,
+	0x7c, 0x8e, 0x76, 0x35, 0xeb, 0x7f, 0x05, 0x00, 0x00, 0xff, 0xff, 0x34, 0xd7, 0x1c, 0x6a, 0x30,
+	0x1b, 0x00, 0x00,
 }
 
 // Reference imports to suppress errors if they are not otherwise used.
@@ -1279,12 +2139,19 @@ const _ = grpc.SupportPackageIsVersion4
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type PersonaAppVacancyClient interface {
 	// Vacancy categories
+	GetVacancyCategory(ctx context.Context, in *GetVacancyCategoryRequest, opts ...grpc.CallOption) (*GetVacancyCategoryResponse, error)
+	UpsertVacancyCategory(ctx context.Context, in *UpsertVacancyCategoryRequest, opts ...grpc.CallOption) (*UpsertVacancyCategoryResponse, error)
+	DeleteVacancyCategory(ctx context.Context, in *DeleteVacancyCategoryRequest, opts ...grpc.CallOption) (*DeleteVacancyCategoryResponse, error)
 	GetVacancyCategoriesList(ctx context.Context, in *GetVacancyCategoriesListRequest, opts ...grpc.CallOption) (*GetVacancyCategoriesListResponse, error)
 	// Vacancy
+	UpsertVacancy(ctx context.Context, in *UpsertVacancyRequest, opts ...grpc.CallOption) (*UpsertVacancyResponse, error)
 	GetVacanciesList(ctx context.Context, in *GetVacanciesListRequest, opts ...grpc.CallOption) (*GetVacanciesListResponse, error)
 	GetVacancyDetails(ctx context.Context, in *GetVacancyDetailsRequest, opts ...grpc.CallOption) (*GetVacancyDetailsResponse, error)
+	DeleteVacancy(ctx context.Context, in *DeleteVacancyRequest, opts ...grpc.CallOption) (*DeleteVacancyResponse, error)
 	// Cities
 	GetCities(ctx context.Context, in *GetCitiesRequest, opts ...grpc.CallOption) (*GetCitiesResponse, error)
+	UpsertCity(ctx context.Context, in *UpsertCityRequest, opts ...grpc.CallOption) (*UpsertCityResponse, error)
+	DeleteCity(ctx context.Context, in *DeleteCityRequest, opts ...grpc.CallOption) (*DeleteCityResponse, error)
 }
 
 type personaAppVacancyClient struct {
@@ -1295,9 +2162,45 @@ func NewPersonaAppVacancyClient(cc *grpc.ClientConn) PersonaAppVacancyClient {
 	return &personaAppVacancyClient{cc}
 }
 
+func (c *personaAppVacancyClient) GetVacancyCategory(ctx context.Context, in *GetVacancyCategoryRequest, opts ...grpc.CallOption) (*GetVacancyCategoryResponse, error) {
+	out := new(GetVacancyCategoryResponse)
+	err := c.cc.Invoke(ctx, "/personaappapi.vacancy.PersonaAppVacancy/GetVacancyCategory", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *personaAppVacancyClient) UpsertVacancyCategory(ctx context.Context, in *UpsertVacancyCategoryRequest, opts ...grpc.CallOption) (*UpsertVacancyCategoryResponse, error) {
+	out := new(UpsertVacancyCategoryResponse)
+	err := c.cc.Invoke(ctx, "/personaappapi.vacancy.PersonaAppVacancy/UpsertVacancyCategory", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *personaAppVacancyClient) DeleteVacancyCategory(ctx context.Context, in *DeleteVacancyCategoryRequest, opts ...grpc.CallOption) (*DeleteVacancyCategoryResponse, error) {
+	out := new(DeleteVacancyCategoryResponse)
+	err := c.cc.Invoke(ctx, "/personaappapi.vacancy.PersonaAppVacancy/DeleteVacancyCategory", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *personaAppVacancyClient) GetVacancyCategoriesList(ctx context.Context, in *GetVacancyCategoriesListRequest, opts ...grpc.CallOption) (*GetVacancyCategoriesListResponse, error) {
 	out := new(GetVacancyCategoriesListResponse)
 	err := c.cc.Invoke(ctx, "/personaappapi.vacancy.PersonaAppVacancy/GetVacancyCategoriesList", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *personaAppVacancyClient) UpsertVacancy(ctx context.Context, in *UpsertVacancyRequest, opts ...grpc.CallOption) (*UpsertVacancyResponse, error) {
+	out := new(UpsertVacancyResponse)
+	err := c.cc.Invoke(ctx, "/personaappapi.vacancy.PersonaAppVacancy/UpsertVacancy", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1322,6 +2225,15 @@ func (c *personaAppVacancyClient) GetVacancyDetails(ctx context.Context, in *Get
 	return out, nil
 }
 
+func (c *personaAppVacancyClient) DeleteVacancy(ctx context.Context, in *DeleteVacancyRequest, opts ...grpc.CallOption) (*DeleteVacancyResponse, error) {
+	out := new(DeleteVacancyResponse)
+	err := c.cc.Invoke(ctx, "/personaappapi.vacancy.PersonaAppVacancy/DeleteVacancy", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 func (c *personaAppVacancyClient) GetCities(ctx context.Context, in *GetCitiesRequest, opts ...grpc.CallOption) (*GetCitiesResponse, error) {
 	out := new(GetCitiesResponse)
 	err := c.cc.Invoke(ctx, "/personaappapi.vacancy.PersonaAppVacancy/GetCities", in, out, opts...)
@@ -1331,23 +2243,60 @@ func (c *personaAppVacancyClient) GetCities(ctx context.Context, in *GetCitiesRe
 	return out, nil
 }
 
+func (c *personaAppVacancyClient) UpsertCity(ctx context.Context, in *UpsertCityRequest, opts ...grpc.CallOption) (*UpsertCityResponse, error) {
+	out := new(UpsertCityResponse)
+	err := c.cc.Invoke(ctx, "/personaappapi.vacancy.PersonaAppVacancy/UpsertCity", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
+func (c *personaAppVacancyClient) DeleteCity(ctx context.Context, in *DeleteCityRequest, opts ...grpc.CallOption) (*DeleteCityResponse, error) {
+	out := new(DeleteCityResponse)
+	err := c.cc.Invoke(ctx, "/personaappapi.vacancy.PersonaAppVacancy/DeleteCity", in, out, opts...)
+	if err != nil {
+		return nil, err
+	}
+	return out, nil
+}
+
 // PersonaAppVacancyServer is the server API for PersonaAppVacancy service.
 type PersonaAppVacancyServer interface {
 	// Vacancy categories
+	GetVacancyCategory(context.Context, *GetVacancyCategoryRequest) (*GetVacancyCategoryResponse, error)
+	UpsertVacancyCategory(context.Context, *UpsertVacancyCategoryRequest) (*UpsertVacancyCategoryResponse, error)
+	DeleteVacancyCategory(context.Context, *DeleteVacancyCategoryRequest) (*DeleteVacancyCategoryResponse, error)
 	GetVacancyCategoriesList(context.Context, *GetVacancyCategoriesListRequest) (*GetVacancyCategoriesListResponse, error)
 	// Vacancy
+	UpsertVacancy(context.Context, *UpsertVacancyRequest) (*UpsertVacancyResponse, error)
 	GetVacanciesList(context.Context, *GetVacanciesListRequest) (*GetVacanciesListResponse, error)
 	GetVacancyDetails(context.Context, *GetVacancyDetailsRequest) (*GetVacancyDetailsResponse, error)
+	DeleteVacancy(context.Context, *DeleteVacancyRequest) (*DeleteVacancyResponse, error)
 	// Cities
 	GetCities(context.Context, *GetCitiesRequest) (*GetCitiesResponse, error)
+	UpsertCity(context.Context, *UpsertCityRequest) (*UpsertCityResponse, error)
+	DeleteCity(context.Context, *DeleteCityRequest) (*DeleteCityResponse, error)
 }
 
 // UnimplementedPersonaAppVacancyServer can be embedded to have forward compatible implementations.
 type UnimplementedPersonaAppVacancyServer struct {
 }
 
+func (*UnimplementedPersonaAppVacancyServer) GetVacancyCategory(ctx context.Context, req *GetVacancyCategoryRequest) (*GetVacancyCategoryResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method GetVacancyCategory not implemented")
+}
+func (*UnimplementedPersonaAppVacancyServer) UpsertVacancyCategory(ctx context.Context, req *UpsertVacancyCategoryRequest) (*UpsertVacancyCategoryResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpsertVacancyCategory not implemented")
+}
+func (*UnimplementedPersonaAppVacancyServer) DeleteVacancyCategory(ctx context.Context, req *DeleteVacancyCategoryRequest) (*DeleteVacancyCategoryResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteVacancyCategory not implemented")
+}
 func (*UnimplementedPersonaAppVacancyServer) GetVacancyCategoriesList(ctx context.Context, req *GetVacancyCategoriesListRequest) (*GetVacancyCategoriesListResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetVacancyCategoriesList not implemented")
+}
+func (*UnimplementedPersonaAppVacancyServer) UpsertVacancy(ctx context.Context, req *UpsertVacancyRequest) (*UpsertVacancyResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpsertVacancy not implemented")
 }
 func (*UnimplementedPersonaAppVacancyServer) GetVacanciesList(ctx context.Context, req *GetVacanciesListRequest) (*GetVacanciesListResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetVacanciesList not implemented")
@@ -1355,12 +2304,75 @@ func (*UnimplementedPersonaAppVacancyServer) GetVacanciesList(ctx context.Contex
 func (*UnimplementedPersonaAppVacancyServer) GetVacancyDetails(ctx context.Context, req *GetVacancyDetailsRequest) (*GetVacancyDetailsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetVacancyDetails not implemented")
 }
+func (*UnimplementedPersonaAppVacancyServer) DeleteVacancy(ctx context.Context, req *DeleteVacancyRequest) (*DeleteVacancyResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteVacancy not implemented")
+}
 func (*UnimplementedPersonaAppVacancyServer) GetCities(ctx context.Context, req *GetCitiesRequest) (*GetCitiesResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetCities not implemented")
+}
+func (*UnimplementedPersonaAppVacancyServer) UpsertCity(ctx context.Context, req *UpsertCityRequest) (*UpsertCityResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpsertCity not implemented")
+}
+func (*UnimplementedPersonaAppVacancyServer) DeleteCity(ctx context.Context, req *DeleteCityRequest) (*DeleteCityResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method DeleteCity not implemented")
 }
 
 func RegisterPersonaAppVacancyServer(s *grpc.Server, srv PersonaAppVacancyServer) {
 	s.RegisterService(&_PersonaAppVacancy_serviceDesc, srv)
+}
+
+func _PersonaAppVacancy_GetVacancyCategory_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(GetVacancyCategoryRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PersonaAppVacancyServer).GetVacancyCategory(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/personaappapi.vacancy.PersonaAppVacancy/GetVacancyCategory",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PersonaAppVacancyServer).GetVacancyCategory(ctx, req.(*GetVacancyCategoryRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PersonaAppVacancy_UpsertVacancyCategory_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpsertVacancyCategoryRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PersonaAppVacancyServer).UpsertVacancyCategory(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/personaappapi.vacancy.PersonaAppVacancy/UpsertVacancyCategory",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PersonaAppVacancyServer).UpsertVacancyCategory(ctx, req.(*UpsertVacancyCategoryRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PersonaAppVacancy_DeleteVacancyCategory_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteVacancyCategoryRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PersonaAppVacancyServer).DeleteVacancyCategory(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/personaappapi.vacancy.PersonaAppVacancy/DeleteVacancyCategory",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PersonaAppVacancyServer).DeleteVacancyCategory(ctx, req.(*DeleteVacancyCategoryRequest))
+	}
+	return interceptor(ctx, in, info, handler)
 }
 
 func _PersonaAppVacancy_GetVacancyCategoriesList_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
@@ -1377,6 +2389,24 @@ func _PersonaAppVacancy_GetVacancyCategoriesList_Handler(srv interface{}, ctx co
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(PersonaAppVacancyServer).GetVacancyCategoriesList(ctx, req.(*GetVacancyCategoriesListRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PersonaAppVacancy_UpsertVacancy_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpsertVacancyRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PersonaAppVacancyServer).UpsertVacancy(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/personaappapi.vacancy.PersonaAppVacancy/UpsertVacancy",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PersonaAppVacancyServer).UpsertVacancy(ctx, req.(*UpsertVacancyRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -1417,6 +2447,24 @@ func _PersonaAppVacancy_GetVacancyDetails_Handler(srv interface{}, ctx context.C
 	return interceptor(ctx, in, info, handler)
 }
 
+func _PersonaAppVacancy_DeleteVacancy_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteVacancyRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PersonaAppVacancyServer).DeleteVacancy(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/personaappapi.vacancy.PersonaAppVacancy/DeleteVacancy",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PersonaAppVacancyServer).DeleteVacancy(ctx, req.(*DeleteVacancyRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 func _PersonaAppVacancy_GetCities_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(GetCitiesRequest)
 	if err := dec(in); err != nil {
@@ -1435,13 +2483,65 @@ func _PersonaAppVacancy_GetCities_Handler(srv interface{}, ctx context.Context, 
 	return interceptor(ctx, in, info, handler)
 }
 
+func _PersonaAppVacancy_UpsertCity_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpsertCityRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PersonaAppVacancyServer).UpsertCity(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/personaappapi.vacancy.PersonaAppVacancy/UpsertCity",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PersonaAppVacancyServer).UpsertCity(ctx, req.(*UpsertCityRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
+func _PersonaAppVacancy_DeleteCity_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(DeleteCityRequest)
+	if err := dec(in); err != nil {
+		return nil, err
+	}
+	if interceptor == nil {
+		return srv.(PersonaAppVacancyServer).DeleteCity(ctx, in)
+	}
+	info := &grpc.UnaryServerInfo{
+		Server:     srv,
+		FullMethod: "/personaappapi.vacancy.PersonaAppVacancy/DeleteCity",
+	}
+	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
+		return srv.(PersonaAppVacancyServer).DeleteCity(ctx, req.(*DeleteCityRequest))
+	}
+	return interceptor(ctx, in, info, handler)
+}
+
 var _PersonaAppVacancy_serviceDesc = grpc.ServiceDesc{
 	ServiceName: "personaappapi.vacancy.PersonaAppVacancy",
 	HandlerType: (*PersonaAppVacancyServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
+			MethodName: "GetVacancyCategory",
+			Handler:    _PersonaAppVacancy_GetVacancyCategory_Handler,
+		},
+		{
+			MethodName: "UpsertVacancyCategory",
+			Handler:    _PersonaAppVacancy_UpsertVacancyCategory_Handler,
+		},
+		{
+			MethodName: "DeleteVacancyCategory",
+			Handler:    _PersonaAppVacancy_DeleteVacancyCategory_Handler,
+		},
+		{
 			MethodName: "GetVacancyCategoriesList",
 			Handler:    _PersonaAppVacancy_GetVacancyCategoriesList_Handler,
+		},
+		{
+			MethodName: "UpsertVacancy",
+			Handler:    _PersonaAppVacancy_UpsertVacancy_Handler,
 		},
 		{
 			MethodName: "GetVacanciesList",
@@ -1452,8 +2552,20 @@ var _PersonaAppVacancy_serviceDesc = grpc.ServiceDesc{
 			Handler:    _PersonaAppVacancy_GetVacancyDetails_Handler,
 		},
 		{
+			MethodName: "DeleteVacancy",
+			Handler:    _PersonaAppVacancy_DeleteVacancy_Handler,
+		},
+		{
 			MethodName: "GetCities",
 			Handler:    _PersonaAppVacancy_GetCities_Handler,
+		},
+		{
+			MethodName: "UpsertCity",
+			Handler:    _PersonaAppVacancy_UpsertCity_Handler,
+		},
+		{
+			MethodName: "DeleteCity",
+			Handler:    _PersonaAppVacancy_DeleteCity_Handler,
 		},
 	},
 	Streams:  []grpc.StreamDesc{},
