@@ -18,10 +18,6 @@ service PersonaAppVacancy {
     rpc GetVacanciesList (GetVacanciesListRequest) returns (GetVacanciesListResponse);
     rpc GetVacancyDetails (GetVacancyDetailsRequest) returns (GetVacancyDetailsResponse);
     rpc DeleteVacancy (DeleteVacancyRequest) returns (DeleteVacancyResponse);
-    // Cities
-    rpc GetCities (GetCitiesRequest) returns (GetCitiesResponse);
-    rpc UpsertCity (UpsertCityRequest) returns (UpsertCityResponse);
-    rpc DeleteCity (DeleteCityRequest) returns (DeleteCityResponse);
 }
 
 // Get vacancy category
@@ -166,36 +162,6 @@ message DeleteVacancyRequest {
 }
 
 message DeleteVacancyResponse {
-}
-
-// Get cities
-message GetCitiesRequest {
-    google.protobuf.Int32Value rating = 1;
-    google.protobuf.StringValue filter = 2;
-}
-
-message GetCitiesResponse {
-    repeated City cities = 1;
-}
-
-// Upsert city
-message UpsertCityRequest {
-    google.protobuf.StringValue id = 1;
-    string name = 2;
-    int32 country_code = 3;
-    int32 rating = 4;
-}
-
-message UpsertCityResponse {
-    string id = 1;
-}
-
-// Delete city
-message DeleteCityRequest {
-    string id = 1;
-}
-
-message DeleteCityResponse {
 }
 
 // Entity

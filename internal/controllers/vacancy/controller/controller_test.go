@@ -8,6 +8,8 @@ import (
 	uuid "github.com/satori/go.uuid"
 	"github.com/stretchr/testify/require"
 	authController "personaapp/internal/controllers/auth/controller"
+	cityController "personaapp/internal/controllers/city/controller"
+	cityStorage "personaapp/internal/controllers/city/storage"
 	companyController "personaapp/internal/controllers/company/controller"
 	companyStorage "personaapp/internal/controllers/company/storage"
 	"personaapp/internal/controllers/vacancy/controller"
@@ -35,6 +37,13 @@ func initCompanyStorage(t *testing.T) (_ *companyStorage.Storage, closer func() 
 	require.NoError(t, testutils.Migrate(pg.DB, sqlMigrate.Up))
 
 	return companyStorage.New(pg), pg.Close
+}
+
+func initCityStorage(t *testing.T) (_ *cityStorage.Storage, closer func() error) {
+	pg := testutils.EnsurePostgres(t)
+	require.NoError(t, testutils.Migrate(pg.DB, sqlMigrate.Up))
+
+	return cityStorage.New(pg), pg.Close
 }
 
 func cleanup(t *testing.T) {
@@ -125,107 +134,11 @@ func TestController_PutVacancyCategory(t *testing.T) {
 	})
 }
 
-func TestController_PutCity(t *testing.T) {
-	s, closer := initStorage(t)
-	defer func() {
-		if err := closer(); err != nil {
-			t.Error(err)
-		}
-		cleanup(t)
-	}()
-
-	c := controller.New(s)
-
-	t.Run("create new city", func(t *testing.T) {
-		cityToCreate := controller.City{
-			Name:        "Hamburg",
-			CountryCode: 0,
-			Rating:      0,
-		}
-		ID, err := c.PutCity(context.TODO(), nil, &cityToCreate)
-		require.NoError(t, err)
-		require.NotNil(t, ID)
-
-		createdCities, err := c.GetCities(context.TODO(), []int32{0}, 0, cityToCreate.Name)
-		require.NoError(t, err)
-		require.NotNil(t, createdCities)
-		require.Equal(t, cityToCreate.Name, createdCities[0].Name)
-		require.Equal(t, cityToCreate.CountryCode, createdCities[0].CountryCode)
-		require.Equal(t, cityToCreate.Rating, createdCities[0].Rating)
-	})
-
-	t.Run("update city", func(t *testing.T) {
-		cityToCreate := controller.City{
-			Name:        "Dnipro",
-			CountryCode: 1,
-			Rating:      1,
-		}
-		ID, err := c.PutCity(context.TODO(), nil, &cityToCreate)
-
-		require.NoError(t, err)
-		require.NotNil(t, ID)
-
-		cityToUpdate := controller.City{
-			Name:        "Lviv",
-			CountryCode: 0,
-			Rating:      0,
-		}
-
-		stringID := string(ID)
-		updatedID, err := c.PutCity(context.TODO(), &stringID, &cityToUpdate)
-		require.NoError(t, err)
-		require.Equal(t, ID, updatedID)
-
-		updatedCities, err := c.GetCities(context.TODO(), []int32{0}, 0, cityToUpdate.Name)
-		require.NoError(t, err)
-		require.NotNil(t, updatedCities)
-		require.Equal(t, string(ID), updatedCities[0].ID)
-		require.Equal(t, cityToUpdate.Name, updatedCities[0].Name)
-		require.Equal(t, cityToUpdate.CountryCode, updatedCities[0].CountryCode)
-		require.Equal(t, cityToUpdate.Rating, updatedCities[0].Rating)
-	})
-
-	t.Run("update city with invalid ID", func(t *testing.T) {
-		ID := uuid.NewV4().String()
-		_, err := c.PutCity(context.TODO(), &ID, &controller.City{
-			Name:        "Sidney",
-			CountryCode: 0,
-			Rating:      0,
-		})
-		require.EqualError(t, errors.Cause(err), controller.ErrCityNotFound.Error())
-	})
-
-	t.Run("update city with empty city struct", func(t *testing.T) {
-		_, err := c.PutCity(context.TODO(), nil, nil)
-		require.EqualError(t, errors.Cause(err), controller.ErrInvalidCity.Error())
-	})
-
-	t.Run("update city with invalid Name", func(t *testing.T) {
-		_, err := c.PutCity(context.TODO(), nil, &controller.City{
-			Name:        "",
-			CountryCode: 0,
-			Rating:      0,
-		})
-		require.EqualError(t, errors.Cause(err), controller.ErrInvalidCityName.Error())
-
-		_, err = c.PutCity(context.TODO(), nil, &controller.City{
-			Name: "Abcd abcd abcd abcd abcd abcd abcd abcd abcd abcdef" +
-				"Abcd abcd abcd abcd abcd abcd abcd abcd abcd abcdef" +
-				"Abcd abcd abcd abcd abcd abcd abcd abcd abcd abcdef" +
-				"Abcd abcd abcd abcd abcd abcd abcd abcd abcd abcdef" +
-				"Abcd abcd abcd abcd abcd abcd abcd abcd abcd abcdef" +
-				"Abcd abcd abcd abcd abcd abcd abcd abcd abcd abcdef",
-			CountryCode: 0,
-			Rating:      0,
-		})
-		require.EqualError(t, errors.Cause(err), controller.ErrInvalidCityName.Error())
-	})
-}
-
 func TestController_PutVacancy(t *testing.T) {
 	s, closer := initStorage(t)
 	as, authCloser := testutils.InitAuthStorage(t)
 	cs, companyCloser := initCompanyStorage(t)
+	cys, cityCloser := initCityStorage(t)
 
 	defer func() {
 		if err := closer(); err != nil {
@@ -237,12 +150,16 @@ func TestController_PutVacancy(t *testing.T) {
 		if err := companyCloser(); err != nil {
 			t.Error(err)
 		}
+		if err := cityCloser(); err != nil {
+			t.Error(err)
+		}
 		cleanup(t)
 	}()
 
 	c := controller.New(s)
 	ac := authController.New(authCfg, as)
 	cc := companyController.New(cs)
+	cy := cityController.New(cys)
 
 	t.Run("create new vacancy", func(t *testing.T) {
 		token, err := ac.Register(context.TODO(), &authController.RegisterData{
@@ -273,12 +190,12 @@ func TestController_PutVacancy(t *testing.T) {
 		require.NoError(t, err)
 		require.NotNil(t, categoryID)
 
-		city := controller.City{
+		city := cityController.City{
 			Name:        "Obukhiv",
 			CountryCode: 0,
 			Rating:      0,
 		}
-		cityID, err := c.PutCity(context.TODO(), nil, &city)
+		cityID, err := cy.PutCity(context.TODO(), nil, &city)
 		require.NoError(t, err)
 		require.NotNil(t, cityID)
 
@@ -363,50 +280,11 @@ func TestController_GetVacanciesCategoriesList(t *testing.T) {
 	})
 }
 
-func TestController_GetCities(t *testing.T) {
-	s, closer := initStorage(t)
-	defer func() {
-		if err := closer(); err != nil {
-			t.Error(err)
-		}
-		cleanup(t)
-	}()
-
-	c := controller.New(s)
-
-	t.Run("get city list", func(t *testing.T) {
-		count := 5
-		citiesMap := make(map[string]*controller.City)
-		for i := 0; i < count; i++ {
-			city := &controller.City{
-				Name:        fmt.Sprintf("City %d", i+1),
-				CountryCode: int32(i % 2),
-				Rating:      0,
-			}
-			ID, err := c.PutCity(context.TODO(), nil, city)
-			require.NoError(t, err)
-			require.NotNil(t, ID)
-
-			citiesMap[string(ID)] = city
-		}
-
-		cities, err := c.GetCities(context.TODO(), []int32{}, 0, "")
-		require.NoError(t, err)
-		require.Equal(t, count, len(cities))
-
-		for _, c := range cities {
-			require.NotNil(t, citiesMap[c.ID])
-			require.Equal(t, citiesMap[c.ID].Name, c.Name)
-			require.Equal(t, citiesMap[c.ID].CountryCode, c.CountryCode)
-			require.Equal(t, citiesMap[c.ID].Rating, c.Rating)
-		}
-	})
-}
-
 func TestController_GetVacanciesList(t *testing.T) {
 	s, closer := initStorage(t)
 	as, authCloser := testutils.InitAuthStorage(t)
 	cs, companyCloser := initCompanyStorage(t)
+	cys, cityCloser := initCityStorage(t)
 
 	defer func() {
 		if err := closer(); err != nil {
@@ -418,12 +296,16 @@ func TestController_GetVacanciesList(t *testing.T) {
 		if err := companyCloser(); err != nil {
 			t.Error(err)
 		}
+		if err := cityCloser(); err != nil {
+			t.Error(err)
+		}
 		cleanup(t)
 	}()
 
 	c := controller.New(s)
 	ac := authController.New(authCfg, as)
 	cc := companyController.New(cs)
+	cy := cityController.New(cys)
 
 	t.Run("get vacancies list", func(t *testing.T) {
 		token, err := ac.Register(context.TODO(), &authController.RegisterData{
@@ -464,14 +346,14 @@ func TestController_GetVacanciesList(t *testing.T) {
 
 		citiesCount := 3
 		citiesIDs := make([]string, citiesCount)
-		citiesMap := make(map[string]*controller.City)
+		citiesMap := make(map[string]*cityController.City)
 		for i := 0; i < citiesCount; i++ {
-			city := &controller.City{
+			city := &cityController.City{
 				Name:        fmt.Sprintf("Town %d", i+1),
 				CountryCode: int32(i),
 				Rating:      0,
 			}
-			ID, err := c.PutCity(context.TODO(), nil, city)
+			ID, err := cy.PutCity(context.TODO(), nil, city)
 			require.NoError(t, err)
 			require.NotNil(t, ID)
 

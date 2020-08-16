@@ -39,14 +39,6 @@ type VacancyController interface {
 	GetVacanciesCategories(ctx context.Context, vacancyIDs []string) ([]*vacancyController.VacancyCategoryShort, error)
 	GetVacancyCities(ctx context.Context, vacancyIDs []string) ([]*vacancyController.VacancyCity, error)
 	DeleteVacancy(ctx context.Context, vacancyID string) error
-
-	GetCities(ctx context.Context, countryCodes []int32, rating int32, filter string) ([]*vacancyController.City, error)
-	PutCity(
-		ctx context.Context,
-		cityID *string,
-		category *vacancyController.City,
-	) (vacancyController.CityID, error)
-	DeleteCity(ctx context.Context, cityID string) error
 }
 
 // Vacancy
@@ -135,7 +127,7 @@ func (s *Server) DeleteVacancyCategory(
 	err = s.vc.DeleteVacancyCategory(ctx, req.Id)
 	switch errors.Cause(err) {
 	case nil:
-	case vacancyController.ErrCitiesNotFound:
+	case vacancyController.ErrVacancyCategoryNotFound:
 		return nil, status.Error(codes.NotFound, err.Error())
 	}
 
@@ -420,85 +412,11 @@ func (s *Server) DeleteVacancy(
 	err = s.vc.DeleteVacancy(ctx, req.Id)
 	switch errors.Cause(err) {
 	case nil:
-	case vacancyController.ErrCitiesNotFound:
+	case vacancyController.ErrVacancyNotFound:
 		return nil, status.Error(codes.NotFound, err.Error())
 	}
 
 	return &vacancyapi.DeleteVacancyResponse{}, nil
-}
-
-func (s *Server) GetCities(
-	ctx context.Context,
-	req *vacancyapi.GetCitiesRequest,
-) (*vacancyapi.GetCitiesResponse, error) {
-	_, err := s.getAuthClaims(ctx)
-	if err != nil {
-		return nil, status.Error(codes.Unauthenticated, "unauthorized")
-	}
-
-	cs, err := s.vc.GetCities(ctx, []int32{}, req.Rating.GetValue(), req.Filter.GetValue())
-	switch errors.Cause(err) {
-	case nil:
-	case vacancyController.ErrCitiesNotFound:
-		return nil, status.Error(codes.NotFound, err.Error())
-	}
-
-	cities := make([]*vacancyapi.City, len(cs))
-	for idx, c := range cs {
-		cities[idx] = &vacancyapi.City{
-			Id:          c.ID,
-			Name:        c.Name,
-			CountryCode: c.CountryCode,
-			Rating:      c.Rating,
-		}
-	}
-
-	return &vacancyapi.GetCitiesResponse{
-		Cities: cities,
-	}, nil
-}
-
-func (s *Server) UpsertCity(
-	ctx context.Context,
-	req *vacancyapi.UpsertCityRequest,
-) (*vacancyapi.UpsertCityResponse, error) {
-	claims, err := s.getAuthClaims(ctx)
-	if err != nil || !s.isAdminAccountType(claims) {
-		return nil, status.Error(codes.Unauthenticated, "unauthorized")
-	}
-
-	cityID, err := s.vc.PutCity(ctx, getOptionalString(req.Id), &vacancyController.City{
-		Name:        req.Name,
-		CountryCode: req.CountryCode,
-		Rating:      req.Rating,
-	})
-
-	if err != nil {
-		return nil, status.Error(codes.Internal, err.Error())
-	}
-
-	return &vacancyapi.UpsertCityResponse{
-		Id: string(cityID),
-	}, nil
-}
-
-func (s *Server) DeleteCity(
-	ctx context.Context,
-	req *vacancyapi.DeleteCityRequest,
-) (*vacancyapi.DeleteCityResponse, error) {
-	claims, err := s.getAuthClaims(ctx)
-	if err != nil || !s.isAdminAccountType(claims) {
-		return nil, status.Error(codes.Unauthenticated, "unauthorized")
-	}
-
-	err = s.vc.DeleteCity(ctx, req.Id)
-	switch errors.Cause(err) {
-	case nil:
-	case vacancyController.ErrCitiesNotFound:
-		return nil, status.Error(codes.NotFound, err.Error())
-	}
-
-	return &vacancyapi.DeleteCityResponse{}, nil
 }
 
 // Mappings
