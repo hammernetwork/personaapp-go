@@ -9,12 +9,43 @@ option java_outer_classname = "GrpcVacancy";
 
 service PersonaAppVacancy {
     // Vacancy categories
+    rpc GetVacancyCategory (GetVacancyCategoryRequest) returns (GetVacancyCategoryResponse);
+    rpc UpsertVacancyCategory (UpsertVacancyCategoryRequest) returns (UpsertVacancyCategoryResponse);
+    rpc DeleteVacancyCategory (DeleteVacancyCategoryRequest) returns (DeleteVacancyCategoryResponse);
     rpc GetVacancyCategoriesList (GetVacancyCategoriesListRequest) returns (GetVacancyCategoriesListResponse);
     // Vacancy
+    rpc UpsertVacancy (UpsertVacancyRequest) returns (UpsertVacancyResponse);
     rpc GetVacanciesList (GetVacanciesListRequest) returns (GetVacanciesListResponse);
     rpc GetVacancyDetails (GetVacancyDetailsRequest) returns (GetVacancyDetailsResponse);
-    // Cities
-    rpc GetCities (GetCitiesRequest) returns (GetCitiesResponse);
+    rpc DeleteVacancy (DeleteVacancyRequest) returns (DeleteVacancyResponse);
+}
+
+// Get vacancy category
+message GetVacancyCategoryRequest {
+    string id = 1;
+}
+
+message GetVacancyCategoryResponse {
+    VacancyCategory category = 1;
+}
+
+// Upsert vacancy category
+message UpsertVacancyCategoryRequest {
+    google.protobuf.StringValue id = 1;
+    string title = 2;
+    string icon_url = 3;
+}
+
+message UpsertVacancyCategoryResponse {
+    string id = 1;
+}
+
+// Delete vacancy
+message DeleteVacancyCategoryRequest {
+    string id = 1;
+}
+
+message DeleteVacancyCategoryResponse {
 }
 
 // Get Vacancies filters list
@@ -22,13 +53,45 @@ message GetVacancyCategoriesListRequest {
 }
 
 message GetVacancyCategoriesListResponse {
-    message VacancyCategory {
-        string id = 1;
-        string title = 2;
-        string icon_url = 3;
+    map<string, VacancyCategory> vacancy_categories = 1;
+}
+
+// Upsert vacancy
+message UpsertVacancyRequest {
+    message VacancyLocation {
+        float latitude = 1;
+        float longitude = 2;
     }
 
-    map<string, VacancyCategory> vacancy_categories = 1;
+    message VacancyDescription {
+        string description = 1;
+        uint32 work_months_experience = 2;
+        string work_schedule = 3;
+        VacancyType type = 4;
+        string address = 5;
+        int32 country_code = 6;
+    }
+
+    message Vacancy {
+        google.protobuf.StringValue id = 1;
+        string title = 2;
+        string phone = 3;
+        int32 min_salary = 4;
+        int32 max_salary = 5;
+        string company_id = 6;
+        Currency currency = 7;
+    }
+
+    Vacancy vacancy = 1;
+    repeated string imageURLs = 2;
+    VacancyLocation location = 3;
+    VacancyDescription description = 4;
+    repeated string cityIDs = 5;
+    repeated string categoryIDs = 6;
+}
+
+message UpsertVacancyResponse {
+    string id = 1;
 }
 
 // Get Vacancies List
@@ -93,14 +156,12 @@ message GetVacancyDetailsResponse {
     map<string, VacancyCategoryShort> categories = 7;
 }
 
-// Get cities
-message GetCitiesRequest {
-    google.protobuf.Int32Value rating = 1;
-    google.protobuf.StringValue filter = 2;
+// Delete Vacancy
+message DeleteVacancyRequest {
+    string id = 1;
 }
 
-message GetCitiesResponse {
-    repeated City cities = 1;
+message DeleteVacancyResponse {
 }
 
 // Entity
@@ -122,6 +183,12 @@ message Company {
     string id = 1;
     string title = 2;
     string logo_url = 3;
+}
+
+message VacancyCategory {
+    string id = 1;
+    string title = 2;
+    string icon_url = 3;
 }
 
 message Vacancy {

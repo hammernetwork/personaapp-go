@@ -14,12 +14,14 @@ import (
 
 type VacancyController interface {
 	GetVacancyCategory(ctx context.Context, categoryID string) (*vacancyController.VacancyCategory, error)
+	GetVacanciesCategoriesList(ctx context.Context) ([]*vacancyController.VacancyCategory, error)
 	PutVacancyCategory(
 		ctx context.Context,
 		categoryID *string,
 		category *vacancyController.VacancyCategory,
 	) (vacancyController.VacancyCategoryID, error)
-	GetVacanciesCategoriesList(ctx context.Context) ([]*vacancyController.VacancyCategory, error)
+	DeleteVacancyCategory(ctx context.Context, categoryID string) error
+
 	PutVacancy(
 		ctx context.Context,
 		vacancyID *string,
@@ -36,10 +38,33 @@ type VacancyController interface {
 	) ([]*vacancyController.Vacancy, *vacancyController.Cursor, error)
 	GetVacanciesCategories(ctx context.Context, vacancyIDs []string) ([]*vacancyController.VacancyCategoryShort, error)
 	GetVacancyCities(ctx context.Context, vacancyIDs []string) ([]*vacancyController.VacancyCity, error)
-	GetCities(ctx context.Context, countryCodes []int32, rating int32, filter string) ([]*vacancyController.City, error)
+	DeleteVacancy(ctx context.Context, vacancyID string) error
 }
 
 // Vacancy
+
+func (s *Server) GetVacancyCategory(
+	ctx context.Context,
+	req *vacancyapi.GetVacancyCategoryRequest,
+) (*vacancyapi.GetVacancyCategoryResponse, error) {
+	_, err := s.getAuthClaims(ctx)
+	if err != nil {
+		return nil, status.Error(codes.Unauthenticated, "unauthorized")
+	}
+
+	vc, err := s.vc.GetVacancyCategory(ctx, req.Id)
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	return &vacancyapi.GetVacancyCategoryResponse{
+		Category: &vacancyapi.VacancyCategory{
+			Id:      vc.ID,
+			Title:   vc.Title,
+			IconUrl: vc.IconURL,
+		},
+	}, nil
+}
 
 func (s *Server) GetVacancyCategoriesList(
 	ctx context.Context,
@@ -55,9 +80,9 @@ func (s *Server) GetVacancyCategoriesList(
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
-	svcs := map[string]*vacancyapi.GetVacancyCategoriesListResponse_VacancyCategory{}
+	svcs := map[string]*vacancyapi.VacancyCategory{}
 	for _, vc := range vcs {
-		svcs[vc.ID] = &vacancyapi.GetVacancyCategoriesListResponse_VacancyCategory{
+		svcs[vc.ID] = &vacancyapi.VacancyCategory{
 			Id:      vc.ID,
 			Title:   vc.Title,
 			IconUrl: vc.IconURL,
@@ -65,6 +90,48 @@ func (s *Server) GetVacancyCategoriesList(
 	}
 
 	return &vacancyapi.GetVacancyCategoriesListResponse{VacancyCategories: svcs}, nil
+}
+
+func (s *Server) UpsertVacancyCategory(
+	ctx context.Context,
+	req *vacancyapi.UpsertVacancyCategoryRequest,
+) (*vacancyapi.UpsertVacancyCategoryResponse, error) {
+	claims, err := s.getAuthClaims(ctx)
+	if err != nil || !s.isAdminAccountType(claims) {
+		return nil, status.Error(codes.Unauthenticated, "unauthorized")
+	}
+
+	categoryID, err := s.vc.PutVacancyCategory(ctx, getOptionalString(req.Id), &vacancyController.VacancyCategory{
+		Title:   req.Title,
+		IconURL: req.IconUrl,
+	})
+
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	return &vacancyapi.UpsertVacancyCategoryResponse{
+		Id: string(categoryID),
+	}, nil
+}
+
+func (s *Server) DeleteVacancyCategory(
+	ctx context.Context,
+	req *vacancyapi.DeleteVacancyCategoryRequest,
+) (*vacancyapi.DeleteVacancyCategoryResponse, error) {
+	claims, err := s.getAuthClaims(ctx)
+	if err != nil || !s.isAdminAccountType(claims) {
+		return nil, status.Error(codes.Unauthenticated, "unauthorized")
+	}
+
+	err = s.vc.DeleteVacancyCategory(ctx, req.Id)
+	switch errors.Cause(err) {
+	case nil:
+	case vacancyController.ErrVacancyCategoryNotFound:
+		return nil, status.Error(codes.NotFound, err.Error())
+	}
+
+	return &vacancyapi.DeleteVacancyCategoryResponse{}, nil
 }
 
 func (s *Server) GetVacancyDetails(
@@ -270,35 +337,86 @@ func (s *Server) GetVacanciesList(
 	}, nil
 }
 
-func (s *Server) GetCities(
+func (s *Server) UpsertVacancy(
 	ctx context.Context,
-	req *vacancyapi.GetCitiesRequest,
-) (*vacancyapi.GetCitiesResponse, error) {
-	_, err := s.getAuthClaims(ctx)
-	if err != nil {
+	req *vacancyapi.UpsertVacancyRequest,
+) (*vacancyapi.UpsertVacancyResponse, error) {
+	claims, err := s.getAuthClaims(ctx)
+	if err != nil || !s.isAdminAccountType(claims) || !s.isCompanyAccountType(claims) {
 		return nil, status.Error(codes.Unauthenticated, "unauthorized")
 	}
 
-	cs, err := s.vc.GetCities(ctx, []int32{}, req.Rating.GetValue(), req.Filter.GetValue())
+	if req.Vacancy.CompanyId != claims.AccountID {
+		return nil, status.Error(codes.PermissionDenied, "wrong account")
+	}
+
+	vacancyType, err := toControllerVacancyType(req.Description.Type)
+	if err != nil {
+		return nil, errors.WithStack(err)
+	}
+
+	vacancyID, err := s.vc.PutVacancy(
+		ctx,
+		getOptionalString(req.Vacancy.Id),
+		&vacancyController.VacancyDetails{
+			Vacancy: vacancyController.Vacancy{
+				Title:     req.Vacancy.Title,
+				Phone:     req.Vacancy.Phone,
+				MinSalary: req.Vacancy.MinSalary,
+				MaxSalary: req.Vacancy.MaxSalary,
+				ImageURLs: req.ImageURLs,
+				CompanyID: req.Vacancy.CompanyId,
+			},
+			Description:          req.Description.Description,
+			WorkMonthsExperience: int32(req.Description.WorkMonthsExperience),
+			WorkSchedule:         req.Description.WorkSchedule,
+			LocationLatitude:     req.Location.Latitude,
+			LocationLongitude:    req.Location.Longitude,
+			Type:                 vacancyType,
+			Address:              req.Description.Address,
+			CountryCode:          req.Description.CountryCode,
+		},
+		req.CategoryIDs,
+		req.CityIDs,
+	)
+
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	return &vacancyapi.UpsertVacancyResponse{
+		Id: string(vacancyID),
+	}, nil
+}
+
+func (s *Server) DeleteVacancy(
+	ctx context.Context,
+	req *vacancyapi.DeleteVacancyRequest,
+) (*vacancyapi.DeleteVacancyResponse, error) {
+	claims, err := s.getAuthClaims(ctx)
+	if err != nil || !s.isAdminAccountType(claims) {
+		return nil, status.Error(codes.Unauthenticated, "unauthorized")
+	}
+
+	vd, err := s.vc.GetVacancyDetails(ctx, req.Id)
 	switch errors.Cause(err) {
 	case nil:
-	case vacancyController.ErrCitiesNotFound:
+	case vacancyController.ErrVacancyNotFound:
 		return nil, status.Error(codes.NotFound, err.Error())
 	}
 
-	cities := make([]*vacancyapi.City, len(cs))
-	for idx, c := range cs {
-		cities[idx] = &vacancyapi.City{
-			Id:          c.ID,
-			Name:        c.Name,
-			CountryCode: c.CountryCode,
-			Rating:      c.Rating,
-		}
+	if vd.CompanyID != claims.AccountID {
+		return nil, status.Error(codes.PermissionDenied, "wrong account")
 	}
 
-	return &vacancyapi.GetCitiesResponse{
-		Cities: cities,
-	}, nil
+	err = s.vc.DeleteVacancy(ctx, req.Id)
+	switch errors.Cause(err) {
+	case nil:
+	case vacancyController.ErrVacancyNotFound:
+		return nil, status.Error(codes.NotFound, err.Error())
+	}
+
+	return &vacancyapi.DeleteVacancyResponse{}, nil
 }
 
 // Mappings
@@ -360,5 +478,18 @@ func toServerVacancyType(at vacancyController.VacancyType) vacancyapi.VacancyTyp
 		return vacancyapi.VacancyType_VACANCY_TYPE_REMOTE
 	default:
 		return vacancyapi.VacancyType_VACANCY_TYPE_UNKNOWN
+	}
+}
+
+func toControllerVacancyType(at vacancyapi.VacancyType) (vacancyController.VacancyType, error) {
+	switch at {
+	case vacancyapi.VacancyType_VACANCY_TYPE_UNKNOWN:
+		return "", errors.New("default unknown account type")
+	case vacancyapi.VacancyType_VACANCY_TYPE_NORMAL:
+		return vacancyController.VacancyTypeNormal, nil
+	case vacancyapi.VacancyType_VACANCY_TYPE_REMOTE:
+		return vacancyController.VacancyTypeRemote, nil
+	default:
+		return "", errors.New("unknown account type")
 	}
 }

@@ -3,6 +3,7 @@ package server
 import (
 	"log"
 	"net"
+	cityController "personaapp/internal/controllers/city/controller"
 	"personaapp/internal/server"
 	"personaapp/pkg/closeable"
 
@@ -15,6 +16,7 @@ import (
 
 	authController "personaapp/internal/controllers/auth/controller"
 	authStorage "personaapp/internal/controllers/auth/storage"
+	cityStorage "personaapp/internal/controllers/city/storage"
 	companyController "personaapp/internal/controllers/company/controller"
 	companyStorage "personaapp/internal/controllers/company/storage"
 	vacancyController "personaapp/internal/controllers/vacancy/controller"
@@ -22,6 +24,7 @@ import (
 	pkgcmd "personaapp/pkg/cmd"
 	"personaapp/pkg/flag"
 	apiauth "personaapp/pkg/grpcapi/auth"
+	apicity "personaapp/pkg/grpcapi/city"
 	apicompany "personaapp/pkg/grpcapi/company"
 	apivacancy "personaapp/pkg/grpcapi/vacancy"
 	"personaapp/pkg/postgresql"
@@ -67,11 +70,7 @@ func run(cfg *Config) func(cmd *cobra.Command, args []string) error {
 		// nolint TODO: not sure if there should be defer, but I guess so
 		defer closeable.CloseWithErrorLogging(sugar, pg)
 
-		srv := server.New(
-			newAuthController(pg, &cfg.AuthController),
-			newCompanyController(pg),
-			newVacancyController(pg),
-		)
+		srv := createControllers(pg, cfg)
 
 		ln, err := net.Listen("tcp", cfg.Server.Address)
 		if err != nil {
@@ -79,10 +78,7 @@ func run(cfg *Config) func(cmd *cobra.Command, args []string) error {
 		}
 
 		grpcServer := grpc.NewServer()
-		apiauth.RegisterPersonaAppAuthServer(grpcServer, srv)
-		apicompany.RegisterPersonaAppCompanyServer(grpcServer, srv)
-		apivacancy.RegisterPersonaAppVacancyServer(grpcServer, srv)
-		reflection.Register(grpcServer)
+		registerServer(grpcServer, srv)
 
 		g := &errgroup.Group{}
 		g.Go(func() error {
@@ -103,6 +99,23 @@ func run(cfg *Config) func(cmd *cobra.Command, args []string) error {
 	}
 }
 
+func registerServer(grpcServer *grpc.Server, srv *server.Server) {
+	apiauth.RegisterPersonaAppAuthServer(grpcServer, srv)
+	apicompany.RegisterPersonaAppCompanyServer(grpcServer, srv)
+	apivacancy.RegisterPersonaAppVacancyServer(grpcServer, srv)
+	apicity.RegisterPersonaAppCityServer(grpcServer, srv)
+	reflection.Register(grpcServer)
+}
+
+func createControllers(pg *postgresql.Storage, cfg *Config) *server.Server {
+	return server.New(
+		newAuthController(pg, &cfg.AuthController),
+		newCompanyController(pg),
+		newVacancyController(pg),
+		newCityController(pg),
+	)
+}
+
 func newAuthController(pg *postgresql.Storage, cfg *authController.Config) *authController.Controller {
 	return authController.New(cfg, authStorage.New(pg))
 }
@@ -113,4 +126,8 @@ func newCompanyController(pg *postgresql.Storage) *companyController.Controller 
 
 func newVacancyController(pg *postgresql.Storage) *vacancyController.Controller {
 	return vacancyController.New(vacancyStorage.New(pg))
+}
+
+func newCityController(pg *postgresql.Storage) *cityController.Controller {
+	return cityController.New(cityStorage.New(pg))
 }

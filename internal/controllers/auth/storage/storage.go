@@ -14,6 +14,7 @@ type AccountType string
 const (
 	AccountTypeCompany AccountType = "account_type_company"
 	AccountTypePersona AccountType = "account_type_persona"
+	AccountTypeAdmin   AccountType = "account_type_admin"
 )
 
 var ErrNotFound = errors.New("not found")

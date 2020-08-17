@@ -42,6 +42,8 @@ func toControllerAccount(at apiauth.AccountType) (authController.AccountType, er
 		return authController.AccountTypeCompany, nil
 	case apiauth.AccountType_ACCOUNT_TYPE_PERSONA:
 		return authController.AccountTypePersona, nil
+	case apiauth.AccountType_ACCOUNT_TYPE_ADMIN:
+		return authController.AccountTypeAdmin, nil
 	default:
 		return "", errors.New("unknown account type")
 	}
@@ -53,6 +55,8 @@ func toServerAccount(at authController.AccountType) apiauth.AccountType {
 		return apiauth.AccountType_ACCOUNT_TYPE_COMPANY
 	case authController.AccountTypePersona:
 		return apiauth.AccountType_ACCOUNT_TYPE_PERSONA
+	case authController.AccountTypeAdmin:
+		return apiauth.AccountType_ACCOUNT_TYPE_ADMIN
 	default:
 		return apiauth.AccountType_ACCOUNT_TYPE_UNKNOWN
 	}

@@ -19,7 +19,8 @@ var migrations = []*migrate.Migration{
 		Up: []string{
 			`CREATE TYPE e_account_type AS ENUM (
 				'account_type_company',
-				'account_type_persona'
+				'account_type_persona',
+				'account_type_admin'
 			);`,
 
 			`CREATE TABLE IF NOT EXISTS auth (

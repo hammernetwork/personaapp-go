@@ -100,6 +100,7 @@ enum AccountType {
     ACCOUNT_TYPE_UNKNOWN = 0;
     ACCOUNT_TYPE_COMPANY = 1;
     ACCOUNT_TYPE_PERSONA = 2;
+    ACCOUNT_TYPE_ADMIN = 3;
 }
 
 message Token {
