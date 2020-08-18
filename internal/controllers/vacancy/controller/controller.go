@@ -50,7 +50,7 @@ var (
 type Storage interface {
 	TxGetVacancyCategory(ctx context.Context, tx pkgtx.Tx, categoryID string) (*storage.VacancyCategory, error)
 	TxPutVacancyCategory(ctx context.Context, tx pkgtx.Tx, category *storage.VacancyCategory) error
-	TxGetVacanciesCategoriesList(ctx context.Context, tx pkgtx.Tx) ([]*storage.VacancyCategory, error)
+	TxGetVacanciesCategoriesList(ctx context.Context, tx pkgtx.Tx, rating int32) ([]*storage.VacancyCategory, error)
 	TxDeleteVacancyCategory(ctx context.Context, tx pkgtx.Tx, categoryID string) error
 
 	TxGetVacanciesCategories(
@@ -107,6 +107,7 @@ type VacancyCategory struct {
 	ID      string
 	Title   string `valid:"stringlength(2|50)"`
 	IconURL string `valid:"stringlength(10|255),media_link"`
+	Rating  int32
 }
 
 type VacancyID string
@@ -268,6 +269,7 @@ func (c *Controller) PutVacancyCategory(
 			ID:        string(ID),
 			Title:     category.Title,
 			IconURL:   category.IconURL,
+			Rating:    category.Rating,
 			CreatedAt: now,
 			UpdatedAt: now,
 		}
@@ -293,11 +295,17 @@ func (c *Controller) GetVacancyCategory(ctx context.Context, categoryID string) 
 		ID:      vc.ID,
 		Title:   vc.Title,
 		IconURL: vc.IconURL,
+		Rating:  vc.Rating,
 	}, nil
 }
 
-func (c *Controller) GetVacanciesCategoriesList(ctx context.Context) ([]*VacancyCategory, error) {
-	vcs, err := c.s.TxGetVacanciesCategoriesList(ctx, c.s.NoTx())
+func (c *Controller) GetVacanciesCategoriesList(ctx context.Context, rating *int32) ([]*VacancyCategory, error) {
+	var r int32 = 0
+	if rating != nil {
+		r = *rating
+	}
+
+	vcs, err := c.s.TxGetVacanciesCategoriesList(ctx, c.s.NoTx(), r)
 	if err != nil {
 		return nil, errors.WithStack(err)
 	}
@@ -308,6 +316,7 @@ func (c *Controller) GetVacanciesCategoriesList(ctx context.Context) ([]*Vacancy
 			ID:      vc.ID,
 			Title:   vc.Title,
 			IconURL: vc.IconURL,
+			Rating:  vc.Rating,
 		}
 	}
 

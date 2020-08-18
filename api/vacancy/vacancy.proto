@@ -50,6 +50,7 @@ message DeleteVacancyCategoryResponse {
 
 // Get Vacancies filters list
 message GetVacancyCategoriesListRequest {
+    google.protobuf.Int32Value rating = 1;
 }
 
 message GetVacancyCategoriesListResponse {
@@ -189,6 +190,7 @@ message VacancyCategory {
     string id = 1;
     string title = 2;
     string icon_url = 3;
+    int32 rating = 4;
 }
 
 message Vacancy {
