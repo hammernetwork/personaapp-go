@@ -3,6 +3,7 @@ package controller_test
 import (
 	"context"
 	sqlMigrate "github.com/rubenv/sql-migrate"
+	uuid "github.com/satori/go.uuid"
 	"github.com/stretchr/testify/require"
 	"personaapp/internal/controllers/auth/controller"
 	"personaapp/internal/controllers/auth/storage"
@@ -81,7 +82,7 @@ func TestUpdateAuthEmailAndPhone(t *testing.T) {
 		_, err := ac.UpdateEmail(context.Background(), token.AccountID, newEmail, rd.Password, rd.Account)
 		require.NoError(t, err)
 
-		self, err := ac.GetSelf(context.Background(), token.AccountID)
+		self, err := ac.GetAuth(context.Background(), token.AccountID)
 		require.NoError(t, err)
 		require.Equal(t, newEmail, self.Email)
 	})
@@ -92,9 +93,16 @@ func TestUpdateAuthEmailAndPhone(t *testing.T) {
 		_, err := ac.UpdatePhone(context.Background(), token.AccountID, newPhone, rd.Password)
 		require.NoError(t, err)
 
-		self, err := ac.GetSelf(context.Background(), token.AccountID)
+		self, err := ac.GetAuth(context.Background(), token.AccountID)
 		require.NoError(t, err)
 		require.Equal(t, newPhone, self.Phone)
+	})
+
+	t.Run("get auth with invalid ID", func(t *testing.T) {
+		ID := uuid.NewV4().String()
+		_, err := ac.GetAuth(context.Background(), ID)
+		require.Error(t, err)
+		require.EqualError(t, controller.ErrAuthEntityNotFound, err.Error())
 	})
 
 	pd := controller.UpdatePasswordData{

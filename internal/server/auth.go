@@ -18,7 +18,7 @@ type AuthController interface {
 	Login(ctx context.Context, ld *authController.LoginData) (*authController.AuthToken, error)
 	Refresh(ctx context.Context, tokenStr string) (*authController.AuthToken, error)
 	GetAuthClaims(ctx context.Context, tokenStr string) (*authController.AuthClaims, error)
-	GetSelf(ctx context.Context, accountID string) (*authController.AuthData, error)
+	GetAuth(ctx context.Context, accountID string) (*authController.AuthData, error)
 	UpdateEmail(
 		ctx context.Context,
 		accountID string,
@@ -210,7 +210,7 @@ func (s *Server) GetSelf(
 		return nil, status.Error(codes.Unauthenticated, "unauthorized")
 	}
 
-	self, err := s.ac.GetSelf(ctx, claims.AccountID)
+	self, err := s.ac.GetAuth(ctx, claims.AccountID)
 	switch errors.Cause(err) {
 	case nil:
 	case companyController.ErrCompanyNotFound:
