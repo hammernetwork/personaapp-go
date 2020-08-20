@@ -100,7 +100,7 @@ func (c *Controller) GetCities(
 	// Get cities
 	cs, err := c.s.TxGetCitiesList(ctx, c.s.NoTx(), countryCodes, rating, filter)
 
-	switch errors.Cause(err) {
+	switch err {
 	case nil:
 	default:
 		return nil, errors.WithStack(err)
@@ -132,7 +132,7 @@ func (c *Controller) PutCity(
 
 	if err := pkgtx.RunInTx(ctx, c.s, func(ctx context.Context, tx pkgtx.Tx) error {
 		if cityID != nil {
-			switch _, err := c.s.TxGetCity(ctx, tx, *cityID); errors.Cause(err) {
+			switch _, err := c.s.TxGetCity(ctx, tx, *cityID); errors.Unwrap(err) {
 			case nil:
 				ID = CityID(*cityID)
 			case storage.ErrNotFound:
@@ -164,7 +164,7 @@ func (c *Controller) DeleteCity(
 	id string,
 ) error {
 	if err := pkgtx.RunInTx(ctx, c.s, func(ctx context.Context, tx pkgtx.Tx) error {
-		switch err := c.s.TxDeleteCity(ctx, tx, id); errors.Cause(err) {
+		switch err := c.s.TxDeleteCity(ctx, tx, id); errors.Unwrap(err) {
 		case nil:
 		case storage.ErrNotFound:
 			return errors.WithStack(ErrCityNotFound)

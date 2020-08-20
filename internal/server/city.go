@@ -2,7 +2,6 @@ package server
 
 import (
 	"context"
-	"github.com/cockroachdb/errors"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	cityController "personaapp/internal/controllers/city/controller"
@@ -29,7 +28,7 @@ func (s *Server) GetCities(
 	}
 
 	cs, err := s.cy.GetCities(ctx, []int32{}, req.Rating.GetValue(), req.Filter.GetValue())
-	switch errors.Cause(err) {
+	switch err {
 	case nil:
 	case cityController.ErrCitiesNotFound:
 		return nil, status.Error(codes.NotFound, err.Error())
@@ -84,7 +83,7 @@ func (s *Server) DeleteCity(
 	}
 
 	err = s.cy.DeleteCity(ctx, req.Id)
-	switch errors.Cause(err) {
+	switch err {
 	case nil:
 	case cityController.ErrCitiesNotFound:
 		return nil, status.Error(codes.NotFound, err.Error())

@@ -472,13 +472,13 @@ func (c *Controller) GetAuthClaims(ctx context.Context, tokenStr string) (*AuthC
 	return c.isAuthorized(tokenStr)
 }
 
-func (c *Controller) GetSelf(ctx context.Context, accountID string) (*AuthData, error) {
+func (c *Controller) GetAuth(ctx context.Context, accountID string) (*AuthData, error) {
 	var authData *AuthData
 
 	if err := pkgtx.RunInTx(ctx, c.s, func(ctx context.Context, tx pkgtx.Tx) error {
 		ad, err := c.s.TxGetAuthDataByID(ctx, tx, accountID)
 
-		switch errors.Cause(err) {
+		switch err {
 		case nil:
 		case storage.ErrNotFound:
 			return errors.WithStack(ErrInvalidAccount)
@@ -533,7 +533,7 @@ func (c *Controller) UpdateEmail(
 	}
 
 	ad, err := c.s.TxGetAuthDataByID(ctx, c.s.NoTx(), accountID)
-	switch errors.Cause(err) {
+	switch err {
 	case nil:
 	case storage.ErrNotFound:
 		return nil, errors.WithStack(ErrAuthEntityNotFound)
@@ -572,7 +572,7 @@ func putAuthUpdatedMail(
 ) func(ctx context.Context, tx pkgtx.Tx) error {
 	return func(ctx context.Context, tx pkgtx.Tx) error {
 		if email != "" {
-			switch _, err := c.s.TxGetAuthDataByEmail(ctx, tx, email); errors.Cause(err) {
+			switch _, err := c.s.TxGetAuthDataByEmail(ctx, tx, email); err {
 			case storage.ErrNotFound:
 			case nil:
 				return errors.WithStack(ErrAlreadyExists)
@@ -610,7 +610,7 @@ func (c *Controller) UpdatePhone(
 	}
 
 	ad, err := c.s.TxGetAuthDataByID(ctx, c.s.NoTx(), accountID)
-	switch errors.Cause(err) {
+	switch err {
 	case nil:
 	case storage.ErrNotFound:
 		return nil, errors.WithStack(ErrAuthEntityNotFound)
@@ -648,7 +648,7 @@ func putAuthUpdatedPhone(
 	ad *storage.AuthData,
 ) func(ctx context.Context, tx pkgtx.Tx) error {
 	return func(ctx context.Context, tx pkgtx.Tx) error {
-		switch _, err := c.s.TxGetAuthDataByPhone(ctx, tx, phone); errors.Cause(err) {
+		switch _, err := c.s.TxGetAuthDataByPhone(ctx, tx, phone); err {
 		case storage.ErrNotFound:
 		case nil:
 			return errors.WithStack(ErrAlreadyExists)

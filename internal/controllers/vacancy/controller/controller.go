@@ -251,7 +251,7 @@ func (c *Controller) PutVacancyCategory(
 
 	if err := pkgtx.RunInTx(ctx, c.s, func(ctx context.Context, tx pkgtx.Tx) error {
 		if categoryID != nil {
-			switch _, err := c.s.TxGetVacancyCategory(ctx, tx, *categoryID); errors.Cause(err) {
+			switch _, err := c.s.TxGetVacancyCategory(ctx, tx, *categoryID); errors.Unwrap(err) {
 			case nil:
 				ID = VacancyCategoryID(*categoryID)
 			case storage.ErrNotFound:
@@ -285,7 +285,7 @@ func (c *Controller) PutVacancyCategory(
 func (c *Controller) GetVacancyCategory(ctx context.Context, categoryID string) (*VacancyCategory, error) {
 	vc, err := c.s.TxGetVacancyCategory(ctx, c.s.NoTx(), categoryID)
 
-	switch errors.Cause(err) {
+	switch err {
 	case nil:
 	default:
 		return nil, errors.WithStack(err)
@@ -328,7 +328,7 @@ func (c *Controller) DeleteVacancyCategory(
 	categoryID string,
 ) error {
 	if err := pkgtx.RunInTx(ctx, c.s, func(ctx context.Context, tx pkgtx.Tx) error {
-		switch err := c.s.TxDeleteVacancyCategory(ctx, tx, categoryID); errors.Cause(err) {
+		switch err := c.s.TxDeleteVacancyCategory(ctx, tx, categoryID); err {
 		case nil:
 		case storage.ErrNotFound:
 			return errors.WithStack(ErrVacancyCategoryNotFound)
@@ -360,7 +360,7 @@ func (c *Controller) PutVacancy(
 	if err := pkgtx.RunInTx(ctx, c.s, func(ctx context.Context, tx pkgtx.Tx) error {
 		// Look for vacancy id
 		if vacancyID != nil {
-			switch _, err := c.s.TxGetVacancyDetails(ctx, tx, *vacancyID); errors.Cause(err) {
+			switch _, err := c.s.TxGetVacancyDetails(ctx, tx, *vacancyID); err {
 			case nil:
 				vid = VacancyID(*vacancyID)
 			case storage.ErrNotFound:
@@ -476,7 +476,7 @@ func (c *Controller) GetVacancyDetails(ctx context.Context, vacancyID string) (*
 	// Get vacancy details from DB
 	vd, err := c.s.TxGetVacancyDetails(ctx, c.s.NoTx(), vacancyID)
 
-	switch errors.Cause(err) {
+	switch err {
 	case nil:
 	case storage.ErrNotFound:
 		return nil, errors.WithStack(ErrVacancyNotFound)
@@ -487,7 +487,7 @@ func (c *Controller) GetVacancyDetails(ctx context.Context, vacancyID string) (*
 	// Get vacancy images from DB
 	vi, err := c.s.TxGetVacanciesImages(ctx, c.s.NoTx(), []string{vacancyID})
 
-	switch errors.Cause(err) {
+	switch err {
 	case nil:
 	case storage.ErrNotFound:
 		return nil, errors.WithStack(ErrVacancyImagesNotFound)
@@ -559,7 +559,7 @@ func (c *Controller) GetVacanciesList(
 	vacancyIDs := extractVacancyIDs(vcs)
 	vacanciesImagesMap, err := c.s.TxGetVacanciesImages(ctx, c.s.NoTx(), vacancyIDs)
 
-	switch errors.Cause(err) {
+	switch err {
 	case nil:
 	case storage.ErrNotFound:
 		return nil, nil, errors.WithStack(ErrVacancyImagesNotFound)
@@ -600,7 +600,7 @@ func (c *Controller) GetVacanciesCategories(
 	// Get categories
 	vscs, err := c.s.TxGetVacanciesCategories(ctx, c.s.NoTx(), vacancyIDs)
 
-	switch errors.Cause(err) {
+	switch err {
 	case nil:
 	default:
 		return nil, errors.WithStack(err)
@@ -625,7 +625,7 @@ func (c *Controller) GetVacancyCities(
 	// Get categories
 	vcs, err := c.s.TxGetVacancyCities(ctx, c.s.NoTx(), vacancyIDs)
 
-	switch errors.Cause(err) {
+	switch err {
 	case nil:
 	default:
 		return nil, errors.WithStack(err)
@@ -650,7 +650,7 @@ func (c *Controller) DeleteVacancy(
 	vacancyID string,
 ) error {
 	if err := pkgtx.RunInTx(ctx, c.s, func(ctx context.Context, tx pkgtx.Tx) error {
-		switch err := c.s.TxDeleteVacancy(ctx, tx, vacancyID); errors.Cause(err) {
+		switch err := c.s.TxDeleteVacancy(ctx, tx, vacancyID); err {
 		case nil:
 		case storage.ErrNotFound:
 			return errors.WithStack(ErrVacancyNotFound)

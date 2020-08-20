@@ -3,7 +3,6 @@ package controller_test
 import (
 	"context"
 	"fmt"
-	"github.com/cockroachdb/errors"
 	sqlMigrate "github.com/rubenv/sql-migrate"
 	uuid "github.com/satori/go.uuid"
 	"github.com/stretchr/testify/require"
@@ -108,12 +107,12 @@ func TestController_PutCity(t *testing.T) {
 			CountryCode: 0,
 			Rating:      0,
 		})
-		require.EqualError(t, errors.Cause(err), controller.ErrCityNotFound.Error())
+		require.EqualError(t, err, controller.ErrCityNotFound.Error())
 	})
 
 	t.Run("update city with empty city struct", func(t *testing.T) {
 		_, err := c.PutCity(context.TODO(), nil, nil)
-		require.EqualError(t, errors.Cause(err), controller.ErrInvalidCity.Error())
+		require.EqualError(t, err, controller.ErrInvalidCity.Error())
 	})
 
 	t.Run("update city with invalid Name", func(t *testing.T) {
@@ -122,7 +121,7 @@ func TestController_PutCity(t *testing.T) {
 			CountryCode: 0,
 			Rating:      0,
 		})
-		require.EqualError(t, errors.Cause(err), controller.ErrInvalidCityName.Error())
+		require.EqualError(t, err, controller.ErrInvalidCityName.Error())
 
 		_, err = c.PutCity(context.TODO(), nil, &controller.City{
 			Name: "Abcd abcd abcd abcd abcd abcd abcd abcd abcd abcdef" +
@@ -134,7 +133,7 @@ func TestController_PutCity(t *testing.T) {
 			CountryCode: 0,
 			Rating:      0,
 		})
-		require.EqualError(t, errors.Cause(err), controller.ErrInvalidCityName.Error())
+		require.EqualError(t, err, controller.ErrInvalidCityName.Error())
 	})
 }
 

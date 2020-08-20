@@ -212,7 +212,7 @@ func (c *Controller) Get(ctx context.Context, companyID string) (*Company, error
 	if err := pkgtx.RunInTx(ctx, c.s, func(ctx context.Context, tx pkgtx.Tx) error {
 		cd, err := c.s.TxGetCompanyByID(ctx, tx, companyID)
 
-		switch errors.Cause(err) {
+		switch err {
 		case nil:
 		case storage.ErrNotFound:
 			return errors.WithStack(ErrCompanyNotFound)

@@ -3,7 +3,6 @@ package controller_test
 import (
 	"context"
 	"fmt"
-	"github.com/cockroachdb/errors"
 	sqlMigrate "github.com/rubenv/sql-migrate"
 	uuid "github.com/satori/go.uuid"
 	"github.com/stretchr/testify/require"
@@ -117,12 +116,12 @@ func TestController_PutVacancyCategory(t *testing.T) {
 			IconURL: "https://s3.bucket.org/valid_url.jpg",
 			Rating:  0,
 		})
-		require.EqualError(t, errors.Cause(err), controller.ErrVacancyCategoryNotFound.Error())
+		require.EqualError(t, err, controller.ErrVacancyCategoryNotFound.Error())
 	})
 
 	t.Run("update vacancy category with empty vacancy struct", func(t *testing.T) {
 		_, err := c.PutVacancyCategory(context.TODO(), nil, nil)
-		require.EqualError(t, errors.Cause(err), controller.ErrInvalidVacancyCategory.Error())
+		require.EqualError(t, err, controller.ErrInvalidVacancyCategory.Error())
 	})
 
 	t.Run("update vacancy category with invalid Title", func(t *testing.T) {
@@ -131,14 +130,14 @@ func TestController_PutVacancyCategory(t *testing.T) {
 			IconURL: "https://s3.bucket.org/valid_url.jpg",
 			Rating:  0,
 		})
-		require.EqualError(t, errors.Cause(err), controller.ErrInvalidVacancyCategoryTitle.Error())
+		require.EqualError(t, err, controller.ErrInvalidVacancyCategoryTitle.Error())
 
 		_, err = c.PutVacancyCategory(context.TODO(), nil, &controller.VacancyCategory{
 			Title:   "Abcd abcd abcd abcd abcd abcd abcd abcd abcd abcdef",
 			IconURL: "https://s3.bucket.org/valid_url.jpg",
 			Rating:  0,
 		})
-		require.EqualError(t, errors.Cause(err), controller.ErrInvalidVacancyCategoryTitle.Error())
+		require.EqualError(t, err, controller.ErrInvalidVacancyCategoryTitle.Error())
 	})
 }
 

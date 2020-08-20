@@ -2,7 +2,6 @@ package server
 
 import (
 	"context"
-	"github.com/cockroachdb/errors"
 	"google.golang.org/genproto/googleapis/rpc/errdetails"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
@@ -45,7 +44,7 @@ func (s *Server) UpdateCompany(
 
 	var fv *errdetails.BadRequest_FieldViolation
 
-	switch causeErr := errors.Cause(err); causeErr {
+	switch causeErr := err; causeErr {
 	case nil:
 	case companyController.ErrInvalidTitle:
 		fv = &errdetails.BadRequest_FieldViolation{Field: "Title", Description: causeErr.Error()}
@@ -62,9 +61,9 @@ func (s *Server) UpdateCompany(
 	case companyController.ErrInvalidLogoURLLength:
 		fv = &errdetails.BadRequest_FieldViolation{Field: "LogoUrl", Description: causeErr.Error()}
 	case companyController.ErrCompanyNotFound:
-		return nil, status.Error(codes.NotFound, err.Error())
+		return nil, status.Error(codes.NotFound, causeErr.Error())
 	default:
-		return nil, status.Error(codes.Internal, err.Error())
+		return nil, status.Error(codes.Internal, causeErr.Error())
 	}
 
 	if fv != nil {
@@ -109,7 +108,7 @@ func (s *Server) GetCompany(
 	}
 
 	company, err := s.cc.Get(ctx, req.Id)
-	switch errors.Cause(err) {
+	switch err {
 	case nil:
 	case companyController.ErrCompanyNotFound:
 		return nil, status.Error(codes.NotFound, err.Error())

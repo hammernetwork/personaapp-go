@@ -2,7 +2,6 @@ package server
 
 import (
 	"context"
-	"github.com/cockroachdb/errors"
 	"github.com/golang/protobuf/ptypes/wrappers"
 	"google.golang.org/genproto/googleapis/rpc/errdetails"
 	"google.golang.org/grpc/codes"
@@ -31,7 +30,7 @@ func (s *Server) getAuthClaims(ctx context.Context) (*authController.AuthClaims,
 	token := md.Get("Bearer")[0] // nolint TODO
 	claims, err := s.ac.GetAuthClaims(ctx, token)
 
-	switch errors.Cause(err) {
+	switch err {
 	case nil:
 		return claims, nil
 	case authController.ErrUnauthorized:

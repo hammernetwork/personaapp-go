@@ -18,7 +18,7 @@ type AuthController interface {
 	Login(ctx context.Context, ld *authController.LoginData) (*authController.AuthToken, error)
 	Refresh(ctx context.Context, tokenStr string) (*authController.AuthToken, error)
 	GetAuthClaims(ctx context.Context, tokenStr string) (*authController.AuthClaims, error)
-	GetSelf(ctx context.Context, accountID string) (*authController.AuthData, error)
+	GetAuth(ctx context.Context, accountID string) (*authController.AuthData, error)
 	UpdateEmail(
 		ctx context.Context,
 		accountID string,
@@ -94,12 +94,12 @@ func (s *Server) Register(
 
 	var fv *errdetails.BadRequest_FieldViolation
 
-	switch causeErr := errors.Cause(err); causeErr {
+	switch causeErr := err; causeErr {
 	case nil:
 	case authController.ErrAlreadyExists:
-		return nil, status.Error(codes.AlreadyExists, err.Error())
+		return nil, status.Error(codes.AlreadyExists, causeErr.Error())
 	case authController.ErrUnauthorized:
-		return nil, status.Error(codes.Unauthenticated, err.Error())
+		return nil, status.Error(codes.Unauthenticated, causeErr.Error())
 	case authController.ErrInvalidEmail:
 		fv = &errdetails.BadRequest_FieldViolation{Field: "Email", Description: causeErr.Error()}
 	case authController.ErrInvalidEmailFormat:
@@ -140,7 +140,7 @@ func (s *Server) Login(ctx context.Context, req *apiauth.LoginRequest) (*apiauth
 
 	var fv *errdetails.BadRequest_FieldViolation
 
-	switch causeErr := errors.Cause(err); causeErr {
+	switch causeErr := err; causeErr {
 	case nil:
 	case authController.ErrInvalidLogin:
 		fv = &errdetails.BadRequest_FieldViolation{Field: "Login", Description: causeErr.Error()}
@@ -151,7 +151,7 @@ func (s *Server) Login(ctx context.Context, req *apiauth.LoginRequest) (*apiauth
 	case authController.ErrInvalidPasswordLength:
 		fv = &errdetails.BadRequest_FieldViolation{Field: "Password", Description: causeErr.Error()}
 	default:
-		return nil, status.Error(codes.Internal, err.Error())
+		return nil, status.Error(codes.Internal, causeErr.Error())
 	}
 
 	if fv != nil {
@@ -183,7 +183,7 @@ func (s *Server) Refresh(
 
 	authToken, err := s.ac.Refresh(ctx, token)
 
-	switch errors.Cause(err) {
+	switch err {
 	case nil:
 	case authController.ErrUnauthorized:
 		return nil, status.Error(codes.Unauthenticated, err.Error())
@@ -210,8 +210,8 @@ func (s *Server) GetSelf(
 		return nil, status.Error(codes.Unauthenticated, "unauthorized")
 	}
 
-	self, err := s.ac.GetSelf(ctx, claims.AccountID)
-	switch errors.Cause(err) {
+	self, err := s.ac.GetAuth(ctx, claims.AccountID)
+	switch err {
 	case nil:
 	case companyController.ErrCompanyNotFound:
 		return nil, status.Error(codes.NotFound, err.Error())
