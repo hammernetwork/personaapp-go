@@ -57,6 +57,14 @@ func getOptionalString(sw *wrappers.StringValue) *string {
 	return &sw.Value
 }
 
+func getOptionalInt32(sw *wrappers.Int32Value) *int32 {
+	if sw == nil {
+		return nil
+	}
+
+	return &sw.Value
+}
+
 func fieldViolationStatus(fieldViolation *errdetails.BadRequest_FieldViolation) *status.Status {
 	st, err := status.New(codes.InvalidArgument, fieldViolation.Description).WithDetails(fieldViolation)
 	if err != nil {

@@ -33,6 +33,7 @@ type VacancyCategory struct {
 	ID        string
 	Title     string
 	IconURL   string
+	Rating    int32
 	CreatedAt time.Time
 	UpdatedAt time.Time
 }
@@ -83,14 +84,20 @@ type Cursor struct {
 	PrevPosition  int
 }
 
-func (s *Storage) TxGetVacanciesCategoriesList(ctx context.Context, tx pkgtx.Tx) (_ []*VacancyCategory, rerr error) {
+func (s *Storage) TxGetVacanciesCategoriesList(
+	ctx context.Context,
+	tx pkgtx.Tx,
+	rating int32,
+) (_ []*VacancyCategory, rerr error) {
 	c := postgresql.FromTx(tx)
 
 	rows, err := c.QueryContext(
 		ctx,
-		`SELECT id, title, icon_url 
+		`SELECT id, title, icon_url, rating 
 				FROM vacancy_category
+				WHERE rating >= $1
 				ORDER BY title ASC`,
+		rating,
 	)
 	if err != nil {
 		return nil, errors.WithStack(err)
@@ -110,7 +117,7 @@ func (s *Storage) TxGetVacanciesCategoriesList(ctx context.Context, tx pkgtx.Tx)
 
 	for rows.Next() {
 		var vc VacancyCategory
-		if err := rows.Scan(&vc.ID, &vc.Title, &vc.IconURL); err != nil {
+		if err := rows.Scan(&vc.ID, &vc.Title, &vc.IconURL, &vc.Rating); err != nil {
 			return nil, errors.WithStack(err)
 		}
 
@@ -132,16 +139,18 @@ func (s *Storage) TxPutVacancyCategory(ctx context.Context, tx pkgtx.Tx, categor
 				UPDATE vacancy_category SET
 					title = $2,
 					icon_url = $3,
-					updated_at = $5
+					rating = $4,
+					updated_at = $6
 				WHERE id = $1
 				RETURNING id, title, icon_url
 			)
-			INSERT INTO vacancy_category (id, title, icon_url, created_at, updated_at)
-			SELECT $1, $2, $3, $4, $5
+			INSERT INTO vacancy_category (id, title, icon_url, rating, created_at, updated_at)
+			SELECT $1, $2, $3, $4, $5, $6
 			WHERE NOT EXISTS (SELECT * FROM upsert)`,
 		category.ID,
 		category.Title,
 		category.IconURL,
+		category.Rating,
 		category.CreatedAt,
 		category.UpdatedAt,
 	); err != nil {
@@ -157,11 +166,11 @@ func (s *Storage) TxGetVacancyCategory(ctx context.Context, tx pkgtx.Tx, categor
 	var vc VacancyCategory
 	err := c.QueryRowContext(
 		ctx,
-		`SELECT id, title, icon_url
+		`SELECT id, title, icon_url, rating
 				FROM vacancy_category
 				WHERE id = $1`,
 		categoryID,
-	).Scan(&vc.ID, &vc.Title, &vc.IconURL)
+	).Scan(&vc.ID, &vc.Title, &vc.IconURL, &vc.Rating)
 
 	switch err {
 	case nil:

@@ -66,6 +66,7 @@ func TestController_PutVacancyCategory(t *testing.T) {
 		categoryToCreate := controller.VacancyCategory{
 			Title:   "Put category",
 			IconURL: "https://s3.bucket.org/1.jpg",
+			Rating:  0,
 		}
 		ID, err := c.PutVacancyCategory(context.TODO(), nil, &categoryToCreate)
 		require.NoError(t, err)
@@ -76,12 +77,14 @@ func TestController_PutVacancyCategory(t *testing.T) {
 		require.NotNil(t, createdCategory)
 		require.Equal(t, categoryToCreate.Title, createdCategory.Title)
 		require.Equal(t, categoryToCreate.IconURL, createdCategory.IconURL)
+		require.Equal(t, categoryToCreate.Rating, createdCategory.Rating)
 	})
 
 	t.Run("update vacancy category", func(t *testing.T) {
 		ID, err := c.PutVacancyCategory(context.TODO(), nil, &controller.VacancyCategory{
 			Title:   "Put category to update",
 			IconURL: "https://s3.bucket.org/create.jpg",
+			Rating:  0,
 		})
 
 		require.NoError(t, err)
@@ -90,6 +93,7 @@ func TestController_PutVacancyCategory(t *testing.T) {
 		categoryToUpdate := controller.VacancyCategory{
 			Title:   "Update category",
 			IconURL: "https://s3.bucket.org/update.jpg",
+			Rating:  1,
 		}
 
 		stringID := string(ID)
@@ -103,6 +107,7 @@ func TestController_PutVacancyCategory(t *testing.T) {
 		require.Equal(t, string(ID), updatedCategory.ID)
 		require.Equal(t, categoryToUpdate.Title, updatedCategory.Title)
 		require.Equal(t, categoryToUpdate.IconURL, updatedCategory.IconURL)
+		require.Equal(t, categoryToUpdate.Rating, updatedCategory.Rating)
 	})
 
 	t.Run("update vacancy category with invalid ID", func(t *testing.T) {
@@ -110,6 +115,7 @@ func TestController_PutVacancyCategory(t *testing.T) {
 		_, err := c.PutVacancyCategory(context.TODO(), &ID, &controller.VacancyCategory{
 			Title:   "Valid title",
 			IconURL: "https://s3.bucket.org/valid_url.jpg",
+			Rating:  0,
 		})
 		require.EqualError(t, errors.Cause(err), controller.ErrVacancyCategoryNotFound.Error())
 	})
@@ -123,12 +129,14 @@ func TestController_PutVacancyCategory(t *testing.T) {
 		_, err := c.PutVacancyCategory(context.TODO(), nil, &controller.VacancyCategory{
 			Title:   "a",
 			IconURL: "https://s3.bucket.org/valid_url.jpg",
+			Rating:  0,
 		})
 		require.EqualError(t, errors.Cause(err), controller.ErrInvalidVacancyCategoryTitle.Error())
 
 		_, err = c.PutVacancyCategory(context.TODO(), nil, &controller.VacancyCategory{
 			Title:   "Abcd abcd abcd abcd abcd abcd abcd abcd abcd abcdef",
 			IconURL: "https://s3.bucket.org/valid_url.jpg",
+			Rating:  0,
 		})
 		require.EqualError(t, errors.Cause(err), controller.ErrInvalidVacancyCategoryTitle.Error())
 	})
@@ -260,6 +268,7 @@ func TestController_GetVacanciesCategoriesList(t *testing.T) {
 			category := &controller.VacancyCategory{
 				Title:   fmt.Sprintf("Category %d", i+1),
 				IconURL: fmt.Sprintf("https://s3.bucket.org/category_%d.jpg", i+1),
+				Rating:  int32(i % 2),
 			}
 			ID, err := c.PutVacancyCategory(context.TODO(), nil, category)
 			require.NoError(t, err)
@@ -268,7 +277,7 @@ func TestController_GetVacanciesCategoriesList(t *testing.T) {
 			categoriesMap[string(ID)] = category
 		}
 
-		categories, err := c.GetVacanciesCategoriesList(context.TODO())
+		categories, err := c.GetVacanciesCategoriesList(context.TODO(), nil)
 		require.NoError(t, err)
 		require.Equal(t, count, len(categories))
 
@@ -276,7 +285,15 @@ func TestController_GetVacanciesCategoriesList(t *testing.T) {
 			require.NotNil(t, categoriesMap[cat.ID])
 			require.Equal(t, categoriesMap[cat.ID].Title, cat.Title)
 			require.Equal(t, categoriesMap[cat.ID].IconURL, cat.IconURL)
+			require.Equal(t, categoriesMap[cat.ID].Rating, cat.Rating)
 		}
+
+		popularCategoriesCount := 2
+		rating := new(int32)
+		*rating = 1
+		categories, err = c.GetVacanciesCategoriesList(context.TODO(), rating)
+		require.NoError(t, err)
+		require.Equal(t, popularCategoriesCount, len(categories))
 	})
 }
 
@@ -335,6 +352,7 @@ func TestController_GetVacanciesList(t *testing.T) {
 			category := &controller.VacancyCategory{
 				Title:   fmt.Sprintf("Category %d", i+1),
 				IconURL: fmt.Sprintf("https://s3.bucket.org/category_%d.jpg", i+1),
+				Rating:  int32(i % 2),
 			}
 			ID, err := c.PutVacancyCategory(context.TODO(), nil, category)
 			require.NoError(t, err)

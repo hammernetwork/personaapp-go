@@ -472,16 +472,16 @@ func (c *Controller) GetAuthClaims(ctx context.Context, tokenStr string) (*AuthC
 	return c.isAuthorized(tokenStr)
 }
 
-func (c *Controller) GetSelf(ctx context.Context, accountID string) (*AuthData, error) {
+func (c *Controller) GetAuth(ctx context.Context, accountID string) (*AuthData, error) {
 	var authData *AuthData
 
 	if err := pkgtx.RunInTx(ctx, c.s, func(ctx context.Context, tx pkgtx.Tx) error {
 		ad, err := c.s.TxGetAuthDataByID(ctx, tx, accountID)
 
-		switch errors.Cause(err) {
+		switch err {
 		case nil:
 		case storage.ErrNotFound:
-			return errors.WithStack(ErrInvalidAccount)
+			return errors.WithStack(ErrAuthEntityNotFound)
 		default:
 			return errors.WithStack(err)
 		}

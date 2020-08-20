@@ -102,8 +102,9 @@ var migrations = []*migrate.Migration{
 				id            uuid			   PRIMARY KEY,
 				title		  VARCHAR(255)	   NOT NULL,
 				icon_url	  VARCHAR(255)	   NOT NULL,
-				created_at    TIMESTAMPTZ     NOT NULL,
-				updated_at    TIMESTAMPTZ     NOT NULL
+				rating		  INTEGER		   NOT NULL,
+				created_at    TIMESTAMPTZ      NOT NULL,
+				updated_at    TIMESTAMPTZ      NOT NULL
 			);`,
 		},
 		Down: []string{

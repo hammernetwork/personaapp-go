@@ -14,7 +14,7 @@ import (
 
 type VacancyController interface {
 	GetVacancyCategory(ctx context.Context, categoryID string) (*vacancyController.VacancyCategory, error)
-	GetVacanciesCategoriesList(ctx context.Context) ([]*vacancyController.VacancyCategory, error)
+	GetVacanciesCategoriesList(ctx context.Context, rating *int32) ([]*vacancyController.VacancyCategory, error)
 	PutVacancyCategory(
 		ctx context.Context,
 		categoryID *string,
@@ -75,7 +75,7 @@ func (s *Server) GetVacancyCategoriesList(
 		return nil, status.Error(codes.Unauthenticated, "unauthorized")
 	}
 
-	vcs, err := s.vc.GetVacanciesCategoriesList(ctx)
+	vcs, err := s.vc.GetVacanciesCategoriesList(ctx, getOptionalInt32(req.GetRating()))
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}
@@ -86,6 +86,7 @@ func (s *Server) GetVacancyCategoriesList(
 			Id:      vc.ID,
 			Title:   vc.Title,
 			IconUrl: vc.IconURL,
+			Rating:  vc.Rating,
 		}
 	}
 
