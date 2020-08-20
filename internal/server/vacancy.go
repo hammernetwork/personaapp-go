@@ -126,7 +126,7 @@ func (s *Server) DeleteVacancyCategory(
 	}
 
 	err = s.vc.DeleteVacancyCategory(ctx, req.Id)
-	switch errors.Cause(err) {
+	switch err {
 	case nil:
 	case vacancyController.ErrVacancyCategoryNotFound:
 		return nil, status.Error(codes.NotFound, err.Error())
@@ -145,7 +145,7 @@ func (s *Server) GetVacancyDetails(
 	}
 
 	vd, err := s.vc.GetVacancyDetails(ctx, req.VacancyId)
-	switch errors.Cause(err) {
+	switch err {
 	case nil:
 	case vacancyController.ErrVacancyNotFound:
 		return nil, status.Error(codes.NotFound, err.Error())
@@ -153,7 +153,7 @@ func (s *Server) GetVacancyDetails(
 
 	// Get companies
 	cd, err := s.cc.Get(ctx, vd.CompanyID)
-	switch errors.Cause(err) {
+	switch err {
 	case nil:
 	case companyController.ErrCompanyNotFound:
 		return nil, status.Error(codes.NotFound, err.Error())
@@ -198,7 +198,7 @@ func getVacancyCategoriesFromStorage(
 	s *Server,
 ) (categoriesMap map[string]*vacancyapi.VacancyCategoryShort, vc []string, err error) {
 	categories, err := s.vc.GetVacanciesCategories(ctx, []string{req.VacancyId})
-	switch errors.Cause(err) {
+	switch err {
 	case nil:
 	case companyController.ErrCategoryNotFound:
 		return nil, nil, status.Error(codes.NotFound, err.Error())
@@ -222,7 +222,7 @@ func getVacancyCityFromStorage(
 	s *Server,
 ) (*vacancyapi.City, error) {
 	cities, err := s.vc.GetVacancyCities(ctx, []string{req.VacancyId})
-	switch errors.Cause(err) {
+	switch err {
 	case nil:
 	case companyController.ErrCityNotFound:
 		return nil, status.Error(codes.NotFound, err.Error())
@@ -254,13 +254,13 @@ func (s *Server) GetVacanciesList(
 		int(req.Count.GetValue()),
 	)
 
-	switch causeErr := errors.Cause(err); causeErr {
+	switch causeErr := err; causeErr {
 	case nil:
 	case vacancyController.ErrInvalidCursor:
 		fv := &errdetails.BadRequest_FieldViolation{Field: "Cursor", Description: causeErr.Error()}
 		return nil, fieldViolationStatus(fv).Err()
 	default:
-		return nil, status.Error(codes.Internal, err.Error())
+		return nil, status.Error(codes.Internal, causeErr.Error())
 	}
 
 	vacanciesIDs := make([]string, len(vcs))
@@ -292,7 +292,7 @@ func (s *Server) GetVacanciesList(
 		vacanciesIDs,
 	)
 
-	switch errors.Cause(err) {
+	switch err {
 	case nil:
 	case companyController.ErrCategoryNotFound:
 		return nil, status.Error(codes.NotFound, err.Error())
@@ -400,7 +400,7 @@ func (s *Server) DeleteVacancy(
 	}
 
 	vd, err := s.vc.GetVacancyDetails(ctx, req.Id)
-	switch errors.Cause(err) {
+	switch err {
 	case nil:
 	case vacancyController.ErrVacancyNotFound:
 		return nil, status.Error(codes.NotFound, err.Error())
@@ -411,7 +411,7 @@ func (s *Server) DeleteVacancy(
 	}
 
 	err = s.vc.DeleteVacancy(ctx, req.Id)
-	switch errors.Cause(err) {
+	switch err {
 	case nil:
 	case vacancyController.ErrVacancyNotFound:
 		return nil, status.Error(codes.NotFound, err.Error())

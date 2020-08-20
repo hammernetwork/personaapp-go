@@ -468,7 +468,7 @@ func (x *RefreshResponse) GetToken() *Token {
 	return nil
 }
 
-// GetAuth
+// GetSelf
 type GetSelfRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
@@ -1135,7 +1135,7 @@ var file_auth_auth_proto_depIdxs = []int32{
 	3,  // 11: personaappapi.auth.PersonaAppAuth.Login:input_type -> personaappapi.auth.LoginRequest
 	5,  // 12: personaappapi.auth.PersonaAppAuth.Logout:input_type -> personaappapi.auth.LogoutRequest
 	7,  // 13: personaappapi.auth.PersonaAppAuth.Refresh:input_type -> personaappapi.auth.RefreshRequest
-	9,  // 14: personaappapi.auth.PersonaAppAuth.GetAuth:input_type -> personaappapi.auth.GetSelfRequest
+	9,  // 14: personaappapi.auth.PersonaAppAuth.GetSelf:input_type -> personaappapi.auth.GetSelfRequest
 	11, // 15: personaappapi.auth.PersonaAppAuth.UpdateEmail:input_type -> personaappapi.auth.UpdateEmailRequest
 	13, // 16: personaappapi.auth.PersonaAppAuth.UpdatePhone:input_type -> personaappapi.auth.UpdatePhoneRequest
 	15, // 17: personaappapi.auth.PersonaAppAuth.UpdatePassword:input_type -> personaappapi.auth.UpdatePasswordRequest
@@ -1143,7 +1143,7 @@ var file_auth_auth_proto_depIdxs = []int32{
 	4,  // 19: personaappapi.auth.PersonaAppAuth.Login:output_type -> personaappapi.auth.LoginResponse
 	6,  // 20: personaappapi.auth.PersonaAppAuth.Logout:output_type -> personaappapi.auth.LogoutResponse
 	8,  // 21: personaappapi.auth.PersonaAppAuth.Refresh:output_type -> personaappapi.auth.RefreshResponse
-	10, // 22: personaappapi.auth.PersonaAppAuth.GetAuth:output_type -> personaappapi.auth.GetSelfResponse
+	10, // 22: personaappapi.auth.PersonaAppAuth.GetSelf:output_type -> personaappapi.auth.GetSelfResponse
 	12, // 23: personaappapi.auth.PersonaAppAuth.UpdateEmail:output_type -> personaappapi.auth.UpdateEmailResponse
 	14, // 24: personaappapi.auth.PersonaAppAuth.UpdatePhone:output_type -> personaappapi.auth.UpdatePhoneResponse
 	16, // 25: personaappapi.auth.PersonaAppAuth.UpdatePassword:output_type -> personaappapi.auth.UpdatePasswordResponse
@@ -1454,7 +1454,7 @@ func (c *personaAppAuthClient) Refresh(ctx context.Context, in *RefreshRequest, 
 
 func (c *personaAppAuthClient) GetSelf(ctx context.Context, in *GetSelfRequest, opts ...grpc.CallOption) (*GetSelfResponse, error) {
 	out := new(GetSelfResponse)
-	err := c.cc.Invoke(ctx, "/personaappapi.auth.PersonaAppAuth/GetAuth", in, out, opts...)
+	err := c.cc.Invoke(ctx, "/personaappapi.auth.PersonaAppAuth/GetSelf", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -1517,7 +1517,7 @@ func (*UnimplementedPersonaAppAuthServer) Refresh(context.Context, *RefreshReque
 	return nil, status.Errorf(codes.Unimplemented, "method Refresh not implemented")
 }
 func (*UnimplementedPersonaAppAuthServer) GetSelf(context.Context, *GetSelfRequest) (*GetSelfResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method GetAuth not implemented")
+	return nil, status.Errorf(codes.Unimplemented, "method GetSelf not implemented")
 }
 func (*UnimplementedPersonaAppAuthServer) UpdateEmail(context.Context, *UpdateEmailRequest) (*UpdateEmailResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method UpdateEmail not implemented")
@@ -1615,7 +1615,7 @@ func _PersonaAppAuth_GetSelf_Handler(srv interface{}, ctx context.Context, dec f
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/personaappapi.auth.PersonaAppAuth/GetAuth",
+		FullMethod: "/personaappapi.auth.PersonaAppAuth/GetSelf",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
 		return srv.(PersonaAppAuthServer).GetSelf(ctx, req.(*GetSelfRequest))
@@ -1698,7 +1698,7 @@ var _PersonaAppAuth_serviceDesc = grpc.ServiceDesc{
 			Handler:    _PersonaAppAuth_Refresh_Handler,
 		},
 		{
-			MethodName: "GetAuth",
+			MethodName: "GetSelf",
 			Handler:    _PersonaAppAuth_GetSelf_Handler,
 		},
 		{

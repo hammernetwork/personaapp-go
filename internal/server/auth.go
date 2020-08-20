@@ -117,7 +117,7 @@ func (s *Server) Register(
 	case authController.ErrInvalidPasswordLength:
 		fv = &errdetails.BadRequest_FieldViolation{Field: "Password", Description: causeErr.Error()}
 	default:
-		return nil, status.Error(codes.Internal, err.Error())
+		return nil, status.Error(codes.Internal, causeErr.Error())
 	}
 
 	if fv != nil {
@@ -240,7 +240,7 @@ func (s *Server) UpdateEmail(
 
 	var fv *errdetails.BadRequest_FieldViolation
 
-	switch causeErr := errors.Cause(updateErr); causeErr {
+	switch causeErr := updateErr; causeErr {
 	case nil:
 	case authController.ErrInvalidEmailFormat:
 		fv = &errdetails.BadRequest_FieldViolation{Field: "Email", Description: causeErr.Error()}
@@ -251,11 +251,11 @@ func (s *Server) UpdateEmail(
 	case authController.ErrInvalidPassword:
 		fv = &errdetails.BadRequest_FieldViolation{Field: "Password", Description: causeErr.Error()}
 	case authController.ErrAuthEntityNotFound:
-		return nil, status.Error(codes.NotFound, updateErr.Error())
+		return nil, status.Error(codes.NotFound, causeErr.Error())
 	case authController.ErrAlreadyExists:
-		return nil, status.Error(codes.AlreadyExists, updateErr.Error())
+		return nil, status.Error(codes.AlreadyExists, causeErr.Error())
 	default:
-		return nil, status.Error(codes.Internal, updateErr.Error())
+		return nil, status.Error(codes.Internal, causeErr.Error())
 	}
 
 	if fv != nil {
@@ -284,7 +284,7 @@ func (s *Server) UpdatePhone(
 
 	var fv *errdetails.BadRequest_FieldViolation
 
-	switch causeErr := errors.Cause(updateErr); causeErr {
+	switch causeErr := updateErr; causeErr {
 	case nil:
 	case authController.ErrInvalidPhoneFormat:
 		fv = &errdetails.BadRequest_FieldViolation{Field: "Phone", Description: causeErr.Error()}
@@ -293,11 +293,11 @@ func (s *Server) UpdatePhone(
 	case authController.ErrInvalidPhone:
 		fv = &errdetails.BadRequest_FieldViolation{Field: "Phone", Description: causeErr.Error()}
 	case authController.ErrAuthEntityNotFound:
-		return nil, status.Error(codes.NotFound, updateErr.Error())
+		return nil, status.Error(codes.NotFound, causeErr.Error())
 	case authController.ErrAlreadyExists:
-		return nil, status.Error(codes.AlreadyExists, updateErr.Error())
+		return nil, status.Error(codes.AlreadyExists, causeErr.Error())
 	default:
-		return nil, status.Error(codes.Internal, updateErr.Error())
+		return nil, status.Error(codes.Internal, causeErr.Error())
 	}
 
 	if fv != nil {
@@ -330,7 +330,7 @@ func (s *Server) UpdatePassword(
 
 	var fv *errdetails.BadRequest_FieldViolation
 
-	switch causeErr := errors.Cause(updateErr); causeErr {
+	switch causeErr := updateErr; causeErr {
 	case nil:
 	case authController.ErrInvalidOldPassword:
 		fv = &errdetails.BadRequest_FieldViolation{Field: "OldPassword", Description: causeErr.Error()}
@@ -343,9 +343,9 @@ func (s *Server) UpdatePassword(
 	case authController.ErrInvalidPasswordLength:
 		fv = &errdetails.BadRequest_FieldViolation{Field: "Password", Description: causeErr.Error()}
 	case authController.ErrAuthEntityNotFound:
-		return nil, status.Error(codes.NotFound, updateErr.Error())
+		return nil, status.Error(codes.NotFound, causeErr.Error())
 	default:
-		return nil, status.Error(codes.Internal, updateErr.Error())
+		return nil, status.Error(codes.Internal, causeErr.Error())
 	}
 
 	if fv != nil {
