@@ -1094,8 +1094,10 @@ type GetVacancyDetailsResponse_VacancyLocation struct {
 func (m *GetVacancyDetailsResponse_VacancyLocation) Reset() {
 	*m = GetVacancyDetailsResponse_VacancyLocation{}
 }
-func (m *GetVacancyDetailsResponse_VacancyLocation) String() string { return proto.CompactTextString(m) }
-func (*GetVacancyDetailsResponse_VacancyLocation) ProtoMessage()    {}
+func (m *GetVacancyDetailsResponse_VacancyLocation) String() string {
+	return proto.CompactTextString(m)
+}
+func (*GetVacancyDetailsResponse_VacancyLocation) ProtoMessage() {}
 func (*GetVacancyDetailsResponse_VacancyLocation) Descriptor() ([]byte, []int) {
 	return fileDescriptor_47be6d1234ea964b, []int{13, 1}
 }
