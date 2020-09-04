@@ -33,8 +33,8 @@ var migrations = []*migrate.Migration{
 				updated_at       TIMESTAMPTZ     NOT NULL
 			);`,
 
-			`CREATE UNIQUE INDEX auth_email_idx ON auth (email) WHERE NULLIF(TRIM(email),'') IS NOT NULL;`,
-			`CREATE UNIQUE INDEX auth_phone_idx ON auth (phone);`,
+			`CREATE UNIQUE INDEX auth_email_idx ON auth (email);`,
+			`CREATE UNIQUE INDEX auth_phone_idx ON auth (phone) WHERE NULLIF(TRIM(phone),'') IS NOT NULL;`,
 		},
 		Down: []string{
 			`DROP INDEX IF EXISTS auth_phone_idx;`,

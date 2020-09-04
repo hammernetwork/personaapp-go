@@ -123,8 +123,8 @@ func New(cfg *Config, s Storage) *Controller {
 }
 
 type RegisterData struct {
-	Email    string      `valid:"stringlength(5|255),custom_email"`
-	Phone    string      `valid:"phone,required"`
+	Email    string      `valid:"stringlength(5|255),custom_email, required"`
+	Phone    string      `valid:"phone"`
 	Account  AccountType `valid:"account_type,required"`
 	Password string      `valid:"stringlength(6|30),required"`
 }
@@ -332,8 +332,8 @@ func (c *Controller) Register(ctx context.Context, rd *RegisterData) (*AuthToken
 
 	if err := pkgtx.RunInTx(ctx, c.s, func(ctx context.Context, tx pkgtx.Tx) error {
 		var err error
-		if rd.Email == "" {
-			_, err = c.s.TxGetAuthDataByPhone(ctx, tx, rd.Phone)
+		if rd.Phone == "" {
+			_, err = c.s.TxGetAuthDataByEmail(ctx, tx, rd.Email)
 		} else {
 			_, err = c.s.TxGetAuthDataByPhoneOrEmail(ctx, tx, rd.Phone, rd.Email)
 		}

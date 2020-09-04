@@ -35,18 +35,18 @@ func TestRegister(t *testing.T) {
 
 	c := controller.New(authCfg, s)
 
-	t.Run("two accounts with empty email", func(t *testing.T) {
+	t.Run("two accounts with empty phone", func(t *testing.T) {
 		_, err := c.Register(context.TODO(), &controller.RegisterData{
-			Email:    "",
-			Phone:    "+380500000101",
+			Email:    "companytest1@gmail.com",
+			Phone:    "",
 			Account:  controller.AccountTypeCompany,
 			Password: "random_password",
 		})
 		require.Nil(t, err)
 
 		_, err = c.Register(context.TODO(), &controller.RegisterData{
-			Email:    "",
-			Phone:    "+380500000102",
+			Email:    "companytest2@gmail.com",
+			Phone:    "",
 			Account:  controller.AccountTypeCompany,
 			Password: "random_password",
 		})
@@ -65,7 +65,7 @@ func TestUpdateAuthEmailAndPhone(t *testing.T) {
 	ac := controller.New(authCfg, as)
 
 	rd := controller.RegisterData{
-		Email:    "companytest1@gmail.com",
+		Email:    "companytest3@gmail.com",
 		Phone:    "+380500000002",
 		Account:  controller.AccountTypePersona,
 		Password: "Password2",
@@ -76,7 +76,7 @@ func TestUpdateAuthEmailAndPhone(t *testing.T) {
 		t.Error(err)
 	}
 
-	newEmail := "companytest2@gmail.com"
+	newEmail := "companytest4@gmail.com"
 
 	t.Run("update email", func(t *testing.T) {
 		_, err := ac.UpdateEmail(context.Background(), token.AccountID, newEmail, rd.Password, rd.Account)

@@ -61,7 +61,7 @@ message GetSelfRequest {
 
 message GetSelfResponse {
     string email = 1;
-    string phone = 2; // optional for persona
+    string phone = 2;
     AccountType account_type = 3;
 }
 
