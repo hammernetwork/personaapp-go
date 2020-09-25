@@ -10,6 +10,7 @@ import (
 	"google.golang.org/grpc/status"
 	authController "personaapp/internal/controllers/auth/controller"
 	companyController "personaapp/internal/controllers/company/controller"
+	"personaapp/internal/mail"
 	apiauth "personaapp/pkg/grpcapi/auth"
 )
 
@@ -392,10 +393,37 @@ func (s *Server) RecoveryEmail(
 		return nil, fieldViolationStatus(fv).Err()
 	}
 
-	// add send secret ot email!!!
-	return &apiauth.RecoveryEmailResponse{
-		Secret: secret.Secret,
-	}, nil
+	// Send email with recovery link
+	sendEmail(secret.Secret, req.Email)
+
+	return &apiauth.RecoveryEmailResponse{}, nil
+}
+
+func sendEmail(secret string, email string) {
+	sender := mail.NewSender("personaapp.online@gmail.com", "Pp4A8.9c3(:TxqSV")
+
+	// The receiver needs to be in slice as the receive supports multiple receiver
+	Receiver := []string{email}
+
+	Subject := "Recovery password"
+	message := `
+	<!DOCTYPE HTML PULBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+	<html>
+	<head>
+	<meta http-equiv="content-type" content="text/html"; charset=ISO-8859-1">
+	</head>
+	<body>Link https://personaapp.online.com/confirm?secret=` + secret + `<br>
+	<div class="moz-signature"><i><br>
+	<br>
+	Regards<br>
+	Devygidno<br>
+	<i></div>
+	</body>
+	</html>
+	`
+	bodyMessage := sender.WriteHTMLEmail(Receiver, Subject, message)
+
+	sender.SendMail(Receiver, Subject, bodyMessage)
 }
 
 func (s *Server) UpdatePasswordBySecret(

@@ -103,7 +103,6 @@ message RecoveryEmailRequest {
 }
 
 message RecoveryEmailResponse {
-    string secret = 1;
 }
 
 // Update password by secret

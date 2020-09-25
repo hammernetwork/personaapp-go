@@ -842,7 +842,7 @@ func createSecret(ctx context.Context, c *Controller, email string) (*AuthSecret
 }
 
 func updateAttempts(ctx context.Context, c *Controller, as *storage.AuthSecret) error {
-	as.Attempts += 1
+	as.Attempts++
 
 	if err := pkgtx.RunInTx(ctx, c.s, func(ctx context.Context, tx pkgtx.Tx) error {
 		return errors.WithStack(c.s.TxPutAuthSecretByEmail(ctx, tx, as))
