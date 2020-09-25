@@ -85,7 +85,7 @@ var (
 	ErrInvalidOldPasswordNotMatch = errors.New("invalid old password not match")
 	ErrAuthEntityNotFound         = errors.New("auth entity not found")
 	ErrAuthSecretNotFound         = errors.New("auth secret not found")
-	ErrAuthSecretToManyAttempts   = errors.New("auth secret not found")
+	ErrAuthSecretToManyAttempts   = errors.New("auth secret to many attempts")
 )
 
 type Config struct {
@@ -842,7 +842,7 @@ func createSecret(ctx context.Context, c *Controller, email string) (*AuthSecret
 }
 
 func updateAttempts(ctx context.Context, c *Controller, as *storage.AuthSecret) error {
-	as.Attempts = +1
+	as.Attempts += 1
 
 	if err := pkgtx.RunInTx(ctx, c.s, func(ctx context.Context, tx pkgtx.Tx) error {
 		return errors.WithStack(c.s.TxPutAuthSecretByEmail(ctx, tx, as))

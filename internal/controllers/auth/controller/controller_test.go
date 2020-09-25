@@ -132,9 +132,31 @@ func TestUpdateAuthEmailAndPhone(t *testing.T) {
 
 	wrongEmail := "notPresent@email.com"
 
-	t.Run("recovery email with wrong email", func(t *testing.T) {
+	t.Run("recovery email with not registered email", func(t *testing.T) {
 		_, err := ac.RecoveryEmail(context.Background(), wrongEmail)
 		require.Error(t, err)
 		require.EqualError(t, controller.ErrAuthEntityNotFound, err.Error())
+	})
+
+	t.Run("recovery email with wrong secret", func(t *testing.T) {
+		upd := controller.UpdatePasswordBySecretData{
+			Secret:      uuid.NewV4().String(),
+			NewPassword: newPassword,
+		}
+
+		_, err = ac.UpdatePasswordBySecret(context.Background(), &upd)
+		require.Error(t, err)
+		require.EqualError(t, controller.ErrAuthSecretNotFound, err.Error())
+	})
+
+	t.Run("recovery email to many attempts", func(t *testing.T) {
+		for n := 0; n <= 5; n++ {
+			_, err := ac.RecoveryEmail(context.Background(), newEmail)
+			require.NoError(t, err)
+		}
+
+		_, err := ac.RecoveryEmail(context.Background(), newEmail)
+		require.Error(t, err)
+		require.EqualError(t, controller.ErrAuthSecretToManyAttempts, err.Error())
 	})
 }
