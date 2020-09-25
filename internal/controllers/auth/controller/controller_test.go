@@ -114,4 +114,27 @@ func TestUpdateAuthEmailAndPhone(t *testing.T) {
 		_, err := ac.UpdatePassword(context.Background(), token.AccountID, &pd)
 		require.NoError(t, err)
 	})
+
+	newPassword := "PasswordNew"
+
+	t.Run("recovery email", func(t *testing.T) {
+		secret, err := ac.RecoveryEmail(context.Background(), newEmail)
+		require.NoError(t, err)
+
+		upd := controller.UpdatePasswordBySecretData{
+			Secret:      secret.Secret,
+			NewPassword: newPassword,
+		}
+
+		_, err = ac.UpdatePasswordBySecret(context.Background(), &upd)
+		require.NoError(t, err)
+	})
+
+	wrongEmail := "notPresent@email.com"
+
+	t.Run("recovery email with wrong email", func(t *testing.T) {
+		_, err := ac.RecoveryEmail(context.Background(), wrongEmail)
+		require.Error(t, err)
+		require.EqualError(t, controller.ErrAuthEntityNotFound, err.Error())
+	})
 }

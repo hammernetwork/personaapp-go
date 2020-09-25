@@ -32,6 +32,14 @@ type AuthController interface {
 		accountID string,
 		upd *authController.UpdatePasswordData,
 	) (*authController.AuthToken, error)
+	RecoveryEmail(
+		ctx context.Context,
+		email string,
+	) (*authController.AuthSecret, error)
+	UpdatePasswordBySecret(
+		ctx context.Context,
+		upd *authController.UpdatePasswordBySecretData,
+	) (*authController.AuthToken, error)
 }
 
 func toControllerAccount(at apiauth.AccountType) (authController.AccountType, error) {
@@ -358,4 +366,70 @@ func (s *Server) UpdatePassword(
 	}
 
 	return &apiauth.UpdatePasswordResponse{Token: sat}, nil
+}
+
+func (s *Server) RecoveryEmail(
+	ctx context.Context,
+	req *apiauth.RecoveryEmailRequest,
+) (*apiauth.RecoveryEmailResponse, error) {
+	secret, err := s.ac.RecoveryEmail(ctx, req.Email)
+
+	var fv *errdetails.BadRequest_FieldViolation
+
+	switch causeErr := errors.Cause(err); causeErr {
+	case nil:
+	case authController.ErrInvalidEmailFormat:
+		fv = &errdetails.BadRequest_FieldViolation{Field: "Email", Description: causeErr.Error()}
+	case authController.ErrInvalidEmailLength:
+		fv = &errdetails.BadRequest_FieldViolation{Field: "Email", Description: causeErr.Error()}
+	case authController.ErrInvalidEmail:
+		fv = &errdetails.BadRequest_FieldViolation{Field: "Email", Description: causeErr.Error()}
+	default:
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	if fv != nil {
+		return nil, fieldViolationStatus(fv).Err()
+	}
+
+	// add send secret ot email!!!
+	return &apiauth.RecoveryEmailResponse{
+		Secret: secret.Secret,
+	}, nil
+}
+
+func (s *Server) UpdatePasswordBySecret(
+	ctx context.Context,
+	req *apiauth.UpdatePasswordBySecretRequest,
+) (*apiauth.UpdatePasswordBySecretResponse, error) {
+	upd := &authController.UpdatePasswordBySecretData{
+		Secret:      req.Secret,
+		NewPassword: req.NewPassword,
+	}
+	token, updateErr := s.ac.UpdatePasswordBySecret(ctx, upd)
+
+	var fv *errdetails.BadRequest_FieldViolation
+
+	switch causeErr := errors.Cause(updateErr); causeErr {
+	case nil:
+	case authController.ErrInvalidPassword:
+		fv = &errdetails.BadRequest_FieldViolation{Field: "Password", Description: causeErr.Error()}
+	case authController.ErrInvalidPasswordLength:
+		fv = &errdetails.BadRequest_FieldViolation{Field: "Password", Description: causeErr.Error()}
+	case authController.ErrAuthSecretNotFound:
+		return nil, status.Error(codes.NotFound, updateErr.Error())
+	default:
+		return nil, status.Error(codes.Internal, updateErr.Error())
+	}
+
+	if fv != nil {
+		return nil, fieldViolationStatus(fv).Err()
+	}
+
+	sat, err := toServerToken(token)
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	return &apiauth.UpdatePasswordBySecretResponse{Token: sat}, nil
 }

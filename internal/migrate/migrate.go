@@ -214,6 +214,22 @@ var migrations = []*migrate.Migration{
 			`DROP TABLE IF EXISTS vacancy_cities;`,
 		},
 	},
+	{
+		Id: "12 - Create auth_secret for password recovery table",
+		Up: []string{
+			`CREATE TABLE IF NOT EXISTS auth_secret (
+				email					 VARCHAR(255)			PRIMARY KEY,
+				secret           		 uuid            		NOT NULL,
+				attempts    		 	 INTEGER            	NOT NULL,
+				expiresAt    		 	 TIMESTAMPTZ            NOT NULL
+			);`,
+			`CREATE UNIQUE INDEX auth_secret_secret_idx ON auth_secret (secret);`,
+		},
+		Down: []string{
+			`DROP INDEX IF EXISTS auth_secret_secret_idx;`,
+			`DROP TABLE IF EXISTS auth_secret;`,
+		},
+	},
 }
 
 func GetMigrations() []*migrate.Migration {
