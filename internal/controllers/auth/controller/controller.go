@@ -770,7 +770,7 @@ func (c *Controller) UpdatePassword(
 	return sat, nil
 }
 
-func (c *Controller) RecoveryEmail(
+func (c *Controller) RecoveryPassword(
 	ctx context.Context,
 	email string,
 ) (*AuthSecret, error) {

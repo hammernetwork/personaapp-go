@@ -118,7 +118,7 @@ func TestUpdateAuthEmailAndPhone(t *testing.T) {
 	newPassword := "PasswordNew"
 
 	t.Run("recovery email", func(t *testing.T) {
-		secret, err := ac.RecoveryEmail(context.Background(), newEmail)
+		secret, err := ac.RecoveryPassword(context.Background(), newEmail)
 		require.NoError(t, err)
 
 		upd := controller.UpdatePasswordBySecretData{
@@ -133,7 +133,7 @@ func TestUpdateAuthEmailAndPhone(t *testing.T) {
 	wrongEmail := "notPresent@email.com"
 
 	t.Run("recovery email with not registered email", func(t *testing.T) {
-		_, err := ac.RecoveryEmail(context.Background(), wrongEmail)
+		_, err := ac.RecoveryPassword(context.Background(), wrongEmail)
 		require.Error(t, err)
 		require.EqualError(t, controller.ErrAuthEntityNotFound, err.Error())
 	})
@@ -151,11 +151,11 @@ func TestUpdateAuthEmailAndPhone(t *testing.T) {
 
 	t.Run("recovery email to many attempts", func(t *testing.T) {
 		for n := 0; n <= 5; n++ {
-			_, err := ac.RecoveryEmail(context.Background(), newEmail)
+			_, err := ac.RecoveryPassword(context.Background(), newEmail)
 			require.NoError(t, err)
 		}
 
-		_, err := ac.RecoveryEmail(context.Background(), newEmail)
+		_, err := ac.RecoveryPassword(context.Background(), newEmail)
 		require.Error(t, err)
 		require.EqualError(t, controller.ErrAuthSecretToManyAttempts, err.Error())
 	})

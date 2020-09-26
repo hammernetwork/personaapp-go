@@ -16,7 +16,7 @@ service PersonaAppAuth {
     rpc UpdateEmail (UpdateEmailRequest) returns (UpdateEmailResponse);
     rpc UpdatePhone (UpdatePhoneRequest) returns (UpdatePhoneResponse);
     rpc UpdatePassword (UpdatePasswordRequest) returns (UpdatePasswordResponse);
-    rpc RecoveryEmail (RecoveryEmailRequest) returns (RecoveryEmailResponse);
+    rpc RecoveryPassword (RecoveryPasswordRequest) returns (RecoveryPasswordResponse);
     rpc UpdatePasswordBySecret (UpdatePasswordBySecretRequest) returns (UpdatePasswordBySecretResponse);
 }
 
@@ -98,11 +98,11 @@ message UpdatePasswordResponse {
 }
 
 // Recovery email
-message RecoveryEmailRequest {
+message RecoveryPasswordRequest {
     string email = 1;
 }
 
-message RecoveryEmailResponse {
+message RecoveryPasswordResponse {
 }
 
 // Update password by secret

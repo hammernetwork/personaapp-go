@@ -33,7 +33,7 @@ type AuthController interface {
 		accountID string,
 		upd *authController.UpdatePasswordData,
 	) (*authController.AuthToken, error)
-	RecoveryEmail(
+	RecoveryPassword(
 		ctx context.Context,
 		email string,
 	) (*authController.AuthSecret, error)
@@ -369,11 +369,11 @@ func (s *Server) UpdatePassword(
 	return &apiauth.UpdatePasswordResponse{Token: sat}, nil
 }
 
-func (s *Server) RecoveryEmail(
+func (s *Server) RecoveryPassword(
 	ctx context.Context,
-	req *apiauth.RecoveryEmailRequest,
-) (*apiauth.RecoveryEmailResponse, error) {
-	secret, err := s.ac.RecoveryEmail(ctx, req.Email)
+	req *apiauth.RecoveryPasswordRequest,
+) (*apiauth.RecoveryPasswordResponse, error) {
+	secret, err := s.ac.RecoveryPassword(ctx, req.Email)
 
 	var fv *errdetails.BadRequest_FieldViolation
 
@@ -396,7 +396,7 @@ func (s *Server) RecoveryEmail(
 	// Send email with recovery link
 	sendEmail(secret.Secret, req.Email)
 
-	return &apiauth.RecoveryEmailResponse{}, nil
+	return &apiauth.RecoveryPasswordResponse{}, nil
 }
 
 func sendEmail(secret string, email string) {
