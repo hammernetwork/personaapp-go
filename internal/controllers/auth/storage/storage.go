@@ -37,6 +37,13 @@ type AuthData struct {
 	UpdatedAt    time.Time
 }
 
+type AuthSecret struct {
+	Email     string
+	Secret    string
+	Attempts  int
+	ExpiresAt time.Time
+}
+
 func (s *Storage) TxPutAuth(ctx context.Context, tx pkgtx.Tx, ad *AuthData) error {
 	c := postgresql.FromTx(tx)
 	if _, err := c.ExecContext(
@@ -196,4 +203,92 @@ func (s *Storage) TxGetAuthDataByID(ctx context.Context, tx pkgtx.Tx, accountID 
 	}
 
 	return &ad, nil
+}
+
+func (s *Storage) TxGetAuthSecretByEmail(ctx context.Context, tx pkgtx.Tx, email string) (*AuthSecret, error) {
+	c := postgresql.FromTx(tx)
+
+	var as AuthSecret
+	err := c.QueryRowContext(
+		ctx,
+		`SELECT email, secret, attempts, expiresAt
+			FROM auth_secret
+			WHERE email = $1`,
+		email,
+	).Scan(&as.Email, &as.Secret, &as.Attempts, &as.ExpiresAt)
+
+	switch err {
+	case nil:
+	case sql.ErrNoRows:
+		return nil, ErrNotFound
+	default:
+		return nil, errors.WithStack(err)
+	}
+
+	return &as, nil
+}
+
+func (s *Storage) TxGetAuthSecretBySecret(ctx context.Context, tx pkgtx.Tx, secret string) (*AuthSecret, error) {
+	c := postgresql.FromTx(tx)
+
+	var as AuthSecret
+	err := c.QueryRowContext(
+		ctx,
+		`SELECT email, secret, attempts, expiresAt
+			FROM auth_secret
+			WHERE secret = $1`,
+		secret,
+	).Scan(&as.Email, &as.Secret, &as.Attempts, &as.ExpiresAt)
+
+	switch err {
+	case nil:
+	case sql.ErrNoRows:
+		return nil, ErrNotFound
+	default:
+		return nil, errors.WithStack(err)
+	}
+
+	return &as, nil
+}
+
+func (s *Storage) TxPutAuthSecretByEmail(ctx context.Context, tx pkgtx.Tx, authSecret *AuthSecret) error {
+	c := postgresql.FromTx(tx)
+
+	if _, err := c.ExecContext(
+		ctx,
+		`WITH upsert AS (
+				UPDATE auth_secret SET
+					secret = $2,
+					attempts = $3,
+					expiresAt = $4
+				WHERE email = $1
+				RETURNING email, secret, attempts, expiresAt
+			)
+			INSERT INTO auth_secret (email, secret, attempts, expiresAt)
+			SELECT $1, $2, $3, $4
+			WHERE NOT EXISTS (SELECT * FROM upsert)`,
+		authSecret.Email,
+		authSecret.Secret,
+		authSecret.Attempts,
+		authSecret.ExpiresAt,
+	); err != nil {
+		return errors.WithStack(err)
+	}
+
+	return nil
+}
+
+func (s *Storage) TxDeleteAuthSecret(ctx context.Context, tx pkgtx.Tx, email string) error {
+	c := postgresql.FromTx(tx)
+
+	if _, err := c.ExecContext(
+		ctx,
+		`DELETE FROM auth_secret 
+			WHERE email = $1`,
+		email,
+	); err != nil {
+		return errors.WithStack(err)
+	}
+
+	return nil
 }

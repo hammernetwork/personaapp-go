@@ -84,6 +84,8 @@ var (
 	ErrInvalidOldPasswordLength   = errors.New("invalid old password length")
 	ErrInvalidOldPasswordNotMatch = errors.New("invalid old password not match")
 	ErrAuthEntityNotFound         = errors.New("auth entity not found")
+	ErrAuthSecretNotFound         = errors.New("auth secret not found")
+	ErrAuthSecretToManyAttempts   = errors.New("auth secret to many attempts")
 )
 
 type Config struct {
@@ -108,6 +110,11 @@ type Storage interface {
 	TxGetAuthDataByPhoneOrEmail(ctx context.Context, tx pkgtx.Tx, phone, email string) (*storage.AuthData, error)
 	TxGetAuthDataByPhone(ctx context.Context, tx pkgtx.Tx, phone string) (*storage.AuthData, error)
 	TxGetAuthDataByEmail(ctx context.Context, tx pkgtx.Tx, email string) (*storage.AuthData, error)
+
+	TxGetAuthSecretByEmail(ctx context.Context, tx pkgtx.Tx, email string) (*storage.AuthSecret, error)
+	TxGetAuthSecretBySecret(ctx context.Context, tx pkgtx.Tx, secret string) (*storage.AuthSecret, error)
+	TxPutAuthSecretByEmail(ctx context.Context, tx pkgtx.Tx, authSecret *storage.AuthSecret) error
+	TxDeleteAuthSecret(ctx context.Context, tx pkgtx.Tx, email string) error
 
 	BeginTx(ctx context.Context) (pkgtx.Tx, error)
 	NoTx() pkgtx.Tx
@@ -225,6 +232,11 @@ type AuthToken struct {
 	AccountID   string
 	AccountType AccountType
 	ExpiresAt   time.Time
+}
+
+type AuthSecret struct {
+	Secret    string
+	ExpiresAt time.Time
 }
 
 type AuthClaims struct {
@@ -663,6 +675,11 @@ type UpdatePasswordData struct {
 	NewPassword string `valid:"stringlength(6|30),required"`
 }
 
+type UpdatePasswordBySecretData struct {
+	Secret      string `valid:"stringlength(35),required"`
+	NewPassword string `valid:"stringlength(6|30),required"`
+}
+
 // nolint:dupl // will rework
 func (upd *UpdatePasswordData) Validate() error {
 	var fieldErrors = []struct {
@@ -746,6 +763,142 @@ func (c *Controller) UpdatePassword(
 	}
 
 	sat, err := c.generateToken(accountID, at)
+	if err != nil {
+		return nil, errors.WithStack(err)
+	}
+
+	return sat, nil
+}
+
+func (c *Controller) RecoveryPassword(
+	ctx context.Context,
+	email string,
+) (*AuthSecret, error) {
+	// Check if account is registered
+	_, err := c.s.TxGetAuthDataByEmail(ctx, c.s.NoTx(), email)
+	switch err {
+	case nil:
+	case storage.ErrNotFound:
+		return nil, errors.WithStack(ErrAuthEntityNotFound)
+	default:
+		return nil, errors.WithStack(err)
+	}
+
+	// Get or create secret by email
+	var secret *AuthSecret
+	as, err := c.s.TxGetAuthSecretByEmail(ctx, c.s.NoTx(), email)
+	switch err {
+	case nil:
+		switch {
+		case as.Attempts > 5:
+			return nil, errors.WithStack(ErrAuthSecretToManyAttempts)
+		case time.Until(as.ExpiresAt) > 0:
+			if err := updateAttempts(ctx, c, as); err != nil {
+				return nil, errors.WithStack(err)
+			}
+
+			secret = &AuthSecret{
+				Secret:    as.Secret,
+				ExpiresAt: as.ExpiresAt,
+			}
+		default:
+			secret, err = createSecret(ctx, c, email)
+			if err != nil {
+				return nil, errors.WithStack(err)
+			}
+		}
+	case storage.ErrNotFound:
+		secret, err = createSecret(ctx, c, email)
+		if err != nil {
+			return nil, errors.WithStack(ErrAuthEntityNotFound)
+		}
+
+	default:
+		return nil, errors.WithStack(err)
+	}
+
+	return secret, nil
+}
+
+func createSecret(ctx context.Context, c *Controller, email string) (*AuthSecret, error) {
+	secret := uuid.NewV4().String()
+	upd := &storage.AuthSecret{
+		Email:     email,
+		Secret:    secret,
+		Attempts:  1,
+		ExpiresAt: time.Now().Add(time.Hour * 24),
+	}
+
+	if err := pkgtx.RunInTx(ctx, c.s, func(ctx context.Context, tx pkgtx.Tx) error {
+		return errors.WithStack(c.s.TxPutAuthSecretByEmail(ctx, tx, upd))
+	}); err != nil {
+		return nil, errors.WithStack(err)
+	}
+
+	return &AuthSecret{
+		Secret:    upd.Secret,
+		ExpiresAt: upd.ExpiresAt,
+	}, nil
+}
+
+func updateAttempts(ctx context.Context, c *Controller, as *storage.AuthSecret) error {
+	as.Attempts++
+
+	if err := pkgtx.RunInTx(ctx, c.s, func(ctx context.Context, tx pkgtx.Tx) error {
+		return errors.WithStack(c.s.TxPutAuthSecretByEmail(ctx, tx, as))
+	}); err != nil {
+		return errors.WithStack(err)
+	}
+
+	return nil
+}
+
+func (c *Controller) UpdatePasswordBySecret(
+	ctx context.Context,
+	upd *UpdatePasswordBySecretData,
+) (*AuthToken, error) {
+	as, err := c.s.TxGetAuthSecretBySecret(ctx, c.s.NoTx(), upd.Secret)
+	switch err {
+	case nil:
+	case storage.ErrNotFound:
+		return nil, errors.WithStack(ErrAuthSecretNotFound)
+	default:
+		return nil, errors.WithStack(err)
+	}
+
+	if err := c.s.TxDeleteAuthSecret(ctx, c.s.NoTx(), as.Email); err != nil {
+		return nil, errors.WithStack(err)
+	}
+
+	ad, err := c.s.TxGetAuthDataByEmail(ctx, c.s.NoTx(), as.Email)
+	switch err {
+	case nil:
+	case storage.ErrNotFound:
+		return nil, errors.WithStack(ErrAuthEntityNotFound)
+	default:
+		return nil, errors.WithStack(err)
+	}
+
+	newPasswordHash, err := passwordHash(upd.NewPassword)
+	if err != nil {
+		return nil, errors.WithStack(err)
+	}
+
+	ad.PasswordHash = newPasswordHash
+	ad.UpdatedAt = time.Now()
+
+	if err := pkgtx.RunInTx(ctx, c.s, func(ctx context.Context, tx pkgtx.Tx) error {
+		return errors.WithStack(c.s.TxPutAuth(ctx, tx, ad))
+	}); err != nil {
+		return nil, errors.WithStack(err)
+	}
+
+	at, err := fromStorageAccount(ad.Account)
+	if err != nil {
+		return nil, errors.WithStack(err)
+	}
+
+	sat, err := c.generateToken(ad.AccountID, at)
 	if err != nil {
 		return nil, errors.WithStack(err)
 	}

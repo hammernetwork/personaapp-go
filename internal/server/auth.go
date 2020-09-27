@@ -10,6 +10,7 @@ import (
 	"google.golang.org/grpc/status"
 	authController "personaapp/internal/controllers/auth/controller"
 	companyController "personaapp/internal/controllers/company/controller"
+	"personaapp/internal/mail"
 	apiauth "personaapp/pkg/grpcapi/auth"
 )
 
@@ -31,6 +32,14 @@ type AuthController interface {
 		ctx context.Context,
 		accountID string,
 		upd *authController.UpdatePasswordData,
+	) (*authController.AuthToken, error)
+	RecoveryPassword(
+		ctx context.Context,
+		email string,
+	) (*authController.AuthSecret, error)
+	UpdatePasswordBySecret(
+		ctx context.Context,
+		upd *authController.UpdatePasswordBySecretData,
 	) (*authController.AuthToken, error)
 }
 
@@ -358,4 +367,97 @@ func (s *Server) UpdatePassword(
 	}
 
 	return &apiauth.UpdatePasswordResponse{Token: sat}, nil
+}
+
+func (s *Server) RecoveryPassword(
+	ctx context.Context,
+	req *apiauth.RecoveryPasswordRequest,
+) (*apiauth.RecoveryPasswordResponse, error) {
+	secret, err := s.ac.RecoveryPassword(ctx, req.Email)
+
+	var fv *errdetails.BadRequest_FieldViolation
+
+	switch causeErr := errors.Cause(err); causeErr {
+	case nil:
+	case authController.ErrInvalidEmailFormat:
+		fv = &errdetails.BadRequest_FieldViolation{Field: "Email", Description: causeErr.Error()}
+	case authController.ErrInvalidEmailLength:
+		fv = &errdetails.BadRequest_FieldViolation{Field: "Email", Description: causeErr.Error()}
+	case authController.ErrInvalidEmail:
+		fv = &errdetails.BadRequest_FieldViolation{Field: "Email", Description: causeErr.Error()}
+	default:
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	if fv != nil {
+		return nil, fieldViolationStatus(fv).Err()
+	}
+
+	// Send email with recovery link
+	sendEmail(secret.Secret, req.Email)
+
+	return &apiauth.RecoveryPasswordResponse{}, nil
+}
+
+func sendEmail(secret string, email string) {
+	sender := mail.NewSender("personaapp.online@gmail.com", "Pp4A8.9c3(:TxqSV")
+
+	// The receiver needs to be in slice as the receive supports multiple receiver
+	Receiver := []string{email}
+
+	Subject := "Recovery password"
+	message := `
+	<!DOCTYPE HTML PULBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+	<html>
+	<head>
+	<meta http-equiv="content-type" content="text/html"; charset=ISO-8859-1">
+	</head>
+	<body>Link https://personaapp.online.com/confirm?secret=` + secret + `<br>
+	<div class="moz-signature"><i><br>
+	<br>
+	Regards<br>
+	Devygidno<br>
+	<i></div>
+	</body>
+	</html>
+	`
+	bodyMessage := sender.WriteHTMLEmail(Receiver, Subject, message)
+
+	sender.SendMail(Receiver, Subject, bodyMessage)
+}
+
+func (s *Server) UpdatePasswordBySecret(
+	ctx context.Context,
+	req *apiauth.UpdatePasswordBySecretRequest,
+) (*apiauth.UpdatePasswordBySecretResponse, error) {
+	upd := &authController.UpdatePasswordBySecretData{
+		Secret:      req.Secret,
+		NewPassword: req.NewPassword,
+	}
+	token, updateErr := s.ac.UpdatePasswordBySecret(ctx, upd)
+
+	var fv *errdetails.BadRequest_FieldViolation
+
+	switch causeErr := errors.Cause(updateErr); causeErr {
+	case nil:
+	case authController.ErrInvalidPassword:
+		fv = &errdetails.BadRequest_FieldViolation{Field: "Password", Description: causeErr.Error()}
+	case authController.ErrInvalidPasswordLength:
+		fv = &errdetails.BadRequest_FieldViolation{Field: "Password", Description: causeErr.Error()}
+	case authController.ErrAuthSecretNotFound:
+		return nil, status.Error(codes.NotFound, updateErr.Error())
+	default:
+		return nil, status.Error(codes.Internal, updateErr.Error())
+	}
+
+	if fv != nil {
+		return nil, fieldViolationStatus(fv).Err()
+	}
+
+	sat, err := toServerToken(token)
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	return &apiauth.UpdatePasswordBySecretResponse{Token: sat}, nil
 }

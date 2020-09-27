@@ -16,12 +16,14 @@ service PersonaAppAuth {
     rpc UpdateEmail (UpdateEmailRequest) returns (UpdateEmailResponse);
     rpc UpdatePhone (UpdatePhoneRequest) returns (UpdatePhoneResponse);
     rpc UpdatePassword (UpdatePasswordRequest) returns (UpdatePasswordResponse);
+    rpc RecoveryPassword (RecoveryPasswordRequest) returns (RecoveryPasswordResponse);
+    rpc UpdatePasswordBySecret (UpdatePasswordBySecretRequest) returns (UpdatePasswordBySecretResponse);
 }
 
 // Register
 message RegisterRequest {
     string email = 1;
-    string phone = 2; // optional for persona
+    string phone = 2; // optional
     string password = 3;
     AccountType account_type = 4;
 }
@@ -92,6 +94,24 @@ message UpdatePasswordRequest {
 }
 
 message UpdatePasswordResponse {
+    Token token = 1;
+}
+
+// Recovery email
+message RecoveryPasswordRequest {
+    string email = 1;
+}
+
+message RecoveryPasswordResponse {
+}
+
+// Update password by secret
+message UpdatePasswordBySecretRequest {
+    string secret = 1;
+    string new_password = 2;
+}
+
+message UpdatePasswordBySecretResponse {
     Token token = 1;
 }
 
