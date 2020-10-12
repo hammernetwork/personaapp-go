@@ -385,6 +385,10 @@ func (s *Server) RecoveryPassword(
 		fv = &errdetails.BadRequest_FieldViolation{Field: "Email", Description: causeErr.Error()}
 	case authController.ErrInvalidEmail:
 		fv = &errdetails.BadRequest_FieldViolation{Field: "Email", Description: causeErr.Error()}
+	case authController.ErrAuthEntityNotFound:
+		return nil, status.Error(codes.NotFound, err.Error())
+	case authController.ErrAuthSecretToManyAttempts:
+		return nil, status.Error(codes.Unavailable, err.Error())
 	default:
 		return nil, status.Error(codes.Internal, err.Error())
 	}
@@ -445,6 +449,8 @@ func (s *Server) UpdatePasswordBySecret(
 	case authController.ErrInvalidPasswordLength:
 		fv = &errdetails.BadRequest_FieldViolation{Field: "Password", Description: causeErr.Error()}
 	case authController.ErrAuthSecretNotFound:
+		return nil, status.Error(codes.NotFound, updateErr.Error())
+	case authController.ErrAuthEntityNotFound:
 		return nil, status.Error(codes.NotFound, updateErr.Error())
 	default:
 		return nil, status.Error(codes.Internal, updateErr.Error())
