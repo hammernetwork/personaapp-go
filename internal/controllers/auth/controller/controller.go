@@ -505,7 +505,7 @@ func (c *Controller) GetAuth(ctx context.Context, accountID string) (*AuthData, 
 		}
 
 		authData = &AuthData{
-			AccountID: ad.AccountID
+			AccountID: ad.AccountID,
 			Email:     ad.Email,
 			Phone:     ad.Phone,
 			Account:   account,
