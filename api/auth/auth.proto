@@ -62,9 +62,10 @@ message GetSelfRequest {
 }
 
 message GetSelfResponse {
-    string email = 1;
-    string phone = 2;
-    AccountType account_type = 3;
+    string id = 1;
+    string email = 2;
+    string phone = 3;
+    AccountType account_type = 4;
 }
 
 // Update email
