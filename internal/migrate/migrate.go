@@ -79,7 +79,60 @@ var migrations = []*migrate.Migration{
 		},
 	},
 	{
-		Id: "05 - Create company activity fields table",
+		Id: "05 - Create persona table",
+		Up: []string{
+			`CREATE TABLE IF NOT EXISTS persona (
+				auth_id			uuid			NOT NULL REFERENCES auth (account_id) ON DELETE CASCADE,
+				name			VARCHAR(255)	NULL,
+				avatar_url		VARCHAR(255)	NULL,
+				created_at      TIMESTAMPTZ     NOT NULL,
+				updated_at      TIMESTAMPTZ     NOT NULL
+			);`,
+			`CREATE UNIQUE INDEX persona_auth_id_idx ON persona (auth_id);`,
+		},
+		Down: []string{
+			`DROP INDEX IF EXISTS persona_auth_id_idx;`,
+			`DROP TABLE IF EXISTS persona;`,
+		},
+	},
+	{
+		Id: "06 - Create extra auth email table",
+		Up: []string{
+			`CREATE TABLE IF NOT EXISTS auth_email (
+				auth_id			uuid			NOT NULL REFERENCES auth (account_id) ON DELETE CASCADE,
+				name			VARCHAR(255)	NOT NULL,
+				email         	VARCHAR(255)    NOT NULL,
+				CONSTRAINT auth_email_pkey PRIMARY KEY (auth_id, email)
+			);`,
+			`CREATE INDEX auth_email_auth_id_idx ON auth_email (auth_id);`,
+			`CREATE INDEX auth_email_email_idx ON auth_email (email);`,
+		},
+		Down: []string{
+			`DROP INDEX IF EXISTS auth_email_auth_id_idx;`,
+			`DROP INDEX IF EXISTS auth_email_email_idx;`,
+			`DROP TABLE IF EXISTS auth_email;`,
+		},
+	},
+	{
+		Id: "07 - Create extra auth phone table",
+		Up: []string{
+			`CREATE TABLE IF NOT EXISTS auth_phone (
+				auth_id			uuid			NOT NULL REFERENCES auth (account_id) ON DELETE CASCADE,
+				name			VARCHAR(255)	NOT NULL,
+				phone         	VARCHAR(255)    NOT NULL,
+				CONSTRAINT auth_phone_pkey PRIMARY KEY (auth_id, phone)
+			);`,
+			`CREATE INDEX auth_phone_auth_id_idx ON auth_phone (auth_id);`,
+			`CREATE INDEX auth_phone_phone_idx ON auth_phone (email);`,
+		},
+		Down: []string{
+			`DROP INDEX IF EXISTS auth_phone_auth_id_idx;`,
+			`DROP INDEX IF EXISTS auth_phone_phone_idx;`,
+			`DROP TABLE IF EXISTS auth_phone;`,
+		},
+	},
+	{
+		Id: "08 - Create company activity fields table",
 		Up: []string{
 			`CREATE TABLE IF NOT EXISTS company_activity_fields (
 				company_id           uuid            REFERENCES company (auth_id) ON DELETE CASCADE,
@@ -96,7 +149,7 @@ var migrations = []*migrate.Migration{
 		},
 	},
 	{
-		Id: "06 - Create vacancy category table",
+		Id: "09 - Create vacancy category table",
 		Up: []string{
 			`CREATE TABLE IF NOT EXISTS vacancy_category (
 				id            uuid			   PRIMARY KEY,
@@ -112,7 +165,7 @@ var migrations = []*migrate.Migration{
 		},
 	},
 	{
-		Id: "07 - Create vacancy table",
+		Id: "10 - Create vacancy table",
 		Up: []string{
 			`CREATE EXTENSION IF NOT EXISTS "postgis";`,
 			`CREATE TYPE e_vacancy_type AS ENUM (
@@ -146,7 +199,7 @@ var migrations = []*migrate.Migration{
 		},
 	},
 	{
-		Id: "08 - Create vacancies categories table",
+		Id: "11 - Create vacancies categories table",
 		Up: []string{
 			`CREATE TABLE IF NOT EXISTS vacancies_categories (
 				vacancy_id           uuid            REFERENCES vacancy (id) ON DELETE CASCADE,
@@ -165,7 +218,7 @@ var migrations = []*migrate.Migration{
 		},
 	},
 	{
-		Id: "09 - Create vacancies images table",
+		Id: "12 - Create vacancies images table",
 		Up: []string{
 			`CREATE TABLE IF NOT EXISTS vacancies_images (
 				vacancy_id         	uuid            	REFERENCES vacancy (id) ON DELETE CASCADE,
@@ -182,7 +235,7 @@ var migrations = []*migrate.Migration{
 		},
 	},
 	{
-		Id: "10 - Create city table",
+		Id: "13 - Create city table",
 		Up: []string{
 			`CREATE TABLE IF NOT EXISTS city (
 				id         			uuid            	PRIMARY KEY,
@@ -196,7 +249,7 @@ var migrations = []*migrate.Migration{
 		},
 	},
 	{
-		Id: "11 - Create vacancy cities table",
+		Id: "14 - Create vacancy cities table",
 		Up: []string{
 			`CREATE TABLE IF NOT EXISTS vacancy_cities (
 				vacancy_id           uuid            REFERENCES vacancy (id) ON DELETE CASCADE,
@@ -215,7 +268,7 @@ var migrations = []*migrate.Migration{
 		},
 	},
 	{
-		Id: "12 - Create auth_secret for password recovery table",
+		Id: "15 - Create auth_secret for password recovery table",
 		Up: []string{
 			`CREATE TABLE IF NOT EXISTS auth_secret (
 				email					 VARCHAR(255)			PRIMARY KEY,
@@ -228,6 +281,167 @@ var migrations = []*migrate.Migration{
 		Down: []string{
 			`DROP INDEX IF EXISTS auth_secret_secret_idx;`,
 			`DROP TABLE IF EXISTS auth_secret;`,
+		},
+	},
+	{
+		Id: "16 - Create cv table",
+		Up: []string{
+			`CREATE TABLE IF NOT EXISTS cv (
+				id            			uuid					PRIMARY KEY,
+				persona_id	  			uuid					REFERENCES persona (auth_id) ON DELETE CASCADE,
+				position				VARCHAR(255)			NOT NULL,
+				work_months_experience  INTEGER					NULL,
+				min_salary	  			INTEGER					NULL,
+				max_salary	  			INTEGER					NULL,
+
+				created_at       		TIMESTAMPTZ     		NOT NULL,
+				updated_at       		TIMESTAMPTZ     		NOT NULL
+			);`,
+			`CREATE INDEX created_at_position_id_cv_idx ON cv (created_at, persona_id);`,
+		},
+		Down: []string{
+			`DROP INDEX IF EXISTS created_at_position_id_cv_idx;`,
+			`DROP TABLE IF EXISTS cv;`,
+			`DROP TYPE IF EXISTS e_job_type;`,
+		},
+	},
+	{
+		Id: "17 - Create job type table",
+		Up: []string{
+			`CREATE TABLE IF NOT EXISTS job_type (
+				id            			uuid					PRIMARY KEY,
+				name					TEXT					NOT NULL,
+				created_at    			TIMESTAMPTZ      		NOT NULL,
+				updated_at    			TIMESTAMPTZ      		NOT NULL
+			);`,
+		},
+		Down: []string{
+			`DROP TABLE IF EXISTS job_type;`,
+		},
+	},
+	{
+		Id: "18 - Create cv job types table",
+		Up: []string{
+			`CREATE TABLE IF NOT EXISTS  cv_job_types  (
+				cv_id           		uuid            		REFERENCES cv (id) ON DELETE CASCADE,
+				job_type_id    			uuid            		REFERENCES job_type (id) ON DELETE CASCADE,
+				CONSTRAINT cv_job_types_pkey PRIMARY KEY (cv_id, job_type_id)
+			);`,
+			`CREATE UNIQUE INDEX cv_job_types_unique_idx ON cv_job_types (cv_id, job_type_id);`,
+			`CREATE INDEX cv_job_types_cv_id_idx ON cv_job_types (cv_id);`,
+			`CREATE INDEX cv_job_types_job_type_id_idx ON cv_job_types (job_type_id);`,
+		},
+		Down: []string{
+			`DROP INDEX IF EXISTS cv_job_types_unique_idx;`,
+			`DROP INDEX IF EXISTS cv_job_types_cv_id_idx;`,
+			`DROP INDEX IF EXISTS cv_job_types_job_type_id_idx;`,
+			`DROP TABLE IF EXISTS cv_job_types;`,
+		},
+	},
+	{
+		Id: "19 - Create job_kind table",
+		Up: []string{
+			`CREATE TABLE IF NOT EXISTS job_kind (
+				id            			uuid					PRIMARY KEY,
+				name					TEXT					NOT NULL,
+				created_at    			TIMESTAMPTZ      		NOT NULL,
+				updated_at    			TIMESTAMPTZ      		NOT NULL
+			);`,
+		},
+		Down: []string{
+			`DROP TABLE IF EXISTS job_kind;`,
+		},
+	},
+	{
+		Id: "20 - Create cv kinds of job table",
+		Up: []string{
+			`CREATE TABLE IF NOT EXISTS  cv_job_kinds  (
+				cv_id           		uuid            		REFERENCES cv (id) ON DELETE CASCADE,
+				job_kind_id    			uuid            		REFERENCES job_kind (id) ON DELETE CASCADE,
+				CONSTRAINT cv_job_kinds_pkey PRIMARY KEY (cv_id, job_kind_id)
+			);`,
+			`CREATE UNIQUE INDEX cv_job_kinds_unique_idx ON cv_job_kinds (cv_id, job_kind_id);`,
+			`CREATE INDEX cv_job_kinds_cv_id_idx ON cv_job_kinds (cv_id);`,
+			`CREATE INDEX cv_job_kinds_job_kind_id_idx ON cv_job_kinds (job_kind_id);`,
+		},
+		Down: []string{
+			`DROP INDEX IF EXISTS cv_job_kinds_unique_idx;`,
+			`DROP INDEX IF EXISTS cv_job_kinds_cv_id_idx;`,
+			`DROP INDEX IF EXISTS cv_job_kinds_job_kind_id_idx;`,
+			`DROP TABLE IF EXISTS cv_job_kinds;`,
+		},
+	},
+	{
+		Id: "21 - Create experience table",
+		Up: []string{
+			`CREATE TABLE IF NOT EXISTS experience (
+				id            			uuid					PRIMARY KEY,
+				cv_id	  				uuid					REFERENCES cv (id) ON DELETE CASCADE,
+				company_name			TEXT					NOT NULL,
+				date_from       		TIMESTAMPTZ     		NULL,
+				date_till       		TIMESTAMPTZ     		NULL,
+				position				TEXT					NOT NULL,
+				description				TEXT					NULL
+			);`,
+		},
+		Down: []string{
+			`DROP TABLE IF EXISTS experience;`,
+		},
+	},
+	{
+		Id: "22 - Create education table",
+		Up: []string{
+			`CREATE TABLE IF NOT EXISTS education (
+				id            			uuid					PRIMARY KEY,
+				cv_id	  				uuid					REFERENCES cv (id) ON DELETE CASCADE,
+				institution				TEXT					NOT NULL,
+				date_from       		TIMESTAMPTZ     		NULL,
+				date_till       		TIMESTAMPTZ     		NULL,
+				speciality				TEXT					NOT NULL,
+				description				TEXT					NULL
+			);`,
+		},
+		Down: []string{
+			`DROP TABLE IF EXISTS education;`,
+		},
+	},
+	{
+		Id: "23 - Create custom_section table",
+		Up: []string{
+			`CREATE TABLE IF NOT EXISTS custom_section (
+				id            			uuid					PRIMARY KEY,
+				cv_id	  				uuid					REFERENCES cv (id) ON DELETE CASCADE,
+				description				TEXT					NOT NULL
+			);`,
+		},
+		Down: []string{
+			`DROP TABLE IF EXISTS custom_section;`,
+		},
+	},
+	{
+		Id: "24 - Create story table",
+		Up: []string{
+			`CREATE TABLE IF NOT EXISTS story (
+				id            			uuid					PRIMARY KEY,
+				cv_id	  				uuid					REFERENCES cv (id) ON DELETE CASCADE,
+				chapter_name			TEXT					NOT NULL
+			);`,
+		},
+		Down: []string{
+			`DROP TABLE IF EXISTS story;`,
+		},
+	},
+	{
+		Id: "25 - Create story_episodes table",
+		Up: []string{
+			`CREATE TABLE IF NOT EXISTS story_episodes (
+				id            			uuid					PRIMARY KEY,
+				stories_id	  			uuid					REFERENCES story (id) ON DELETE CASCADE,
+				media_url				TEXT					NOT NULL
+			);`,
+		},
+		Down: []string{
+			`DROP TABLE IF EXISTS stories_episode;`,
 		},
 	},
 }

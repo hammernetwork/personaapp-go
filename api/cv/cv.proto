@@ -1,0 +1,51 @@
+syntax = "proto3";
+
+package personaappapi.cv;
+
+import "google/protobuf/wrappers.proto";
+
+option java_package = "online.personaapp";
+option java_outer_classname = "GrpcCV";
+
+service PersonaAppCV {
+    rpc GetCities (GetCitiesRequest) returns (GetCitiesResponse);
+    rpc UpsertCity (UpsertCityRequest) returns (UpsertCityResponse);
+    rpc DeleteCity (DeleteCityRequest) returns (DeleteCityResponse);
+}
+
+// Get cities
+message GetCitiesRequest {
+    google.protobuf.Int32Value rating = 1;
+    google.protobuf.StringValue filter = 2;
+}
+
+message GetCitiesResponse {
+    repeated City cities = 1;
+}
+
+// Upsert city
+message UpsertCityRequest {
+    google.protobuf.StringValue id = 1;
+    string name = 2;
+    int32 country_code = 3;
+    int32 rating = 4;
+}
+
+message UpsertCityResponse {
+    string id = 1;
+}
+
+// Delete city
+message DeleteCityRequest {
+    string id = 1;
+}
+
+message DeleteCityResponse {
+}
+
+message City {
+    string id = 1;
+    string name = 2;
+    int32 country_code = 3;
+    int32 rating = 4;
+}
