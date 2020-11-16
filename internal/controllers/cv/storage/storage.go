@@ -172,6 +172,21 @@ func (s *Storage) TxGetJobTypes(
 	return jts, nil
 }
 
+func (s *Storage) TxDeleteJobType(ctx context.Context, tx pkgtx.Tx, jobTypeID string) error {
+	c := postgresql.FromTx(tx)
+
+	if _, err := c.ExecContext(
+		ctx,
+		`DELETE FROM job_type 
+			WHERE id = $1`,
+		jobTypeID,
+	); err != nil {
+		return errors.WithStack(err)
+	}
+
+	return nil
+}
+
 func (s *Storage) TxPutCVJobTypes(
 	ctx context.Context,
 	tx pkgtx.Tx,
@@ -333,6 +348,21 @@ func (s *Storage) TxGetJobKinds(
 	return jts, nil
 }
 
+func (s *Storage) TxDeleteJobKind(ctx context.Context, tx pkgtx.Tx, jobKindID string) error {
+	c := postgresql.FromTx(tx)
+
+	if _, err := c.ExecContext(
+		ctx,
+		`DELETE FROM job_kind 
+			WHERE id = $1`,
+		jobKindID,
+	); err != nil {
+		return errors.WithStack(err)
+	}
+
+	return nil
+}
+
 func (s *Storage) TxPutCVJobKinds(
 	ctx context.Context,
 	tx pkgtx.Tx,
@@ -425,7 +455,7 @@ Job kinds part end
 Experience part start
 */
 
-func (s *Storage) TxPutCVExperience(ctx context.Context, tx pkgtx.Tx, CVID string, experience *CVExperience) error {
+func (s *Storage) TxPutExperience(ctx context.Context, tx pkgtx.Tx, CVID string, experience *CVExperience) error {
 	c := postgresql.FromTx(tx)
 
 	if _, err := c.ExecContext(
@@ -458,7 +488,7 @@ func (s *Storage) TxPutCVExperience(ctx context.Context, tx pkgtx.Tx, CVID strin
 	return nil
 }
 
-func (s *Storage) TxGetCVExperience(
+func (s *Storage) TxGetExperiences(
 	ctx context.Context,
 	tx pkgtx.Tx,
 	CVID string,
@@ -498,7 +528,7 @@ func (s *Storage) TxGetCVExperience(
 	return cves, nil
 }
 
-func (s *Storage) TxDeleteCVExperience(ctx context.Context, tx pkgtx.Tx, experienceID string) error {
+func (s *Storage) TxDeleteExperience(ctx context.Context, tx pkgtx.Tx, experienceID string) error {
 	c := postgresql.FromTx(tx)
 
 	if _, err := c.ExecContext(
@@ -520,7 +550,7 @@ Experience part end
 /**
 Education part start
 */
-func (s *Storage) TxPutCVEducations(ctx context.Context, tx pkgtx.Tx, CVID string, education *CVEducation) error {
+func (s *Storage) TxPutEducation(ctx context.Context, tx pkgtx.Tx, CVID string, education *CVEducation) error {
 	c := postgresql.FromTx(tx)
 
 	if _, err := c.ExecContext(
@@ -553,7 +583,7 @@ func (s *Storage) TxPutCVEducations(ctx context.Context, tx pkgtx.Tx, CVID strin
 	return nil
 }
 
-func (s *Storage) TxGetCVEducations(
+func (s *Storage) TxGetEducations(
 	ctx context.Context,
 	tx pkgtx.Tx,
 	CVID string,
@@ -593,7 +623,7 @@ func (s *Storage) TxGetCVEducations(
 	return cves, nil
 }
 
-func (s *Storage) TxDeleteCVEducations(ctx context.Context, tx pkgtx.Tx, educationID string) error {
+func (s *Storage) TxDeleteEducation(ctx context.Context, tx pkgtx.Tx, educationID string) error {
 	c := postgresql.FromTx(tx)
 
 	if _, err := c.ExecContext(

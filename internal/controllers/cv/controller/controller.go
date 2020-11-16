@@ -22,30 +22,23 @@ var (
 	ErrCVNotFound              = errors.New("cv not found")
 	ErrStoriesEpisodesNotFound = errors.New("stories episodes not found")
 	ErrStoriesNotFound         = errors.New("stories not found")
+	ErrExperiencesNotFound     = errors.New("experiences not found")
+	ErrJobKindsNotFound        = errors.New("job kinds not found")
+	ErrJobTypesNotFound        = errors.New("job types not found")
 	ErrCustomSectionsNotFound  = errors.New("custom sections not found")
 	ErrCustomSectionNotFound   = errors.New("custom section not found")
+	ErrEducationNotFound       = errors.New("education not found")
+	ErrExperienceNotFound      = errors.New("experience not found")
+	ErrJobKindNotFound         = errors.New("job kind not found")
+	ErrJobTypeNotFound         = errors.New("job type not found")
+	ErrCVJobKindNotFound       = errors.New("cv job kind not found")
+	ErrCVJobTypesNotFound      = errors.New("cv job type not found")
 
 	ErrInvalidStoriesEpisodesMediaURL = errors.New("invalid stories episodes media url")
 	ErrInvalidStoryMediaURL           = errors.New("invalid story media url")
 
-	ErrVacancyCategoryNotFound            = errors.New("vacancy category not found")
-	ErrVacancyImagesNotFound              = errors.New("vacancy image not found")
-	ErrInvalidCursor                      = errors.New("invalid cursor")
-	ErrInvalidStoryEpisode                = errors.New("invalid story episode struct")
-	ErrInvalidStory                       = errors.New("invalid story struct")
-	ErrInvalidVacancyCategoryTitle        = errors.New("invalid vacancy category title")
-	ErrInvalidVacancy                     = errors.New("invalid vacancy struct")
-	ErrInvalidVacancyTitle                = errors.New("invalid vacancy title")
-	ErrInvalidVacancyPhone                = errors.New("invalid vacancy phone")
-	ErrInvalidVacancyMinSalary            = errors.New("invalid vacancy min salary")
-	ErrInvalidVacancyMaxSalary            = errors.New("invalid vacancy max salary")
-	ErrInvalidVacancyImageURL             = errors.New("invalid vacancy image url")
-	ErrInvalidVacancyCompanyID            = errors.New("invalid vacancy company id")
-	ErrInvalidVacancyDescription          = errors.New("invalid vacancy description")
-	ErrInvalidVacancyWorkMonthsExperience = errors.New("invalid vacancy work months experience")
-	ErrInvalidVacancyWorkSchedule         = errors.New("invalid vacancy work schedule")
-	ErrInvalidVacancyLocationLatitude     = errors.New("invalid vacancy location latitude")
-	ErrInvalidVacancyLocationLongitude    = errors.New("invalid vacancy location longitude")
+	ErrInvalidStoryEpisode = errors.New("invalid story episode struct")
+	ErrInvalidStory        = errors.New("invalid story struct")
 )
 
 type Storage interface {
@@ -54,6 +47,8 @@ type Storage interface {
 		ctx context.Context,
 		tx pkgtx.Tx,
 	) (_ []*storage.JobType, rerr error)
+	TxDeleteJobType(ctx context.Context, tx pkgtx.Tx, jobTypeID string) error
+
 	TxPutCVJobTypes(
 		ctx context.Context,
 		tx pkgtx.Tx,
@@ -65,13 +60,15 @@ type Storage interface {
 		tx pkgtx.Tx,
 		CVID string,
 	) ([]*storage.CVJobType, error)
-	TxDeleteCVJobTypes(ctx context.Context, tx pkgtx.Tx, CVID string)
+	TxDeleteCVJobTypes(ctx context.Context, tx pkgtx.Tx, CVID string) error
 
 	TxPutJobKind(ctx context.Context, tx pkgtx.Tx, jobKind *storage.JobKind) error
 	TxGetJobKinds(
 		ctx context.Context,
 		tx pkgtx.Tx,
 	) (_ []*storage.JobKind, rerr error)
+	TxDeleteJobKind(ctx context.Context, tx pkgtx.Tx, jobKindID string) error
+
 	TxPutCVJobKinds(
 		ctx context.Context,
 		tx pkgtx.Tx,
@@ -85,21 +82,21 @@ type Storage interface {
 	) ([]*storage.CVJobKind, error)
 	TxDeleteCVJobKinds(ctx context.Context, tx pkgtx.Tx, CVID string) error
 
-	TxPutCVExperience(ctx context.Context, tx pkgtx.Tx, CVID string, experience *storage.CVExperience) error
-	TxGetCVExperience(
+	TxPutExperience(ctx context.Context, tx pkgtx.Tx, CVID string, experience *storage.CVExperience) error
+	TxGetExperiences(
 		ctx context.Context,
 		tx pkgtx.Tx,
 		CVID string,
 	) ([]*storage.CVExperience, error)
-	TxDeleteCVExperience(ctx context.Context, tx pkgtx.Tx, experienceID string) error
+	TxDeleteExperience(ctx context.Context, tx pkgtx.Tx, experienceID string) error
 
-	TxPutCVEducations(ctx context.Context, tx pkgtx.Tx, CVID string, education *storage.CVEducation) error
-	TxGetCVEducations(
+	TxPutEducation(ctx context.Context, tx pkgtx.Tx, CVID string, education *storage.CVEducation) error
+	TxGetEducations(
 		ctx context.Context,
 		tx pkgtx.Tx,
 		CVID string,
 	) ([]*storage.CVEducation, error)
-	TxDeleteCVEducations(ctx context.Context, tx pkgtx.Tx, educationID string) error
+	TxDeleteEducation(ctx context.Context, tx pkgtx.Tx, educationID string) error
 
 	TxPutCustomSections(ctx context.Context, tx pkgtx.Tx, CVID string, education *storage.CVCustomSection) error
 	TxGetCustomSections(
@@ -122,7 +119,7 @@ type Storage interface {
 		ctx context.Context,
 		tx pkgtx.Tx,
 		storyEpisodeID string,
-	) ([]*StoryEpisode, error)
+	) ([]*storage.StoryEpisode, error)
 	TxGetStoriesEpisodes(
 		ctx context.Context,
 		tx pkgtx.Tx,
@@ -151,56 +148,6 @@ func New(s Storage) *Controller {
 	return &Controller{s: s}
 }
 
-type VacancyCategoryID string
-
-type VacancyCategory struct {
-	ID      string
-	Title   string `valid:"stringlength(2|50)"`
-	IconURL string `valid:"stringlength(10|255),media_link"`
-	Rating  int32
-}
-
-type VacancyID string
-
-// Vacancy models for put
-type Vacancy struct {
-	ID        string
-	Title     string   `valid:"stringlength(5|80),required"`
-	Phone     string   `valid:"phone,required"`
-	MinSalary int32    `valid:"range(0|1000000000),required"`
-	MaxSalary int32    `valid:"range(0|1000000000),required"`
-	ImageURLs []string `valid:"stringlength(0|255),media_link"`
-	CompanyID string   `valid:"required"`
-}
-
-type VacancyDetails struct {
-	Vacancy
-	Description          string
-	WorkMonthsExperience int32   `valid:"range(0|1200),required"`
-	WorkSchedule         string  `valid:"stringlength(0|100)"`
-	LocationLatitude     float32 `valid:"latitude"`
-	LocationLongitude    float32 `valid:"longitude"`
-	Type                 VacancyType
-	Address              string
-	CountryCode          int32
-}
-
-type VacancyCategoryShort struct {
-	VacancyID string
-	ID        string
-	Title     string
-}
-
-type VacancyCity struct {
-	VacancyID   string
-	ID          string
-	Name        string
-	CountryCode int32
-	Rating      int32
-}
-
-type Cursor string
-
 type StoryEpisode struct {
 	StoryID  string
 	ID       string
@@ -218,15 +165,76 @@ type CVCustomSection struct {
 	Description string
 }
 
+type CVEducation struct {
+	ID          string
+	Institution string
+	DateFrom    time.Time
+	DateTill    time.Time
+	Speciality  string
+	Description string
+}
+
+type CVExperience struct {
+	ID          string
+	CompanyName string
+	DateFrom    time.Time
+	DateTill    time.Time
+	Position    string
+	Description string
+}
+
+type JobKind struct {
+	ID        string
+	Name      string
+}
+
+type CVJobKind struct {
+	ID   string
+	Name string
+}
+
+type JobType struct {
+	ID        string
+	Name      string
+}
+
+type CVJobType struct {
+	ID   string
+	Name string
+}
+
+type CV struct {
+	ID                   string
+	PersonaID            string
+	Position             string
+	WorkMonthsExperience int32
+	MinSalary            int32
+	MaxSalary            int32
+}
+
+type CVShort struct {
+	ID                   string
+	Position             string
+	WorkMonthsExperience int32
+	MinSalary            int32
+	MaxSalary            int32
+}
+
 type StoriesEpisodeID string
 
 type StoryID string
 
 type CustomSectionID string
 
-func (c Cursor) String() string {
-	return string(c)
-}
+type EducationID string
+
+type ExperienceID string
+
+type JobKindID string
+
+type JobTypeID string
+
+type CVID string
 
 func (vc *StoryEpisode) validate() error {
 	if vc == nil {
@@ -278,104 +286,33 @@ func (vc *CVCustomStory) validate() error {
 	return nil
 }
 
-func (vc *VacancyCategory) validate() error {
-	if vc == nil {
-		return ErrInvalidVacancyCategory
-	}
-
-	var fieldErrors = []struct {
-		Field        string
-		DefaultError error
-	}{
-		{Field: "Title", DefaultError: ErrInvalidVacancyCategoryTitle},
-		{Field: "IconURL", DefaultError: ErrInvalidVacancyCategoryIconURL},
-	}
-
-	if valid, err := govalidator.ValidateStruct(vc); !valid {
-		for _, fe := range fieldErrors {
-			if msg := govalidator.ErrorByField(err, fe.Field); msg != "" {
-				return errors.WithStack(fe.DefaultError)
-			}
-		}
-
-		return errors.New("vacancy category struct is filled with some invalid data")
-	}
-
-	return nil
-}
-
-func (vd *VacancyDetails) validate() error {
-	if vd == nil {
-		return ErrInvalidVacancy
-	}
-
-	var fieldErrors = []struct {
-		Field        string
-		DefaultError error
-	}{
-		{Field: "Title", DefaultError: ErrInvalidVacancyTitle},
-		{Field: "Phone", DefaultError: ErrInvalidVacancyPhone},
-		{Field: "MinSalary", DefaultError: ErrInvalidVacancyMinSalary},
-		{Field: "MaxSalary", DefaultError: ErrInvalidVacancyMaxSalary},
-		{Field: "ImageURL", DefaultError: ErrInvalidVacancyImageURL},
-		{Field: "CompanyID", DefaultError: ErrInvalidVacancyCompanyID},
-		{Field: "Description", DefaultError: ErrInvalidVacancyDescription},
-		{Field: "WorkMonthsExperience", DefaultError: ErrInvalidVacancyWorkMonthsExperience},
-		{Field: "WorkSchedule", DefaultError: ErrInvalidVacancyWorkSchedule},
-		{Field: "LocationLatitude", DefaultError: ErrInvalidVacancyLocationLatitude},
-		{Field: "LocationLongitude", DefaultError: ErrInvalidVacancyLocationLongitude},
-	}
-
-	if valid, err := govalidator.ValidateStruct(vd); !valid {
-		for _, fe := range fieldErrors {
-			if msg := govalidator.ErrorByField(err, fe.Field); msg != "" {
-				return errors.Wrap(fe.DefaultError, msg)
-			}
-		}
-
-		return errors.New("vacancy details struct is filled with some invalid data")
-	}
-
-	return nil
-}
-
-func (c *Controller) PutVacancyCategory(
+// Job Type
+func (c *Controller) PutJobType(
 	ctx context.Context,
-	categoryID *string,
-	category *VacancyCategory,
-) (VacancyCategoryID, error) {
-	var ID VacancyCategoryID
-
-	if err := category.validate(); err != nil {
-		return ID, errors.WithStack(err)
-	}
+	jobType *JobType,
+) (JobTypeID, error) {
+	var ID JobTypeID
 
 	if err := pkgtx.RunInTx(ctx, c.s, func(ctx context.Context, tx pkgtx.Tx) error {
-		if categoryID != nil {
-			switch _, err := c.s.TxGetVacancyCategory(ctx, tx, *categoryID); errors.Cause(err) {
+		if &jobType.ID != nil {
+			switch _, err := c.s.TxGetJobTypes(ctx, tx); errors.Cause(err) {
 			case nil:
-				ID = VacancyCategoryID(*categoryID)
+				ID = JobTypeID(jobType.ID)
 			case storage.ErrNotFound:
-				return errors.WithStack(ErrVacancyCategoryNotFound)
+				return errors.WithStack(ErrJobTypesNotFound)
 			default:
 				return errors.WithStack(err)
 			}
 		} else {
-			ID = VacancyCategoryID(uuid.NewV4().String())
+			ID = JobTypeID(uuid.NewV4().String())
 		}
 
-		now := time.Now()
-
-		svc := storage.VacancyCategory{
+		jobType := storage.JobType{
 			ID:        string(ID),
-			Title:     category.Title,
-			IconURL:   category.IconURL,
-			Rating:    category.Rating,
-			CreatedAt: now,
-			UpdatedAt: now,
+			Name:      jobType.Name,
 		}
 
-		return errors.WithStack(c.s.TxPutVacancyCategory(ctx, tx, &svc))
+		return errors.WithStack(c.s.TxPutJobType(ctx, tx, &jobType))
 	}); err != nil {
 		return ID, errors.WithStack(err)
 	}
@@ -383,8 +320,10 @@ func (c *Controller) PutVacancyCategory(
 	return ID, nil
 }
 
-func (c *Controller) GetVacancyCategory(ctx context.Context, categoryID string) (*VacancyCategory, error) {
-	vc, err := c.s.TxGetVacancyCategory(ctx, c.s.NoTx(), categoryID)
+func (c *Controller) GetJobTypes(
+	ctx context.Context,
+) ([]*JobType, error) {
+	jt, err := c.s.TxGetJobTypes(ctx, c.s.NoTx())
 
 	switch errors.Cause(err) {
 	case nil:
@@ -392,47 +331,26 @@ func (c *Controller) GetVacancyCategory(ctx context.Context, categoryID string) 
 		return nil, errors.WithStack(err)
 	}
 
-	return &VacancyCategory{
-		ID:      vc.ID,
-		Title:   vc.Title,
-		IconURL: vc.IconURL,
-		Rating:  vc.Rating,
-	}, nil
-}
-
-func (c *Controller) GetVacanciesCategoriesList(ctx context.Context, rating *int32) ([]*VacancyCategory, error) {
-	var r int32 = 0
-	if rating != nil {
-		r = *rating
-	}
-
-	vcs, err := c.s.TxGetVacanciesCategoriesList(ctx, c.s.NoTx(), r)
-	if err != nil {
-		return nil, errors.WithStack(err)
-	}
-
-	cvcs := make([]*VacancyCategory, len(vcs))
-	for idx, vc := range vcs {
-		cvcs[idx] = &VacancyCategory{
-			ID:      vc.ID,
-			Title:   vc.Title,
-			IconURL: vc.IconURL,
-			Rating:  vc.Rating,
+	jobTypes := make([]*JobType, len(jt))
+	for idx, jobType := range jt {
+		jobTypes[idx] = &JobType{
+			ID:        jobType.ID,
+			Name:      jobType.Name,
 		}
 	}
 
-	return cvcs, nil
+	return jobTypes, nil
 }
 
-func (c *Controller) DeleteVacancyCategory(
+func (c *Controller) DeleteJobType(
 	ctx context.Context,
-	categoryID string,
+	jobTypeID string,
 ) error {
 	if err := pkgtx.RunInTx(ctx, c.s, func(ctx context.Context, tx pkgtx.Tx) error {
-		switch err := c.s.TxDeleteVacancyCategory(ctx, tx, categoryID); errors.Cause(err) {
+		switch err := c.s.TxDeleteJobType(ctx, tx, jobTypeID); errors.Cause(err) {
 		case nil:
 		case storage.ErrNotFound:
-			return errors.WithStack(ErrVacancyCategoryNotFound)
+			return errors.WithStack(ErrJobTypeNotFound)
 		default:
 			return errors.WithStack(err)
 		}
@@ -445,261 +363,265 @@ func (c *Controller) DeleteVacancyCategory(
 	return nil
 }
 
-func (c *Controller) PutVacancy(
+// CV Job Types
+func (c *Controller) PutCVJobTypes(
 	ctx context.Context,
-	vacancyID *string,
-	vacancy *VacancyDetails,
-	categoryIDs []string,
-	cityIDs []string,
-) (VacancyID, error) {
-	var vid VacancyID
-
-	if err := vacancy.validate(); err != nil {
-		return vid, errors.WithStack(err)
-	}
+	CVID string,
+	jobTypesIDs []string,
+) error {
 
 	if err := pkgtx.RunInTx(ctx, c.s, func(ctx context.Context, tx pkgtx.Tx) error {
-		// Look for vacancy id
-		if vacancyID != nil {
-			switch _, err := c.s.TxGetVacancyDetails(ctx, tx, *vacancyID); errors.Cause(err) {
-			case nil:
-				vid = VacancyID(*vacancyID)
-			case storage.ErrNotFound:
-				return errors.WithStack(ErrVacancyNotFound)
-			default:
+		if err := c.s.TxDeleteCVJobTypes(ctx, tx, CVID); err != nil {
+			return errors.WithStack(err)
+		}
+
+		if len(jobTypesIDs) > 0 {
+			if err := c.s.TxPutCVJobTypes(ctx, tx, CVID, jobTypesIDs); err != nil {
 				return errors.WithStack(err)
 			}
-		} else {
-			vid = VacancyID(uuid.NewV4().String())
 		}
+		return nil
+	}); err != nil {
+		return errors.WithStack(err)
+	}
 
-		vacancyType, err := toStorageVacancyType(vacancy.Type)
-		if err != nil {
-			return errors.WithStack(err)
+	return nil
+}
+
+func (c *Controller) GetCVJobTypes(
+	ctx context.Context,
+	CVID string,
+) ([]*CVJobType, error) {
+	jk, err := c.s.TxGetCVJobTypes(ctx, c.s.NoTx(), CVID)
+
+	switch errors.Cause(err) {
+	case nil:
+	default:
+		return nil, errors.WithStack(err)
+	}
+
+	jobTypes := make([]*CVJobType, len(jk))
+	for idx, jobType := range jk {
+		jobTypes[idx] = &CVJobType{
+			ID:   jobType.ID,
+			Name: jobType.Name,
 		}
+	}
 
-		v := toStorageVacancyDetails(string(vid), vacancyType, vacancy)
+	return jobTypes, nil
+}
 
-		// Update vacancy
-		if err := c.s.TxPutVacancy(ctx, tx, v); err != nil {
-			return errors.WithStack(err)
-		}
-
-		// Update vacancy categories
-		if err := updateVacancyCategories(ctx, tx, c, vid, categoryIDs); err != nil {
-			return errors.WithStack(err)
-		}
-
-		// Update vacancy cities
-		if err := updateVacancyCities(ctx, tx, c, vid, cityIDs); err != nil {
-			return errors.WithStack(err)
-		}
-
-		// Update vacancy images
-		if err := updateVacancyImages(ctx, c, tx, vid, vacancy); err != nil {
+func (c *Controller) DeleteCVJobTypes(
+	ctx context.Context,
+	CVID string,
+) error {
+	if err := pkgtx.RunInTx(ctx, c.s, func(ctx context.Context, tx pkgtx.Tx) error {
+		switch err := c.s.TxDeleteCVJobTypes(ctx, tx, CVID); errors.Cause(err) {
+		case nil:
+		case storage.ErrNotFound:
+			return errors.WithStack(ErrCVJobTypesNotFound)
+		default:
 			return errors.WithStack(err)
 		}
 
 		return nil
 	}); err != nil {
-		return vid, errors.WithStack(err)
-	}
-
-	return vid, nil
-}
-
-func updateVacancyCategories(
-	ctx context.Context,
-	tx pkgtx.Tx,
-	c *Controller,
-	vid VacancyID,
-	categoryIDs []string,
-) error {
-	if err := c.s.TxDeleteVacancyCategories(ctx, tx, string(vid)); err != nil {
 		return errors.WithStack(err)
 	}
 
-	if len(categoryIDs) > 0 {
-		if err := c.s.TxPutVacancyCategories(ctx, tx, string(vid), categoryIDs); err != nil {
-			return errors.WithStack(err)
-		}
-	}
 	return nil
 }
 
-func updateVacancyCities(
+// Job Kinds
+func (c *Controller) PutJobKind(
 	ctx context.Context,
-	tx pkgtx.Tx,
-	c *Controller,
-	vid VacancyID,
-	cityIDs []string,
-) error {
-	if err := c.s.TxDeleteVacancyCities(ctx, tx, string(vid)); err != nil {
-		return errors.WithStack(err)
+	jobKind *JobKind,
+) (JobKindID, error) {
+	var ID JobKindID
+
+	if err := pkgtx.RunInTx(ctx, c.s, func(ctx context.Context, tx pkgtx.Tx) error {
+		if &jobKind.ID != nil {
+			switch _, err := c.s.TxGetJobKinds(ctx, tx); errors.Cause(err) {
+			case nil:
+				ID = JobKindID(jobKind.ID)
+			case storage.ErrNotFound:
+				return errors.WithStack(ErrJobKindsNotFound)
+			default:
+				return errors.WithStack(err)
+			}
+		} else {
+			ID = JobKindID(uuid.NewV4().String())
+		}
+
+		jobKind := storage.JobKind{
+			ID:        string(ID),
+			Name:      jobKind.Name,
+		}
+
+		return errors.WithStack(c.s.TxPutJobKind(ctx, tx, &jobKind))
+	}); err != nil {
+		return ID, errors.WithStack(err)
 	}
 
-	if len(cityIDs) > 0 {
-		if err := c.s.TxPutVacancyCities(ctx, tx, string(vid), cityIDs); err != nil {
-			return errors.WithStack(err)
-		}
-	}
-	return nil
+	return ID, nil
 }
 
-func updateVacancyImages(
+func (c *Controller) GetJobKinds(
 	ctx context.Context,
-	c *Controller,
-	tx pkgtx.Tx,
-	vid VacancyID,
-	vacancy *VacancyDetails,
-) error {
-	gvi, err := c.s.TxGetVacanciesImages(ctx, tx, []string{string(vid)})
-	if err != nil {
-		return errors.WithStack(err)
+) ([]*JobKind, error) {
+	jk, err := c.s.TxGetJobKinds(ctx, c.s.NoTx())
+
+	switch errors.Cause(err) {
+	case nil:
+	default:
+		return nil, errors.WithStack(err)
 	}
 
-	if equal(gvi[string(vid)], vacancy.ImageURLs) {
+	jobKinds := make([]*JobKind, len(jk))
+	for idx, jobKind := range jk {
+		jobKinds[idx] = &JobKind{
+			ID:        jobKind.ID,
+			Name:      jobKind.Name,
+		}
+	}
+
+	return jobKinds, nil
+}
+
+func (c *Controller) DeleteJobKind(
+	ctx context.Context,
+	jobKindID string,
+) error {
+	if err := pkgtx.RunInTx(ctx, c.s, func(ctx context.Context, tx pkgtx.Tx) error {
+		switch err := c.s.TxDeleteJobKind(ctx, tx, jobKindID); errors.Cause(err) {
+		case nil:
+		case storage.ErrNotFound:
+			return errors.WithStack(ErrJobKindNotFound)
+		default:
+			return errors.WithStack(err)
+		}
+
 		return nil
-	}
-
-	if err := c.s.TxDeleteVacancyImages(ctx, tx, string(vid)); err != nil {
+	}); err != nil {
 		return errors.WithStack(err)
-	}
-
-	if len(vacancy.ImageURLs) > 0 {
-		return errors.WithStack(c.s.TxPutVacancyImages(ctx, tx, string(vid), vacancy.ImageURLs))
 	}
 
 	return nil
 }
 
-func (c *Controller) GetVacancyDetails(ctx context.Context, vacancyID string) (*VacancyDetails, error) {
-	// Get vacancy details from DB
-	vd, err := c.s.TxGetVacancyDetails(ctx, c.s.NoTx(), vacancyID)
+// CV Job Kinds
+func (c *Controller) PutCVJobKinds(
+	ctx context.Context,
+	CVID string,
+	jobKindsIDs []string,
+) error {
 
-	switch errors.Cause(err) {
-	case nil:
-	case storage.ErrNotFound:
-		return nil, errors.WithStack(ErrVacancyNotFound)
-	default:
-		return nil, errors.WithStack(err)
+	if err := pkgtx.RunInTx(ctx, c.s, func(ctx context.Context, tx pkgtx.Tx) error {
+		if err := c.s.TxDeleteCVJobKinds(ctx, tx, CVID); err != nil {
+			return errors.WithStack(err)
+		}
+
+		if len(jobKindsIDs) > 0 {
+			if err := c.s.TxPutCVJobKinds(ctx, tx, CVID, jobKindsIDs); err != nil {
+				return errors.WithStack(err)
+			}
+		}
+		return nil
+	}); err != nil {
+		return errors.WithStack(err)
 	}
 
-	// Get vacancy images from DB
-	vi, err := c.s.TxGetVacanciesImages(ctx, c.s.NoTx(), []string{vacancyID})
-
-	switch errors.Cause(err) {
-	case nil:
-	case storage.ErrNotFound:
-		return nil, errors.WithStack(ErrVacancyImagesNotFound)
-	default:
-		return nil, errors.WithStack(err)
-	}
-
-	vacancyType, err := fromStorageVacancyType(vd.Type)
-	if err != nil {
-		return nil, errors.WithStack(err)
-	}
-
-	return &VacancyDetails{
-		Vacancy: Vacancy{
-			ID:        vd.ID,
-			Title:     vd.Title,
-			Phone:     vd.Phone,
-			MinSalary: vd.MinSalary,
-			MaxSalary: vd.MaxSalary,
-			ImageURLs: vi[vacancyID],
-			CompanyID: vd.CompanyID,
-		},
-		Description:          vd.Description,
-		WorkMonthsExperience: vd.WorkMonthsExperience,
-		WorkSchedule:         vd.WorkSchedule,
-		LocationLatitude:     vd.LocationLatitude,
-		LocationLongitude:    vd.LocationLongitude,
-		Type:                 vacancyType,
-		Address:              vd.Address,
-		CountryCode:          vd.CountryCode,
-	}, nil
+	return nil
 }
 
-func (c *Controller) GetVacanciesList(
+func (c *Controller) GetCVJobKinds(
 	ctx context.Context,
-	categoriesIDs []string,
-	cursor *Cursor,
-	limit int,
-) ([]*Vacancy, *Cursor, error) {
-	cursorData, err := toCursorData(cursor)
-	if err != nil || (cursorData != nil && !equal(cursorData.CategoriesIDs, categoriesIDs)) {
-		return nil, nil, errors.WithStack(ErrInvalidCursor)
-	}
-
-	maxLimit := 100
-	if limit > maxLimit || limit <= 0 {
-		limit = maxLimit
-	}
-
-	vcs, storageCursor, err := c.s.TxGetVacanciesList(
-		ctx,
-		c.s.NoTx(),
-		categoriesIDs,
-		limit,
-		toStorageCursor(cursorData),
-	)
-
-	switch err {
-	case nil:
-	default:
-		return nil, nil, errors.WithStack(err)
-	}
-
-	controllerCursor, err := toCursor(storageCursor, categoriesIDs)
-	if err != nil {
-		return nil, nil, errors.WithStack(err)
-	}
-
-	vacancyIDs := extractVacancyIDs(vcs)
-	vacanciesImagesMap, err := c.s.TxGetVacanciesImages(ctx, c.s.NoTx(), vacancyIDs)
+	CVID string,
+) ([]*CVJobKind, error) {
+	jk, err := c.s.TxGetCVJobKinds(ctx, c.s.NoTx(), CVID)
 
 	switch errors.Cause(err) {
 	case nil:
-	case storage.ErrNotFound:
-		return nil, nil, errors.WithStack(ErrVacancyImagesNotFound)
 	default:
-		return nil, nil, errors.WithStack(err)
+		return nil, errors.WithStack(err)
 	}
 
-	controllerVacancies := make([]*Vacancy, len(vcs))
-
-	for idx, v := range vcs {
-		controllerVacancies[idx] = &Vacancy{
-			ID:        v.ID,
-			Title:     v.Title,
-			Phone:     v.Phone,
-			MinSalary: v.MinSalary,
-			MaxSalary: v.MaxSalary,
-			ImageURLs: vacanciesImagesMap[v.ID],
-			CompanyID: v.CompanyID,
+	cvJobKinds := make([]*CVJobKind, len(jk))
+	for idx, cvJobKind := range jk {
+		cvJobKinds[idx] = &CVJobKind{
+			ID:   cvJobKind.ID,
+			Name: cvJobKind.Name,
 		}
 	}
 
-	return controllerVacancies, controllerCursor, nil
+	return cvJobKinds, nil
 }
 
-func extractVacancyIDs(vcs []*storage.Vacancy) []string {
-	vacancyIDs := make([]string, len(vcs))
-	for idx := range vcs {
-		vacancyIDs[idx] = vcs[idx].ID
+func (c *Controller) DeleteCVJobKinds(
+	ctx context.Context,
+	CVID string,
+) error {
+	if err := pkgtx.RunInTx(ctx, c.s, func(ctx context.Context, tx pkgtx.Tx) error {
+		switch err := c.s.TxDeleteCVJobKinds(ctx, tx, CVID); errors.Cause(err) {
+		case nil:
+		case storage.ErrNotFound:
+			return errors.WithStack(ErrCVJobKindNotFound)
+		default:
+			return errors.WithStack(err)
+		}
+
+		return nil
+	}); err != nil {
+		return errors.WithStack(err)
 	}
 
-	return vacancyIDs
+	return nil
 }
 
-func (c *Controller) GetVacanciesCategories(
+// Experience
+func (c *Controller) PutExperience(
 	ctx context.Context,
-	vacancyIDs []string,
-) ([]*VacancyCategoryShort, error) {
-	// Get categories
-	vscs, err := c.s.TxGetVacanciesCategories(ctx, c.s.NoTx(), vacancyIDs)
+	CVID string,
+	experience *CVExperience,
+) (ExperienceID, error) {
+	var ID ExperienceID
+
+	if err := pkgtx.RunInTx(ctx, c.s, func(ctx context.Context, tx pkgtx.Tx) error {
+		if &experience.ID != nil {
+			switch _, err := c.s.TxGetExperiences(ctx, tx, CVID); errors.Cause(err) {
+			case nil:
+				ID = ExperienceID(experience.ID)
+			case storage.ErrNotFound:
+				return errors.WithStack(ErrExperiencesNotFound)
+			default:
+				return errors.WithStack(err)
+			}
+		} else {
+			ID = ExperienceID(uuid.NewV4().String())
+		}
+
+		experience := storage.CVExperience{
+			ID:          string(ID),
+			CompanyName: experience.CompanyName,
+			DateFrom:    experience.DateFrom,
+			DateTill:    experience.DateTill,
+			Position:    experience.Position,
+			Description: experience.Description,
+		}
+
+		return errors.WithStack(c.s.TxPutExperience(ctx, tx, CVID, &experience))
+	}); err != nil {
+		return ID, errors.WithStack(err)
+	}
+
+	return ID, nil
+}
+
+func (c *Controller) GetExperiences(
+	ctx context.Context,
+	CVID string,
+) ([]*CVExperience, error) {
+	se, err := c.s.TxGetExperiences(ctx, c.s.NoTx(), CVID)
 
 	switch errors.Cause(err) {
 	case nil:
@@ -707,24 +629,86 @@ func (c *Controller) GetVacanciesCategories(
 		return nil, errors.WithStack(err)
 	}
 
-	categories := make([]*VacancyCategoryShort, len(vscs))
-	for idx, vacancy := range vscs {
-		categories[idx] = &VacancyCategoryShort{
-			VacancyID: vacancy.VacancyID,
-			ID:        vacancy.ID,
-			Title:     vacancy.Title,
+	experiences := make([]*CVExperience, len(se))
+	for idx, experience := range se {
+		experiences[idx] = &CVExperience{
+			ID:          experience.ID,
+			CompanyName: experience.CompanyName,
+			DateFrom:    experience.DateFrom,
+			DateTill:    experience.DateTill,
+			Position:    experience.Position,
+			Description: experience.Description,
 		}
 	}
 
-	return categories, nil
+	return experiences, nil
 }
 
-func (c *Controller) GetVacancyCities(
+func (c *Controller) DeleteExperience(
 	ctx context.Context,
-	vacancyIDs []string,
-) ([]*VacancyCity, error) {
-	// Get categories
-	vcs, err := c.s.TxGetVacancyCities(ctx, c.s.NoTx(), vacancyIDs)
+	experienceID string,
+) error {
+	if err := pkgtx.RunInTx(ctx, c.s, func(ctx context.Context, tx pkgtx.Tx) error {
+		switch err := c.s.TxDeleteExperience(ctx, tx, experienceID); errors.Cause(err) {
+		case nil:
+		case storage.ErrNotFound:
+			return errors.WithStack(ErrExperienceNotFound)
+		default:
+			return errors.WithStack(err)
+		}
+
+		return nil
+	}); err != nil {
+		return errors.WithStack(err)
+	}
+
+	return nil
+}
+
+// Education
+func (c *Controller) PutEducation(
+	ctx context.Context,
+	CVID string,
+	education *CVEducation,
+) (EducationID, error) {
+	var ID EducationID
+
+	if err := pkgtx.RunInTx(ctx, c.s, func(ctx context.Context, tx pkgtx.Tx) error {
+		if &education.ID != nil {
+			switch _, err := c.s.TxGetStories(ctx, tx, CVID); errors.Cause(err) {
+			case nil:
+				ID = EducationID(education.ID)
+			case storage.ErrNotFound:
+				return errors.WithStack(ErrCustomSectionsNotFound)
+			default:
+				return errors.WithStack(err)
+			}
+		} else {
+			ID = EducationID(uuid.NewV4().String())
+		}
+
+		education := storage.CVEducation{
+			ID:          string(ID),
+			Institution: education.Institution,
+			DateFrom:    education.DateFrom,
+			DateTill:    education.DateTill,
+			Speciality:  education.Speciality,
+			Description: education.Description,
+		}
+
+		return errors.WithStack(c.s.TxPutEducation(ctx, tx, CVID, &education))
+	}); err != nil {
+		return ID, errors.WithStack(err)
+	}
+
+	return ID, nil
+}
+
+func (c *Controller) GetEducations(
+	ctx context.Context,
+	CVID string,
+) ([]*CVEducation, error) {
+	se, err := c.s.TxGetEducations(ctx, c.s.NoTx(), CVID)
 
 	switch errors.Cause(err) {
 	case nil:
@@ -732,25 +716,47 @@ func (c *Controller) GetVacancyCities(
 		return nil, errors.WithStack(err)
 	}
 
-	cities := make([]*VacancyCity, len(vcs))
-	for idx, city := range vcs {
-		cities[idx] = &VacancyCity{
-			VacancyID:   city.VacancyID,
-			ID:          city.ID,
-			Name:        city.Name,
-			CountryCode: city.CountryCode,
-			Rating:      city.Rating,
+	educations := make([]*CVEducation, len(se))
+	for idx, education := range se {
+		educations[idx] = &CVEducation{
+			ID:          education.ID,
+			Institution: education.Institution,
+			DateFrom:    education.DateFrom,
+			DateTill:    education.DateTill,
+			Speciality:  education.Speciality,
+			Description: education.Description,
 		}
 	}
 
-	return cities, nil
+	return educations, nil
+}
+
+func (c *Controller) DeleteEducation(
+	ctx context.Context,
+	educationID string,
+) error {
+	if err := pkgtx.RunInTx(ctx, c.s, func(ctx context.Context, tx pkgtx.Tx) error {
+		switch err := c.s.TxDeleteEducation(ctx, tx, educationID); errors.Cause(err) {
+		case nil:
+		case storage.ErrNotFound:
+			return errors.WithStack(ErrEducationNotFound)
+		default:
+			return errors.WithStack(err)
+		}
+
+		return nil
+	}); err != nil {
+		return errors.WithStack(err)
+	}
+
+	return nil
 }
 
 // Custom section
 func (c *Controller) PutCustomSections(
 	ctx context.Context,
 	CVID string,
-	education *CVCustomSection,
+	customSection *CVCustomSection,
 ) (CustomSectionID, error) {
 	var ID CustomSectionID
 
@@ -759,10 +765,10 @@ func (c *Controller) PutCustomSections(
 	//}
 
 	if err := pkgtx.RunInTx(ctx, c.s, func(ctx context.Context, tx pkgtx.Tx) error {
-		if &education.ID != nil {
+		if &customSection.ID != nil {
 			switch _, err := c.s.TxGetStories(ctx, tx, CVID); errors.Cause(err) {
 			case nil:
-				ID = CustomSectionID(education.ID)
+				ID = CustomSectionID(customSection.ID)
 			case storage.ErrNotFound:
 				return errors.WithStack(ErrCustomSectionsNotFound)
 			default:
@@ -774,7 +780,7 @@ func (c *Controller) PutCustomSections(
 
 		customSection := storage.CVCustomSection{
 			ID:          string(ID),
-			Description: education.Description,
+			Description: customSection.Description,
 		}
 
 		return errors.WithStack(c.s.TxPutCustomSections(ctx, tx, CVID, &customSection))
@@ -1002,6 +1008,92 @@ func (c *Controller) DeleteStoriesEpisodes(
 }
 
 // CV
+func (c *Controller) PutCV(
+	ctx context.Context,
+	cv *CV,
+) (CVID, error) {
+	var ID CVID
+
+	if err := pkgtx.RunInTx(ctx, c.s, func(ctx context.Context, tx pkgtx.Tx) error {
+		if &cv.ID != nil {
+			switch _, err := c.s.TxGetCV(ctx, tx, cv.ID); errors.Cause(err) {
+			case nil:
+				ID = CVID(cv.ID)
+			case storage.ErrNotFound:
+				return errors.WithStack(ErrCVNotFound)
+			default:
+				return errors.WithStack(err)
+			}
+		} else {
+			ID = CVID(uuid.NewV4().String())
+		}
+
+		cv := storage.CV{
+			ID:                   string(ID),
+			PersonaID:            cv.PersonaID,
+			Position:             cv.Position,
+			WorkMonthsExperience: cv.WorkMonthsExperience,
+			MinSalary:            cv.MinSalary,
+			MaxSalary:            cv.MaxSalary,
+		}
+
+		return errors.WithStack(c.s.TxPutCV(ctx, tx, &cv))
+	}); err != nil {
+		return ID, errors.WithStack(err)
+	}
+
+	return ID, nil
+}
+
+func (c *Controller) GetCV(ctx context.Context, CVID string) (*CV, error) {
+	// Get vacancy details from DB
+	cv, err := c.s.TxGetCV(ctx, c.s.NoTx(), CVID)
+
+	switch errors.Cause(err) {
+	case nil:
+	case storage.ErrNotFound:
+		return nil, errors.WithStack(ErrCVNotFound)
+	default:
+		return nil, errors.WithStack(err)
+	}
+
+	return &CV{
+		ID:                   cv.ID,
+		PersonaID:            cv.PersonaID,
+		Position:             cv.Position,
+		WorkMonthsExperience: cv.WorkMonthsExperience,
+		MinSalary:            cv.MinSalary,
+		MaxSalary:            cv.MaxSalary,
+	}, nil
+}
+
+func (c *Controller) GetCVs(
+	ctx context.Context,
+	personaID string,
+) ([]*CVShort, error) {
+	// Get cvs
+	cvs, err := c.s.TxGetCVs(ctx, c.s.NoTx(), personaID)
+
+	switch errors.Cause(err) {
+	case nil:
+	default:
+		return nil, errors.WithStack(err)
+	}
+
+	cvShorts := make([]*CVShort, len(cvs))
+	for idx, cvShort := range cvs {
+		cvShorts[idx] = &CVShort{
+			ID:                   cvShort.ID,
+			Position:             cvShort.Position,
+			WorkMonthsExperience: cvShort.WorkMonthsExperience,
+			MinSalary:            cvShort.MinSalary,
+			MaxSalary:            cvShort.MaxSalary,
+		}
+	}
+
+	return cvShorts, nil
+}
+
 func (c *Controller) DeleteCV(
 	ctx context.Context,
 	CVID string,
@@ -1021,45 +1113,4 @@ func (c *Controller) DeleteCV(
 	}
 
 	return nil
-}
-
-// Mappings
-
-func toStorageVacancyDetails(vid string, vacancyType storage.VacancyType, vd *VacancyDetails) *storage.VacancyDetails {
-	now := time.Now()
-
-	return &storage.VacancyDetails{
-		Vacancy: storage.Vacancy{
-			ID:        vid,
-			Title:     vd.Title,
-			Phone:     vd.Phone,
-			MinSalary: vd.MinSalary,
-			MaxSalary: vd.MaxSalary,
-			CompanyID: vd.CompanyID,
-			CreatedAt: now,
-			UpdatedAt: now,
-		},
-		Description:          vd.Description,
-		WorkMonthsExperience: vd.WorkMonthsExperience,
-		WorkSchedule:         vd.WorkSchedule,
-		LocationLatitude:     vd.LocationLatitude,
-		LocationLongitude:    vd.LocationLongitude,
-		Type:                 vacancyType,
-		Address:              vd.Address,
-		CountryCode:          vd.CountryCode,
-	}
-}
-
-func equal(a, b []string) bool {
-	if len(a) != len(b) {
-		return false
-	}
-
-	for i, v := range a {
-		if v != b[i] {
-			return false
-		}
-	}
-
-	return true
 }

@@ -289,7 +289,7 @@ var migrations = []*migrate.Migration{
 			`CREATE TABLE IF NOT EXISTS cv (
 				id            			uuid					PRIMARY KEY,
 				persona_id	  			uuid					REFERENCES persona (auth_id) ON DELETE CASCADE,
-				position				VARCHAR(255)			NOT NULL,
+				position				VARCHAR(255)			NULL,
 				work_months_experience  INTEGER					NULL,
 				min_salary	  			INTEGER					NULL,
 				max_salary	  			INTEGER					NULL,

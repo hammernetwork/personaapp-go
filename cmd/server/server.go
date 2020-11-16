@@ -3,7 +3,6 @@ package server
 import (
 	"log"
 	"net"
-	cityController "personaapp/internal/controllers/city/controller"
 	"personaapp/internal/server"
 	"personaapp/pkg/closeable"
 
@@ -16,17 +15,21 @@ import (
 
 	authController "personaapp/internal/controllers/auth/controller"
 	authStorage "personaapp/internal/controllers/auth/storage"
+	cityController "personaapp/internal/controllers/city/controller"
 	cityStorage "personaapp/internal/controllers/city/storage"
 	companyController "personaapp/internal/controllers/company/controller"
 	companyStorage "personaapp/internal/controllers/company/storage"
 	vacancyController "personaapp/internal/controllers/vacancy/controller"
 	vacancyStorage "personaapp/internal/controllers/vacancy/storage"
+	cvController "personaapp/internal/controllers/cv/controller"
+	cvStorage "personaapp/internal/controllers/cv/storage"
 	pkgcmd "personaapp/pkg/cmd"
 	"personaapp/pkg/flag"
 	apiauth "personaapp/pkg/grpcapi/auth"
 	apicity "personaapp/pkg/grpcapi/city"
 	apicompany "personaapp/pkg/grpcapi/company"
 	apivacancy "personaapp/pkg/grpcapi/vacancy"
+	apicv "personaapp/pkg/grpcapi/cv"
 	"personaapp/pkg/postgresql"
 )
 
@@ -104,6 +107,7 @@ func registerServer(grpcServer *grpc.Server, srv *server.Server) {
 	apicompany.RegisterPersonaAppCompanyServer(grpcServer, srv)
 	apivacancy.RegisterPersonaAppVacancyServer(grpcServer, srv)
 	apicity.RegisterPersonaAppCityServer(grpcServer, srv)
+	apicv.RegisterPersonaAppCVServer(grpcServer, srv)
 	reflection.Register(grpcServer)
 }
 
@@ -113,6 +117,7 @@ func createControllers(pg *postgresql.Storage, cfg *Config) *server.Server {
 		newCompanyController(pg),
 		newVacancyController(pg),
 		newCityController(pg),
+		newCVController(pg),
 	)
 }
 
@@ -130,4 +135,8 @@ func newVacancyController(pg *postgresql.Storage) *vacancyController.Controller 
 
 func newCityController(pg *postgresql.Storage) *cityController.Controller {
 	return cityController.New(cityStorage.New(pg))
+}
+
+func newCVController(pg *postgresql.Storage) *cvController.Controller {
+	return cvController.New(cvStorage.New(pg))
 }
