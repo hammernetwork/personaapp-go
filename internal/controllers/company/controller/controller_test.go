@@ -2,6 +2,7 @@ package controller_test
 
 import (
 	"context"
+	uuid "github.com/satori/go.uuid"
 	"personaapp/internal/controllers/company/storage"
 	"testing"
 	"time"
@@ -133,6 +134,27 @@ func TestUpdateExistingCompany(t *testing.T) {
 		require.Equal(t, description, company.Description)
 		require.Equal(t, logoURL, company.LogoURL)
 	})
+
+	title = "Title"
+	iconURL := "https://logourl.com"
+
+	activityID := uuid.NewV4().String()
+	af := companyController.ActivityField{
+		Title:   title,
+		IconURL: iconURL,
+	}
+
+	activityFields := []string{activityID}
+
+	t.Run("update activity fields", func(t *testing.T) {
+		require.NoError(t, cc.UpdateActivityField(context.Background(), &activityID, &af))
+		require.NoError(t, cc.UpdateActivityFields(context.Background(), token.AccountID, activityFields))
+
+		fields, err := cc.GetActivityFields(context.Background())
+		require.NoError(t, err)
+		require.Equal(t, title, fields[0].Title)
+		require.Equal(t, description, fields[0].IconURL)
+	})
 }
 
 func TestUpdateNonExistingCompany(t *testing.T) {
@@ -155,4 +177,72 @@ func TestUpdateNonExistingCompany(t *testing.T) {
 	t.Run("normal flow", func(t *testing.T) {
 		require.Error(t, companyController.ErrCompanyNotFound, cc.Update(context.Background(), &cd))
 	})
+}
+
+func TestGetAndUpdateActivityFields(t *testing.T) {
+	as, authCloser := testutils.InitAuthStorage(t)
+	defer func() {
+		if err := authCloser(); err != nil {
+			t.Error(err)
+		}
+	}()
+
+	ac := authController.New(authCfg, as)
+
+	cs, companyCloser := InitStorage(t)
+	defer func() {
+		if err := companyCloser(); err != nil {
+			t.Error(err)
+		}
+	}()
+
+	cc := companyController.New(cs)
+
+	rd := authController.RegisterData{
+		Email:    "companytest2@gmail.com",
+		Phone:    "+380500000002",
+		Account:  authController.AccountTypeCompany,
+		Password: "Password2",
+	}
+
+	_, err := ac.Register(context.Background(), &rd)
+	if err != nil {
+		t.Error(err)
+	}
+
+	title := "Title"
+	iconURL := "https://logourl.com"
+
+	activityID := uuid.NewV4().String()
+	af := companyController.ActivityField{
+		Title:   title,
+		IconURL: iconURL,
+	}
+
+	t.Run("insert activity field", func(t *testing.T) {
+		require.NoError(t, cc.UpdateActivityField(context.Background(), &activityID, &af))
+
+		activityField, err := cc.GetActivityField(context.Background(), activityID)
+		require.NoError(t, err)
+		require.Equal(t, title, activityField.Title)
+		require.Equal(t, iconURL, activityField.IconURL)
+	})
+
+	title = "Title2"
+	iconURL = "https://logourl2.com"
+
+	af = companyController.ActivityField{
+		Title:   title,
+		IconURL: iconURL,
+	}
+
+	t.Run("update activity field", func(t *testing.T) {
+		require.NoError(t, cc.UpdateActivityField(context.Background(), &activityID, &af))
+
+		activityField, err := cc.GetActivityField(context.Background(), activityID)
+		require.NoError(t, err)
+		require.Equal(t, title, activityField.Title)
+		require.Equal(t, iconURL, activityField.IconURL)
+	})
+
 }

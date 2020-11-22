@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/asaskevich/govalidator"
 	"github.com/cockroachdb/errors"
+	uuid "github.com/satori/go.uuid"
 	"personaapp/internal/controllers/company/storage"
 	pkgtx "personaapp/pkg/tx"
 	"time"
@@ -19,6 +20,7 @@ func init() {
 var (
 	ErrCompanyNotFound          = errors.New("company not found")
 	ErrCategoryNotFound         = errors.New("category not found")
+	ErrActivityFieldNotFound    = errors.New("activity field not found")
 	ErrCityNotFound             = errors.New("city not found")
 	ErrInvalidTitle             = errors.New("invalid title")
 	ErrInvalidTitleLength       = errors.New("invalid title length")
@@ -33,6 +35,16 @@ type Storage interface {
 	TxGetCompanyByID(ctx context.Context, tx pkgtx.Tx, authID string) (*storage.CompanyData, error)
 	TxGetCompaniesByID(ctx context.Context, tx pkgtx.Tx, companyIDs []string) ([]*storage.CompanyData, error)
 	TxPutCompany(ctx context.Context, tx pkgtx.Tx, cs *storage.CompanyData) error
+	TxPutActivityField(ctx context.Context, tx pkgtx.Tx, af *storage.ActivityField) error
+	TxGetActivityFields(
+		ctx context.Context,
+		tx pkgtx.Tx,
+	) (_ []*storage.ActivityField, rerr error)
+	TxGetActivityFieldsByID(
+		ctx context.Context,
+		tx pkgtx.Tx,
+		activityFieldID string,
+	) (_ *storage.ActivityField, rerr error)
 	TxGetActivityFieldsByCompanyID(
 		ctx context.Context,
 		tx pkgtx.Tx,
@@ -75,6 +87,12 @@ type Company struct {
 	Title          string
 	Description    string
 	LogoURL        string
+}
+
+type ActivityField struct {
+	ID      string
+	Title   string
+	IconURL string
 }
 
 func (cd *CompanyData) validate() error {
@@ -266,4 +284,79 @@ func (c *Controller) GetCompaniesList(ctx context.Context, companyIDs []string) 
 	}
 
 	return companies, nil
+}
+
+func (c *Controller) UpdateActivityField(ctx context.Context, activityFieldID *string, cd *ActivityField) error {
+	if err := pkgtx.RunInTx(ctx, c.s, func(ctx context.Context, tx pkgtx.Tx) error {
+		var ID string
+
+		if activityFieldID != nil {
+			ID = *activityFieldID
+		} else {
+			ID = uuid.NewV4().String()
+		}
+
+		now := time.Now()
+
+		svc := &storage.ActivityField{
+			ID:        ID,
+			Title:     cd.Title,
+			IconURL:   cd.IconURL,
+			CreatedAt: now,
+			UpdatedAt: now,
+		}
+
+		return errors.WithStack(c.s.TxPutActivityField(ctx, tx, svc))
+	}); err != nil {
+		return errors.WithStack(err)
+	}
+
+	return nil
+}
+
+func (c *Controller) GetActivityField(ctx context.Context, activityFieldID string) (*ActivityField, error) {
+	var activityField *ActivityField
+
+	if err := pkgtx.RunInTx(ctx, c.s, func(ctx context.Context, tx pkgtx.Tx) error {
+		af, err := c.s.TxGetActivityFieldsByID(ctx, tx, activityFieldID)
+
+		switch errors.Cause(err) {
+		case nil:
+		case storage.ErrNotFound:
+			return errors.WithStack(ErrActivityFieldNotFound)
+		default:
+			return errors.WithStack(err)
+		}
+
+		activityField = &ActivityField{
+			ID:      af.ID,
+			Title:   af.Title,
+			IconURL: af.IconURL,
+		}
+
+		return nil
+	}); err != nil {
+		return nil, errors.WithStack(err)
+	}
+
+	return activityField, nil
+}
+
+func (c *Controller) GetActivityFields(ctx context.Context) ([]*ActivityField, error) {
+	afs, err := c.s.TxGetActivityFields(ctx, c.s.NoTx())
+
+	if err != nil {
+		return nil, errors.WithStack(err)
+	}
+
+	activityFields := make([]*ActivityField, 0, len(afs))
+	for _, activityField := range afs {
+		activityFields = append(activityFields, &ActivityField{
+			ID:      activityField.ID,
+			Title:   activityField.Title,
+			IconURL: activityField.IconURL,
+		})
+	}
+
+	return activityFields, nil
 }
