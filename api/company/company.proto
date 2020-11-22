@@ -8,17 +8,18 @@ option java_package = "online.personaapp";
 option java_outer_classname = "GrpcCompany";
 
 service PersonaAppCompany {
-    rpc UpdateCompany (UpdateCompanyRequest) returns (UpdateCompanyResponse);
-    rpc UpdateCompanyActivityFields (UpdateCompanyActivityFieldsRequest) returns (UpdateCompanyActivityFieldsResponse);
-    rpc GetCompany (GetCompanyRequest) returns (GetCompanyResponse);
-    rpc GetCompaniesActivityFieldsList (GetCompaniesActivityFieldsListRequest) returns (GetCompaniesActivityFieldsListResponse);
+  rpc UpdateCompany (UpdateCompanyRequest) returns (UpdateCompanyResponse);
+  rpc UpdateCompanyActivityFields (UpdateCompanyActivityFieldsRequest) returns (UpdateCompanyActivityFieldsResponse);
+  rpc GetCompany (GetCompanyRequest) returns (GetCompanyResponse);
+  rpc GetCompaniesActivityFieldsList (GetCompaniesActivityFieldsListRequest) returns (GetCompaniesActivityFieldsListResponse);
+  rpc DeleteActivityFieldsByCompanyID (DeleteActivityFieldsByCompanyIDRequest) returns (DeleteActivityFieldsByCompanyIDResponse);
 }
 
 // Update
 message UpdateCompanyRequest {
-    google.protobuf.StringValue title = 1;
-    google.protobuf.StringValue description = 2;
-    google.protobuf.StringValue logo_url = 3;
+  google.protobuf.StringValue title = 1;
+  google.protobuf.StringValue description = 2;
+  google.protobuf.StringValue logo_url = 3;
 }
 
 message UpdateCompanyResponse {
@@ -26,7 +27,7 @@ message UpdateCompanyResponse {
 
 // Update Activity Fields
 message UpdateCompanyActivityFieldsRequest {
-    map<string, Empty> activity_fields = 1;
+  map<string, Empty> activity_fields = 1;
 }
 
 message UpdateCompanyActivityFieldsResponse {
@@ -34,19 +35,19 @@ message UpdateCompanyActivityFieldsResponse {
 
 // Get company
 message GetCompanyRequest {
-    string id = 1;
+  string id = 1;
 }
 
 message GetCompanyResponse {
-    message Company {
-        string id = 1;
-        string title = 2;
-        string description = 3;
-        string logo_url = 4;
-        map<string, CompanyActivityField> activity_fields = 5;
-    }
+  message Company {
+    string id = 1;
+    string title = 2;
+    string description = 3;
+    string logo_url = 4;
+    map<string, CompanyActivityField> activity_fields = 5;
+  }
 
-    Company company = 1;
+  Company company = 1;
 }
 
 // Get activity fields list
@@ -54,7 +55,15 @@ message GetCompaniesActivityFieldsListRequest {
 }
 
 message GetCompaniesActivityFieldsListResponse {
-    map<string, CompanyActivityField> activity_fields = 1;
+  map<string, CompanyActivityField> activity_fields = 1;
+}
+
+// Delete company
+message DeleteActivityFieldsByCompanyIDRequest {
+  string id = 1;
+}
+
+message DeleteActivityFieldsByCompanyIDResponse {
 }
 
 // Entities
@@ -62,7 +71,7 @@ message Empty {
 }
 
 message CompanyActivityField {
-    string id = 1;
-    string title = 2;
-    string icon_url = 3;
+  string id = 1;
+  string title = 2;
+  string icon_url = 3;
 }

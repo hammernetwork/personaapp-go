@@ -103,8 +103,8 @@ func TestUpdateExistingCompany(t *testing.T) {
 	cc := companyController.New(cs)
 
 	rd := authController.RegisterData{
-		Email:    "companytest2@gmail.com",
-		Phone:    "+380500000002",
+		Email:    "companytest1@gmail.com",
+		Phone:    "+380500000011",
 		Account:  authController.AccountTypeCompany,
 		Password: "Password2",
 	}
@@ -134,27 +134,6 @@ func TestUpdateExistingCompany(t *testing.T) {
 		require.Equal(t, description, company.Description)
 		require.Equal(t, logoURL, company.LogoURL)
 	})
-
-	title = "Title"
-	iconURL := "https://logourl.com"
-
-	activityID := uuid.NewV4().String()
-	af := companyController.ActivityField{
-		Title:   title,
-		IconURL: iconURL,
-	}
-
-	activityFields := []string{activityID}
-
-	t.Run("update activity fields", func(t *testing.T) {
-		require.NoError(t, cc.UpdateActivityField(context.Background(), &activityID, &af))
-		require.NoError(t, cc.UpdateActivityFields(context.Background(), token.AccountID, activityFields))
-
-		fields, err := cc.GetActivityFields(context.Background())
-		require.NoError(t, err)
-		require.Equal(t, title, fields[0].Title)
-		require.Equal(t, description, fields[0].IconURL)
-	})
 }
 
 func TestUpdateNonExistingCompany(t *testing.T) {
@@ -179,7 +158,7 @@ func TestUpdateNonExistingCompany(t *testing.T) {
 	})
 }
 
-func TestGetAndUpdateActivityFields(t *testing.T) {
+func TestUpdateCompanyActivityFields(t *testing.T) {
 	as, authCloser := testutils.InitAuthStorage(t)
 	defer func() {
 		if err := authCloser(); err != nil {
@@ -205,10 +184,77 @@ func TestGetAndUpdateActivityFields(t *testing.T) {
 		Password: "Password2",
 	}
 
-	_, err := ac.Register(context.Background(), &rd)
+	token, err := ac.Register(context.Background(), &rd)
 	if err != nil {
 		t.Error(err)
 	}
+
+	title := "Title"
+	description := "Description"
+	logoURL := "https://logourl.com"
+
+	cd := companyController.CompanyData{
+		ID:          token.AccountID,
+		Title:       &title,
+		Description: &description,
+		LogoURL:     &logoURL,
+	}
+
+	activityID := uuid.NewV4().String()
+	af := companyController.ActivityField{
+		Title:   "Title2",
+		IconURL: "https://logourl2.com",
+	}
+
+	activityID2 := uuid.NewV4().String()
+	af2 := companyController.ActivityField{
+		Title:   "Title3",
+		IconURL: "https://logourl3.com",
+	}
+
+	t.Run("update activity fields", func(t *testing.T) {
+		require.NoError(t, cc.UpdateActivityField(context.Background(), &activityID, &af))
+		require.NoError(t, cc.UpdateActivityField(context.Background(), &activityID2, &af2))
+
+		fields, err := cc.GetActivityFields(context.Background())
+		require.NoError(t, err)
+		require.Equal(t, af.Title, fields[0].Title)
+		require.Equal(t, af.IconURL, fields[0].IconURL)
+		require.Equal(t, af2.Title, fields[1].Title)
+		require.Equal(t, af2.IconURL, fields[1].IconURL)
+	})
+
+	activityFields := []string{activityID, activityID2}
+
+	t.Run("relate company to activity fields", func(t *testing.T) {
+		require.NoError(t, cc.Update(context.Background(), &cd))
+		require.NoError(t, cc.UpdateActivityFields(context.Background(), token.AccountID, activityFields))
+
+		company, err := cc.Get(context.Background(), token.AccountID)
+		require.NoError(t, err)
+		require.Equal(t, af.Title, company.ActivityFields[0])
+		require.Equal(t, af2.Title, company.ActivityFields[1])
+
+		require.NoError(t, cc.DeleteCompanyActivityFieldsByCompanyID(context.Background(), token.AccountID))
+	})
+}
+
+func TestGetAndUpdateActivityFields(t *testing.T) {
+	_, authCloser := testutils.InitAuthStorage(t)
+	defer func() {
+		if err := authCloser(); err != nil {
+			t.Error(err)
+		}
+	}()
+
+	cs, companyCloser := InitStorage(t)
+	defer func() {
+		if err := companyCloser(); err != nil {
+			t.Error(err)
+		}
+	}()
+
+	cc := companyController.New(cs)
 
 	title := "Title"
 	iconURL := "https://logourl.com"
@@ -228,8 +274,8 @@ func TestGetAndUpdateActivityFields(t *testing.T) {
 		require.Equal(t, iconURL, activityField.IconURL)
 	})
 
-	title = "Title2"
-	iconURL = "https://logourl2.com"
+	title = "Title1"
+	iconURL = "https://logourl1.com"
 
 	af = companyController.ActivityField{
 		Title:   title,

@@ -226,22 +226,25 @@ func (s *Storage) TxPutCompanyActivityFields(
 	c := postgresql.FromTx(tx)
 
 	queryFormat := `INSERT 
-		INTO company_activity_fields (company_id, activity_field_id)
+		INTO company_activity_fields (company_id, activity_field_id) 
 		VALUES %s`
 
 	columns := 2
-	valueStrings := make([]string, len(activityFieldsIDs))
-	valueArgs := make([]interface{}, len(activityFieldsIDs)*columns)
+	length := len(activityFieldsIDs)
+	valueStrings := make([]string, length)
+	valueArgs := make([]interface{}, length*columns)
 
-	for i := 0; i < len(activityFieldsIDs); i++ {
+	for i := 0; i < length; i++ {
 		offset := i * columns
-		valueStrings = append(valueStrings, fmt.Sprintf("($%d, $%d)", offset+1, offset+2))
-		valueArgs = append(valueArgs, authID, activityFieldsIDs[i])
+		valueStrings[i] = fmt.Sprintf("($%d, $%d)", offset+1, offset+2)
+		valueArgs[offset] = authID
+		valueArgs[offset+1] = activityFieldsIDs[i]
 	}
 
+	query := fmt.Sprintf(queryFormat, strings.TrimSuffix(strings.Join(valueStrings, ","), ","))
 	if _, err := c.ExecContext(
 		ctx,
-		fmt.Sprintf(queryFormat, strings.TrimSuffix(strings.Join(valueStrings, ","), ",")),
+		query,
 		valueArgs...,
 	); err != nil {
 		return errors.WithStack(err)

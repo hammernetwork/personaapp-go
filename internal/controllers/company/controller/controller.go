@@ -360,3 +360,13 @@ func (c *Controller) GetActivityFields(ctx context.Context) ([]*ActivityField, e
 
 	return activityFields, nil
 }
+
+func (c *Controller) DeleteCompanyActivityFieldsByCompanyID(ctx context.Context, authID string) error {
+	if err := pkgtx.RunInTx(ctx, c.s, func(ctx context.Context, tx pkgtx.Tx) error {
+		return errors.WithStack(c.s.TxDeleteCompanyActivityFieldsByCompanyID(ctx, tx, authID))
+	}); err != nil {
+		return errors.WithStack(err)
+	}
+
+	return nil
+}

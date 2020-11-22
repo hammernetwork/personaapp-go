@@ -18,6 +18,7 @@ type CompanyController interface {
 	GetActivityFields(ctx context.Context) ([]*companyController.ActivityField, error)
 	UpdateActivityFields(ctx context.Context, companyID string, activityFields []string) error
 	UpdateActivityField(ctx context.Context, activityFieldID *string, cd *companyController.ActivityField) error
+	DeleteCompanyActivityFieldsByCompanyID(ctx context.Context, authID string) error
 }
 
 // Company
@@ -151,4 +152,23 @@ func (s *Server) GetCompany(
 			ActivityFields: activityFields,
 		},
 	}, nil
+}
+
+func (s *Server) DeleteActivityFieldsByCompanyID(
+	ctx context.Context,
+	req *apicompany.DeleteActivityFieldsByCompanyIDRequest,
+) (*apicompany.DeleteActivityFieldsByCompanyIDResponse, error) {
+	claims, err := s.getAuthClaims(ctx)
+	if err != nil || !s.isAdminAccountType(claims) {
+		return nil, status.Error(codes.Unauthenticated, "unauthorized")
+	}
+
+	err = s.cc.DeleteCompanyActivityFieldsByCompanyID(ctx, req.Id)
+	switch errors.Cause(err) {
+	case nil:
+	case companyController.ErrActivityFieldNotFound:
+		return nil, status.Error(codes.NotFound, err.Error())
+	}
+
+	return &apicompany.DeleteActivityFieldsByCompanyIDResponse{}, nil
 }
