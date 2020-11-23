@@ -14,16 +14,37 @@ type CompanyController interface {
 	Get(ctx context.Context, companyID string) (*companyController.Company, error)
 	GetCompaniesList(ctx context.Context, companyIDs []string) ([]*companyController.Company, error)
 	Update(ctx context.Context, cd *companyController.CompanyData) error
+	GetActivityField(ctx context.Context, activityFieldID string) (*companyController.ActivityField, error)
+	GetActivityFields(ctx context.Context) ([]*companyController.ActivityField, error)
 	UpdateActivityFields(ctx context.Context, companyID string, activityFields []string) error
+	UpdateActivityField(ctx context.Context, activityFieldID *string, cd *companyController.ActivityField) error
+	DeleteCompanyActivityFieldsByCompanyID(ctx context.Context, authID string) error
 }
 
 // Company
 func (s *Server) GetCompaniesActivityFieldsList(
-	context.Context,
-	*apicompany.GetCompaniesActivityFieldsListRequest,
+	ctx context.Context,
+	_ *apicompany.GetCompaniesActivityFieldsListRequest,
 ) (*apicompany.GetCompaniesActivityFieldsListResponse, error) {
-	// nolint:godox // TODO: implement
-	return nil, nil
+	if _, err := s.getAuthClaims(ctx); err != nil {
+		return nil, status.Error(codes.Unauthenticated, "unauthorized")
+	}
+
+	afs, err := s.cc.GetActivityFields(ctx)
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	cafs := map[string]*apicompany.CompanyActivityField{}
+	for _, vc := range afs {
+		cafs[vc.ID] = &apicompany.CompanyActivityField{
+			Id:      vc.ID,
+			Title:   vc.Title,
+			IconUrl: vc.IconURL,
+		}
+	}
+
+	return &apicompany.GetCompaniesActivityFieldsListResponse{ActivityFields: cafs}, nil
 }
 
 // nolint:funlen // will rework
@@ -131,4 +152,23 @@ func (s *Server) GetCompany(
 			ActivityFields: activityFields,
 		},
 	}, nil
+}
+
+func (s *Server) DeleteActivityFieldsByCompanyID(
+	ctx context.Context,
+	req *apicompany.DeleteActivityFieldsByCompanyIDRequest,
+) (*apicompany.DeleteActivityFieldsByCompanyIDResponse, error) {
+	claims, err := s.getAuthClaims(ctx)
+	if err != nil || !s.isAdminAccountType(claims) {
+		return nil, status.Error(codes.Unauthenticated, "unauthorized")
+	}
+
+	err = s.cc.DeleteCompanyActivityFieldsByCompanyID(ctx, req.Id)
+	switch errors.Cause(err) {
+	case nil:
+	case companyController.ErrActivityFieldNotFound:
+		return nil, status.Error(codes.NotFound, err.Error())
+	}
+
+	return &apicompany.DeleteActivityFieldsByCompanyIDResponse{}, nil
 }
