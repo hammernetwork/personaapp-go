@@ -32,9 +32,11 @@ type CompanyData struct {
 }
 
 type ActivityField struct {
-	ID      string
-	Title   string
-	IconURL string
+	ID        string
+	Title     string
+	IconURL   string
+	CreatedAt time.Time
+	UpdatedAt time.Time
 }
 
 func (s *Storage) TxGetCompanyByID(ctx context.Context, tx pkgtx.Tx, authID string) (*CompanyData, error) {
@@ -188,6 +190,33 @@ func (s *Storage) TxGetActivityFieldsByCompanyID(
 	return afs, nil
 }
 
+func (s *Storage) TxGetActivityFieldsByID(
+	ctx context.Context,
+	tx pkgtx.Tx,
+	activityFieldID string,
+) (_ *ActivityField, rerr error) {
+	c := postgresql.FromTx(tx)
+
+	var af ActivityField
+	err := c.QueryRowContext(
+		ctx,
+		`SELECT af.id, af.title, af.icon_url, af.created_at, af.updated_at
+			FROM activity_field AS af
+			WHERE id = $1`,
+		activityFieldID,
+	).Scan(&af.ID, &af.Title, &af.IconURL, &af.CreatedAt, &af.UpdatedAt)
+
+	switch err {
+	case nil:
+	case sql.ErrNoRows:
+		return nil, ErrNotFound
+	default:
+		return nil, errors.WithStack(err)
+	}
+
+	return &af, nil
+}
+
 func (s *Storage) TxPutCompanyActivityFields(
 	ctx context.Context,
 	tx pkgtx.Tx,
@@ -197,22 +226,25 @@ func (s *Storage) TxPutCompanyActivityFields(
 	c := postgresql.FromTx(tx)
 
 	queryFormat := `INSERT 
-		INTO company_activity_fields (company_id, activity_field_id)
+		INTO company_activity_fields (company_id, activity_field_id) 
 		VALUES %s`
 
 	columns := 2
-	valueStrings := make([]string, len(activityFieldsIDs))
-	valueArgs := make([]interface{}, len(activityFieldsIDs)*columns)
+	length := len(activityFieldsIDs)
+	valueStrings := make([]string, length)
+	valueArgs := make([]interface{}, length*columns)
 
-	for i := 0; i < len(activityFieldsIDs); i++ {
+	for i := 0; i < length; i++ {
 		offset := i * columns
-		valueStrings = append(valueStrings, fmt.Sprintf("($%d, $%d)", offset+1, offset+2))
-		valueArgs = append(valueArgs, authID, activityFieldsIDs[i])
+		valueStrings[i] = fmt.Sprintf("($%d, $%d)", offset+1, offset+2)
+		valueArgs[offset] = authID
+		valueArgs[offset+1] = activityFieldsIDs[i]
 	}
 
+	query := fmt.Sprintf(queryFormat, strings.TrimSuffix(strings.Join(valueStrings, ","), ","))
 	if _, err := c.ExecContext(
 		ctx,
-		fmt.Sprintf(queryFormat, strings.TrimSuffix(strings.Join(valueStrings, ","), ",")),
+		query,
 		valueArgs...,
 	); err != nil {
 		return errors.WithStack(err)
@@ -239,4 +271,76 @@ func (s *Storage) TxDeleteCompanyActivityFieldsByCompanyID(
 	}
 
 	return nil
+}
+
+func (s *Storage) TxPutActivityField(ctx context.Context, tx pkgtx.Tx, af *ActivityField) error {
+	c := postgresql.FromTx(tx)
+	if _, err := c.ExecContext(
+		ctx,
+		`WITH upsert AS (
+				UPDATE activity_field SET
+					title = $2,
+					icon_url = $3,
+					created_at = $4,
+					updated_at = $5
+				WHERE id = $1
+				RETURNING *
+			)
+			INSERT INTO activity_field (id, title, icon_url, created_at, updated_at)
+			SELECT $1, $2, $3, $4, $5
+			WHERE NOT EXISTS (SELECT * FROM upsert)`,
+		af.ID,
+		af.Title,
+		af.IconURL,
+		af.CreatedAt,
+		af.UpdatedAt,
+	); err != nil {
+		return errors.WithStack(err)
+	}
+
+	return nil
+}
+
+func (s *Storage) TxGetActivityFields(
+	ctx context.Context,
+	tx pkgtx.Tx,
+) (_ []*ActivityField, rerr error) {
+	c := postgresql.FromTx(tx)
+
+	rows, err := c.QueryContext(
+		ctx,
+		`SELECT af.id, af.title, af.icon_url
+			FROM activity_field AS af`,
+	)
+	if err != nil {
+		return nil, errors.WithStack(err)
+	}
+
+	defer func() {
+		if err := rows.Close(); err != nil {
+			if rerr != nil {
+				rerr = errors.WithSecondaryError(rerr, err)
+				return
+			}
+
+			rerr = errors.WithStack(err)
+		}
+	}()
+
+	afs := make([]*ActivityField, 0)
+
+	for rows.Next() {
+		var af ActivityField
+		if err := rows.Scan(&af.ID, &af.Title, &af.IconURL); err != nil {
+			return nil, errors.WithStack(err)
+		}
+
+		afs = append(afs, &af)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, errors.WithStack(err)
+	}
+
+	return afs, nil
 }

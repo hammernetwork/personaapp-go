@@ -229,6 +229,7 @@ func (s *Server) GetSelf(
 	}
 
 	return &apiauth.GetSelfResponse{
+		Id:          self.AccountID,
 		Email:       self.Email,
 		Phone:       self.Phone,
 		AccountType: toServerAccount(self.Account),

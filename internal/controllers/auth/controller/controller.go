@@ -137,9 +137,10 @@ type RegisterData struct {
 }
 
 type AuthData struct {
-	Email   string
-	Phone   string
-	Account AccountType
+	AccountID string
+	Email     string
+	Phone     string
+	Account   AccountType
 }
 
 func (rd *RegisterData) Validate() error {
@@ -504,9 +505,10 @@ func (c *Controller) GetAuth(ctx context.Context, accountID string) (*AuthData, 
 		}
 
 		authData = &AuthData{
-			Email:   ad.Email,
-			Phone:   ad.Phone,
-			Account: account,
+			AccountID: ad.AccountID,
+			Email:     ad.Email,
+			Phone:     ad.Phone,
+			Account:   account,
 		}
 
 		return nil
