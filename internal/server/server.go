@@ -17,10 +17,11 @@ type Server struct {
 	cc CompanyController
 	vc VacancyController
 	cy CityController
+	cv CVController
 }
 
-func New(ac AuthController, cc CompanyController, vc VacancyController, cy CityController) *Server {
-	return &Server{ac: ac, cc: cc, vc: vc, cy: cy}
+func New(ac AuthController, cc CompanyController, vc VacancyController, cy CityController, cv CVController) *Server {
+	return &Server{ac: ac, cc: cc, vc: vc, cy: cy, cv: cv}
 }
 
 func (s *Server) getAuthClaims(ctx context.Context) (*authController.AuthClaims, error) {

@@ -3,14 +3,12 @@ package server
 import (
 	"context"
 	"github.com/cockroachdb/errors"
-	"github.com/golang/protobuf/ptypes/wrappers"
-	"google.golang.org/genproto/googleapis/rpc/errdetails"
+	"github.com/golang/protobuf/ptypes"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
-	companyController "personaapp/internal/controllers/company/controller"
 	cvController "personaapp/internal/controllers/cv/controller"
 	vacancyController "personaapp/internal/controllers/vacancy/controller"
-	vacancyapi "personaapp/pkg/grpcapi/vacancy"
+	cvapi "personaapp/pkg/grpcapi/cv"
 )
 
 type CVController interface {
@@ -26,16 +24,16 @@ type CVController interface {
 
 	PutCVJobTypes(
 		ctx context.Context,
-		CVID string,
+		cvID string,
 		jobTypesIDs []string,
 	) error
 	GetCVJobTypes(
 		ctx context.Context,
-		CVID string,
+		cvID string,
 	) ([]*cvController.CVJobType, error)
 	DeleteCVJobTypes(
 		ctx context.Context,
-		CVID string,
+		cvID string,
 	) error
 
 	PutJobKind(
@@ -52,26 +50,26 @@ type CVController interface {
 
 	PutCVJobKinds(
 		ctx context.Context,
-		CVID string,
+		cvID string,
 		jobKindsIDs []string,
 	) error
 	GetCVJobKinds(
 		ctx context.Context,
-		CVID string,
+		cvID string,
 	) ([]*cvController.CVJobKind, error)
 	DeleteCVJobKinds(
 		ctx context.Context,
-		CVID string,
+		cvID string,
 	) error
 
 	PutExperience(
 		ctx context.Context,
-		CVID string,
+		cvID string,
 		experience *cvController.CVExperience,
 	) (cvController.ExperienceID, error)
 	GetExperiences(
 		ctx context.Context,
-		CVID string,
+		cvID string,
 	) ([]*cvController.CVExperience, error)
 	DeleteExperience(
 		ctx context.Context,
@@ -80,26 +78,26 @@ type CVController interface {
 
 	PutEducation(
 		ctx context.Context,
-		CVID string,
+		cvID string,
 		education *cvController.CVEducation,
 	) (cvController.EducationID, error)
 	GetEducations(
 		ctx context.Context,
-		CVID string,
+		cvID string,
 	) ([]*cvController.CVEducation, error)
 	DeleteEducation(
 		ctx context.Context,
 		educationID string,
 	) error
 
-	PutCustomSections(
+	PutCustomSection(
 		ctx context.Context,
-		CVID string,
+		cvID string,
 		customSection *cvController.CVCustomSection,
 	) (cvController.CustomSectionID, error)
 	GetCustomSections(
 		ctx context.Context,
-		CVID string,
+		cvID string,
 	) ([]*cvController.CVCustomSection, error)
 	DeleteCustomSection(
 		ctx context.Context,
@@ -108,27 +106,27 @@ type CVController interface {
 
 	PutStory(
 		ctx context.Context,
-		CVID string,
+		cvID string,
 		story *cvController.CVCustomStory,
 	) (cvController.StoryID, error)
 	GetStories(
 		ctx context.Context,
-		CVID string,
+		cvID string,
 	) ([]*cvController.CVCustomStory, error)
 	DeleteStory(
 		ctx context.Context,
 		storyID string,
 	) error
 
-	PutStoriesEpisodes(
+	PutStoriesEpisode(
 		ctx context.Context,
 		storyEpisode *cvController.StoryEpisode,
 	) (cvController.StoriesEpisodeID, error)
 	GetStoriesEpisodes(
 		ctx context.Context,
-		CVID string,
+		cvID string,
 	) ([]*cvController.StoryEpisode, error)
-	DeleteStoriesEpisodes(
+	DeleteStoriesEpisode(
 		ctx context.Context,
 		episodeID string,
 	) error
@@ -137,491 +135,779 @@ type CVController interface {
 		ctx context.Context,
 		cv *cvController.CV,
 	) (cvController.CVID, error)
-	GetCV(ctx context.Context, CVID string) (*cvController.CV, error)
+	GetCV(ctx context.Context, cvID string) (*cvController.CV, error)
 	GetCVs(
 		ctx context.Context,
 		personaID string,
 	) ([]*cvController.CVShort, error)
 	DeleteCV(
 		ctx context.Context,
-		CVID string,
+		cvID string,
 	) error
 }
 
 // Job Type
 func (s *Server) UpsertJobType(
 	ctx context.Context,
-	req *vacancyapi.UpsertVacancyCategoryRequest,
-) (*vacancyapi.UpsertVacancyCategoryResponse, error) {
+	req *cvapi.UpsertJobTypeRequest,
+) (*cvapi.UpsertJobTypeResponse, error) {
 	claims, err := s.getAuthClaims(ctx)
 	if err != nil || !s.isAdminAccountType(claims) {
 		return nil, status.Error(codes.Unauthenticated, "unauthorized")
 	}
 
-	categoryID, err := s.vc.PutVacancyCategory(ctx, getOptionalString(req.Id), &vacancyController.VacancyCategory{
-		Title:   req.Title,
-		IconURL: req.IconUrl,
+	jobTypeID, err := s.cv.PutJobType(ctx, &cvController.JobType{
+		Name: req.Name,
 	})
 
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
-	return &vacancyapi.UpsertVacancyCategoryResponse{
-		Id: string(categoryID),
+	return &cvapi.UpsertJobTypeResponse{
+		Id: string(jobTypeID),
 	}, nil
 }
 
-// Vacancy
-
-func (s *Server) GetVacancyCategory(
+func (s *Server) GetJobTypes(
 	ctx context.Context,
-	req *vacancyapi.GetVacancyCategoryRequest,
-) (*vacancyapi.GetVacancyCategoryResponse, error) {
-	_, err := s.getAuthClaims(ctx)
-	if err != nil {
+	_ *cvapi.GetJobTypesRequest,
+) (*cvapi.GetJobTypesResponse, error) {
+	if _, err := s.getAuthClaims(ctx); err != nil {
 		return nil, status.Error(codes.Unauthenticated, "unauthorized")
 	}
 
-	vc, err := s.vc.GetVacancyCategory(ctx, req.Id)
+	jts, err := s.cv.GetJobTypes(ctx)
 	if err != nil {
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
-	return &vacancyapi.GetVacancyCategoryResponse{
-		Category: &vacancyapi.VacancyCategory{
-			Id:      vc.ID,
-			Title:   vc.Title,
-			IconUrl: vc.IconURL,
-		},
-	}, nil
-}
-
-func (s *Server) GetVacancyCategoriesList(
-	ctx context.Context,
-	req *vacancyapi.GetVacancyCategoriesListRequest,
-) (*vacancyapi.GetVacancyCategoriesListResponse, error) {
-	_, err := s.getAuthClaims(ctx)
-	if err != nil {
-		return nil, status.Error(codes.Unauthenticated, "unauthorized")
-	}
-
-	vcs, err := s.vc.GetVacanciesCategoriesList(ctx, getOptionalInt32(req.GetRating()))
-	if err != nil {
-		return nil, status.Error(codes.Internal, err.Error())
-	}
-
-	svcs := map[string]*vacancyapi.VacancyCategory{}
-	for _, vc := range vcs {
-		svcs[vc.ID] = &vacancyapi.VacancyCategory{
-			Id:      vc.ID,
-			Title:   vc.Title,
-			IconUrl: vc.IconURL,
-			Rating:  vc.Rating,
+	cafs := make([]*cvapi.JobType, 0, len(jts))
+	for i, vc := range jts {
+		cafs[i] = &cvapi.JobType{
+			Id:   vc.ID,
+			Name: vc.Name,
 		}
 	}
 
-	return &vacancyapi.GetVacancyCategoriesListResponse{VacancyCategories: svcs}, nil
+	return &cvapi.GetJobTypesResponse{JobType: cafs}, nil
 }
 
-func (s *Server) UpsertVacancyCategory(
+func (s *Server) DeleteJobType(
 	ctx context.Context,
-	req *vacancyapi.UpsertVacancyCategoryRequest,
-) (*vacancyapi.UpsertVacancyCategoryResponse, error) {
+	req *cvapi.DeleteJobTypeRequest,
+) (*cvapi.DeleteJobTypeResponse, error) {
 	claims, err := s.getAuthClaims(ctx)
 	if err != nil || !s.isAdminAccountType(claims) {
 		return nil, status.Error(codes.Unauthenticated, "unauthorized")
 	}
 
-	categoryID, err := s.vc.PutVacancyCategory(ctx, getOptionalString(req.Id), &vacancyController.VacancyCategory{
-		Title:   req.Title,
-		IconURL: req.IconUrl,
-	})
-
-	if err != nil {
-		return nil, status.Error(codes.Internal, err.Error())
-	}
-
-	return &vacancyapi.UpsertVacancyCategoryResponse{
-		Id: string(categoryID),
-	}, nil
-}
-
-func (s *Server) DeleteVacancyCategory(
-	ctx context.Context,
-	req *vacancyapi.DeleteVacancyCategoryRequest,
-) (*vacancyapi.DeleteVacancyCategoryResponse, error) {
-	claims, err := s.getAuthClaims(ctx)
-	if err != nil || !s.isAdminAccountType(claims) {
-		return nil, status.Error(codes.Unauthenticated, "unauthorized")
-	}
-
-	err = s.vc.DeleteVacancyCategory(ctx, req.Id)
+	err = s.cv.DeleteJobType(ctx, req.Id)
 	switch errors.Cause(err) {
 	case nil:
 	case vacancyController.ErrVacancyCategoryNotFound:
 		return nil, status.Error(codes.NotFound, err.Error())
 	}
 
-	return &vacancyapi.DeleteVacancyCategoryResponse{}, nil
+	return &cvapi.DeleteJobTypeResponse{}, nil
 }
 
-func (s *Server) GetVacancyDetails(
+// CV job types
+func (s *Server) UpsertCVJobTypes(
 	ctx context.Context,
-	req *vacancyapi.GetVacancyDetailsRequest,
-) (*vacancyapi.GetVacancyDetailsResponse, error) {
-	_, err := s.getAuthClaims(ctx)
-	if err != nil {
-		return nil, status.Error(codes.Unauthenticated, "unauthorized")
-	}
-
-	vd, err := s.vc.GetVacancyDetails(ctx, req.VacancyId)
-	switch errors.Cause(err) {
-	case nil:
-	case vacancyController.ErrVacancyNotFound:
-		return nil, status.Error(codes.NotFound, err.Error())
-	}
-
-	// Get companies
-	cd, err := s.cc.Get(ctx, vd.CompanyID)
-	switch errors.Cause(err) {
-	case nil:
-	case companyController.ErrCompanyNotFound:
-		return nil, status.Error(codes.NotFound, err.Error())
-	}
-
-	// Get vacancy categories
-	categoriesMap, vc, err := getVacancyCategoriesFromStorage(ctx, req, s)
-	if err != nil {
-		return nil, errors.WithStack(err)
-	}
-
-	// Get vacancy categories
-	c, err := getVacancyCityFromStorage(ctx, req, s)
-	if err != nil {
-		return nil, errors.WithStack(err)
-	}
-
-	return &vacancyapi.GetVacancyDetailsResponse{
-		Vacancy: toServerVacancy(vd, vc),
-		Image:   &vacancyapi.GetVacancyDetailsResponse_VacancyImage{ImageUrls: vd.ImageURLs},
-		Location: &vacancyapi.GetVacancyDetailsResponse_VacancyLocation{
-			Latitude:  vd.LocationLatitude,
-			Longitude: vd.LocationLongitude,
-		},
-		Description: &vacancyapi.GetVacancyDetailsResponse_VacancyDescription{
-			Description:          vd.Description,
-			WorkMonthsExperience: uint32(vd.WorkMonthsExperience),
-			WorkSchedule:         vd.WorkSchedule,
-			Type:                 toServerVacancyType(vd.Type),
-			Address:              vd.Address,
-			CountryCode:          vd.CountryCode,
-		},
-		Company:    toServerCompany(cd),
-		Categories: categoriesMap,
-		City:       c,
-	}, nil
-}
-
-func getVacancyCategoriesFromStorage(
-	ctx context.Context,
-	req *vacancyapi.GetVacancyDetailsRequest,
-	s *Server,
-) (categoriesMap map[string]*vacancyapi.VacancyCategoryShort, vc []string, err error) {
-	categories, err := s.vc.GetVacanciesCategories(ctx, []string{req.VacancyId})
-	switch errors.Cause(err) {
-	case nil:
-	case companyController.ErrCategoryNotFound:
-		return nil, nil, status.Error(codes.NotFound, err.Error())
-	}
-
-	categoriesMap = map[string]*vacancyapi.VacancyCategoryShort{}
-	vc = make([]string, len(categories))
-
-	for idx, c := range categories {
-		vc[idx] = c.Title
-		categoriesMap[c.ID] = &vacancyapi.VacancyCategoryShort{
-			Title: c.Title,
-		}
-	}
-	return categoriesMap, vc, nil
-}
-
-func getVacancyCityFromStorage(
-	ctx context.Context,
-	req *vacancyapi.GetVacancyDetailsRequest,
-	s *Server,
-) (*vacancyapi.City, error) {
-	cities, err := s.vc.GetVacancyCities(ctx, []string{req.VacancyId})
-	switch errors.Cause(err) {
-	case nil:
-	case companyController.ErrCityNotFound:
-		return nil, status.Error(codes.NotFound, err.Error())
-	}
-	vacancyCity := cities[0]
-	c := &vacancyapi.City{
-		Id:          vacancyCity.ID,
-		Name:        vacancyCity.Name,
-		CountryCode: vacancyCity.CountryCode,
-		Rating:      vacancyCity.Rating,
-	}
-	return c, nil
-}
-
-// nolint:funlen // will rework
-func (s *Server) GetVacanciesList(
-	ctx context.Context,
-	req *vacancyapi.GetVacanciesListRequest,
-) (*vacancyapi.GetVacanciesListResponse, error) {
-	categoriesIds := make([]string, 0, len(req.CategoriesIds))
-	for id := range req.CategoriesIds {
-		categoriesIds = append(categoriesIds, id)
-	}
-
-	vcs, cursor, err := s.vc.GetVacanciesList(
-		ctx,
-		categoriesIds,
-		toControllerCursor(req.Cursor),
-		int(req.Count.GetValue()),
-	)
-
-	switch causeErr := errors.Cause(err); causeErr {
-	case nil:
-	case vacancyController.ErrInvalidCursor:
-		fv := &errdetails.BadRequest_FieldViolation{Field: "Cursor", Description: causeErr.Error()}
-		return nil, fieldViolationStatus(fv).Err()
-	default:
-		return nil, status.Error(codes.Internal, err.Error())
-	}
-
-	vacanciesIDs := make([]string, len(vcs))
-	vacancies := map[string]*vacancyapi.GetVacanciesListResponse_VacancyDetails{}
-
-	companyIdsMap := make(map[string]bool)
-
-	for idx, v := range vcs {
-		vacanciesIDs[idx] = v.ID
-		vacancies[v.ID] = &vacancyapi.GetVacanciesListResponse_VacancyDetails{
-			Vacancy: &vacancyapi.Vacancy{
-				Id:            v.ID,
-				Title:         v.Title,
-				Phone:         v.Phone,
-				MinSalary:     v.MinSalary,
-				MaxSalary:     v.MaxSalary,
-				CompanyId:     v.CompanyID,
-				Currency:      vacancyapi.Currency_CURRENCY_UAH,
-				CategoriesIds: []string{},
-			},
-			ImageUrls: v.ImageURLs,
-		}
-		companyIdsMap[v.CompanyID] = true
-	}
-
-	// Get vacancy categories
-	categories, err := s.vc.GetVacanciesCategories(
-		ctx,
-		vacanciesIDs,
-	)
-
-	switch errors.Cause(err) {
-	case nil:
-	case companyController.ErrCategoryNotFound:
-		return nil, status.Error(codes.NotFound, err.Error())
-	}
-
-	categoriesMap := map[string]*vacancyapi.VacancyCategoryShort{}
-
-	for _, c := range categories {
-		vc := vacancies[c.VacancyID].Vacancy.CategoriesIds
-		vca := append(vc, c.Title)
-		vacancies[c.VacancyID].Vacancy.CategoriesIds = vca
-		categoriesMap[c.ID] = &vacancyapi.VacancyCategoryShort{
-			Title: c.Title,
-		}
-	}
-
-	// Get companies
-	companyIds := make([]string, 0, len(companyIdsMap))
-	for companyID := range companyIdsMap {
-		companyIds = append(companyIds, companyID)
-	}
-
-	companies, err := s.cc.GetCompaniesList(ctx, companyIds)
-
-	if err != nil {
-		return nil, status.Error(codes.Internal, err.Error())
-	}
-
-	companiesMap := make(map[string]*vacancyapi.Company, len(companies))
-	for _, company := range companies {
-		companiesMap[company.ID] = &vacancyapi.Company{
-			Id:      company.ID,
-			Title:   company.Title,
-			LogoUrl: company.LogoURL,
-		}
-	}
-
-	return &vacancyapi.GetVacanciesListResponse{
-		VacanciesIds: vacanciesIDs,
-		Vacancies:    vacancies,
-		Companies:    companiesMap,
-		Cursor:       toServerCursor(cursor),
-	}, nil
-}
-
-func (s *Server) UpsertVacancy(
-	ctx context.Context,
-	req *vacancyapi.UpsertVacancyRequest,
-) (*vacancyapi.UpsertVacancyResponse, error) {
-	claims, err := s.getAuthClaims(ctx)
-	if err != nil || !s.isAdminAccountType(claims) || !s.isCompanyAccountType(claims) {
-		return nil, status.Error(codes.Unauthenticated, "unauthorized")
-	}
-
-	if req.Vacancy.CompanyId != claims.AccountID {
-		return nil, status.Error(codes.PermissionDenied, "wrong account")
-	}
-
-	vacancyType, err := toControllerVacancyType(req.Description.Type)
-	if err != nil {
-		return nil, errors.WithStack(err)
-	}
-
-	vacancyID, err := s.vc.PutVacancy(
-		ctx,
-		getOptionalString(req.Vacancy.Id),
-		&vacancyController.VacancyDetails{
-			Vacancy: vacancyController.Vacancy{
-				Title:     req.Vacancy.Title,
-				Phone:     req.Vacancy.Phone,
-				MinSalary: req.Vacancy.MinSalary,
-				MaxSalary: req.Vacancy.MaxSalary,
-				ImageURLs: req.ImageURLs,
-				CompanyID: req.Vacancy.CompanyId,
-			},
-			Description:          req.Description.Description,
-			WorkMonthsExperience: int32(req.Description.WorkMonthsExperience),
-			WorkSchedule:         req.Description.WorkSchedule,
-			LocationLatitude:     req.Location.Latitude,
-			LocationLongitude:    req.Location.Longitude,
-			Type:                 vacancyType,
-			Address:              req.Description.Address,
-			CountryCode:          req.Description.CountryCode,
-		},
-		req.CategoryIDs,
-		req.CityIDs,
-	)
-
-	if err != nil {
-		return nil, status.Error(codes.Internal, err.Error())
-	}
-
-	return &vacancyapi.UpsertVacancyResponse{
-		Id: string(vacancyID),
-	}, nil
-}
-
-func (s *Server) DeleteVacancy(
-	ctx context.Context,
-	req *vacancyapi.DeleteVacancyRequest,
-) (*vacancyapi.DeleteVacancyResponse, error) {
+	req *cvapi.UpsertCVJobTypesRequest,
+) (*cvapi.UpsertCVJobTypesResponse, error) {
 	claims, err := s.getAuthClaims(ctx)
 	if err != nil || !s.isAdminAccountType(claims) {
 		return nil, status.Error(codes.Unauthenticated, "unauthorized")
 	}
 
-	vd, err := s.vc.GetVacancyDetails(ctx, req.Id)
+	err = s.cv.PutCVJobTypes(ctx, req.CvId, req.JobTypesIDs)
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	return &cvapi.UpsertCVJobTypesResponse{}, nil
+}
+
+func (s *Server) GetCVJobTypes(
+	ctx context.Context,
+	req *cvapi.GetCVJobTypesRequest,
+) (*cvapi.GetCVJobTypesResponse, error) {
+	if _, err := s.getAuthClaims(ctx); err != nil {
+		return nil, status.Error(codes.Unauthenticated, "unauthorized")
+	}
+
+	cvjts, err := s.cv.GetCVJobTypes(ctx, req.Id)
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	cafs := make([]*cvapi.CVJobType, 0, len(cvjts))
+	for i, vc := range cvjts {
+		cafs[i] = &cvapi.CVJobType{
+			Id:   vc.ID,
+			Name: vc.Name,
+		}
+	}
+
+	return &cvapi.GetCVJobTypesResponse{CvJobType: cafs}, nil
+}
+
+func (s *Server) DeleteCVJobTypes(
+	ctx context.Context,
+	req *cvapi.DeleteCVJobTypesRequest,
+) (*cvapi.DeleteCVJobTypesResponse, error) {
+	claims, err := s.getAuthClaims(ctx)
+	if err != nil || !s.isAdminAccountType(claims) {
+		return nil, status.Error(codes.Unauthenticated, "unauthorized")
+	}
+
+	err = s.cv.DeleteCVJobTypes(ctx, req.Id)
 	switch errors.Cause(err) {
 	case nil:
-	case vacancyController.ErrVacancyNotFound:
+	case cvController.ErrCVJobTypesNotFound:
 		return nil, status.Error(codes.NotFound, err.Error())
 	}
 
-	if vd.CompanyID != claims.AccountID {
-		return nil, status.Error(codes.PermissionDenied, "wrong account")
+	return &cvapi.DeleteCVJobTypesResponse{}, nil
+}
+
+// Job Type
+func (s *Server) UpsertJobKind(
+	ctx context.Context,
+	req *cvapi.UpsertJobKindRequest,
+) (*cvapi.UpsertJobKindResponse, error) {
+	claims, err := s.getAuthClaims(ctx)
+	if err != nil || !s.isAdminAccountType(claims) {
+		return nil, status.Error(codes.Unauthenticated, "unauthorized")
 	}
 
-	err = s.vc.DeleteVacancy(ctx, req.Id)
+	jobTypeID, err := s.cv.PutJobKind(ctx, &cvController.JobKind{
+		Name: req.Name,
+	})
+
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	return &cvapi.UpsertJobKindResponse{
+		Id: string(jobTypeID),
+	}, nil
+}
+
+func (s *Server) GetJobKinds(
+	ctx context.Context,
+	_ *cvapi.GetJobKindsRequest,
+) (*cvapi.GetJobKindsResponse, error) {
+	if _, err := s.getAuthClaims(ctx); err != nil {
+		return nil, status.Error(codes.Unauthenticated, "unauthorized")
+	}
+
+	jks, err := s.cv.GetJobKinds(ctx)
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	cafs := make([]*cvapi.JobKind, 0, len(jks))
+	for i, vc := range jks {
+		cafs[i] = &cvapi.JobKind{
+			Id:   vc.ID,
+			Name: vc.Name,
+		}
+	}
+
+	return &cvapi.GetJobKindsResponse{JobKind: cafs}, nil
+}
+
+func (s *Server) DeleteJobKind(
+	ctx context.Context,
+	req *cvapi.DeleteJobKindRequest,
+) (*cvapi.DeleteJobKindResponse, error) {
+	claims, err := s.getAuthClaims(ctx)
+	if err != nil || !s.isAdminAccountType(claims) {
+		return nil, status.Error(codes.Unauthenticated, "unauthorized")
+	}
+
+	err = s.cv.DeleteJobKind(ctx, req.Id)
 	switch errors.Cause(err) {
 	case nil:
-	case vacancyController.ErrVacancyNotFound:
+	case vacancyController.ErrVacancyCategoryNotFound:
 		return nil, status.Error(codes.NotFound, err.Error())
 	}
 
-	return &vacancyapi.DeleteVacancyResponse{}, nil
+	return &cvapi.DeleteJobKindResponse{}, nil
 }
 
-// Mappings
-func toServerVacancy(vd *vacancyController.VacancyDetails, vc []string) *vacancyapi.Vacancy {
-	return &vacancyapi.Vacancy{
-		Id:            vd.ID,
-		Title:         vd.Title,
-		Phone:         vd.Phone,
-		MinSalary:     vd.MinSalary,
-		MaxSalary:     vd.MaxSalary,
-		CompanyId:     vd.CompanyID,
-		Currency:      vacancyapi.Currency_CURRENCY_UAH,
-		CategoriesIds: vc,
+// CV job types
+func (s *Server) UpsertCVJobKinds(
+	ctx context.Context,
+	req *cvapi.UpsertCVJobKindsRequest,
+) (*cvapi.UpsertCVJobKindsResponse, error) {
+	claims, err := s.getAuthClaims(ctx)
+	if err != nil || !s.isAdminAccountType(claims) {
+		return nil, status.Error(codes.Unauthenticated, "unauthorized")
 	}
+
+	err = s.cv.PutCVJobKinds(ctx, req.CvId, req.JobKindsIDs)
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	return &cvapi.UpsertCVJobKindsResponse{}, nil
 }
 
-func toServerCompany(cd *companyController.Company) *vacancyapi.GetVacancyDetailsResponse_VacancyCompany {
-	afs := make(map[string]*vacancyapi.Empty)
-
-	for _, af := range cd.ActivityFields {
-		afs[af] = &vacancyapi.Empty{}
+func (s *Server) GetCVJobKinds(
+	ctx context.Context,
+	req *cvapi.GetCVJobKindsRequest,
+) (*cvapi.GetCVJobKindsResponse, error) {
+	if _, err := s.getAuthClaims(ctx); err != nil {
+		return nil, status.Error(codes.Unauthenticated, "unauthorized")
 	}
 
-	return &vacancyapi.GetVacancyDetailsResponse_VacancyCompany{
-		Company: &vacancyapi.Company{
-			Id:      cd.ID,
-			Title:   cd.Title,
-			LogoUrl: cd.LogoURL,
+	cvjts, err := s.cv.GetCVJobKinds(ctx, req.Id)
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	cafs := make([]*cvapi.CVJobKind, 0, len(cvjts))
+	for i, vc := range cvjts {
+		cafs[i] = &cvapi.CVJobKind{
+			Id:   vc.ID,
+			Name: vc.Name,
+		}
+	}
+
+	return &cvapi.GetCVJobKindsResponse{CvJobKind: cafs}, nil
+}
+
+func (s *Server) DeleteCVJobKinds(
+	ctx context.Context,
+	req *cvapi.DeleteCVJobKindsRequest,
+) (*cvapi.DeleteCVJobKindsResponse, error) {
+	claims, err := s.getAuthClaims(ctx)
+	if err != nil || !s.isAdminAccountType(claims) {
+		return nil, status.Error(codes.Unauthenticated, "unauthorized")
+	}
+
+	err = s.cv.DeleteCVJobKinds(ctx, req.Id)
+	switch errors.Cause(err) {
+	case nil:
+	case cvController.ErrCVJobKindNotFound:
+		return nil, status.Error(codes.NotFound, err.Error())
+	}
+
+	return &cvapi.DeleteCVJobKindsResponse{}, nil
+}
+
+// Experience
+func (s *Server) UpsertExperience(
+	ctx context.Context,
+	req *cvapi.UpsertExperienceRequest,
+) (*cvapi.UpsertExperienceResponse, error) {
+	claims, err := s.getAuthClaims(ctx)
+	if err != nil || !s.isAdminAccountType(claims) {
+		return nil, status.Error(codes.Unauthenticated, "unauthorized")
+	}
+
+	dateFrom, err := ptypes.Timestamp(req.DateFrom)
+	if err != nil {
+		return nil, errors.New("invalid date from")
+	}
+
+	dateTill, err := ptypes.Timestamp(req.DateTill)
+	if err != nil {
+		return nil, errors.New("invalid date till")
+	}
+
+	jobTypeID, err := s.cv.PutExperience(ctx, req.CvId, &cvController.CVExperience{
+		CompanyName: req.CompanyName,
+		DateFrom:    dateFrom,
+		DateTill:    dateTill,
+		Position:    req.Position,
+		Description: req.Description,
+	})
+
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	return &cvapi.UpsertExperienceResponse{
+		Id: string(jobTypeID),
+	}, nil
+}
+
+func (s *Server) GetExperiences(
+	ctx context.Context,
+	req *cvapi.GetExperiencesRequest,
+) (*cvapi.GetExperiencesResponse, error) {
+	if _, err := s.getAuthClaims(ctx); err != nil {
+		return nil, status.Error(codes.Unauthenticated, "unauthorized")
+	}
+
+	jks, err := s.cv.GetExperiences(ctx, req.CvId)
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	cve := make([]*cvapi.CVExperience, 0, len(jks))
+
+	for i, vc := range jks {
+		dateFrom, err := ptypes.TimestampProto(vc.DateFrom)
+		if err != nil {
+			return nil, errors.New("invalid date from")
+		}
+
+		dateTill, err := ptypes.TimestampProto(vc.DateTill)
+		if err != nil {
+			return nil, errors.New("invalid date till")
+		}
+
+		cve[i] = &cvapi.CVExperience{
+			Id:          vc.ID,
+			CompanyName: vc.CompanyName,
+			DateFrom:    dateFrom,
+			DateTill:    dateTill,
+			Position:    vc.Position,
+			Description: vc.Description,
+		}
+	}
+
+	return &cvapi.GetExperiencesResponse{CvExperience: cve}, nil
+}
+
+func (s *Server) DeleteExperience(
+	ctx context.Context,
+	req *cvapi.DeleteExperienceRequest,
+) (*cvapi.DeleteExperienceResponse, error) {
+	claims, err := s.getAuthClaims(ctx)
+	if err != nil || !s.isAdminAccountType(claims) {
+		return nil, status.Error(codes.Unauthenticated, "unauthorized")
+	}
+
+	err = s.cv.DeleteExperience(ctx, req.Id)
+	switch errors.Cause(err) {
+	case nil:
+	case cvController.ErrExperienceNotFound:
+		return nil, status.Error(codes.NotFound, err.Error())
+	}
+
+	return &cvapi.DeleteExperienceResponse{}, nil
+}
+
+// Education
+func (s *Server) UpsertEducation(
+	ctx context.Context,
+	req *cvapi.UpsertEducationRequest,
+) (*cvapi.UpsertEducationResponse, error) {
+	claims, err := s.getAuthClaims(ctx)
+	if err != nil || !s.isAdminAccountType(claims) {
+		return nil, status.Error(codes.Unauthenticated, "unauthorized")
+	}
+
+	dateFrom, err := ptypes.Timestamp(req.DateFrom)
+	if err != nil {
+		return nil, errors.New("invalid date from")
+	}
+
+	dateTill, err := ptypes.Timestamp(req.DateTill)
+	if err != nil {
+		return nil, errors.New("invalid date till")
+	}
+
+	jobTypeID, err := s.cv.PutEducation(ctx, req.CvId, &cvController.CVEducation{
+		ID:          *getOptionalString(req.Id),
+		Institution: req.Institution,
+		DateFrom:    dateFrom,
+		DateTill:    dateTill,
+		Speciality:  req.Speciality,
+		Description: req.Description,
+	})
+
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	return &cvapi.UpsertEducationResponse{
+		Id: string(jobTypeID),
+	}, nil
+}
+
+func (s *Server) GetEducations(
+	ctx context.Context,
+	req *cvapi.GetEducationsRequest,
+) (*cvapi.GetEducationsResponse, error) {
+	if _, err := s.getAuthClaims(ctx); err != nil {
+		return nil, status.Error(codes.Unauthenticated, "unauthorized")
+	}
+
+	es, err := s.cv.GetEducations(ctx, req.CvId)
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	cve := make([]*cvapi.CVEducation, 0, len(es))
+	for i, vc := range es {
+		dateFrom, err := ptypes.TimestampProto(vc.DateFrom)
+		if err != nil {
+			return nil, errors.New("invalid date from")
+		}
+
+		dateTill, err := ptypes.TimestampProto(vc.DateTill)
+		if err != nil {
+			return nil, errors.New("invalid date till")
+		}
+
+		cve[i] = &cvapi.CVEducation{
+			Id:          vc.ID,
+			Institution: vc.Institution,
+			DateFrom:    dateFrom,
+			DateTill:    dateTill,
+			Speciality:  vc.Speciality,
+			Description: vc.Description,
+		}
+	}
+
+	return &cvapi.GetEducationsResponse{CvEducation: cve}, nil
+}
+
+func (s *Server) DeleteEducation(
+	ctx context.Context,
+	req *cvapi.DeleteEducationRequest,
+) (*cvapi.DeleteEducationResponse, error) {
+	claims, err := s.getAuthClaims(ctx)
+	if err != nil || !s.isAdminAccountType(claims) {
+		return nil, status.Error(codes.Unauthenticated, "unauthorized")
+	}
+
+	err = s.cv.DeleteEducation(ctx, req.Id)
+	switch errors.Cause(err) {
+	case nil:
+	case cvController.ErrEducationNotFound:
+		return nil, status.Error(codes.NotFound, err.Error())
+	}
+
+	return &cvapi.DeleteEducationResponse{}, nil
+}
+
+// Custom section
+func (s *Server) UpsertCustomSection(
+	ctx context.Context,
+	req *cvapi.UpsertCustomSectionRequest,
+) (*cvapi.UpsertCustomSectionResponse, error) {
+	claims, err := s.getAuthClaims(ctx)
+	if err != nil || !s.isAdminAccountType(claims) {
+		return nil, status.Error(codes.Unauthenticated, "unauthorized")
+	}
+
+	jobTypeID, err := s.cv.PutCustomSection(ctx, req.CvId, &cvController.CVCustomSection{
+		ID:          *getOptionalString(req.Id),
+		Description: req.Description,
+	})
+
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	return &cvapi.UpsertCustomSectionResponse{
+		Id: string(jobTypeID),
+	}, nil
+}
+
+func (s *Server) GetCustomSections(
+	ctx context.Context,
+	req *cvapi.GetCustomSectionsRequest,
+) (*cvapi.GetCustomSectionsResponse, error) {
+	if _, err := s.getAuthClaims(ctx); err != nil {
+		return nil, status.Error(codes.Unauthenticated, "unauthorized")
+	}
+
+	jks, err := s.cv.GetCustomSections(ctx, req.CvId)
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	cve := make([]*cvapi.CVCustomSection, 0, len(jks))
+	for i, vc := range jks {
+		cve[i] = &cvapi.CVCustomSection{
+			Id:          vc.ID,
+			Description: vc.Description,
+		}
+	}
+
+	return &cvapi.GetCustomSectionsResponse{CvCustomSection: cve}, nil
+}
+
+func (s *Server) DeleteCustomSection(
+	ctx context.Context,
+	req *cvapi.DeleteCustomSectionRequest,
+) (*cvapi.DeleteCustomSectionResponse, error) {
+	claims, err := s.getAuthClaims(ctx)
+	if err != nil || !s.isAdminAccountType(claims) {
+		return nil, status.Error(codes.Unauthenticated, "unauthorized")
+	}
+
+	err = s.cv.DeleteCustomSection(ctx, req.Id)
+	switch errors.Cause(err) {
+	case nil:
+	case cvController.ErrCustomSectionNotFound:
+		return nil, status.Error(codes.NotFound, err.Error())
+	}
+
+	return &cvapi.DeleteCustomSectionResponse{}, nil
+}
+
+// Story
+func (s *Server) UpsertStory(
+	ctx context.Context,
+	req *cvapi.UpsertStoryRequest,
+) (*cvapi.UpsertStoryResponse, error) {
+	claims, err := s.getAuthClaims(ctx)
+	if err != nil || !s.isAdminAccountType(claims) {
+		return nil, status.Error(codes.Unauthenticated, "unauthorized")
+	}
+
+	jobTypeID, err := s.cv.PutStory(ctx, req.CvId, &cvController.CVCustomStory{
+		ID:          *getOptionalString(req.Id),
+		ChapterName: req.ChapterName,
+		MediaURL:    req.MediaUrl,
+	})
+
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	return &cvapi.UpsertStoryResponse{
+		Id: string(jobTypeID),
+	}, nil
+}
+
+func (s *Server) GetStories(
+	ctx context.Context,
+	req *cvapi.GetStoriesRequest,
+) (*cvapi.GetStoriesResponse, error) {
+	if _, err := s.getAuthClaims(ctx); err != nil {
+		return nil, status.Error(codes.Unauthenticated, "unauthorized")
+	}
+
+	jks, err := s.cv.GetStories(ctx, req.CvId)
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	cve := make([]*cvapi.CVCustomStory, 0, len(jks))
+	for i, vc := range jks {
+		cve[i] = &cvapi.CVCustomStory{
+			Id:          vc.ID,
+			ChapterName: vc.ChapterName,
+			MediaUrl:    vc.MediaURL,
+		}
+	}
+
+	return &cvapi.GetStoriesResponse{CvCustomStory: cve}, nil
+}
+
+func (s *Server) DeleteStory(
+	ctx context.Context,
+	req *cvapi.DeleteStoryRequest,
+) (*cvapi.DeleteStoryResponse, error) {
+	claims, err := s.getAuthClaims(ctx)
+	if err != nil || !s.isAdminAccountType(claims) {
+		return nil, status.Error(codes.Unauthenticated, "unauthorized")
+	}
+
+	err = s.cv.DeleteStory(ctx, req.Id)
+	switch errors.Cause(err) {
+	case nil:
+	case cvController.ErrStoriesNotFound:
+		return nil, status.Error(codes.NotFound, err.Error())
+	}
+
+	return &cvapi.DeleteStoryResponse{}, nil
+}
+
+// Stories episode
+func (s *Server) UpsertStoriesEpisode(
+	ctx context.Context,
+	req *cvapi.UpsertStoriesEpisodeRequest,
+) (*cvapi.UpsertStoriesEpisodeResponse, error) {
+	claims, err := s.getAuthClaims(ctx)
+	if err != nil || !s.isAdminAccountType(claims) {
+		return nil, status.Error(codes.Unauthenticated, "unauthorized")
+	}
+
+	jobTypeID, err := s.cv.PutStoriesEpisode(ctx, &cvController.StoryEpisode{
+		ID:       *getOptionalString(req.Id),
+		StoryID:  req.StoryId,
+		MediaURL: req.MediaUrl,
+	})
+
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	return &cvapi.UpsertStoriesEpisodeResponse{
+		Id: string(jobTypeID),
+	}, nil
+}
+
+func (s *Server) GetStoriesEpisodes(
+	ctx context.Context,
+	req *cvapi.GetStoriesEpisodesRequest,
+) (*cvapi.GetStoriesEpisodesResponse, error) {
+	if _, err := s.getAuthClaims(ctx); err != nil {
+		return nil, status.Error(codes.Unauthenticated, "unauthorized")
+	}
+
+	jks, err := s.cv.GetStoriesEpisodes(ctx, req.CvId)
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	cve := make([]*cvapi.StoryEpisode, 0, len(jks))
+	for i, vc := range jks {
+		cve[i] = &cvapi.StoryEpisode{
+			Id:       vc.ID,
+			StoryId:  vc.StoryID,
+			MediaUrl: vc.MediaURL,
+		}
+	}
+
+	return &cvapi.GetStoriesEpisodesResponse{StoryEpisode: cve}, nil
+}
+
+func (s *Server) DeleteStoriesEpisode(
+	ctx context.Context,
+	req *cvapi.DeleteStoriesEpisodeRequest,
+) (*cvapi.DeleteStoriesEpisodeResponse, error) {
+	claims, err := s.getAuthClaims(ctx)
+	if err != nil || !s.isAdminAccountType(claims) {
+		return nil, status.Error(codes.Unauthenticated, "unauthorized")
+	}
+
+	err = s.cv.DeleteStory(ctx, req.Id)
+	switch errors.Cause(err) {
+	case nil:
+	case cvController.ErrStoriesEpisodesNotFound:
+		return nil, status.Error(codes.NotFound, err.Error())
+	}
+
+	return &cvapi.DeleteStoriesEpisodeResponse{}, nil
+}
+
+//  rpc UpsertCV (UpsertCVRequest) returns (UpsertCVResponse);
+//  rpc GetCV (GetCVRequest) returns (GetCVResponse);
+//  rpc GetCVs (GetCVsRequest) returns (GetCVsResponse);
+//  rpc DeleteCV (DeleteCVRequest) returns (DeleteCVResponse);
+
+//	PutCV(
+//		ctx context.Context,
+//		cv *cvController.CV,
+//	) (cvController.CVID, error)
+//	GetCV(ctx context.Context, CVID string) (*cvController.CV, error)
+//	GetCVs(
+//		ctx context.Context,
+//		personaID string,
+//	) ([]*cvController.CVShort, error)
+//	DeleteCV(
+//		ctx context.Context,
+//		CVID string,
+//	) error
+
+// CV
+func (s *Server) UpsertCV(
+	ctx context.Context,
+	req *cvapi.UpsertCVRequest,
+) (*cvapi.UpsertCVResponse, error) {
+	claims, err := s.getAuthClaims(ctx)
+	if err != nil || !s.isAdminAccountType(claims) {
+		return nil, status.Error(codes.Unauthenticated, "unauthorized")
+	}
+
+	jobTypeID, err := s.cv.PutCV(ctx, &cvController.CV{
+		ID:                   *getOptionalString(req.Id),
+		PersonaID:            req.PersonaId,
+		Position:             req.Position,
+		WorkMonthsExperience: req.WorkMonthsExperience,
+		MinSalary:            req.MinSalary,
+		MaxSalary:            req.MaxSalary,
+	})
+
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	return &cvapi.UpsertCVResponse{
+		Id: string(jobTypeID),
+	}, nil
+}
+
+func (s *Server) GetCV(
+	ctx context.Context,
+	req *cvapi.GetCVRequest,
+) (*cvapi.GetCVResponse, error) {
+	if _, err := s.getAuthClaims(ctx); err != nil {
+		return nil, status.Error(codes.Unauthenticated, "unauthorized")
+	}
+
+	vc, err := s.cv.GetCV(ctx, req.Id)
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
+
+	return &cvapi.GetCVResponse{
+		Cv: &cvapi.CV{
+			Id:                   vc.ID,
+			PersonaId:            vc.PersonaID,
+			Position:             vc.Position,
+			WorkMonthsExperience: vc.WorkMonthsExperience,
+			MinSalary:            vc.MinSalary,
+			MaxSalary:            vc.MaxSalary,
 		},
-		Description: &vacancyapi.GetVacancyDetailsResponse_CompanyDescription{
-			Description: cd.Description,
-		},
-	}
+	}, nil
 }
 
-func toControllerCursor(cursor *wrappers.StringValue) *vacancyController.Cursor {
-	if cursor == nil {
-		return nil
+func (s *Server) GetCVs(
+	ctx context.Context,
+	req *cvapi.GetCVsRequest,
+) (*cvapi.GetCVsResponse, error) {
+	if _, err := s.getAuthClaims(ctx); err != nil {
+		return nil, status.Error(codes.Unauthenticated, "unauthorized")
 	}
 
-	vc := vacancyController.Cursor(cursor.Value)
+	jks, err := s.cv.GetCVs(ctx, req.PersonaId)
+	if err != nil {
+		return nil, status.Error(codes.Internal, err.Error())
+	}
 
-	return &vc
+	cve := make([]*cvapi.CVShort, 0, len(jks))
+	for i, vc := range jks {
+		cve[i] = &cvapi.CVShort{
+			Id:                   vc.ID,
+			Position:             vc.Position,
+			WorkMonthsExperience: vc.WorkMonthsExperience,
+			MinSalary:            vc.MinSalary,
+			MaxSalary:            vc.MaxSalary,
+		}
+	}
+	return &cvapi.GetCVsResponse{CvShort: cve}, nil
 }
 
-func toServerCursor(cursor *vacancyController.Cursor) *wrappers.StringValue {
-	if cursor == nil {
-		return nil
+func (s *Server) DeleteCV(
+	ctx context.Context,
+	req *cvapi.DeleteCVRequest,
+) (*cvapi.DeleteCVResponse, error) {
+	claims, err := s.getAuthClaims(ctx)
+	if err != nil || !s.isAdminAccountType(claims) {
+		return nil, status.Error(codes.Unauthenticated, "unauthorized")
 	}
 
-	return &wrappers.StringValue{Value: cursor.String()}
-}
-
-func toServerVacancyType(at vacancyController.VacancyType) vacancyapi.VacancyType {
-	switch at {
-	case vacancyController.VacancyTypeNormal:
-		return vacancyapi.VacancyType_VACANCY_TYPE_NORMAL
-	case vacancyController.VacancyTypeRemote:
-		return vacancyapi.VacancyType_VACANCY_TYPE_REMOTE
-	default:
-		return vacancyapi.VacancyType_VACANCY_TYPE_UNKNOWN
+	err = s.cv.DeleteCV(ctx, req.Id)
+	switch errors.Cause(err) {
+	case nil:
+	case cvController.ErrCVNotFound:
+		return nil, status.Error(codes.NotFound, err.Error())
 	}
-}
 
-func toControllerVacancyType(at vacancyapi.VacancyType) (vacancyController.VacancyType, error) {
-	switch at {
-	case vacancyapi.VacancyType_VACANCY_TYPE_UNKNOWN:
-		return "", errors.New("default unknown account type")
-	case vacancyapi.VacancyType_VACANCY_TYPE_NORMAL:
-		return vacancyController.VacancyTypeNormal, nil
-	case vacancyapi.VacancyType_VACANCY_TYPE_REMOTE:
-		return vacancyController.VacancyTypeRemote, nil
-	default:
-		return "", errors.New("unknown account type")
-	}
+	return &cvapi.DeleteCVResponse{}, nil
 }

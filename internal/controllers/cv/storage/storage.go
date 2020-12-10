@@ -71,13 +71,13 @@ type CVCustomSection struct {
 type CVCustomStory struct {
 	ID          string
 	ChapterName string
-	MediaUrl    string
+	MediaURL    string
 }
 
 type StoryEpisode struct {
-	StoryID  string
 	ID       string
-	MediaUrl string
+	StoryID  string
+	MediaURL string
 }
 
 type CV struct {
@@ -129,10 +129,7 @@ func (s *Storage) TxPutJobType(ctx context.Context, tx pkgtx.Tx, jobType *JobTyp
 	return nil
 }
 
-func (s *Storage) TxGetJobTypes(
-	ctx context.Context,
-	tx pkgtx.Tx,
-) (_ []*JobType, rerr error) {
+func (s *Storage) TxGetJobTypes(ctx context.Context, tx pkgtx.Tx) (_ []*JobType, rerr error) {
 	c := postgresql.FromTx(tx)
 
 	rows, err := c.QueryContext(
@@ -190,7 +187,7 @@ func (s *Storage) TxDeleteJobType(ctx context.Context, tx pkgtx.Tx, jobTypeID st
 func (s *Storage) TxPutCVJobTypes(
 	ctx context.Context,
 	tx pkgtx.Tx,
-	CVID string,
+	cvID string,
 	jobTypesIDs []string,
 ) error {
 	c := postgresql.FromTx(tx)
@@ -206,7 +203,7 @@ func (s *Storage) TxPutCVJobTypes(
 	for i := 0; i < len(jobTypesIDs); i++ {
 		offset := i * columns
 		valueStrings[i] = fmt.Sprintf("($%d, $%d)", offset+1, offset+2)
-		valueArgs[offset] = CVID
+		valueArgs[offset] = cvID
 		valueArgs[offset+1] = jobTypesIDs[i]
 	}
 
@@ -224,7 +221,7 @@ func (s *Storage) TxPutCVJobTypes(
 func (s *Storage) TxGetCVJobTypes(
 	ctx context.Context,
 	tx pkgtx.Tx,
-	CVID string,
+	cvID string,
 ) ([]*CVJobType, error) {
 	c := postgresql.FromTx(tx)
 
@@ -235,7 +232,7 @@ func (s *Storage) TxGetCVJobTypes(
 			INNER JOIN job_type AS jt
 			ON cjt.job_type_id = jt.id
 			WHERE cv_id = $1`,
-		CVID,
+		cvID,
 	)
 	if err != nil {
 		return nil, errors.WithStack(err)
@@ -256,14 +253,14 @@ func (s *Storage) TxGetCVJobTypes(
 	return cvjts, nil
 }
 
-func (s *Storage) TxDeleteCVJobTypes(ctx context.Context, tx pkgtx.Tx, CVID string) error {
+func (s *Storage) TxDeleteCVJobTypes(ctx context.Context, tx pkgtx.Tx, cvID string) error {
 	c := postgresql.FromTx(tx)
 
 	if _, err := c.ExecContext(
 		ctx,
 		`DELETE FROM cv_job_types 
 			WHERE cv_id = $1`,
-		CVID,
+		cvID,
 	); err != nil {
 		return errors.WithStack(err)
 	}
@@ -331,21 +328,21 @@ func (s *Storage) TxGetJobKinds(
 		}
 	}()
 
-	jts := make([]*JobKind, 0)
+	jks := make([]*JobKind, 0)
 
 	for rows.Next() {
-		var jt JobKind
-		if err := rows.Scan(&jt.ID, &jt.Name, &jt.CreatedAt, &jt.UpdatedAt); err != nil {
+		var jk JobKind
+		if err := rows.Scan(&jk.ID, &jk.Name, &jk.CreatedAt, &jk.UpdatedAt); err != nil {
 			return nil, errors.WithStack(err)
 		}
 
-		jts = append(jts, &jt)
+		jks = append(jks, &jk)
 	}
 	if rows.Err() != nil {
 		return nil, errors.WithStack(rows.Err())
 	}
 
-	return jts, nil
+	return jks, nil
 }
 
 func (s *Storage) TxDeleteJobKind(ctx context.Context, tx pkgtx.Tx, jobKindID string) error {
@@ -366,7 +363,7 @@ func (s *Storage) TxDeleteJobKind(ctx context.Context, tx pkgtx.Tx, jobKindID st
 func (s *Storage) TxPutCVJobKinds(
 	ctx context.Context,
 	tx pkgtx.Tx,
-	CVID string,
+	cvID string,
 	jobKindsIDs []string,
 ) error {
 	c := postgresql.FromTx(tx)
@@ -382,7 +379,7 @@ func (s *Storage) TxPutCVJobKinds(
 	for i := 0; i < len(jobKindsIDs); i++ {
 		offset := i * columns
 		valueStrings[i] = fmt.Sprintf("($%d, $%d)", offset+1, offset+2)
-		valueArgs[offset] = CVID
+		valueArgs[offset] = cvID
 		valueArgs[offset+1] = jobKindsIDs[i]
 	}
 
@@ -400,7 +397,7 @@ func (s *Storage) TxPutCVJobKinds(
 func (s *Storage) TxGetCVJobKinds(
 	ctx context.Context,
 	tx pkgtx.Tx,
-	CVID string,
+	cvID string,
 ) ([]*CVJobKind, error) {
 	c := postgresql.FromTx(tx)
 
@@ -411,7 +408,7 @@ func (s *Storage) TxGetCVJobKinds(
 			INNER JOIN job_kind AS jk
 			ON cjk.job_kind_id = jk.id
 			WHERE cv_id = $1`,
-		CVID,
+		cvID,
 	)
 	if err != nil {
 		return nil, errors.WithStack(err)
@@ -432,14 +429,14 @@ func (s *Storage) TxGetCVJobKinds(
 	return cvjks, nil
 }
 
-func (s *Storage) TxDeleteCVJobKinds(ctx context.Context, tx pkgtx.Tx, CVID string) error {
+func (s *Storage) TxDeleteCVJobKinds(ctx context.Context, tx pkgtx.Tx, cvID string) error {
 	c := postgresql.FromTx(tx)
 
 	if _, err := c.ExecContext(
 		ctx,
 		`DELETE FROM cv_job_kinds 
 			WHERE cv_id = $1`,
-		CVID,
+		cvID,
 	); err != nil {
 		return errors.WithStack(err)
 	}
@@ -455,7 +452,7 @@ Job kinds part end
 Experience part start
 */
 
-func (s *Storage) TxPutExperience(ctx context.Context, tx pkgtx.Tx, CVID string, experience *CVExperience) error {
+func (s *Storage) TxPutExperience(ctx context.Context, tx pkgtx.Tx, cvID string, experience *CVExperience) error {
 	c := postgresql.FromTx(tx)
 
 	if _, err := c.ExecContext(
@@ -475,7 +472,7 @@ func (s *Storage) TxPutExperience(ctx context.Context, tx pkgtx.Tx, CVID string,
 			SELECT $1, $2, $3, $4, $5, $6, $7
 			WHERE NOT EXISTS (SELECT * FROM upsert)`,
 		experience.ID,
-		CVID,
+		cvID,
 		experience.CompanyName,
 		experience.DateFrom,
 		experience.DateTill,
@@ -491,7 +488,7 @@ func (s *Storage) TxPutExperience(ctx context.Context, tx pkgtx.Tx, CVID string,
 func (s *Storage) TxGetExperiences(
 	ctx context.Context,
 	tx pkgtx.Tx,
-	CVID string,
+	cvID string,
 ) ([]*CVExperience, error) {
 	c := postgresql.FromTx(tx)
 
@@ -500,7 +497,7 @@ func (s *Storage) TxGetExperiences(
 		`SELECT id, company_name, date_from, date_till, position, description
 			FROM experience
 			WHERE cv_id = $1`,
-		CVID,
+		cvID,
 	)
 	if err != nil {
 		return nil, errors.WithStack(err)
@@ -550,7 +547,7 @@ Experience part end
 /**
 Education part start
 */
-func (s *Storage) TxPutEducation(ctx context.Context, tx pkgtx.Tx, CVID string, education *CVEducation) error {
+func (s *Storage) TxPutEducation(ctx context.Context, tx pkgtx.Tx, cvID string, education *CVEducation) error {
 	c := postgresql.FromTx(tx)
 
 	if _, err := c.ExecContext(
@@ -570,7 +567,7 @@ func (s *Storage) TxPutEducation(ctx context.Context, tx pkgtx.Tx, CVID string, 
 			SELECT $1, $2, $3, $4, $5, $6, $7
 			WHERE NOT EXISTS (SELECT * FROM upsert)`,
 		education.ID,
-		CVID,
+		cvID,
 		education.Institution,
 		education.DateFrom,
 		education.DateTill,
@@ -586,7 +583,7 @@ func (s *Storage) TxPutEducation(ctx context.Context, tx pkgtx.Tx, CVID string, 
 func (s *Storage) TxGetEducations(
 	ctx context.Context,
 	tx pkgtx.Tx,
-	CVID string,
+	cvID string,
 ) ([]*CVEducation, error) {
 	c := postgresql.FromTx(tx)
 
@@ -595,7 +592,7 @@ func (s *Storage) TxGetEducations(
 		`SELECT id, institution, date_from, date_till, speciality, description
 			FROM education
 			WHERE cv_id = $1`,
-		CVID,
+		cvID,
 	)
 	if err != nil {
 		return nil, errors.WithStack(err)
@@ -645,7 +642,7 @@ Education part end
 /**
 Custom sections part start
 */
-func (s *Storage) TxPutCustomSections(ctx context.Context, tx pkgtx.Tx, CVID string, education *CVCustomSection) error {
+func (s *Storage) TxPutCustomSection(ctx context.Context, tx pkgtx.Tx, cvID string, education *CVCustomSection) error {
 	c := postgresql.FromTx(tx)
 
 	if _, err := c.ExecContext(
@@ -661,7 +658,7 @@ func (s *Storage) TxPutCustomSections(ctx context.Context, tx pkgtx.Tx, CVID str
 			SELECT $1, $2, $3
 			WHERE NOT EXISTS (SELECT * FROM upsert)`,
 		education.ID,
-		CVID,
+		cvID,
 		education.Description,
 	); err != nil {
 		return errors.WithStack(err)
@@ -673,7 +670,7 @@ func (s *Storage) TxPutCustomSections(ctx context.Context, tx pkgtx.Tx, CVID str
 func (s *Storage) TxGetCustomSections(
 	ctx context.Context,
 	tx pkgtx.Tx,
-	CVID string,
+	cvID string,
 ) ([]*CVCustomSection, error) {
 	c := postgresql.FromTx(tx)
 
@@ -682,7 +679,7 @@ func (s *Storage) TxGetCustomSections(
 		`SELECT id, description
 			FROM custom_section
 			WHERE cv_id = $1`,
-		CVID,
+		cvID,
 	)
 	if err != nil {
 		return nil, errors.WithStack(err)
@@ -728,7 +725,7 @@ Custom sections end
 /**
 Story part start
 */
-func (s *Storage) TxPutStory(ctx context.Context, tx pkgtx.Tx, CVID string, story *CVCustomStory) error {
+func (s *Storage) TxPutStory(ctx context.Context, tx pkgtx.Tx, cvID string, story *CVCustomStory) error {
 	c := postgresql.FromTx(tx)
 
 	if _, err := c.ExecContext(
@@ -744,7 +741,7 @@ func (s *Storage) TxPutStory(ctx context.Context, tx pkgtx.Tx, CVID string, stor
 			SELECT $1, $2, $3
 			WHERE NOT EXISTS (SELECT * FROM upsert)`,
 		story.ID,
-		CVID,
+		cvID,
 		story.ChapterName,
 	); err != nil {
 		return errors.WithStack(err)
@@ -756,7 +753,7 @@ func (s *Storage) TxPutStory(ctx context.Context, tx pkgtx.Tx, CVID string, stor
 func (s *Storage) TxGetStories(
 	ctx context.Context,
 	tx pkgtx.Tx,
-	CVID string,
+	cvID string,
 ) ([]*CVCustomStory, error) {
 	c := postgresql.FromTx(tx)
 
@@ -765,7 +762,7 @@ func (s *Storage) TxGetStories(
 		`SELECT id, chapter_name
 			FROM story
 			WHERE cv_id = $1`,
-		CVID,
+		cvID,
 	)
 	if err != nil {
 		return nil, errors.WithStack(err)
@@ -811,7 +808,7 @@ Story end
 /**
 Stories episodes start
 */
-func (s *Storage) TxPutStoriesEpisodes(ctx context.Context, tx pkgtx.Tx, story *StoryEpisode) error {
+func (s *Storage) TxPutStoriesEpisode(ctx context.Context, tx pkgtx.Tx, story *StoryEpisode) error {
 	c := postgresql.FromTx(tx)
 
 	if _, err := c.ExecContext(
@@ -828,7 +825,7 @@ func (s *Storage) TxPutStoriesEpisodes(ctx context.Context, tx pkgtx.Tx, story *
 			WHERE NOT EXISTS (SELECT * FROM upsert)`,
 		story.ID,
 		story.StoryID,
-		story.MediaUrl,
+		story.MediaURL,
 	); err != nil {
 		return errors.WithStack(err)
 	}
@@ -836,7 +833,7 @@ func (s *Storage) TxPutStoriesEpisodes(ctx context.Context, tx pkgtx.Tx, story *
 	return nil
 }
 
-func (s *Storage) TxGetStoriesEpisodesById(
+func (s *Storage) TxGetStoriesEpisodesByID(
 	ctx context.Context,
 	tx pkgtx.Tx,
 	storyEpisodeID string,
@@ -858,7 +855,7 @@ func (s *Storage) TxGetStoriesEpisodesById(
 
 	for rows.Next() {
 		var se StoryEpisode
-		if err := rows.Scan(&se.StoryID, &se.ID, &se.MediaUrl); err != nil {
+		if err := rows.Scan(&se.StoryID, &se.ID, &se.MediaURL); err != nil {
 			_ = rows.Close()
 			return nil, errors.WithStack(err)
 		}
@@ -872,7 +869,7 @@ func (s *Storage) TxGetStoriesEpisodesById(
 func (s *Storage) TxGetStoriesEpisodes(
 	ctx context.Context,
 	tx pkgtx.Tx,
-	CVID string,
+	cvID string,
 ) ([]*StoryEpisode, error) {
 	c := postgresql.FromTx(tx)
 
@@ -883,7 +880,7 @@ func (s *Storage) TxGetStoriesEpisodes(
 			INNER JOIN story AS s
 			ON se.stories_id = s.id
 			WHERE s.cv_id = $1`,
-		CVID,
+		cvID,
 	)
 	if err != nil {
 		return nil, errors.WithStack(err)
@@ -893,7 +890,7 @@ func (s *Storage) TxGetStoriesEpisodes(
 
 	for rows.Next() {
 		var se StoryEpisode
-		if err := rows.Scan(&se.StoryID, &se.ID, &se.MediaUrl); err != nil {
+		if err := rows.Scan(&se.StoryID, &se.ID, &se.MediaURL); err != nil {
 			_ = rows.Close()
 			return nil, errors.WithStack(err)
 		}
@@ -904,7 +901,7 @@ func (s *Storage) TxGetStoriesEpisodes(
 	return ses, nil
 }
 
-func (s *Storage) TxDeleteStoriesEpisodes(ctx context.Context, tx pkgtx.Tx, episodeID string) error {
+func (s *Storage) TxDeleteStoriesEpisode(ctx context.Context, tx pkgtx.Tx, episodeID string) error {
 	c := postgresql.FromTx(tx)
 
 	if _, err := c.ExecContext(
@@ -960,7 +957,7 @@ func (s *Storage) TxPutCV(ctx context.Context, tx pkgtx.Tx, cv *CV) error {
 	return nil
 }
 
-func (s *Storage) TxGetCV(ctx context.Context, tx pkgtx.Tx, CVID string) (*CV, error) {
+func (s *Storage) TxGetCV(ctx context.Context, tx pkgtx.Tx, cvID string) (*CV, error) {
 	c := postgresql.FromTx(tx)
 
 	var cv CV
@@ -969,7 +966,7 @@ func (s *Storage) TxGetCV(ctx context.Context, tx pkgtx.Tx, CVID string) (*CV, e
 		`SELECT id, persona_id, position, work_months_experience, min_salary, max_salary, created_at, updated_at
 				FROM cv
 				WHERE id = $1`,
-		CVID,
+		cvID,
 	).Scan(
 		&cv.ID,
 		&cv.PersonaID,
