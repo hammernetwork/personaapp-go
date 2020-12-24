@@ -82,23 +82,18 @@ type Storage interface {
 	) ([]*storage.CVJobKind, error)
 	TxDeleteCVJobKinds(ctx context.Context, tx pkgtx.Tx, cvID string) error
 
-	TxPutExperience(ctx context.Context, tx pkgtx.Tx, cvID string, experience *storage.CVExperience) error
-	TxGetExperiences(
-		ctx context.Context,
-		tx pkgtx.Tx,
-		cvID string,
-	) ([]*storage.CVExperience, error)
+	TxPutExperience(ctx context.Context, tx pkgtx.Tx, experience *storage.CVExperience) error
+	TxGetExperience(ctx context.Context, tx pkgtx.Tx, experienceID string) (*storage.CVExperience, error)
+	TxGetExperiences(ctx context.Context, tx pkgtx.Tx, cvID string) ([]*storage.CVExperience, error)
 	TxDeleteExperience(ctx context.Context, tx pkgtx.Tx, experienceID string) error
 
-	TxPutEducation(ctx context.Context, tx pkgtx.Tx, cvID string, education *storage.CVEducation) error
-	TxGetEducations(
-		ctx context.Context,
-		tx pkgtx.Tx,
-		cvID string,
-	) ([]*storage.CVEducation, error)
+	TxPutEducation(ctx context.Context, tx pkgtx.Tx, education *storage.CVEducation) error
+	TxGetEducation(ctx context.Context, tx pkgtx.Tx, educationID string) (*storage.CVEducation, error)
+	TxGetEducations(ctx context.Context, tx pkgtx.Tx, cvID string) ([]*storage.CVEducation, error)
 	TxDeleteEducation(ctx context.Context, tx pkgtx.Tx, educationID string) error
 
-	TxPutCustomSection(ctx context.Context, tx pkgtx.Tx, cvID string, education *storage.CVCustomSection) error
+	TxPutCustomSection(ctx context.Context, tx pkgtx.Tx, education *storage.CVCustomSection) error
+	TxGetCustomSection(ctx context.Context, tx pkgtx.Tx, sectionID string) (*storage.CVCustomSection, error)
 	TxGetCustomSections(
 		ctx context.Context,
 		tx pkgtx.Tx,
@@ -106,7 +101,8 @@ type Storage interface {
 	) ([]*storage.CVCustomSection, error)
 	TxDeleteCustomSection(ctx context.Context, tx pkgtx.Tx, sectionID string) error
 
-	TxPutStory(ctx context.Context, tx pkgtx.Tx, cvID string, story *storage.CVCustomStory) error
+	TxPutStory(ctx context.Context, tx pkgtx.Tx, story *storage.CVCustomStory) error
+	TxGetStory(ctx context.Context, tx pkgtx.Tx, storyID string) (*storage.CVCustomStory, error)
 	TxGetStories(
 		ctx context.Context,
 		tx pkgtx.Tx,
@@ -156,17 +152,19 @@ type StoryEpisode struct {
 
 type CVCustomStory struct {
 	ID          string
+	CvID        string
 	ChapterName string
-	MediaURL    string `valid:"stringlength(10|2000),media_link"`
 }
 
 type CVCustomSection struct {
 	ID          string
+	CvID        string
 	Description string
 }
 
 type CVEducation struct {
 	ID          string
+	CvID        string
 	Institution string
 	DateFrom    time.Time
 	DateTill    time.Time
@@ -176,6 +174,7 @@ type CVEducation struct {
 
 type CVExperience struct {
 	ID          string
+	CvID        string
 	CompanyName string
 	DateFrom    time.Time
 	DateTill    time.Time
@@ -573,16 +572,16 @@ func (c *Controller) DeleteCVJobKinds(
 // Experience
 func (c *Controller) PutExperience(
 	ctx context.Context,
-	cvID string,
+	experienceID *string,
 	experience *CVExperience,
 ) (ExperienceID, error) {
 	var ID ExperienceID
 
 	if err := pkgtx.RunInTx(ctx, c.s, func(ctx context.Context, tx pkgtx.Tx) error {
-		if &experience.ID != nil {
-			switch _, err := c.s.TxGetExperiences(ctx, tx, cvID); errors.Cause(err) {
+		if experienceID != nil {
+			switch _, err := c.s.TxGetExperience(ctx, tx, *experienceID); errors.Cause(err) {
 			case nil:
-				ID = ExperienceID(experience.ID)
+				ID = ExperienceID(*experienceID)
 			case storage.ErrNotFound:
 				return errors.WithStack(ErrExperiencesNotFound)
 			default:
@@ -594,6 +593,7 @@ func (c *Controller) PutExperience(
 
 		experience := storage.CVExperience{
 			ID:          string(ID),
+			CVID:        experience.CvID,
 			CompanyName: experience.CompanyName,
 			DateFrom:    experience.DateFrom,
 			DateTill:    experience.DateTill,
@@ -601,7 +601,7 @@ func (c *Controller) PutExperience(
 			Description: experience.Description,
 		}
 
-		return errors.WithStack(c.s.TxPutExperience(ctx, tx, cvID, &experience))
+		return errors.WithStack(c.s.TxPutExperience(ctx, tx, &experience))
 	}); err != nil {
 		return ID, errors.WithStack(err)
 	}
@@ -658,16 +658,20 @@ func (c *Controller) DeleteExperience(
 }
 
 // Education
-func (c *Controller) PutEducation(ctx context.Context, cvID string, education *CVEducation) (EducationID, error) {
+func (c *Controller) PutEducation(
+	ctx context.Context,
+	educationID *string,
+	education *CVEducation,
+) (EducationID, error) {
 	var ID EducationID
 
 	if err := pkgtx.RunInTx(ctx, c.s, func(ctx context.Context, tx pkgtx.Tx) error {
-		if &education.ID != nil {
-			switch _, err := c.s.TxGetStories(ctx, tx, cvID); errors.Cause(err) {
+		if educationID != nil {
+			switch _, err := c.s.TxGetEducation(ctx, tx, *educationID); errors.Cause(err) {
 			case nil:
-				ID = EducationID(education.ID)
+				ID = EducationID(*educationID)
 			case storage.ErrNotFound:
-				return errors.WithStack(ErrCustomSectionsNotFound)
+				return errors.WithStack(ErrEducationNotFound)
 			default:
 				return errors.WithStack(err)
 			}
@@ -677,6 +681,7 @@ func (c *Controller) PutEducation(ctx context.Context, cvID string, education *C
 
 		education := storage.CVEducation{
 			ID:          string(ID),
+			CVID:        education.CvID,
 			Institution: education.Institution,
 			DateFrom:    education.DateFrom,
 			DateTill:    education.DateTill,
@@ -684,7 +689,7 @@ func (c *Controller) PutEducation(ctx context.Context, cvID string, education *C
 			Description: education.Description,
 		}
 
-		return errors.WithStack(c.s.TxPutEducation(ctx, tx, cvID, &education))
+		return errors.WithStack(c.s.TxPutEducation(ctx, tx, &education))
 	}); err != nil {
 		return ID, errors.WithStack(err)
 	}
@@ -708,6 +713,7 @@ func (c *Controller) GetEducations(
 	for idx, education := range se {
 		educations[idx] = &CVEducation{
 			ID:          education.ID,
+			CvID:        education.CVID,
 			Institution: education.Institution,
 			DateFrom:    education.DateFrom,
 			DateTill:    education.DateTill,
@@ -743,16 +749,16 @@ func (c *Controller) DeleteEducation(
 // Custom section
 func (c *Controller) PutCustomSection(
 	ctx context.Context,
-	cvID string,
+	sectionID *string,
 	customSection *CVCustomSection,
 ) (CustomSectionID, error) {
 	var ID CustomSectionID
 
 	if err := pkgtx.RunInTx(ctx, c.s, func(ctx context.Context, tx pkgtx.Tx) error {
-		if &customSection.ID != nil {
-			switch _, err := c.s.TxGetStories(ctx, tx, cvID); errors.Cause(err) {
+		if sectionID != nil {
+			switch _, err := c.s.TxGetCustomSection(ctx, tx, *sectionID); errors.Cause(err) {
 			case nil:
-				ID = CustomSectionID(customSection.ID)
+				ID = CustomSectionID(*sectionID)
 			case storage.ErrNotFound:
 				return errors.WithStack(ErrCustomSectionsNotFound)
 			default:
@@ -762,12 +768,13 @@ func (c *Controller) PutCustomSection(
 			ID = CustomSectionID(uuid.NewV4().String())
 		}
 
-		customSection := storage.CVCustomSection{
+		section := storage.CVCustomSection{
 			ID:          string(ID),
+			CVID:        customSection.CvID,
 			Description: customSection.Description,
 		}
 
-		return errors.WithStack(c.s.TxPutCustomSection(ctx, tx, cvID, &customSection))
+		return errors.WithStack(c.s.TxPutCustomSection(ctx, tx, &section))
 	}); err != nil {
 		return ID, errors.WithStack(err)
 	}
@@ -792,6 +799,7 @@ func (c *Controller) GetCustomSections(
 	for idx, section := range se {
 		sections[idx] = &CVCustomSection{
 			ID:          section.ID,
+			CvID:        section.CVID,
 			Description: section.Description,
 		}
 	}
@@ -823,7 +831,7 @@ func (c *Controller) DeleteCustomSection(
 // Stories
 func (c *Controller) PutStory(
 	ctx context.Context,
-	cvID string,
+	storyID *string,
 	story *CVCustomStory,
 ) (StoryID, error) {
 	var ID StoryID
@@ -833,10 +841,10 @@ func (c *Controller) PutStory(
 	}
 
 	if err := pkgtx.RunInTx(ctx, c.s, func(ctx context.Context, tx pkgtx.Tx) error {
-		if &story.ID != nil {
-			switch _, err := c.s.TxGetStories(ctx, tx, cvID); errors.Cause(err) {
+		if storyID != nil {
+			switch _, err := c.s.TxGetStory(ctx, tx, *storyID); errors.Cause(err) {
 			case nil:
-				ID = StoryID(story.ID)
+				ID = StoryID(*storyID)
 			case storage.ErrNotFound:
 				return errors.WithStack(ErrStoriesNotFound)
 			default:
@@ -848,11 +856,11 @@ func (c *Controller) PutStory(
 
 		customStory := storage.CVCustomStory{
 			ID:          string(ID),
+			CVID:        story.CvID,
 			ChapterName: story.ChapterName,
-			MediaURL:    story.MediaURL,
 		}
 
-		return errors.WithStack(c.s.TxPutStory(ctx, tx, cvID, &customStory))
+		return errors.WithStack(c.s.TxPutStory(ctx, tx, &customStory))
 	}); err != nil {
 		return ID, errors.WithStack(err)
 	}
@@ -877,8 +885,8 @@ func (c *Controller) GetStories(
 	for idx, story := range se {
 		stories[idx] = &CVCustomStory{
 			ID:          story.ID,
+			CvID:        story.CVID,
 			ChapterName: story.ChapterName,
-			MediaURL:    story.MediaURL,
 		}
 	}
 
@@ -909,6 +917,7 @@ func (c *Controller) DeleteStory(
 // Stories episodes
 func (c *Controller) PutStoriesEpisode(
 	ctx context.Context,
+	episodeID *string,
 	storyEpisode *StoryEpisode,
 ) (StoriesEpisodeID, error) {
 	var ID StoriesEpisodeID
@@ -918,10 +927,10 @@ func (c *Controller) PutStoriesEpisode(
 	}
 
 	if err := pkgtx.RunInTx(ctx, c.s, func(ctx context.Context, tx pkgtx.Tx) error {
-		if &storyEpisode.ID != nil {
-			switch _, err := c.s.TxGetStoriesEpisodesByID(ctx, tx, storyEpisode.ID); errors.Cause(err) {
+		if episodeID != nil {
+			switch _, err := c.s.TxGetStoriesEpisodesByID(ctx, tx, *episodeID); errors.Cause(err) {
 			case nil:
-				ID = StoriesEpisodeID(storyEpisode.ID)
+				ID = StoriesEpisodeID(*episodeID)
 			case storage.ErrNotFound:
 				return errors.WithStack(ErrStoriesEpisodesNotFound)
 			default:
@@ -994,15 +1003,16 @@ func (c *Controller) DeleteStoriesEpisode(
 // CV
 func (c *Controller) PutCV(
 	ctx context.Context,
+	cvID *string,
 	cv *CV,
 ) (CVID, error) {
 	var ID CVID
 
 	if err := pkgtx.RunInTx(ctx, c.s, func(ctx context.Context, tx pkgtx.Tx) error {
-		if &cv.ID != nil {
-			switch _, err := c.s.TxGetCV(ctx, tx, cv.ID); errors.Cause(err) {
+		if cvID != nil {
+			switch _, err := c.s.TxGetCV(ctx, tx, *cvID); errors.Cause(err) {
 			case nil:
-				ID = CVID(cv.ID)
+				ID = CVID(*cvID)
 			case storage.ErrNotFound:
 				return errors.WithStack(ErrCVNotFound)
 			default:

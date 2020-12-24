@@ -64,7 +64,7 @@ type CVController interface {
 
 	PutExperience(
 		ctx context.Context,
-		cvID string,
+		experienceID *string,
 		experience *cvController.CVExperience,
 	) (cvController.ExperienceID, error)
 	GetExperiences(
@@ -78,7 +78,7 @@ type CVController interface {
 
 	PutEducation(
 		ctx context.Context,
-		cvID string,
+		educationID *string,
 		education *cvController.CVEducation,
 	) (cvController.EducationID, error)
 	GetEducations(
@@ -92,7 +92,7 @@ type CVController interface {
 
 	PutCustomSection(
 		ctx context.Context,
-		cvID string,
+		sectionID *string,
 		customSection *cvController.CVCustomSection,
 	) (cvController.CustomSectionID, error)
 	GetCustomSections(
@@ -106,7 +106,7 @@ type CVController interface {
 
 	PutStory(
 		ctx context.Context,
-		cvID string,
+		storyID *string,
 		story *cvController.CVCustomStory,
 	) (cvController.StoryID, error)
 	GetStories(
@@ -120,6 +120,7 @@ type CVController interface {
 
 	PutStoriesEpisode(
 		ctx context.Context,
+		episodeID *string,
 		storyEpisode *cvController.StoryEpisode,
 	) (cvController.StoriesEpisodeID, error)
 	GetStoriesEpisodes(
@@ -133,6 +134,7 @@ type CVController interface {
 
 	PutCV(
 		ctx context.Context,
+		cvID *string,
 		cv *cvController.CV,
 	) (cvController.CVID, error)
 	GetCV(ctx context.Context, cvID string) (*cvController.CV, error)
@@ -515,8 +517,9 @@ func (s *Server) UpsertEducation(
 		return nil, errors.New("invalid date till")
 	}
 
-	jobTypeID, err := s.cv.PutEducation(ctx, req.CvId, &cvController.CVEducation{
+	jobTypeID, err := s.cv.PutEducation(ctx, getOptionalString(req.Id), &cvController.CVEducation{
 		ID:          *getOptionalString(req.Id),
+		CvID:        req.CvId,
 		Institution: req.Institution,
 		DateFrom:    dateFrom,
 		DateTill:    dateTill,
@@ -600,8 +603,9 @@ func (s *Server) UpsertCustomSection(
 		return nil, status.Error(codes.Unauthenticated, "unauthorized")
 	}
 
-	jobTypeID, err := s.cv.PutCustomSection(ctx, req.CvId, &cvController.CVCustomSection{
+	jobTypeID, err := s.cv.PutCustomSection(ctx, getOptionalString(req.Id), &cvController.CVCustomSection{
 		ID:          *getOptionalString(req.Id),
+		CvID:        req.CvId,
 		Description: req.Description,
 	})
 
@@ -667,7 +671,7 @@ func (s *Server) UpsertStory(
 		return nil, status.Error(codes.Unauthenticated, "unauthorized")
 	}
 
-	jobTypeID, err := s.cv.PutStory(ctx, req.CvId, &cvController.CVCustomStory{
+	jobTypeID, err := s.cv.PutStory(ctx, getOptionalString(req.Id), &cvController.CVCustomStory{
 		ID:          *getOptionalString(req.Id),
 		ChapterName: req.ChapterName,
 		MediaURL:    req.MediaUrl,
@@ -795,25 +799,6 @@ func (s *Server) DeleteStoriesEpisode(
 	return &cvapi.DeleteStoriesEpisodeResponse{}, nil
 }
 
-//  rpc UpsertCV (UpsertCVRequest) returns (UpsertCVResponse);
-//  rpc GetCV (GetCVRequest) returns (GetCVResponse);
-//  rpc GetCVs (GetCVsRequest) returns (GetCVsResponse);
-//  rpc DeleteCV (DeleteCVRequest) returns (DeleteCVResponse);
-
-//	PutCV(
-//		ctx context.Context,
-//		cv *cvController.CV,
-//	) (cvController.CVID, error)
-//	GetCV(ctx context.Context, CVID string) (*cvController.CV, error)
-//	GetCVs(
-//		ctx context.Context,
-//		personaID string,
-//	) ([]*cvController.CVShort, error)
-//	DeleteCV(
-//		ctx context.Context,
-//		CVID string,
-//	) error
-
 // CV
 func (s *Server) UpsertCV(
 	ctx context.Context,
@@ -824,8 +809,8 @@ func (s *Server) UpsertCV(
 		return nil, status.Error(codes.Unauthenticated, "unauthorized")
 	}
 
-	jobTypeID, err := s.cv.PutCV(ctx, &cvController.CV{
-		ID:                   *getOptionalString(req.Id),
+	jobTypeID, err := s.cv.PutCV(ctx, getOptionalString(req.Id), &cvController.CV{
+		//ID:                   *getOptionalString(req.Id),
 		PersonaID:            req.PersonaId,
 		Position:             req.Position,
 		WorkMonthsExperience: req.WorkMonthsExperience,

@@ -123,7 +123,7 @@ var migrations = []*migrate.Migration{
 				CONSTRAINT auth_phone_pkey PRIMARY KEY (auth_id, phone)
 			);`,
 			`CREATE INDEX auth_phone_auth_id_idx ON auth_phone (auth_id);`,
-			`CREATE INDEX auth_phone_phone_idx ON auth_phone (email);`,
+			`CREATE INDEX auth_phone_phone_idx ON auth_phone (phone);`,
 		},
 		Down: []string{
 			`DROP INDEX IF EXISTS auth_phone_auth_id_idx;`,
@@ -288,12 +288,11 @@ var migrations = []*migrate.Migration{
 		Up: []string{
 			`CREATE TABLE IF NOT EXISTS cv (
 				id            			uuid					PRIMARY KEY,
-				persona_id	  			uuid					REFERENCES persona (auth_id) ON DELETE CASCADE,
+				persona_id	  			uuid					REFERENCES auth (account_id) ON DELETE CASCADE,
 				position				VARCHAR(255)			NULL,
 				work_months_experience  INTEGER					NULL,
 				min_salary	  			INTEGER					NULL,
 				max_salary	  			INTEGER					NULL,
-
 				created_at       		TIMESTAMPTZ     		NOT NULL,
 				updated_at       		TIMESTAMPTZ     		NOT NULL
 			);`,
@@ -302,7 +301,6 @@ var migrations = []*migrate.Migration{
 		Down: []string{
 			`DROP INDEX IF EXISTS created_at_position_id_cv_idx;`,
 			`DROP TABLE IF EXISTS cv;`,
-			`DROP TYPE IF EXISTS e_job_type;`,
 		},
 	},
 	{
@@ -355,7 +353,7 @@ var migrations = []*migrate.Migration{
 	{
 		Id: "20 - Create cv kinds of job table",
 		Up: []string{
-			`CREATE TABLE IF NOT EXISTS  cv_job_kinds  (
+			`CREATE TABLE IF NOT EXISTS cv_job_kinds  (
 				cv_id           		uuid            		REFERENCES cv (id) ON DELETE CASCADE,
 				job_kind_id    			uuid            		REFERENCES job_kind (id) ON DELETE CASCADE,
 				CONSTRAINT cv_job_kinds_pkey PRIMARY KEY (cv_id, job_kind_id)
@@ -428,7 +426,7 @@ var migrations = []*migrate.Migration{
 			);`,
 		},
 		Down: []string{
-			`DROP TABLE IF EXISTS story;`,
+			`DROP TABLE IF EXISTS story cascade;`,
 		},
 	},
 	{

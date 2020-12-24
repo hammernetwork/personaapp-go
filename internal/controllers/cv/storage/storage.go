@@ -47,6 +47,7 @@ type CVJobKind struct {
 
 type CVExperience struct {
 	ID          string
+	CVID        string
 	CompanyName string
 	DateFrom    time.Time
 	DateTill    time.Time
@@ -56,6 +57,7 @@ type CVExperience struct {
 
 type CVEducation struct {
 	ID          string
+	CVID        string
 	Institution string
 	DateFrom    time.Time
 	DateTill    time.Time
@@ -65,13 +67,14 @@ type CVEducation struct {
 
 type CVCustomSection struct {
 	ID          string
+	CVID        string
 	Description string
 }
 
 type CVCustomStory struct {
 	ID          string
+	CVID        string
 	ChapterName string
-	MediaURL    string
 }
 
 type StoryEpisode struct {
@@ -452,7 +455,7 @@ Job kinds part end
 Experience part start
 */
 
-func (s *Storage) TxPutExperience(ctx context.Context, tx pkgtx.Tx, cvID string, experience *CVExperience) error {
+func (s *Storage) TxPutExperience(ctx context.Context, tx pkgtx.Tx, experience *CVExperience) error {
 	c := postgresql.FromTx(tx)
 
 	if _, err := c.ExecContext(
@@ -472,7 +475,7 @@ func (s *Storage) TxPutExperience(ctx context.Context, tx pkgtx.Tx, cvID string,
 			SELECT $1, $2, $3, $4, $5, $6, $7
 			WHERE NOT EXISTS (SELECT * FROM upsert)`,
 		experience.ID,
-		cvID,
+		experience.CVID,
 		experience.CompanyName,
 		experience.DateFrom,
 		experience.DateTill,
@@ -483,6 +486,37 @@ func (s *Storage) TxPutExperience(ctx context.Context, tx pkgtx.Tx, cvID string,
 	}
 
 	return nil
+}
+
+func (s *Storage) TxGetExperience(ctx context.Context, tx pkgtx.Tx, experienceID string) (*CVExperience, error) {
+	c := postgresql.FromTx(tx)
+
+	var e CVExperience
+	err := c.QueryRowContext(
+		ctx,
+		`SELECT id, cv_id, company_name, date_from, date_till, position, description
+			FROM experience
+			WHERE id = $1`,
+		experienceID,
+	).Scan(
+		&e.ID,
+		&e.CVID,
+		&e.CompanyName,
+		&e.DateFrom,
+		&e.DateTill,
+		&e.Position,
+		&e.Description,
+	)
+
+	switch err {
+	case nil:
+	case sql.ErrNoRows:
+		return nil, errors.WithStack(ErrNotFound)
+	default:
+		return nil, errors.WithStack(err)
+	}
+
+	return &e, nil
 }
 
 func (s *Storage) TxGetExperiences(
@@ -547,7 +581,7 @@ Experience part end
 /**
 Education part start
 */
-func (s *Storage) TxPutEducation(ctx context.Context, tx pkgtx.Tx, cvID string, education *CVEducation) error {
+func (s *Storage) TxPutEducation(ctx context.Context, tx pkgtx.Tx, education *CVEducation) error {
 	c := postgresql.FromTx(tx)
 
 	if _, err := c.ExecContext(
@@ -567,7 +601,7 @@ func (s *Storage) TxPutEducation(ctx context.Context, tx pkgtx.Tx, cvID string, 
 			SELECT $1, $2, $3, $4, $5, $6, $7
 			WHERE NOT EXISTS (SELECT * FROM upsert)`,
 		education.ID,
-		cvID,
+		education.CVID,
 		education.Institution,
 		education.DateFrom,
 		education.DateTill,
@@ -580,6 +614,37 @@ func (s *Storage) TxPutEducation(ctx context.Context, tx pkgtx.Tx, cvID string, 
 	return nil
 }
 
+func (s *Storage) TxGetEducation(ctx context.Context, tx pkgtx.Tx, educationID string) (*CVEducation, error) {
+	c := postgresql.FromTx(tx)
+
+	var e CVEducation
+	err := c.QueryRowContext(
+		ctx,
+		`SELECT id, cv_id, institution, date_from, date_till, speciality, description
+			FROM education
+			WHERE id = $1`,
+		educationID,
+	).Scan(
+		&e.ID,
+		&e.CVID,
+		&e.Institution,
+		&e.DateFrom,
+		&e.DateTill,
+		&e.Speciality,
+		&e.Description,
+	)
+
+	switch err {
+	case nil:
+	case sql.ErrNoRows:
+		return nil, errors.WithStack(ErrNotFound)
+	default:
+		return nil, errors.WithStack(err)
+	}
+
+	return &e, nil
+}
+
 func (s *Storage) TxGetEducations(
 	ctx context.Context,
 	tx pkgtx.Tx,
@@ -589,7 +654,7 @@ func (s *Storage) TxGetEducations(
 
 	rows, err := c.QueryContext(
 		ctx,
-		`SELECT id, institution, date_from, date_till, speciality, description
+		`SELECT id, cv_id, institution, date_from, date_till, speciality, description
 			FROM education
 			WHERE cv_id = $1`,
 		cvID,
@@ -604,6 +669,7 @@ func (s *Storage) TxGetEducations(
 		var cve CVEducation
 		if err := rows.Scan(
 			&cve.ID,
+			&cve.CVID,
 			&cve.Institution,
 			&cve.DateFrom,
 			&cve.DateTill,
@@ -642,7 +708,7 @@ Education part end
 /**
 Custom sections part start
 */
-func (s *Storage) TxPutCustomSection(ctx context.Context, tx pkgtx.Tx, cvID string, education *CVCustomSection) error {
+func (s *Storage) TxPutCustomSection(ctx context.Context, tx pkgtx.Tx, section *CVCustomSection) error {
 	c := postgresql.FromTx(tx)
 
 	if _, err := c.ExecContext(
@@ -657,14 +723,41 @@ func (s *Storage) TxPutCustomSection(ctx context.Context, tx pkgtx.Tx, cvID stri
 			INSERT INTO custom_section (id, cv_id, description)
 			SELECT $1, $2, $3
 			WHERE NOT EXISTS (SELECT * FROM upsert)`,
-		education.ID,
-		cvID,
-		education.Description,
+		section.ID,
+		section.CVID,
+		section.Description,
 	); err != nil {
 		return errors.WithStack(err)
 	}
 
 	return nil
+}
+
+func (s *Storage) TxGetCustomSection(ctx context.Context, tx pkgtx.Tx, sectionID string) (*CVCustomSection, error) {
+	c := postgresql.FromTx(tx)
+
+	var cs CVCustomSection
+	err := c.QueryRowContext(
+		ctx,
+		`SELECT id, cv_id, description
+			FROM custom_section
+			WHERE id = $1`,
+		sectionID,
+	).Scan(
+		&cs.ID,
+		&cs.CVID,
+		&cs.Description,
+	)
+
+	switch err {
+	case nil:
+	case sql.ErrNoRows:
+		return nil, errors.WithStack(ErrNotFound)
+	default:
+		return nil, errors.WithStack(err)
+	}
+
+	return &cs, nil
 }
 
 func (s *Storage) TxGetCustomSections(
@@ -676,7 +769,7 @@ func (s *Storage) TxGetCustomSections(
 
 	rows, err := c.QueryContext(
 		ctx,
-		`SELECT id, description
+		`SELECT id, cv_id, description
 			FROM custom_section
 			WHERE cv_id = $1`,
 		cvID,
@@ -691,6 +784,7 @@ func (s *Storage) TxGetCustomSections(
 		var cvcs CVCustomSection
 		if err := rows.Scan(
 			&cvcs.ID,
+			&cvcs.CVID,
 			&cvcs.Description,
 		); err != nil {
 			_ = rows.Close()
@@ -725,7 +819,7 @@ Custom sections end
 /**
 Story part start
 */
-func (s *Storage) TxPutStory(ctx context.Context, tx pkgtx.Tx, cvID string, story *CVCustomStory) error {
+func (s *Storage) TxPutStory(ctx context.Context, tx pkgtx.Tx, story *CVCustomStory) error {
 	c := postgresql.FromTx(tx)
 
 	if _, err := c.ExecContext(
@@ -741,13 +835,40 @@ func (s *Storage) TxPutStory(ctx context.Context, tx pkgtx.Tx, cvID string, stor
 			SELECT $1, $2, $3
 			WHERE NOT EXISTS (SELECT * FROM upsert)`,
 		story.ID,
-		cvID,
+		story.CVID,
 		story.ChapterName,
 	); err != nil {
 		return errors.WithStack(err)
 	}
 
 	return nil
+}
+
+func (s *Storage) TxGetStory(ctx context.Context, tx pkgtx.Tx, storyID string) (*CVCustomStory, error) {
+	c := postgresql.FromTx(tx)
+
+	var e CVCustomStory
+	err := c.QueryRowContext(
+		ctx,
+		`SELECT id, cv_id, chapter_name
+			FROM story
+			WHERE id = $1`,
+		storyID,
+	).Scan(
+		&e.ID,
+		&e.CVID,
+		&e.ChapterName,
+	)
+
+	switch err {
+	case nil:
+	case sql.ErrNoRows:
+		return nil, errors.WithStack(ErrNotFound)
+	default:
+		return nil, errors.WithStack(err)
+	}
+
+	return &e, nil
 }
 
 func (s *Storage) TxGetStories(
@@ -759,7 +880,7 @@ func (s *Storage) TxGetStories(
 
 	rows, err := c.QueryContext(
 		ctx,
-		`SELECT id, chapter_name
+		`SELECT id, cv_id, chapter_name
 			FROM story
 			WHERE cv_id = $1`,
 		cvID,
@@ -774,6 +895,7 @@ func (s *Storage) TxGetStories(
 		var cvcs CVCustomStory
 		if err := rows.Scan(
 			&cvcs.ID,
+			&cvcs.CVID,
 			&cvcs.ChapterName,
 		); err != nil {
 			_ = rows.Close()
