@@ -36,6 +36,7 @@ linters:
     - gomnd
     - wsl
     - rowserrcheck
+    - dupl
 
 issues:
   exclude-rules:

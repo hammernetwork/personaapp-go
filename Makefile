@@ -75,7 +75,7 @@ grpc:
 	@$(GOINSTALL) github.com/golang/protobuf/protoc-gen-go
 
 	@-rm -rf ./pkg/grpcapi
-	@mkdir -p ./pkg/grpcapi/vacancy ./pkg/grpcapi/auth ./pkg/grpcapi/company ./pkg/grpcapi/city
+	@mkdir -p ./pkg/grpcapi/vacancy ./pkg/grpcapi/auth ./pkg/grpcapi/company ./pkg/grpcapi/city ./pkg/grpcapi/cv
 
 	@${PROTOC} \
         -I ./api \
@@ -95,6 +95,11 @@ grpc:
 	@${PROTOC} \
         -I ./api \
         ./api/city/city.proto \
+        --go_out=plugins=grpc:./pkg/grpcapi
+
+	@${PROTOC} \
+        -I ./api \
+        ./api/cv/cv.proto \
         --go_out=plugins=grpc:./pkg/grpcapi
 
 generate:

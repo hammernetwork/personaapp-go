@@ -10,7 +10,6 @@ import (
 	authController "personaapp/internal/controllers/auth/controller"
 	"personaapp/internal/controllers/city/controller"
 	"personaapp/internal/controllers/city/storage"
-	companyStorage "personaapp/internal/controllers/company/storage"
 	"personaapp/internal/testutils"
 	"testing"
 	"time"
@@ -27,13 +26,6 @@ func initStorage(t *testing.T) (_ *storage.Storage, closer func() error) {
 	require.NoError(t, testutils.Migrate(pg.DB, sqlMigrate.Up))
 
 	return storage.New(pg), pg.Close
-}
-
-func initCompanyStorage(t *testing.T) (_ *companyStorage.Storage, closer func() error) {
-	pg := testutils.EnsurePostgres(t)
-	require.NoError(t, testutils.Migrate(pg.DB, sqlMigrate.Up))
-
-	return companyStorage.New(pg), pg.Close
 }
 
 func cleanup(t *testing.T) {

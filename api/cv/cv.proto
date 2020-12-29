@@ -1,0 +1,419 @@
+syntax = "proto3";
+
+package personaappapi.cv;
+
+import "google/protobuf/wrappers.proto";
+import "google/protobuf/timestamp.proto";
+
+option java_package = "online.personaapp";
+option java_outer_classname = "GrpcCV";
+
+service PersonaAppCV {
+  rpc UpsertCV (UpsertCVRequest) returns (UpsertCVResponse);
+  rpc GetCV (GetCVRequest) returns (GetCVResponse);
+  rpc GetCVs (GetCVsRequest) returns (GetCVsResponse);
+  rpc DeleteCV (DeleteCVRequest) returns (DeleteCVResponse);
+
+  rpc UpsertStoriesEpisode (UpsertStoriesEpisodeRequest) returns (UpsertStoriesEpisodeResponse);
+  rpc GetStoriesEpisodes (GetStoriesEpisodesRequest) returns (GetStoriesEpisodesResponse);
+  rpc DeleteStoriesEpisode (DeleteStoriesEpisodeRequest) returns (DeleteStoriesEpisodeResponse);
+
+  rpc UpsertStory (UpsertStoryRequest) returns (UpsertStoryResponse);
+  rpc GetStories (GetStoriesRequest) returns (GetStoriesResponse);
+  rpc DeleteStory (DeleteStoryRequest) returns (DeleteStoryResponse);
+
+  rpc UpsertCustomSection (UpsertCustomSectionRequest) returns (UpsertCustomSectionResponse);
+  rpc GetCustomSections (GetCustomSectionsRequest) returns (GetCustomSectionsResponse);
+  rpc DeleteCustomSection (DeleteCustomSectionRequest) returns (DeleteCustomSectionResponse);
+
+  rpc UpsertEducation (UpsertEducationRequest) returns (UpsertEducationResponse);
+  rpc GetEducations (GetEducationsRequest) returns (GetEducationsResponse);
+  rpc DeleteEducation (DeleteEducationRequest) returns (DeleteEducationResponse);
+
+  rpc UpsertExperience (UpsertExperienceRequest) returns (UpsertExperienceResponse);
+  rpc GetExperiences (GetExperiencesRequest) returns (GetExperiencesResponse);
+  rpc DeleteExperience (DeleteExperienceRequest) returns (DeleteExperienceResponse);
+
+  rpc UpsertCVJobKinds (UpsertCVJobKindsRequest) returns (UpsertCVJobKindsResponse);
+  rpc GetCVJobKinds (GetCVJobKindsRequest) returns (GetCVJobKindsResponse);
+  rpc DeleteCVJobKinds (DeleteCVJobKindsRequest) returns (DeleteCVJobKindsResponse);
+
+  rpc UpsertJobKind (UpsertJobKindRequest) returns (UpsertJobKindResponse);
+  rpc GetJobKinds (GetJobKindsRequest) returns (GetJobKindsResponse);
+  rpc DeleteJobKind (DeleteJobKindRequest) returns (DeleteJobKindResponse);
+
+  rpc UpsertCVJobTypes (UpsertCVJobTypesRequest) returns (UpsertCVJobTypesResponse);
+  rpc GetCVJobTypes (GetCVJobTypesRequest) returns (GetCVJobTypesResponse);
+  rpc DeleteCVJobTypes (DeleteCVJobTypesRequest) returns (DeleteCVJobTypesResponse);
+
+  rpc UpsertJobType (UpsertJobTypeRequest) returns (UpsertJobTypeResponse);
+  rpc GetJobTypes (GetJobTypesRequest) returns (GetJobTypesResponse);
+  rpc DeleteJobType (DeleteJobTypeRequest) returns (DeleteJobTypeResponse);
+}
+
+// Upsert CV
+message UpsertCVRequest {
+  google.protobuf.StringValue id = 1;
+  string persona_id = 2;
+  string position = 3;
+  int32 work_months_experience = 4;
+  int32 min_salary = 5;
+  int32 max_salary = 6;
+}
+
+message UpsertCVResponse {
+  string id = 1;
+}
+
+// Get CVs personaID
+message GetCVsRequest {
+  string persona_id = 1;
+}
+
+message GetCVsResponse {
+  repeated CVShort cv_short = 1;
+}
+
+// Get CV
+message GetCVRequest {
+  string id = 1;
+}
+
+message GetCVResponse {
+  CV cv = 1;
+}
+
+// Delete CV
+message DeleteCVRequest {
+  string id = 1;
+}
+
+message DeleteCVResponse {
+}
+
+// Upsert stories episode
+message UpsertStoriesEpisodeRequest {
+  google.protobuf.StringValue id = 1;
+  string story_id = 2;
+  string media_url = 3;
+}
+
+message UpsertStoriesEpisodeResponse {
+  string id = 1;
+}
+
+// Get stories episodes
+message GetStoriesEpisodesRequest {
+  string cv_id = 1;
+}
+
+message GetStoriesEpisodesResponse {
+  repeated StoryEpisode story_episode = 1;
+}
+
+// Delete stories episode
+message DeleteStoriesEpisodeRequest {
+  string id = 1;
+}
+
+message DeleteStoriesEpisodeResponse {
+}
+
+// Upsert story
+message UpsertStoryRequest {
+  google.protobuf.StringValue id = 1;
+  string cv_id = 2;
+  string chapter_name = 3;
+  string media_url = 4;
+}
+
+message UpsertStoryResponse {
+  string id = 1;
+}
+
+// Get stories
+message GetStoriesRequest {
+  string cv_id = 1;
+}
+
+message GetStoriesResponse {
+  repeated CVCustomStory cv_custom_story = 1;
+}
+
+// Delete story
+message DeleteStoryRequest {
+  string id = 1;
+}
+
+message DeleteStoryResponse {
+}
+
+// Upsert custom section
+message UpsertCustomSectionRequest {
+  google.protobuf.StringValue id = 1;
+  string cv_id = 2;
+  string description = 3;
+}
+
+message UpsertCustomSectionResponse {
+  string id = 1;
+}
+
+// Get custom section
+message GetCustomSectionsRequest {
+  string cv_id = 1;
+}
+
+message GetCustomSectionsResponse {
+  repeated CVCustomSection cv_custom_section = 1;
+}
+
+// Delete custom section
+message DeleteCustomSectionRequest {
+  string id = 1;
+}
+
+message DeleteCustomSectionResponse {
+}
+
+// Upsert education
+message UpsertEducationRequest {
+  google.protobuf.StringValue id = 1;
+  string cv_id = 2;
+  string institution = 3;
+  google.protobuf.Timestamp date_from = 4;
+  google.protobuf.Timestamp date_till = 5;
+  string speciality = 6;
+  string description = 7;
+}
+
+message UpsertEducationResponse {
+  string id = 1;
+}
+
+// Get educations
+message GetEducationsRequest {
+  string cv_id = 1;
+}
+
+message GetEducationsResponse {
+  repeated CVEducation cv_education = 1;
+}
+
+// Delete education
+message DeleteEducationRequest {
+  string id = 1;
+}
+
+message DeleteEducationResponse {
+}
+
+// Upsert experience
+message UpsertExperienceRequest {
+  google.protobuf.StringValue id = 1;
+  string cv_id = 2;
+  string company_name = 3;
+  google.protobuf.Timestamp date_from = 4;
+  google.protobuf.Timestamp date_till = 5;
+  string position = 6;
+  string description = 7;
+}
+
+message UpsertExperienceResponse {
+  string id = 1;
+}
+
+// Get experience
+message GetExperiencesRequest {
+  string cv_id = 1;
+}
+
+message GetExperiencesResponse {
+  repeated CVExperience cv_experience = 1;
+}
+
+// Delete experience
+message DeleteExperienceRequest {
+  string id = 1;
+}
+
+message DeleteExperienceResponse {
+}
+
+// Upsert CV job kinds
+message UpsertCVJobKindsRequest {
+  string cv_id = 1;
+  repeated string jobKindsIDs = 5;
+}
+
+message UpsertCVJobKindsResponse {
+  string id = 1;
+}
+
+// Get CV job kinds
+message GetCVJobKindsRequest {
+  string id = 1;
+}
+
+message GetCVJobKindsResponse {
+  repeated CVJobKind cv_job_kind = 1;
+}
+
+// Delete CV job kinds
+message DeleteCVJobKindsRequest {
+  string id = 1;
+}
+
+message DeleteCVJobKindsResponse {
+}
+
+// Upsert job kind
+message UpsertJobKindRequest {
+  google.protobuf.StringValue id = 1;
+  string name = 2;
+}
+
+message UpsertJobKindResponse {
+  string id = 1;
+}
+
+// Get job type
+message GetJobKindsRequest {
+}
+
+message GetJobKindsResponse {
+  repeated JobKind job_kind = 1;
+}
+
+// Delete job type
+message DeleteJobKindRequest {
+  string id = 1;
+}
+
+message DeleteJobKindResponse {
+}
+
+// Upsert CV job types
+message UpsertCVJobTypesRequest {
+  string cv_id = 1;
+  repeated string jobTypesIDs = 5;
+}
+
+message UpsertCVJobTypesResponse {
+}
+
+// Get CV job types
+message GetCVJobTypesRequest {
+  string id = 1;
+}
+
+message GetCVJobTypesResponse {
+  repeated CVJobType cv_job_type = 1;
+}
+
+// Delete CV job types
+message DeleteCVJobTypesRequest {
+  string id = 1;
+}
+
+message DeleteCVJobTypesResponse {
+}
+
+// Upsert job type
+message UpsertJobTypeRequest {
+  google.protobuf.StringValue id = 1;
+  string name = 2;
+}
+
+message UpsertJobTypeResponse {
+  string id = 1;
+}
+
+// Get job type
+message GetJobTypesRequest {
+}
+
+message GetJobTypesResponse {
+  repeated JobType job_type = 1;
+}
+
+// Delete job type
+message DeleteJobTypeRequest {
+  string id = 1;
+}
+
+message DeleteJobTypeResponse {
+}
+
+// Models
+message CV {
+  string id = 1;
+  string persona_id = 2;
+  string position = 3;
+  int32 work_months_experience = 4;
+  int32 min_salary = 5;
+  int32 max_salary = 6;
+}
+
+message CVShort {
+  string id = 1;
+  string position = 2;
+  int32 work_months_experience = 3;
+  int32 min_salary = 4;
+  int32 max_salary = 5;
+}
+
+message StoryEpisode {
+  string id = 1;
+  string story_id = 2;
+  string media_url = 3;
+}
+
+message CVCustomStory {
+  string id = 1;
+  string chapter_name = 2;
+  string media_url = 3;
+}
+
+message CVCustomSection {
+  string id = 1;
+  string description = 6;
+}
+
+message CVEducation {
+  string id = 1;
+  string institution = 2;
+  google.protobuf.Timestamp date_from = 3;
+  google.protobuf.Timestamp date_till = 4;
+  string speciality = 5;
+  string description = 6;
+}
+
+message CVExperience {
+  string id = 1;
+  string company_name = 2;
+  google.protobuf.Timestamp date_from = 3;
+  google.protobuf.Timestamp date_till = 4;
+  string position = 5;
+  string description = 6;
+}
+
+message CVJobKind {
+  string id = 1;
+  string name = 2;
+}
+
+message JobKind {
+  string id = 1;
+  string name = 2;
+}
+
+message CVJobType {
+  string id = 1;
+  string name = 2;
+}
+
+message JobType {
+  string id = 1;
+  string name = 2;
+}
