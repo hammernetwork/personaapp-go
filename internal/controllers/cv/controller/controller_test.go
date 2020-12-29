@@ -294,18 +294,18 @@ func TestController_PutCV(t *testing.T) {
 		}
 		storyID := stories[0].ID
 
-		// Story episode
-		episodeMap := make(map[string]*controller.StoryEpisode)
+		// Episodes
+		episodesMap := make(map[string]*controller.StoryEpisode)
 		for i := 0; i < count; i++ {
-			section := &controller.StoryEpisode{
-				StoryID: storyID,
+			episode := &controller.StoryEpisode{
+				StoryID:  storyID,
 				MediaURL: fmt.Sprintf("MediaURL %d", i+1),
 			}
-			ID, err := c.PutStoriesEpisode(context.TODO(), nil, section)
+			ID, err := c.PutStoriesEpisode(context.TODO(), nil, episode)
 			require.NoError(t, err)
 			require.NotNil(t, ID)
 
-			episodeMap[string(ID)] = section
+			episodesMap[string(ID)] = episode
 		}
 
 		episodes, err := c.GetStoriesEpisodes(context.TODO(), string(cvID))
@@ -313,10 +313,91 @@ func TestController_PutCV(t *testing.T) {
 		require.Equal(t, count, len(stories))
 
 		for _, cat := range episodes {
-			require.NotNil(t, episodeMap[cat.ID])
-			require.Equal(t, episodeMap[cat.ID].StoryID, cat.StoryID)
-			require.Equal(t, episodeMap[cat.ID].MediaURL, cat.MediaURL)
+			require.NotNil(t, episodesMap[cat.ID])
+			require.Equal(t, episodesMap[cat.ID].StoryID, cat.StoryID)
+			require.Equal(t, episodesMap[cat.ID].MediaURL, cat.MediaURL)
 		}
+
+		// Job kind
+		kindMap := make(map[string]*controller.JobKind)
+		for i := 0; i < count; i++ {
+			section := &controller.JobKind{
+				Name: fmt.Sprintf("Name %d", i+1),
+			}
+			ID, err := c.PutJobKind(context.TODO(), nil, section)
+			require.NoError(t, err)
+			require.NotNil(t, ID)
+
+			kindMap[string(ID)] = section
+		}
+
+		kinds, err := c.GetJobKinds(context.TODO())
+		require.NoError(t, err)
+		require.Equal(t, count, len(kinds))
+
+		for _, cat := range kinds {
+			require.NotNil(t, kindMap[cat.ID])
+			require.Equal(t, kindMap[cat.ID].Name, cat.Name)
+		}
+
+		// CV Job kind
+		cvKinds := make([]string, count)
+		for i := 0; i < count; i++ {
+			cvKinds[i] = kinds[i].ID
+		}
+
+		err = c.PutCVJobKinds(context.TODO(), string(cvID), cvKinds)
+		require.NoError(t, err)
+
+		cvJobKinds, err := c.GetCVJobKinds(context.TODO(), string(cvID))
+		require.NoError(t, err)
+
+		for idx, cat := range cvJobKinds {
+			require.NotNil(t, cvJobKinds[idx])
+			require.Equal(t, cvJobKinds[idx].ID, cat.ID)
+			require.Equal(t, cvJobKinds[idx].Name, cat.Name)
+		}
+
+		// Job types
+		typeMap := make(map[string]*controller.JobType)
+		for i := 0; i < count; i++ {
+			section := &controller.JobType{
+				Name: fmt.Sprintf("Name %d", i+1),
+			}
+			ID, err := c.PutJobType(context.TODO(), nil, section)
+			require.NoError(t, err)
+			require.NotNil(t, ID)
+
+			typeMap[string(ID)] = section
+		}
+
+		tpes, err := c.GetJobTypes(context.TODO())
+		require.NoError(t, err)
+		require.Equal(t, count, len(tpes))
+
+		for _, cat := range kinds {
+			require.NotNil(t, kindMap[cat.ID])
+			require.Equal(t, kindMap[cat.ID].Name, cat.Name)
+		}
+
+		// CV Job types
+		cvTypes := make([]string, count)
+		for i := 0; i < count; i++ {
+			cvTypes[i] = tpes[i].ID
+		}
+
+		err = c.PutCVJobTypes(context.TODO(), string(cvID), cvTypes)
+		require.NoError(t, err)
+
+		cvJobTypes, err := c.GetCVJobTypes(context.TODO(), string(cvID))
+		require.NoError(t, err)
+
+		for idx, cat := range cvJobTypes {
+			require.NotNil(t, cvJobTypes[idx])
+			require.Equal(t, cvJobTypes[idx].ID, cat.ID)
+			require.Equal(t, cvJobTypes[idx].Name, cat.Name)
+		}
+
 	})
 
 }

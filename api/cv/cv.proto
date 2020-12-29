@@ -210,12 +210,13 @@ message DeleteEducationResponse {
 
 // Upsert experience
 message UpsertExperienceRequest {
-  string cv_id = 1;
-  string company_name = 2;
-  google.protobuf.Timestamp date_from = 3;
-  google.protobuf.Timestamp date_till = 4;
-  string position = 5;
-  string description = 6;
+  google.protobuf.StringValue id = 1;
+  string cv_id = 2;
+  string company_name = 3;
+  google.protobuf.Timestamp date_from = 4;
+  google.protobuf.Timestamp date_till = 5;
+  string position = 6;
+  string description = 7;
 }
 
 message UpsertExperienceResponse {
@@ -268,8 +269,8 @@ message DeleteCVJobKindsResponse {
 
 // Upsert job kind
 message UpsertJobKindRequest {
-  //    google.protobuf.StringValue id = 1;
-  string name = 1;
+  google.protobuf.StringValue id = 1;
+  string name = 2;
 }
 
 message UpsertJobKindResponse {
@@ -320,8 +321,8 @@ message DeleteCVJobTypesResponse {
 
 // Upsert job type
 message UpsertJobTypeRequest {
-  //    google.protobuf.StringValue id = 1;
-  string name = 1;
+  google.protobuf.StringValue id = 1;
+  string name = 2;
 }
 
 message UpsertJobTypeResponse {

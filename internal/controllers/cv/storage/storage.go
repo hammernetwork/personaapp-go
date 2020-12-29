@@ -132,6 +132,34 @@ func (s *Storage) TxPutJobType(ctx context.Context, tx pkgtx.Tx, jobType *JobTyp
 	return nil
 }
 
+func (s *Storage) TxGetJobType(ctx context.Context, tx pkgtx.Tx, jobTypeID string) (*JobType, error) {
+	c := postgresql.FromTx(tx)
+
+	var e JobType
+	err := c.QueryRowContext(
+		ctx,
+		`SELECT id, name, created_at, updated_at
+			FROM job_type
+			WHERE id = $1`,
+		jobTypeID,
+	).Scan(
+		&e.ID,
+		&e.Name,
+		&e.CreatedAt,
+		&e.UpdatedAt,
+	)
+
+	switch err {
+	case nil:
+	case sql.ErrNoRows:
+		return nil, errors.WithStack(ErrNotFound)
+	default:
+		return nil, errors.WithStack(err)
+	}
+
+	return &e, nil
+}
+
 func (s *Storage) TxGetJobTypes(ctx context.Context, tx pkgtx.Tx) (_ []*JobType, rerr error) {
 	c := postgresql.FromTx(tx)
 
@@ -303,6 +331,34 @@ func (s *Storage) TxPutJobKind(ctx context.Context, tx pkgtx.Tx, jobKind *JobKin
 	}
 
 	return nil
+}
+
+func (s *Storage) TxGetJobKind(ctx context.Context, tx pkgtx.Tx, jobKindID string) (*JobKind, error) {
+	c := postgresql.FromTx(tx)
+
+	var e JobKind
+	err := c.QueryRowContext(
+		ctx,
+		`SELECT id, name, created_at, updated_at
+			FROM job_kind
+			WHERE id = $1`,
+		jobKindID,
+	).Scan(
+		&e.ID,
+		&e.Name,
+		&e.CreatedAt,
+		&e.UpdatedAt,
+	)
+
+	switch err {
+	case nil:
+	case sql.ErrNoRows:
+		return nil, errors.WithStack(ErrNotFound)
+	default:
+		return nil, errors.WithStack(err)
+	}
+
+	return &e, nil
 }
 
 func (s *Storage) TxGetJobKinds(

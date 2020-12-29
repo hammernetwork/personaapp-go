@@ -14,6 +14,7 @@ import (
 type CVController interface {
 	PutJobType(
 		ctx context.Context,
+		jobTypeID *string,
 		jobType *cvController.JobType,
 	) (cvController.JobTypeID, error)
 	GetJobTypes(ctx context.Context) ([]*cvController.JobType, error)
@@ -38,6 +39,7 @@ type CVController interface {
 
 	PutJobKind(
 		ctx context.Context,
+		jobKindID *string,
 		jobKind *cvController.JobKind,
 	) (cvController.JobKindID, error)
 	GetJobKinds(
@@ -158,7 +160,8 @@ func (s *Server) UpsertJobType(
 		return nil, status.Error(codes.Unauthenticated, "unauthorized")
 	}
 
-	jobTypeID, err := s.cv.PutJobType(ctx, &cvController.JobType{
+	jobTypeID, err := s.cv.PutJobType(ctx, getOptionalString(req.Id), &cvController.JobType{
+		ID:   *getOptionalString(req.Id),
 		Name: req.Name,
 	})
 
@@ -285,7 +288,8 @@ func (s *Server) UpsertJobKind(
 		return nil, status.Error(codes.Unauthenticated, "unauthorized")
 	}
 
-	jobTypeID, err := s.cv.PutJobKind(ctx, &cvController.JobKind{
+	jobTypeID, err := s.cv.PutJobKind(ctx, getOptionalString(req.Id), &cvController.JobKind{
+		ID:   *getOptionalString(req.Id),
 		Name: req.Name,
 	})
 
@@ -422,7 +426,9 @@ func (s *Server) UpsertExperience(
 		return nil, errors.New("invalid date till")
 	}
 
-	jobTypeID, err := s.cv.PutExperience(ctx, req.CvId, &cvController.CVExperience{
+	jobTypeID, err := s.cv.PutExperience(ctx, getOptionalString(req.Id), &cvController.CVExperience{
+		ID:          *getOptionalString(req.Id),
+		CvID:        req.CvId,
 		CompanyName: req.CompanyName,
 		DateFrom:    dateFrom,
 		DateTill:    dateTill,
@@ -674,7 +680,6 @@ func (s *Server) UpsertStory(
 	jobTypeID, err := s.cv.PutStory(ctx, getOptionalString(req.Id), &cvController.CVCustomStory{
 		ID:          *getOptionalString(req.Id),
 		ChapterName: req.ChapterName,
-		MediaURL:    req.MediaUrl,
 	})
 
 	if err != nil {
@@ -704,7 +709,6 @@ func (s *Server) GetStories(
 		cve[i] = &cvapi.CVCustomStory{
 			Id:          vc.ID,
 			ChapterName: vc.ChapterName,
-			MediaUrl:    vc.MediaURL,
 		}
 	}
 
@@ -740,7 +744,7 @@ func (s *Server) UpsertStoriesEpisode(
 		return nil, status.Error(codes.Unauthenticated, "unauthorized")
 	}
 
-	jobTypeID, err := s.cv.PutStoriesEpisode(ctx, &cvController.StoryEpisode{
+	jobTypeID, err := s.cv.PutStoriesEpisode(ctx, getOptionalString(req.Id), &cvController.StoryEpisode{
 		ID:       *getOptionalString(req.Id),
 		StoryID:  req.StoryId,
 		MediaURL: req.MediaUrl,

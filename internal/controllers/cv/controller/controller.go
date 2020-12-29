@@ -63,6 +63,7 @@ type Storage interface {
 	TxDeleteCVJobTypes(ctx context.Context, tx pkgtx.Tx, cvID string) error
 
 	TxPutJobKind(ctx context.Context, tx pkgtx.Tx, jobKind *storage.JobKind) error
+	TxGetJobKind(ctx context.Context, tx pkgtx.Tx, jobKindID string) (*storage.JobKind, error)
 	TxGetJobKinds(
 		ctx context.Context,
 		tx pkgtx.Tx,
@@ -286,11 +287,11 @@ func (vc *CVCustomStory) validate() error {
 }
 
 // Job Type
-func (c *Controller) PutJobType(ctx context.Context, jobType *JobType) (JobTypeID, error) {
+func (c *Controller) PutJobType(ctx context.Context, jobTypeID *string, jobType *JobType) (JobTypeID, error) {
 	var ID JobTypeID
 
 	if err := pkgtx.RunInTx(ctx, c.s, func(ctx context.Context, tx pkgtx.Tx) error {
-		if &jobType.ID != nil {
+		if jobTypeID != nil {
 			switch _, err := c.s.TxGetJobTypes(ctx, tx); errors.Cause(err) {
 			case nil:
 				ID = JobTypeID(jobType.ID)
@@ -428,14 +429,18 @@ func (c *Controller) DeleteCVJobTypes(
 }
 
 // Job Kinds
-func (c *Controller) PutJobKind(ctx context.Context, jobKind *JobKind) (JobKindID, error) {
+func (c *Controller) PutJobKind(
+	ctx context.Context,
+	jobKindID *string,
+	jobKind *JobKind,
+) (JobKindID, error) {
 	var ID JobKindID
 
 	if err := pkgtx.RunInTx(ctx, c.s, func(ctx context.Context, tx pkgtx.Tx) error {
-		if &jobKind.ID != nil {
-			switch _, err := c.s.TxGetJobKinds(ctx, tx); errors.Cause(err) {
+		if jobKindID != nil {
+			switch _, err := c.s.TxGetJobKind(ctx, tx, *jobKindID); errors.Cause(err) {
 			case nil:
-				ID = JobKindID(jobKind.ID)
+				ID = JobKindID(*jobKindID)
 			case storage.ErrNotFound:
 				return errors.WithStack(ErrJobKindsNotFound)
 			default:
