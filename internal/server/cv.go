@@ -151,10 +151,10 @@ type CVController interface {
 }
 
 // Job Type
-func (s *Server) UpsertJobType(
+func (s *Server) UpdateJobType(
 	ctx context.Context,
-	req *cvapi.UpsertJobTypeRequest,
-) (*cvapi.UpsertJobTypeResponse, error) {
+	req *cvapi.UpdateJobTypeRequest,
+) (*cvapi.UpdateJobTypeResponse, error) {
 	claims, err := s.getAuthClaims(ctx)
 	if err != nil || !s.isAdminAccountType(claims) {
 		return nil, status.Error(codes.Unauthenticated, "unauthorized")
@@ -169,7 +169,7 @@ func (s *Server) UpsertJobType(
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
-	return &cvapi.UpsertJobTypeResponse{
+	return &cvapi.UpdateJobTypeResponse{
 		Id: string(jobTypeID),
 	}, nil
 }
@@ -218,10 +218,10 @@ func (s *Server) DeleteJobType(
 }
 
 // CV job types
-func (s *Server) UpsertCVJobTypes(
+func (s *Server) UpdateCVJobTypes(
 	ctx context.Context,
-	req *cvapi.UpsertCVJobTypesRequest,
-) (*cvapi.UpsertCVJobTypesResponse, error) {
+	req *cvapi.UpdateCVJobTypesRequest,
+) (*cvapi.UpdateCVJobTypesResponse, error) {
 	claims, err := s.getAuthClaims(ctx)
 	if err != nil || !s.isAdminAccountType(claims) {
 		return nil, status.Error(codes.Unauthenticated, "unauthorized")
@@ -232,7 +232,7 @@ func (s *Server) UpsertCVJobTypes(
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
-	return &cvapi.UpsertCVJobTypesResponse{}, nil
+	return &cvapi.UpdateCVJobTypesResponse{}, nil
 }
 
 func (s *Server) GetCVJobTypes(
@@ -279,10 +279,10 @@ func (s *Server) DeleteCVJobTypes(
 }
 
 // Job Type
-func (s *Server) UpsertJobKind(
+func (s *Server) UpdateJobKind(
 	ctx context.Context,
-	req *cvapi.UpsertJobKindRequest,
-) (*cvapi.UpsertJobKindResponse, error) {
+	req *cvapi.UpdateJobKindRequest,
+) (*cvapi.UpdateJobKindResponse, error) {
 	claims, err := s.getAuthClaims(ctx)
 	if err != nil || !s.isAdminAccountType(claims) {
 		return nil, status.Error(codes.Unauthenticated, "unauthorized")
@@ -297,7 +297,7 @@ func (s *Server) UpsertJobKind(
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
-	return &cvapi.UpsertJobKindResponse{
+	return &cvapi.UpdateJobKindResponse{
 		Id: string(jobTypeID),
 	}, nil
 }
@@ -346,10 +346,10 @@ func (s *Server) DeleteJobKind(
 }
 
 // CV job types
-func (s *Server) UpsertCVJobKinds(
+func (s *Server) UpdateCVJobKinds(
 	ctx context.Context,
-	req *cvapi.UpsertCVJobKindsRequest,
-) (*cvapi.UpsertCVJobKindsResponse, error) {
+	req *cvapi.UpdateCVJobKindsRequest,
+) (*cvapi.UpdateCVJobKindsResponse, error) {
 	claims, err := s.getAuthClaims(ctx)
 	if err != nil || !s.isAdminAccountType(claims) {
 		return nil, status.Error(codes.Unauthenticated, "unauthorized")
@@ -360,7 +360,7 @@ func (s *Server) UpsertCVJobKinds(
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
-	return &cvapi.UpsertCVJobKindsResponse{}, nil
+	return &cvapi.UpdateCVJobKindsResponse{}, nil
 }
 
 func (s *Server) GetCVJobKinds(
@@ -407,10 +407,10 @@ func (s *Server) DeleteCVJobKinds(
 }
 
 // Experience
-func (s *Server) UpsertExperience(
+func (s *Server) UpdateExperience(
 	ctx context.Context,
-	req *cvapi.UpsertExperienceRequest,
-) (*cvapi.UpsertExperienceResponse, error) {
+	req *cvapi.UpdateExperienceRequest,
+) (*cvapi.UpdateExperienceResponse, error) {
 	claims, err := s.getAuthClaims(ctx)
 	if err != nil || !s.isAdminAccountType(claims) {
 		return nil, status.Error(codes.Unauthenticated, "unauthorized")
@@ -440,7 +440,7 @@ func (s *Server) UpsertExperience(
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
-	return &cvapi.UpsertExperienceResponse{
+	return &cvapi.UpdateExperienceResponse{
 		Id: string(jobTypeID),
 	}, nil
 }
@@ -504,10 +504,10 @@ func (s *Server) DeleteExperience(
 }
 
 // Education
-func (s *Server) UpsertEducation(
+func (s *Server) UpdateEducation(
 	ctx context.Context,
-	req *cvapi.UpsertEducationRequest,
-) (*cvapi.UpsertEducationResponse, error) {
+	req *cvapi.UpdateEducationRequest,
+) (*cvapi.UpdateEducationResponse, error) {
 	claims, err := s.getAuthClaims(ctx)
 	if err != nil || !s.isAdminAccountType(claims) {
 		return nil, status.Error(codes.Unauthenticated, "unauthorized")
@@ -537,7 +537,7 @@ func (s *Server) UpsertEducation(
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
-	return &cvapi.UpsertEducationResponse{
+	return &cvapi.UpdateEducationResponse{
 		Id: string(jobTypeID),
 	}, nil
 }
@@ -600,10 +600,10 @@ func (s *Server) DeleteEducation(
 }
 
 // Custom section
-func (s *Server) UpsertCustomSection(
+func (s *Server) UpdateCustomSection(
 	ctx context.Context,
-	req *cvapi.UpsertCustomSectionRequest,
-) (*cvapi.UpsertCustomSectionResponse, error) {
+	req *cvapi.UpdateCustomSectionRequest,
+) (*cvapi.UpdateCustomSectionResponse, error) {
 	claims, err := s.getAuthClaims(ctx)
 	if err != nil || !s.isAdminAccountType(claims) {
 		return nil, status.Error(codes.Unauthenticated, "unauthorized")
@@ -619,7 +619,7 @@ func (s *Server) UpsertCustomSection(
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
-	return &cvapi.UpsertCustomSectionResponse{
+	return &cvapi.UpdateCustomSectionResponse{
 		Id: string(jobTypeID),
 	}, nil
 }
@@ -668,10 +668,10 @@ func (s *Server) DeleteCustomSection(
 }
 
 // Story
-func (s *Server) UpsertStory(
+func (s *Server) UpdateStory(
 	ctx context.Context,
-	req *cvapi.UpsertStoryRequest,
-) (*cvapi.UpsertStoryResponse, error) {
+	req *cvapi.UpdateStoryRequest,
+) (*cvapi.UpdateStoryResponse, error) {
 	claims, err := s.getAuthClaims(ctx)
 	if err != nil || !s.isAdminAccountType(claims) {
 		return nil, status.Error(codes.Unauthenticated, "unauthorized")
@@ -686,7 +686,7 @@ func (s *Server) UpsertStory(
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
-	return &cvapi.UpsertStoryResponse{
+	return &cvapi.UpdateStoryResponse{
 		Id: string(jobTypeID),
 	}, nil
 }
@@ -735,10 +735,10 @@ func (s *Server) DeleteStory(
 }
 
 // Stories episode
-func (s *Server) UpsertStoriesEpisode(
+func (s *Server) UpdateStoriesEpisode(
 	ctx context.Context,
-	req *cvapi.UpsertStoriesEpisodeRequest,
-) (*cvapi.UpsertStoriesEpisodeResponse, error) {
+	req *cvapi.UpdateStoriesEpisodeRequest,
+) (*cvapi.UpdateStoriesEpisodeResponse, error) {
 	claims, err := s.getAuthClaims(ctx)
 	if err != nil || !s.isAdminAccountType(claims) {
 		return nil, status.Error(codes.Unauthenticated, "unauthorized")
@@ -754,7 +754,7 @@ func (s *Server) UpsertStoriesEpisode(
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
-	return &cvapi.UpsertStoriesEpisodeResponse{
+	return &cvapi.UpdateStoriesEpisodeResponse{
 		Id: string(jobTypeID),
 	}, nil
 }
@@ -804,10 +804,10 @@ func (s *Server) DeleteStoriesEpisode(
 }
 
 // CV
-func (s *Server) UpsertCV(
+func (s *Server) UpdateCV(
 	ctx context.Context,
-	req *cvapi.UpsertCVRequest,
-) (*cvapi.UpsertCVResponse, error) {
+	req *cvapi.UpdateCVRequest,
+) (*cvapi.UpdateCVResponse, error) {
 	claims, err := s.getAuthClaims(ctx)
 	if err != nil || !s.isAdminAccountType(claims) {
 		return nil, status.Error(codes.Unauthenticated, "unauthorized")
@@ -826,7 +826,7 @@ func (s *Server) UpsertCV(
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
-	return &cvapi.UpsertCVResponse{
+	return &cvapi.UpdateCVResponse{
 		Id: string(jobTypeID),
 	}, nil
 }

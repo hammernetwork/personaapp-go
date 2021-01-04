@@ -31,8 +31,8 @@ const (
 // of the legacy proto package is being used.
 const _ = proto.ProtoPackageIsVersion4
 
-// Upsert CV
-type UpsertCVRequest struct {
+// Update CV
+type UpdateCVRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -45,8 +45,8 @@ type UpsertCVRequest struct {
 	MaxSalary            int32                 `protobuf:"varint,6,opt,name=max_salary,json=maxSalary,proto3" json:"max_salary,omitempty"`
 }
 
-func (x *UpsertCVRequest) Reset() {
-	*x = UpsertCVRequest{}
+func (x *UpdateCVRequest) Reset() {
+	*x = UpdateCVRequest{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_cv_cv_proto_msgTypes[0]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -54,13 +54,13 @@ func (x *UpsertCVRequest) Reset() {
 	}
 }
 
-func (x *UpsertCVRequest) String() string {
+func (x *UpdateCVRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*UpsertCVRequest) ProtoMessage() {}
+func (*UpdateCVRequest) ProtoMessage() {}
 
-func (x *UpsertCVRequest) ProtoReflect() protoreflect.Message {
+func (x *UpdateCVRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_cv_cv_proto_msgTypes[0]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -72,54 +72,54 @@ func (x *UpsertCVRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use UpsertCVRequest.ProtoReflect.Descriptor instead.
-func (*UpsertCVRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use UpdateCVRequest.ProtoReflect.Descriptor instead.
+func (*UpdateCVRequest) Descriptor() ([]byte, []int) {
 	return file_cv_cv_proto_rawDescGZIP(), []int{0}
 }
 
-func (x *UpsertCVRequest) GetId() *wrappers.StringValue {
+func (x *UpdateCVRequest) GetId() *wrappers.StringValue {
 	if x != nil {
 		return x.Id
 	}
 	return nil
 }
 
-func (x *UpsertCVRequest) GetPersonaId() string {
+func (x *UpdateCVRequest) GetPersonaId() string {
 	if x != nil {
 		return x.PersonaId
 	}
 	return ""
 }
 
-func (x *UpsertCVRequest) GetPosition() string {
+func (x *UpdateCVRequest) GetPosition() string {
 	if x != nil {
 		return x.Position
 	}
 	return ""
 }
 
-func (x *UpsertCVRequest) GetWorkMonthsExperience() int32 {
+func (x *UpdateCVRequest) GetWorkMonthsExperience() int32 {
 	if x != nil {
 		return x.WorkMonthsExperience
 	}
 	return 0
 }
 
-func (x *UpsertCVRequest) GetMinSalary() int32 {
+func (x *UpdateCVRequest) GetMinSalary() int32 {
 	if x != nil {
 		return x.MinSalary
 	}
 	return 0
 }
 
-func (x *UpsertCVRequest) GetMaxSalary() int32 {
+func (x *UpdateCVRequest) GetMaxSalary() int32 {
 	if x != nil {
 		return x.MaxSalary
 	}
 	return 0
 }
 
-type UpsertCVResponse struct {
+type UpdateCVResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -127,8 +127,8 @@ type UpsertCVResponse struct {
 	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
 }
 
-func (x *UpsertCVResponse) Reset() {
-	*x = UpsertCVResponse{}
+func (x *UpdateCVResponse) Reset() {
+	*x = UpdateCVResponse{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_cv_cv_proto_msgTypes[1]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -136,13 +136,13 @@ func (x *UpsertCVResponse) Reset() {
 	}
 }
 
-func (x *UpsertCVResponse) String() string {
+func (x *UpdateCVResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*UpsertCVResponse) ProtoMessage() {}
+func (*UpdateCVResponse) ProtoMessage() {}
 
-func (x *UpsertCVResponse) ProtoReflect() protoreflect.Message {
+func (x *UpdateCVResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_cv_cv_proto_msgTypes[1]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -154,12 +154,12 @@ func (x *UpsertCVResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use UpsertCVResponse.ProtoReflect.Descriptor instead.
-func (*UpsertCVResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use UpdateCVResponse.ProtoReflect.Descriptor instead.
+func (*UpdateCVResponse) Descriptor() ([]byte, []int) {
 	return file_cv_cv_proto_rawDescGZIP(), []int{1}
 }
 
-func (x *UpsertCVResponse) GetId() string {
+func (x *UpdateCVResponse) GetId() string {
 	if x != nil {
 		return x.Id
 	}
@@ -442,8 +442,8 @@ func (*DeleteCVResponse) Descriptor() ([]byte, []int) {
 	return file_cv_cv_proto_rawDescGZIP(), []int{7}
 }
 
-// Upsert stories episode
-type UpsertStoriesEpisodeRequest struct {
+// Update stories episode
+type UpdateStoriesEpisodeRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -453,8 +453,8 @@ type UpsertStoriesEpisodeRequest struct {
 	MediaUrl string                `protobuf:"bytes,3,opt,name=media_url,json=mediaUrl,proto3" json:"media_url,omitempty"`
 }
 
-func (x *UpsertStoriesEpisodeRequest) Reset() {
-	*x = UpsertStoriesEpisodeRequest{}
+func (x *UpdateStoriesEpisodeRequest) Reset() {
+	*x = UpdateStoriesEpisodeRequest{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_cv_cv_proto_msgTypes[8]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -462,13 +462,13 @@ func (x *UpsertStoriesEpisodeRequest) Reset() {
 	}
 }
 
-func (x *UpsertStoriesEpisodeRequest) String() string {
+func (x *UpdateStoriesEpisodeRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*UpsertStoriesEpisodeRequest) ProtoMessage() {}
+func (*UpdateStoriesEpisodeRequest) ProtoMessage() {}
 
-func (x *UpsertStoriesEpisodeRequest) ProtoReflect() protoreflect.Message {
+func (x *UpdateStoriesEpisodeRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_cv_cv_proto_msgTypes[8]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -480,33 +480,33 @@ func (x *UpsertStoriesEpisodeRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use UpsertStoriesEpisodeRequest.ProtoReflect.Descriptor instead.
-func (*UpsertStoriesEpisodeRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use UpdateStoriesEpisodeRequest.ProtoReflect.Descriptor instead.
+func (*UpdateStoriesEpisodeRequest) Descriptor() ([]byte, []int) {
 	return file_cv_cv_proto_rawDescGZIP(), []int{8}
 }
 
-func (x *UpsertStoriesEpisodeRequest) GetId() *wrappers.StringValue {
+func (x *UpdateStoriesEpisodeRequest) GetId() *wrappers.StringValue {
 	if x != nil {
 		return x.Id
 	}
 	return nil
 }
 
-func (x *UpsertStoriesEpisodeRequest) GetStoryId() string {
+func (x *UpdateStoriesEpisodeRequest) GetStoryId() string {
 	if x != nil {
 		return x.StoryId
 	}
 	return ""
 }
 
-func (x *UpsertStoriesEpisodeRequest) GetMediaUrl() string {
+func (x *UpdateStoriesEpisodeRequest) GetMediaUrl() string {
 	if x != nil {
 		return x.MediaUrl
 	}
 	return ""
 }
 
-type UpsertStoriesEpisodeResponse struct {
+type UpdateStoriesEpisodeResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -514,8 +514,8 @@ type UpsertStoriesEpisodeResponse struct {
 	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
 }
 
-func (x *UpsertStoriesEpisodeResponse) Reset() {
-	*x = UpsertStoriesEpisodeResponse{}
+func (x *UpdateStoriesEpisodeResponse) Reset() {
+	*x = UpdateStoriesEpisodeResponse{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_cv_cv_proto_msgTypes[9]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -523,13 +523,13 @@ func (x *UpsertStoriesEpisodeResponse) Reset() {
 	}
 }
 
-func (x *UpsertStoriesEpisodeResponse) String() string {
+func (x *UpdateStoriesEpisodeResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*UpsertStoriesEpisodeResponse) ProtoMessage() {}
+func (*UpdateStoriesEpisodeResponse) ProtoMessage() {}
 
-func (x *UpsertStoriesEpisodeResponse) ProtoReflect() protoreflect.Message {
+func (x *UpdateStoriesEpisodeResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_cv_cv_proto_msgTypes[9]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -541,12 +541,12 @@ func (x *UpsertStoriesEpisodeResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use UpsertStoriesEpisodeResponse.ProtoReflect.Descriptor instead.
-func (*UpsertStoriesEpisodeResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use UpdateStoriesEpisodeResponse.ProtoReflect.Descriptor instead.
+func (*UpdateStoriesEpisodeResponse) Descriptor() ([]byte, []int) {
 	return file_cv_cv_proto_rawDescGZIP(), []int{9}
 }
 
-func (x *UpsertStoriesEpisodeResponse) GetId() string {
+func (x *UpdateStoriesEpisodeResponse) GetId() string {
 	if x != nil {
 		return x.Id
 	}
@@ -734,8 +734,8 @@ func (*DeleteStoriesEpisodeResponse) Descriptor() ([]byte, []int) {
 	return file_cv_cv_proto_rawDescGZIP(), []int{13}
 }
 
-// Upsert story
-type UpsertStoryRequest struct {
+// Update story
+type UpdateStoryRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -746,8 +746,8 @@ type UpsertStoryRequest struct {
 	MediaUrl    string                `protobuf:"bytes,4,opt,name=media_url,json=mediaUrl,proto3" json:"media_url,omitempty"`
 }
 
-func (x *UpsertStoryRequest) Reset() {
-	*x = UpsertStoryRequest{}
+func (x *UpdateStoryRequest) Reset() {
+	*x = UpdateStoryRequest{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_cv_cv_proto_msgTypes[14]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -755,13 +755,13 @@ func (x *UpsertStoryRequest) Reset() {
 	}
 }
 
-func (x *UpsertStoryRequest) String() string {
+func (x *UpdateStoryRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*UpsertStoryRequest) ProtoMessage() {}
+func (*UpdateStoryRequest) ProtoMessage() {}
 
-func (x *UpsertStoryRequest) ProtoReflect() protoreflect.Message {
+func (x *UpdateStoryRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_cv_cv_proto_msgTypes[14]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -773,40 +773,40 @@ func (x *UpsertStoryRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use UpsertStoryRequest.ProtoReflect.Descriptor instead.
-func (*UpsertStoryRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use UpdateStoryRequest.ProtoReflect.Descriptor instead.
+func (*UpdateStoryRequest) Descriptor() ([]byte, []int) {
 	return file_cv_cv_proto_rawDescGZIP(), []int{14}
 }
 
-func (x *UpsertStoryRequest) GetId() *wrappers.StringValue {
+func (x *UpdateStoryRequest) GetId() *wrappers.StringValue {
 	if x != nil {
 		return x.Id
 	}
 	return nil
 }
 
-func (x *UpsertStoryRequest) GetCvId() string {
+func (x *UpdateStoryRequest) GetCvId() string {
 	if x != nil {
 		return x.CvId
 	}
 	return ""
 }
 
-func (x *UpsertStoryRequest) GetChapterName() string {
+func (x *UpdateStoryRequest) GetChapterName() string {
 	if x != nil {
 		return x.ChapterName
 	}
 	return ""
 }
 
-func (x *UpsertStoryRequest) GetMediaUrl() string {
+func (x *UpdateStoryRequest) GetMediaUrl() string {
 	if x != nil {
 		return x.MediaUrl
 	}
 	return ""
 }
 
-type UpsertStoryResponse struct {
+type UpdateStoryResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -814,8 +814,8 @@ type UpsertStoryResponse struct {
 	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
 }
 
-func (x *UpsertStoryResponse) Reset() {
-	*x = UpsertStoryResponse{}
+func (x *UpdateStoryResponse) Reset() {
+	*x = UpdateStoryResponse{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_cv_cv_proto_msgTypes[15]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -823,13 +823,13 @@ func (x *UpsertStoryResponse) Reset() {
 	}
 }
 
-func (x *UpsertStoryResponse) String() string {
+func (x *UpdateStoryResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*UpsertStoryResponse) ProtoMessage() {}
+func (*UpdateStoryResponse) ProtoMessage() {}
 
-func (x *UpsertStoryResponse) ProtoReflect() protoreflect.Message {
+func (x *UpdateStoryResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_cv_cv_proto_msgTypes[15]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -841,12 +841,12 @@ func (x *UpsertStoryResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use UpsertStoryResponse.ProtoReflect.Descriptor instead.
-func (*UpsertStoryResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use UpdateStoryResponse.ProtoReflect.Descriptor instead.
+func (*UpdateStoryResponse) Descriptor() ([]byte, []int) {
 	return file_cv_cv_proto_rawDescGZIP(), []int{15}
 }
 
-func (x *UpsertStoryResponse) GetId() string {
+func (x *UpdateStoryResponse) GetId() string {
 	if x != nil {
 		return x.Id
 	}
@@ -1034,8 +1034,8 @@ func (*DeleteStoryResponse) Descriptor() ([]byte, []int) {
 	return file_cv_cv_proto_rawDescGZIP(), []int{19}
 }
 
-// Upsert custom section
-type UpsertCustomSectionRequest struct {
+// Update custom section
+type UpdateCustomSectionRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -1045,8 +1045,8 @@ type UpsertCustomSectionRequest struct {
 	Description string                `protobuf:"bytes,3,opt,name=description,proto3" json:"description,omitempty"`
 }
 
-func (x *UpsertCustomSectionRequest) Reset() {
-	*x = UpsertCustomSectionRequest{}
+func (x *UpdateCustomSectionRequest) Reset() {
+	*x = UpdateCustomSectionRequest{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_cv_cv_proto_msgTypes[20]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -1054,13 +1054,13 @@ func (x *UpsertCustomSectionRequest) Reset() {
 	}
 }
 
-func (x *UpsertCustomSectionRequest) String() string {
+func (x *UpdateCustomSectionRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*UpsertCustomSectionRequest) ProtoMessage() {}
+func (*UpdateCustomSectionRequest) ProtoMessage() {}
 
-func (x *UpsertCustomSectionRequest) ProtoReflect() protoreflect.Message {
+func (x *UpdateCustomSectionRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_cv_cv_proto_msgTypes[20]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -1072,33 +1072,33 @@ func (x *UpsertCustomSectionRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use UpsertCustomSectionRequest.ProtoReflect.Descriptor instead.
-func (*UpsertCustomSectionRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use UpdateCustomSectionRequest.ProtoReflect.Descriptor instead.
+func (*UpdateCustomSectionRequest) Descriptor() ([]byte, []int) {
 	return file_cv_cv_proto_rawDescGZIP(), []int{20}
 }
 
-func (x *UpsertCustomSectionRequest) GetId() *wrappers.StringValue {
+func (x *UpdateCustomSectionRequest) GetId() *wrappers.StringValue {
 	if x != nil {
 		return x.Id
 	}
 	return nil
 }
 
-func (x *UpsertCustomSectionRequest) GetCvId() string {
+func (x *UpdateCustomSectionRequest) GetCvId() string {
 	if x != nil {
 		return x.CvId
 	}
 	return ""
 }
 
-func (x *UpsertCustomSectionRequest) GetDescription() string {
+func (x *UpdateCustomSectionRequest) GetDescription() string {
 	if x != nil {
 		return x.Description
 	}
 	return ""
 }
 
-type UpsertCustomSectionResponse struct {
+type UpdateCustomSectionResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -1106,8 +1106,8 @@ type UpsertCustomSectionResponse struct {
 	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
 }
 
-func (x *UpsertCustomSectionResponse) Reset() {
-	*x = UpsertCustomSectionResponse{}
+func (x *UpdateCustomSectionResponse) Reset() {
+	*x = UpdateCustomSectionResponse{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_cv_cv_proto_msgTypes[21]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -1115,13 +1115,13 @@ func (x *UpsertCustomSectionResponse) Reset() {
 	}
 }
 
-func (x *UpsertCustomSectionResponse) String() string {
+func (x *UpdateCustomSectionResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*UpsertCustomSectionResponse) ProtoMessage() {}
+func (*UpdateCustomSectionResponse) ProtoMessage() {}
 
-func (x *UpsertCustomSectionResponse) ProtoReflect() protoreflect.Message {
+func (x *UpdateCustomSectionResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_cv_cv_proto_msgTypes[21]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -1133,12 +1133,12 @@ func (x *UpsertCustomSectionResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use UpsertCustomSectionResponse.ProtoReflect.Descriptor instead.
-func (*UpsertCustomSectionResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use UpdateCustomSectionResponse.ProtoReflect.Descriptor instead.
+func (*UpdateCustomSectionResponse) Descriptor() ([]byte, []int) {
 	return file_cv_cv_proto_rawDescGZIP(), []int{21}
 }
 
-func (x *UpsertCustomSectionResponse) GetId() string {
+func (x *UpdateCustomSectionResponse) GetId() string {
 	if x != nil {
 		return x.Id
 	}
@@ -1326,8 +1326,8 @@ func (*DeleteCustomSectionResponse) Descriptor() ([]byte, []int) {
 	return file_cv_cv_proto_rawDescGZIP(), []int{25}
 }
 
-// Upsert education
-type UpsertEducationRequest struct {
+// Update education
+type UpdateEducationRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -1341,8 +1341,8 @@ type UpsertEducationRequest struct {
 	Description string                `protobuf:"bytes,7,opt,name=description,proto3" json:"description,omitempty"`
 }
 
-func (x *UpsertEducationRequest) Reset() {
-	*x = UpsertEducationRequest{}
+func (x *UpdateEducationRequest) Reset() {
+	*x = UpdateEducationRequest{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_cv_cv_proto_msgTypes[26]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -1350,13 +1350,13 @@ func (x *UpsertEducationRequest) Reset() {
 	}
 }
 
-func (x *UpsertEducationRequest) String() string {
+func (x *UpdateEducationRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*UpsertEducationRequest) ProtoMessage() {}
+func (*UpdateEducationRequest) ProtoMessage() {}
 
-func (x *UpsertEducationRequest) ProtoReflect() protoreflect.Message {
+func (x *UpdateEducationRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_cv_cv_proto_msgTypes[26]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -1368,61 +1368,61 @@ func (x *UpsertEducationRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use UpsertEducationRequest.ProtoReflect.Descriptor instead.
-func (*UpsertEducationRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use UpdateEducationRequest.ProtoReflect.Descriptor instead.
+func (*UpdateEducationRequest) Descriptor() ([]byte, []int) {
 	return file_cv_cv_proto_rawDescGZIP(), []int{26}
 }
 
-func (x *UpsertEducationRequest) GetId() *wrappers.StringValue {
+func (x *UpdateEducationRequest) GetId() *wrappers.StringValue {
 	if x != nil {
 		return x.Id
 	}
 	return nil
 }
 
-func (x *UpsertEducationRequest) GetCvId() string {
+func (x *UpdateEducationRequest) GetCvId() string {
 	if x != nil {
 		return x.CvId
 	}
 	return ""
 }
 
-func (x *UpsertEducationRequest) GetInstitution() string {
+func (x *UpdateEducationRequest) GetInstitution() string {
 	if x != nil {
 		return x.Institution
 	}
 	return ""
 }
 
-func (x *UpsertEducationRequest) GetDateFrom() *timestamp.Timestamp {
+func (x *UpdateEducationRequest) GetDateFrom() *timestamp.Timestamp {
 	if x != nil {
 		return x.DateFrom
 	}
 	return nil
 }
 
-func (x *UpsertEducationRequest) GetDateTill() *timestamp.Timestamp {
+func (x *UpdateEducationRequest) GetDateTill() *timestamp.Timestamp {
 	if x != nil {
 		return x.DateTill
 	}
 	return nil
 }
 
-func (x *UpsertEducationRequest) GetSpeciality() string {
+func (x *UpdateEducationRequest) GetSpeciality() string {
 	if x != nil {
 		return x.Speciality
 	}
 	return ""
 }
 
-func (x *UpsertEducationRequest) GetDescription() string {
+func (x *UpdateEducationRequest) GetDescription() string {
 	if x != nil {
 		return x.Description
 	}
 	return ""
 }
 
-type UpsertEducationResponse struct {
+type UpdateEducationResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -1430,8 +1430,8 @@ type UpsertEducationResponse struct {
 	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
 }
 
-func (x *UpsertEducationResponse) Reset() {
-	*x = UpsertEducationResponse{}
+func (x *UpdateEducationResponse) Reset() {
+	*x = UpdateEducationResponse{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_cv_cv_proto_msgTypes[27]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -1439,13 +1439,13 @@ func (x *UpsertEducationResponse) Reset() {
 	}
 }
 
-func (x *UpsertEducationResponse) String() string {
+func (x *UpdateEducationResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*UpsertEducationResponse) ProtoMessage() {}
+func (*UpdateEducationResponse) ProtoMessage() {}
 
-func (x *UpsertEducationResponse) ProtoReflect() protoreflect.Message {
+func (x *UpdateEducationResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_cv_cv_proto_msgTypes[27]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -1457,12 +1457,12 @@ func (x *UpsertEducationResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use UpsertEducationResponse.ProtoReflect.Descriptor instead.
-func (*UpsertEducationResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use UpdateEducationResponse.ProtoReflect.Descriptor instead.
+func (*UpdateEducationResponse) Descriptor() ([]byte, []int) {
 	return file_cv_cv_proto_rawDescGZIP(), []int{27}
 }
 
-func (x *UpsertEducationResponse) GetId() string {
+func (x *UpdateEducationResponse) GetId() string {
 	if x != nil {
 		return x.Id
 	}
@@ -1650,8 +1650,8 @@ func (*DeleteEducationResponse) Descriptor() ([]byte, []int) {
 	return file_cv_cv_proto_rawDescGZIP(), []int{31}
 }
 
-// Upsert experience
-type UpsertExperienceRequest struct {
+// Update experience
+type UpdateExperienceRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -1665,8 +1665,8 @@ type UpsertExperienceRequest struct {
 	Description string                `protobuf:"bytes,7,opt,name=description,proto3" json:"description,omitempty"`
 }
 
-func (x *UpsertExperienceRequest) Reset() {
-	*x = UpsertExperienceRequest{}
+func (x *UpdateExperienceRequest) Reset() {
+	*x = UpdateExperienceRequest{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_cv_cv_proto_msgTypes[32]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -1674,13 +1674,13 @@ func (x *UpsertExperienceRequest) Reset() {
 	}
 }
 
-func (x *UpsertExperienceRequest) String() string {
+func (x *UpdateExperienceRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*UpsertExperienceRequest) ProtoMessage() {}
+func (*UpdateExperienceRequest) ProtoMessage() {}
 
-func (x *UpsertExperienceRequest) ProtoReflect() protoreflect.Message {
+func (x *UpdateExperienceRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_cv_cv_proto_msgTypes[32]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -1692,61 +1692,61 @@ func (x *UpsertExperienceRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use UpsertExperienceRequest.ProtoReflect.Descriptor instead.
-func (*UpsertExperienceRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use UpdateExperienceRequest.ProtoReflect.Descriptor instead.
+func (*UpdateExperienceRequest) Descriptor() ([]byte, []int) {
 	return file_cv_cv_proto_rawDescGZIP(), []int{32}
 }
 
-func (x *UpsertExperienceRequest) GetId() *wrappers.StringValue {
+func (x *UpdateExperienceRequest) GetId() *wrappers.StringValue {
 	if x != nil {
 		return x.Id
 	}
 	return nil
 }
 
-func (x *UpsertExperienceRequest) GetCvId() string {
+func (x *UpdateExperienceRequest) GetCvId() string {
 	if x != nil {
 		return x.CvId
 	}
 	return ""
 }
 
-func (x *UpsertExperienceRequest) GetCompanyName() string {
+func (x *UpdateExperienceRequest) GetCompanyName() string {
 	if x != nil {
 		return x.CompanyName
 	}
 	return ""
 }
 
-func (x *UpsertExperienceRequest) GetDateFrom() *timestamp.Timestamp {
+func (x *UpdateExperienceRequest) GetDateFrom() *timestamp.Timestamp {
 	if x != nil {
 		return x.DateFrom
 	}
 	return nil
 }
 
-func (x *UpsertExperienceRequest) GetDateTill() *timestamp.Timestamp {
+func (x *UpdateExperienceRequest) GetDateTill() *timestamp.Timestamp {
 	if x != nil {
 		return x.DateTill
 	}
 	return nil
 }
 
-func (x *UpsertExperienceRequest) GetPosition() string {
+func (x *UpdateExperienceRequest) GetPosition() string {
 	if x != nil {
 		return x.Position
 	}
 	return ""
 }
 
-func (x *UpsertExperienceRequest) GetDescription() string {
+func (x *UpdateExperienceRequest) GetDescription() string {
 	if x != nil {
 		return x.Description
 	}
 	return ""
 }
 
-type UpsertExperienceResponse struct {
+type UpdateExperienceResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -1754,8 +1754,8 @@ type UpsertExperienceResponse struct {
 	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
 }
 
-func (x *UpsertExperienceResponse) Reset() {
-	*x = UpsertExperienceResponse{}
+func (x *UpdateExperienceResponse) Reset() {
+	*x = UpdateExperienceResponse{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_cv_cv_proto_msgTypes[33]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -1763,13 +1763,13 @@ func (x *UpsertExperienceResponse) Reset() {
 	}
 }
 
-func (x *UpsertExperienceResponse) String() string {
+func (x *UpdateExperienceResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*UpsertExperienceResponse) ProtoMessage() {}
+func (*UpdateExperienceResponse) ProtoMessage() {}
 
-func (x *UpsertExperienceResponse) ProtoReflect() protoreflect.Message {
+func (x *UpdateExperienceResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_cv_cv_proto_msgTypes[33]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -1781,12 +1781,12 @@ func (x *UpsertExperienceResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use UpsertExperienceResponse.ProtoReflect.Descriptor instead.
-func (*UpsertExperienceResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use UpdateExperienceResponse.ProtoReflect.Descriptor instead.
+func (*UpdateExperienceResponse) Descriptor() ([]byte, []int) {
 	return file_cv_cv_proto_rawDescGZIP(), []int{33}
 }
 
-func (x *UpsertExperienceResponse) GetId() string {
+func (x *UpdateExperienceResponse) GetId() string {
 	if x != nil {
 		return x.Id
 	}
@@ -1974,8 +1974,8 @@ func (*DeleteExperienceResponse) Descriptor() ([]byte, []int) {
 	return file_cv_cv_proto_rawDescGZIP(), []int{37}
 }
 
-// Upsert CV job kinds
-type UpsertCVJobKindsRequest struct {
+// Update CV job kinds
+type UpdateCVJobKindsRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -1984,8 +1984,8 @@ type UpsertCVJobKindsRequest struct {
 	JobKindsIDs []string `protobuf:"bytes,5,rep,name=jobKindsIDs,proto3" json:"jobKindsIDs,omitempty"`
 }
 
-func (x *UpsertCVJobKindsRequest) Reset() {
-	*x = UpsertCVJobKindsRequest{}
+func (x *UpdateCVJobKindsRequest) Reset() {
+	*x = UpdateCVJobKindsRequest{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_cv_cv_proto_msgTypes[38]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -1993,13 +1993,13 @@ func (x *UpsertCVJobKindsRequest) Reset() {
 	}
 }
 
-func (x *UpsertCVJobKindsRequest) String() string {
+func (x *UpdateCVJobKindsRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*UpsertCVJobKindsRequest) ProtoMessage() {}
+func (*UpdateCVJobKindsRequest) ProtoMessage() {}
 
-func (x *UpsertCVJobKindsRequest) ProtoReflect() protoreflect.Message {
+func (x *UpdateCVJobKindsRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_cv_cv_proto_msgTypes[38]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -2011,26 +2011,26 @@ func (x *UpsertCVJobKindsRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use UpsertCVJobKindsRequest.ProtoReflect.Descriptor instead.
-func (*UpsertCVJobKindsRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use UpdateCVJobKindsRequest.ProtoReflect.Descriptor instead.
+func (*UpdateCVJobKindsRequest) Descriptor() ([]byte, []int) {
 	return file_cv_cv_proto_rawDescGZIP(), []int{38}
 }
 
-func (x *UpsertCVJobKindsRequest) GetCvId() string {
+func (x *UpdateCVJobKindsRequest) GetCvId() string {
 	if x != nil {
 		return x.CvId
 	}
 	return ""
 }
 
-func (x *UpsertCVJobKindsRequest) GetJobKindsIDs() []string {
+func (x *UpdateCVJobKindsRequest) GetJobKindsIDs() []string {
 	if x != nil {
 		return x.JobKindsIDs
 	}
 	return nil
 }
 
-type UpsertCVJobKindsResponse struct {
+type UpdateCVJobKindsResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -2038,8 +2038,8 @@ type UpsertCVJobKindsResponse struct {
 	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
 }
 
-func (x *UpsertCVJobKindsResponse) Reset() {
-	*x = UpsertCVJobKindsResponse{}
+func (x *UpdateCVJobKindsResponse) Reset() {
+	*x = UpdateCVJobKindsResponse{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_cv_cv_proto_msgTypes[39]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -2047,13 +2047,13 @@ func (x *UpsertCVJobKindsResponse) Reset() {
 	}
 }
 
-func (x *UpsertCVJobKindsResponse) String() string {
+func (x *UpdateCVJobKindsResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*UpsertCVJobKindsResponse) ProtoMessage() {}
+func (*UpdateCVJobKindsResponse) ProtoMessage() {}
 
-func (x *UpsertCVJobKindsResponse) ProtoReflect() protoreflect.Message {
+func (x *UpdateCVJobKindsResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_cv_cv_proto_msgTypes[39]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -2065,12 +2065,12 @@ func (x *UpsertCVJobKindsResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use UpsertCVJobKindsResponse.ProtoReflect.Descriptor instead.
-func (*UpsertCVJobKindsResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use UpdateCVJobKindsResponse.ProtoReflect.Descriptor instead.
+func (*UpdateCVJobKindsResponse) Descriptor() ([]byte, []int) {
 	return file_cv_cv_proto_rawDescGZIP(), []int{39}
 }
 
-func (x *UpsertCVJobKindsResponse) GetId() string {
+func (x *UpdateCVJobKindsResponse) GetId() string {
 	if x != nil {
 		return x.Id
 	}
@@ -2258,8 +2258,8 @@ func (*DeleteCVJobKindsResponse) Descriptor() ([]byte, []int) {
 	return file_cv_cv_proto_rawDescGZIP(), []int{43}
 }
 
-// Upsert job kind
-type UpsertJobKindRequest struct {
+// Update job kind
+type UpdateJobKindRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -2268,8 +2268,8 @@ type UpsertJobKindRequest struct {
 	Name string                `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
 }
 
-func (x *UpsertJobKindRequest) Reset() {
-	*x = UpsertJobKindRequest{}
+func (x *UpdateJobKindRequest) Reset() {
+	*x = UpdateJobKindRequest{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_cv_cv_proto_msgTypes[44]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -2277,13 +2277,13 @@ func (x *UpsertJobKindRequest) Reset() {
 	}
 }
 
-func (x *UpsertJobKindRequest) String() string {
+func (x *UpdateJobKindRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*UpsertJobKindRequest) ProtoMessage() {}
+func (*UpdateJobKindRequest) ProtoMessage() {}
 
-func (x *UpsertJobKindRequest) ProtoReflect() protoreflect.Message {
+func (x *UpdateJobKindRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_cv_cv_proto_msgTypes[44]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -2295,26 +2295,26 @@ func (x *UpsertJobKindRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use UpsertJobKindRequest.ProtoReflect.Descriptor instead.
-func (*UpsertJobKindRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use UpdateJobKindRequest.ProtoReflect.Descriptor instead.
+func (*UpdateJobKindRequest) Descriptor() ([]byte, []int) {
 	return file_cv_cv_proto_rawDescGZIP(), []int{44}
 }
 
-func (x *UpsertJobKindRequest) GetId() *wrappers.StringValue {
+func (x *UpdateJobKindRequest) GetId() *wrappers.StringValue {
 	if x != nil {
 		return x.Id
 	}
 	return nil
 }
 
-func (x *UpsertJobKindRequest) GetName() string {
+func (x *UpdateJobKindRequest) GetName() string {
 	if x != nil {
 		return x.Name
 	}
 	return ""
 }
 
-type UpsertJobKindResponse struct {
+type UpdateJobKindResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -2322,8 +2322,8 @@ type UpsertJobKindResponse struct {
 	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
 }
 
-func (x *UpsertJobKindResponse) Reset() {
-	*x = UpsertJobKindResponse{}
+func (x *UpdateJobKindResponse) Reset() {
+	*x = UpdateJobKindResponse{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_cv_cv_proto_msgTypes[45]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -2331,13 +2331,13 @@ func (x *UpsertJobKindResponse) Reset() {
 	}
 }
 
-func (x *UpsertJobKindResponse) String() string {
+func (x *UpdateJobKindResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*UpsertJobKindResponse) ProtoMessage() {}
+func (*UpdateJobKindResponse) ProtoMessage() {}
 
-func (x *UpsertJobKindResponse) ProtoReflect() protoreflect.Message {
+func (x *UpdateJobKindResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_cv_cv_proto_msgTypes[45]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -2349,12 +2349,12 @@ func (x *UpsertJobKindResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use UpsertJobKindResponse.ProtoReflect.Descriptor instead.
-func (*UpsertJobKindResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use UpdateJobKindResponse.ProtoReflect.Descriptor instead.
+func (*UpdateJobKindResponse) Descriptor() ([]byte, []int) {
 	return file_cv_cv_proto_rawDescGZIP(), []int{45}
 }
 
-func (x *UpsertJobKindResponse) GetId() string {
+func (x *UpdateJobKindResponse) GetId() string {
 	if x != nil {
 		return x.Id
 	}
@@ -2533,8 +2533,8 @@ func (*DeleteJobKindResponse) Descriptor() ([]byte, []int) {
 	return file_cv_cv_proto_rawDescGZIP(), []int{49}
 }
 
-// Upsert CV job types
-type UpsertCVJobTypesRequest struct {
+// Update CV job types
+type UpdateCVJobTypesRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -2543,8 +2543,8 @@ type UpsertCVJobTypesRequest struct {
 	JobTypesIDs []string `protobuf:"bytes,5,rep,name=jobTypesIDs,proto3" json:"jobTypesIDs,omitempty"`
 }
 
-func (x *UpsertCVJobTypesRequest) Reset() {
-	*x = UpsertCVJobTypesRequest{}
+func (x *UpdateCVJobTypesRequest) Reset() {
+	*x = UpdateCVJobTypesRequest{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_cv_cv_proto_msgTypes[50]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -2552,13 +2552,13 @@ func (x *UpsertCVJobTypesRequest) Reset() {
 	}
 }
 
-func (x *UpsertCVJobTypesRequest) String() string {
+func (x *UpdateCVJobTypesRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*UpsertCVJobTypesRequest) ProtoMessage() {}
+func (*UpdateCVJobTypesRequest) ProtoMessage() {}
 
-func (x *UpsertCVJobTypesRequest) ProtoReflect() protoreflect.Message {
+func (x *UpdateCVJobTypesRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_cv_cv_proto_msgTypes[50]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -2570,33 +2570,33 @@ func (x *UpsertCVJobTypesRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use UpsertCVJobTypesRequest.ProtoReflect.Descriptor instead.
-func (*UpsertCVJobTypesRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use UpdateCVJobTypesRequest.ProtoReflect.Descriptor instead.
+func (*UpdateCVJobTypesRequest) Descriptor() ([]byte, []int) {
 	return file_cv_cv_proto_rawDescGZIP(), []int{50}
 }
 
-func (x *UpsertCVJobTypesRequest) GetCvId() string {
+func (x *UpdateCVJobTypesRequest) GetCvId() string {
 	if x != nil {
 		return x.CvId
 	}
 	return ""
 }
 
-func (x *UpsertCVJobTypesRequest) GetJobTypesIDs() []string {
+func (x *UpdateCVJobTypesRequest) GetJobTypesIDs() []string {
 	if x != nil {
 		return x.JobTypesIDs
 	}
 	return nil
 }
 
-type UpsertCVJobTypesResponse struct {
+type UpdateCVJobTypesResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 }
 
-func (x *UpsertCVJobTypesResponse) Reset() {
-	*x = UpsertCVJobTypesResponse{}
+func (x *UpdateCVJobTypesResponse) Reset() {
+	*x = UpdateCVJobTypesResponse{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_cv_cv_proto_msgTypes[51]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -2604,13 +2604,13 @@ func (x *UpsertCVJobTypesResponse) Reset() {
 	}
 }
 
-func (x *UpsertCVJobTypesResponse) String() string {
+func (x *UpdateCVJobTypesResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*UpsertCVJobTypesResponse) ProtoMessage() {}
+func (*UpdateCVJobTypesResponse) ProtoMessage() {}
 
-func (x *UpsertCVJobTypesResponse) ProtoReflect() protoreflect.Message {
+func (x *UpdateCVJobTypesResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_cv_cv_proto_msgTypes[51]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -2622,8 +2622,8 @@ func (x *UpsertCVJobTypesResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use UpsertCVJobTypesResponse.ProtoReflect.Descriptor instead.
-func (*UpsertCVJobTypesResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use UpdateCVJobTypesResponse.ProtoReflect.Descriptor instead.
+func (*UpdateCVJobTypesResponse) Descriptor() ([]byte, []int) {
 	return file_cv_cv_proto_rawDescGZIP(), []int{51}
 }
 
@@ -2808,8 +2808,8 @@ func (*DeleteCVJobTypesResponse) Descriptor() ([]byte, []int) {
 	return file_cv_cv_proto_rawDescGZIP(), []int{55}
 }
 
-// Upsert job type
-type UpsertJobTypeRequest struct {
+// Update job type
+type UpdateJobTypeRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -2818,8 +2818,8 @@ type UpsertJobTypeRequest struct {
 	Name string                `protobuf:"bytes,2,opt,name=name,proto3" json:"name,omitempty"`
 }
 
-func (x *UpsertJobTypeRequest) Reset() {
-	*x = UpsertJobTypeRequest{}
+func (x *UpdateJobTypeRequest) Reset() {
+	*x = UpdateJobTypeRequest{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_cv_cv_proto_msgTypes[56]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -2827,13 +2827,13 @@ func (x *UpsertJobTypeRequest) Reset() {
 	}
 }
 
-func (x *UpsertJobTypeRequest) String() string {
+func (x *UpdateJobTypeRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*UpsertJobTypeRequest) ProtoMessage() {}
+func (*UpdateJobTypeRequest) ProtoMessage() {}
 
-func (x *UpsertJobTypeRequest) ProtoReflect() protoreflect.Message {
+func (x *UpdateJobTypeRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_cv_cv_proto_msgTypes[56]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -2845,26 +2845,26 @@ func (x *UpsertJobTypeRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use UpsertJobTypeRequest.ProtoReflect.Descriptor instead.
-func (*UpsertJobTypeRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use UpdateJobTypeRequest.ProtoReflect.Descriptor instead.
+func (*UpdateJobTypeRequest) Descriptor() ([]byte, []int) {
 	return file_cv_cv_proto_rawDescGZIP(), []int{56}
 }
 
-func (x *UpsertJobTypeRequest) GetId() *wrappers.StringValue {
+func (x *UpdateJobTypeRequest) GetId() *wrappers.StringValue {
 	if x != nil {
 		return x.Id
 	}
 	return nil
 }
 
-func (x *UpsertJobTypeRequest) GetName() string {
+func (x *UpdateJobTypeRequest) GetName() string {
 	if x != nil {
 		return x.Name
 	}
 	return ""
 }
 
-type UpsertJobTypeResponse struct {
+type UpdateJobTypeResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -2872,8 +2872,8 @@ type UpsertJobTypeResponse struct {
 	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
 }
 
-func (x *UpsertJobTypeResponse) Reset() {
-	*x = UpsertJobTypeResponse{}
+func (x *UpdateJobTypeResponse) Reset() {
+	*x = UpdateJobTypeResponse{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_cv_cv_proto_msgTypes[57]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -2881,13 +2881,13 @@ func (x *UpsertJobTypeResponse) Reset() {
 	}
 }
 
-func (x *UpsertJobTypeResponse) String() string {
+func (x *UpdateJobTypeResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*UpsertJobTypeResponse) ProtoMessage() {}
+func (*UpdateJobTypeResponse) ProtoMessage() {}
 
-func (x *UpsertJobTypeResponse) ProtoReflect() protoreflect.Message {
+func (x *UpdateJobTypeResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_cv_cv_proto_msgTypes[57]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -2899,12 +2899,12 @@ func (x *UpsertJobTypeResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use UpsertJobTypeResponse.ProtoReflect.Descriptor instead.
-func (*UpsertJobTypeResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use UpdateJobTypeResponse.ProtoReflect.Descriptor instead.
+func (*UpdateJobTypeResponse) Descriptor() ([]byte, []int) {
 	return file_cv_cv_proto_rawDescGZIP(), []int{57}
 }
 
-func (x *UpsertJobTypeResponse) GetId() string {
+func (x *UpdateJobTypeResponse) GetId() string {
 	if x != nil {
 		return x.Id
 	}
@@ -3834,7 +3834,7 @@ var file_cv_cv_proto_rawDesc = []byte{
 	0x2f, 0x77, 0x72, 0x61, 0x70, 0x70, 0x65, 0x72, 0x73, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x1a,
 	0x1f, 0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2f, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66,
 	0x2f, 0x74, 0x69, 0x6d, 0x65, 0x73, 0x74, 0x61, 0x6d, 0x70, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f,
-	0x22, 0xee, 0x01, 0x0a, 0x0f, 0x55, 0x70, 0x73, 0x65, 0x72, 0x74, 0x43, 0x56, 0x52, 0x65, 0x71,
+	0x22, 0xee, 0x01, 0x0a, 0x0f, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x43, 0x56, 0x52, 0x65, 0x71,
 	0x75, 0x65, 0x73, 0x74, 0x12, 0x2c, 0x0a, 0x02, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b,
 	0x32, 0x1c, 0x2e, 0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62,
 	0x75, 0x66, 0x2e, 0x53, 0x74, 0x72, 0x69, 0x6e, 0x67, 0x56, 0x61, 0x6c, 0x75, 0x65, 0x52, 0x02,
@@ -3849,7 +3849,7 @@ var file_cv_cv_proto_rawDesc = []byte{
 	0x79, 0x18, 0x05, 0x20, 0x01, 0x28, 0x05, 0x52, 0x09, 0x6d, 0x69, 0x6e, 0x53, 0x61, 0x6c, 0x61,
 	0x72, 0x79, 0x12, 0x1d, 0x0a, 0x0a, 0x6d, 0x61, 0x78, 0x5f, 0x73, 0x61, 0x6c, 0x61, 0x72, 0x79,
 	0x18, 0x06, 0x20, 0x01, 0x28, 0x05, 0x52, 0x09, 0x6d, 0x61, 0x78, 0x53, 0x61, 0x6c, 0x61, 0x72,
-	0x79, 0x22, 0x22, 0x0a, 0x10, 0x55, 0x70, 0x73, 0x65, 0x72, 0x74, 0x43, 0x56, 0x52, 0x65, 0x73,
+	0x79, 0x22, 0x22, 0x0a, 0x10, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x43, 0x56, 0x52, 0x65, 0x73,
 	0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x0e, 0x0a, 0x02, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28,
 	0x09, 0x52, 0x02, 0x69, 0x64, 0x22, 0x2e, 0x0a, 0x0d, 0x47, 0x65, 0x74, 0x43, 0x56, 0x73, 0x52,
 	0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x1d, 0x0a, 0x0a, 0x70, 0x65, 0x72, 0x73, 0x6f, 0x6e,
@@ -3868,7 +3868,7 @@ var file_cv_cv_proto_rawDesc = []byte{
 	0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x0e, 0x0a, 0x02, 0x69, 0x64, 0x18, 0x01, 0x20,
 	0x01, 0x28, 0x09, 0x52, 0x02, 0x69, 0x64, 0x22, 0x12, 0x0a, 0x10, 0x44, 0x65, 0x6c, 0x65, 0x74,
 	0x65, 0x43, 0x56, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x83, 0x01, 0x0a, 0x1b,
-	0x55, 0x70, 0x73, 0x65, 0x72, 0x74, 0x53, 0x74, 0x6f, 0x72, 0x69, 0x65, 0x73, 0x45, 0x70, 0x69,
+	0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x53, 0x74, 0x6f, 0x72, 0x69, 0x65, 0x73, 0x45, 0x70, 0x69,
 	0x73, 0x6f, 0x64, 0x65, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x2c, 0x0a, 0x02, 0x69,
 	0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x1c, 0x2e, 0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65,
 	0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2e, 0x53, 0x74, 0x72, 0x69, 0x6e, 0x67,
@@ -3876,7 +3876,7 @@ var file_cv_cv_proto_rawDesc = []byte{
 	0x72, 0x79, 0x5f, 0x69, 0x64, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x07, 0x73, 0x74, 0x6f,
 	0x72, 0x79, 0x49, 0x64, 0x12, 0x1b, 0x0a, 0x09, 0x6d, 0x65, 0x64, 0x69, 0x61, 0x5f, 0x75, 0x72,
 	0x6c, 0x18, 0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x6d, 0x65, 0x64, 0x69, 0x61, 0x55, 0x72,
-	0x6c, 0x22, 0x2e, 0x0a, 0x1c, 0x55, 0x70, 0x73, 0x65, 0x72, 0x74, 0x53, 0x74, 0x6f, 0x72, 0x69,
+	0x6c, 0x22, 0x2e, 0x0a, 0x1c, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x53, 0x74, 0x6f, 0x72, 0x69,
 	0x65, 0x73, 0x45, 0x70, 0x69, 0x73, 0x6f, 0x64, 0x65, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73,
 	0x65, 0x12, 0x0e, 0x0a, 0x02, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x02, 0x69,
 	0x64, 0x22, 0x30, 0x0a, 0x19, 0x47, 0x65, 0x74, 0x53, 0x74, 0x6f, 0x72, 0x69, 0x65, 0x73, 0x45,
@@ -3893,7 +3893,7 @@ var file_cv_cv_proto_rawDesc = []byte{
 	0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x0e, 0x0a, 0x02, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28,
 	0x09, 0x52, 0x02, 0x69, 0x64, 0x22, 0x1e, 0x0a, 0x1c, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x53,
 	0x74, 0x6f, 0x72, 0x69, 0x65, 0x73, 0x45, 0x70, 0x69, 0x73, 0x6f, 0x64, 0x65, 0x52, 0x65, 0x73,
-	0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x97, 0x01, 0x0a, 0x12, 0x55, 0x70, 0x73, 0x65, 0x72, 0x74,
+	0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x97, 0x01, 0x0a, 0x12, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65,
 	0x53, 0x74, 0x6f, 0x72, 0x79, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x2c, 0x0a, 0x02,
 	0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x1c, 0x2e, 0x67, 0x6f, 0x6f, 0x67, 0x6c,
 	0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2e, 0x53, 0x74, 0x72, 0x69, 0x6e,
@@ -3903,7 +3903,7 @@ var file_cv_cv_proto_rawDesc = []byte{
 	0x03, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0b, 0x63, 0x68, 0x61, 0x70, 0x74, 0x65, 0x72, 0x4e, 0x61,
 	0x6d, 0x65, 0x12, 0x1b, 0x0a, 0x09, 0x6d, 0x65, 0x64, 0x69, 0x61, 0x5f, 0x75, 0x72, 0x6c, 0x18,
 	0x04, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x6d, 0x65, 0x64, 0x69, 0x61, 0x55, 0x72, 0x6c, 0x22,
-	0x25, 0x0a, 0x13, 0x55, 0x70, 0x73, 0x65, 0x72, 0x74, 0x53, 0x74, 0x6f, 0x72, 0x79, 0x52, 0x65,
+	0x25, 0x0a, 0x13, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x53, 0x74, 0x6f, 0x72, 0x79, 0x52, 0x65,
 	0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x0e, 0x0a, 0x02, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01,
 	0x28, 0x09, 0x52, 0x02, 0x69, 0x64, 0x22, 0x28, 0x0a, 0x11, 0x47, 0x65, 0x74, 0x53, 0x74, 0x6f,
 	0x72, 0x69, 0x65, 0x73, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x13, 0x0a, 0x05, 0x63,
@@ -3918,7 +3918,7 @@ var file_cv_cv_proto_rawDesc = []byte{
 	0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x0e, 0x0a, 0x02, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28,
 	0x09, 0x52, 0x02, 0x69, 0x64, 0x22, 0x15, 0x0a, 0x13, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x53,
 	0x74, 0x6f, 0x72, 0x79, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x81, 0x01, 0x0a,
-	0x1a, 0x55, 0x70, 0x73, 0x65, 0x72, 0x74, 0x43, 0x75, 0x73, 0x74, 0x6f, 0x6d, 0x53, 0x65, 0x63,
+	0x1a, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x43, 0x75, 0x73, 0x74, 0x6f, 0x6d, 0x53, 0x65, 0x63,
 	0x74, 0x69, 0x6f, 0x6e, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x2c, 0x0a, 0x02, 0x69,
 	0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x1c, 0x2e, 0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65,
 	0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2e, 0x53, 0x74, 0x72, 0x69, 0x6e, 0x67,
@@ -3926,7 +3926,7 @@ var file_cv_cv_proto_rawDesc = []byte{
 	0x69, 0x64, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x63, 0x76, 0x49, 0x64, 0x12, 0x20,
 	0x0a, 0x0b, 0x64, 0x65, 0x73, 0x63, 0x72, 0x69, 0x70, 0x74, 0x69, 0x6f, 0x6e, 0x18, 0x03, 0x20,
 	0x01, 0x28, 0x09, 0x52, 0x0b, 0x64, 0x65, 0x73, 0x63, 0x72, 0x69, 0x70, 0x74, 0x69, 0x6f, 0x6e,
-	0x22, 0x2d, 0x0a, 0x1b, 0x55, 0x70, 0x73, 0x65, 0x72, 0x74, 0x43, 0x75, 0x73, 0x74, 0x6f, 0x6d,
+	0x22, 0x2d, 0x0a, 0x1b, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x43, 0x75, 0x73, 0x74, 0x6f, 0x6d,
 	0x53, 0x65, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12,
 	0x0e, 0x0a, 0x02, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x02, 0x69, 0x64, 0x22,
 	0x2f, 0x0a, 0x18, 0x47, 0x65, 0x74, 0x43, 0x75, 0x73, 0x74, 0x6f, 0x6d, 0x53, 0x65, 0x63, 0x74,
@@ -3944,7 +3944,7 @@ var file_cv_cv_proto_rawDesc = []byte{
 	0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x02, 0x69, 0x64, 0x22, 0x1d, 0x0a, 0x1b, 0x44, 0x65,
 	0x6c, 0x65, 0x74, 0x65, 0x43, 0x75, 0x73, 0x74, 0x6f, 0x6d, 0x53, 0x65, 0x63, 0x74, 0x69, 0x6f,
 	0x6e, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0xb1, 0x02, 0x0a, 0x16, 0x55, 0x70,
-	0x73, 0x65, 0x72, 0x74, 0x45, 0x64, 0x75, 0x63, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x52, 0x65, 0x71,
+	0x64, 0x61, 0x74, 0x65, 0x45, 0x64, 0x75, 0x63, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x52, 0x65, 0x71,
 	0x75, 0x65, 0x73, 0x74, 0x12, 0x2c, 0x0a, 0x02, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b,
 	0x32, 0x1c, 0x2e, 0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62,
 	0x75, 0x66, 0x2e, 0x53, 0x74, 0x72, 0x69, 0x6e, 0x67, 0x56, 0x61, 0x6c, 0x75, 0x65, 0x52, 0x02,
@@ -3963,7 +3963,7 @@ var file_cv_cv_proto_rawDesc = []byte{
 	0x0a, 0x73, 0x70, 0x65, 0x63, 0x69, 0x61, 0x6c, 0x69, 0x74, 0x79, 0x12, 0x20, 0x0a, 0x0b, 0x64,
 	0x65, 0x73, 0x63, 0x72, 0x69, 0x70, 0x74, 0x69, 0x6f, 0x6e, 0x18, 0x07, 0x20, 0x01, 0x28, 0x09,
 	0x52, 0x0b, 0x64, 0x65, 0x73, 0x63, 0x72, 0x69, 0x70, 0x74, 0x69, 0x6f, 0x6e, 0x22, 0x29, 0x0a,
-	0x17, 0x55, 0x70, 0x73, 0x65, 0x72, 0x74, 0x45, 0x64, 0x75, 0x63, 0x61, 0x74, 0x69, 0x6f, 0x6e,
+	0x17, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x45, 0x64, 0x75, 0x63, 0x61, 0x74, 0x69, 0x6f, 0x6e,
 	0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x0e, 0x0a, 0x02, 0x69, 0x64, 0x18, 0x01,
 	0x20, 0x01, 0x28, 0x09, 0x52, 0x02, 0x69, 0x64, 0x22, 0x2b, 0x0a, 0x14, 0x47, 0x65, 0x74, 0x45,
 	0x64, 0x75, 0x63, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x73, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74,
@@ -3978,7 +3978,7 @@ var file_cv_cv_proto_rawDesc = []byte{
 	0x69, 0x6f, 0x6e, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x0e, 0x0a, 0x02, 0x69, 0x64,
 	0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x02, 0x69, 0x64, 0x22, 0x19, 0x0a, 0x17, 0x44, 0x65,
 	0x6c, 0x65, 0x74, 0x65, 0x45, 0x64, 0x75, 0x63, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x52, 0x65, 0x73,
-	0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0xaf, 0x02, 0x0a, 0x17, 0x55, 0x70, 0x73, 0x65, 0x72, 0x74,
+	0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0xaf, 0x02, 0x0a, 0x17, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65,
 	0x45, 0x78, 0x70, 0x65, 0x72, 0x69, 0x65, 0x6e, 0x63, 0x65, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73,
 	0x74, 0x12, 0x2c, 0x0a, 0x02, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x1c, 0x2e,
 	0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2e,
@@ -3997,8 +3997,8 @@ var file_cv_cv_proto_rawDesc = []byte{
 	0x69, 0x74, 0x69, 0x6f, 0x6e, 0x18, 0x06, 0x20, 0x01, 0x28, 0x09, 0x52, 0x08, 0x70, 0x6f, 0x73,
 	0x69, 0x74, 0x69, 0x6f, 0x6e, 0x12, 0x20, 0x0a, 0x0b, 0x64, 0x65, 0x73, 0x63, 0x72, 0x69, 0x70,
 	0x74, 0x69, 0x6f, 0x6e, 0x18, 0x07, 0x20, 0x01, 0x28, 0x09, 0x52, 0x0b, 0x64, 0x65, 0x73, 0x63,
-	0x72, 0x69, 0x70, 0x74, 0x69, 0x6f, 0x6e, 0x22, 0x2a, 0x0a, 0x18, 0x55, 0x70, 0x73, 0x65, 0x72,
-	0x74, 0x45, 0x78, 0x70, 0x65, 0x72, 0x69, 0x65, 0x6e, 0x63, 0x65, 0x52, 0x65, 0x73, 0x70, 0x6f,
+	0x72, 0x69, 0x70, 0x74, 0x69, 0x6f, 0x6e, 0x22, 0x2a, 0x0a, 0x18, 0x55, 0x70, 0x64, 0x61, 0x74,
+	0x65, 0x45, 0x78, 0x70, 0x65, 0x72, 0x69, 0x65, 0x6e, 0x63, 0x65, 0x52, 0x65, 0x73, 0x70, 0x6f,
 	0x6e, 0x73, 0x65, 0x12, 0x0e, 0x0a, 0x02, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52,
 	0x02, 0x69, 0x64, 0x22, 0x2c, 0x0a, 0x15, 0x47, 0x65, 0x74, 0x45, 0x78, 0x70, 0x65, 0x72, 0x69,
 	0x65, 0x6e, 0x63, 0x65, 0x73, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x13, 0x0a, 0x05,
@@ -4013,13 +4013,13 @@ var file_cv_cv_proto_rawDesc = []byte{
 	0x65, 0x6e, 0x63, 0x65, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x0e, 0x0a, 0x02, 0x69,
 	0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x02, 0x69, 0x64, 0x22, 0x1a, 0x0a, 0x18, 0x44,
 	0x65, 0x6c, 0x65, 0x74, 0x65, 0x45, 0x78, 0x70, 0x65, 0x72, 0x69, 0x65, 0x6e, 0x63, 0x65, 0x52,
-	0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x50, 0x0a, 0x17, 0x55, 0x70, 0x73, 0x65, 0x72,
-	0x74, 0x43, 0x56, 0x4a, 0x6f, 0x62, 0x4b, 0x69, 0x6e, 0x64, 0x73, 0x52, 0x65, 0x71, 0x75, 0x65,
+	0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x50, 0x0a, 0x17, 0x55, 0x70, 0x64, 0x61, 0x74,
+	0x65, 0x43, 0x56, 0x4a, 0x6f, 0x62, 0x4b, 0x69, 0x6e, 0x64, 0x73, 0x52, 0x65, 0x71, 0x75, 0x65,
 	0x73, 0x74, 0x12, 0x13, 0x0a, 0x05, 0x63, 0x76, 0x5f, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28,
 	0x09, 0x52, 0x04, 0x63, 0x76, 0x49, 0x64, 0x12, 0x20, 0x0a, 0x0b, 0x6a, 0x6f, 0x62, 0x4b, 0x69,
 	0x6e, 0x64, 0x73, 0x49, 0x44, 0x73, 0x18, 0x05, 0x20, 0x03, 0x28, 0x09, 0x52, 0x0b, 0x6a, 0x6f,
-	0x62, 0x4b, 0x69, 0x6e, 0x64, 0x73, 0x49, 0x44, 0x73, 0x22, 0x2a, 0x0a, 0x18, 0x55, 0x70, 0x73,
-	0x65, 0x72, 0x74, 0x43, 0x56, 0x4a, 0x6f, 0x62, 0x4b, 0x69, 0x6e, 0x64, 0x73, 0x52, 0x65, 0x73,
+	0x62, 0x4b, 0x69, 0x6e, 0x64, 0x73, 0x49, 0x44, 0x73, 0x22, 0x2a, 0x0a, 0x18, 0x55, 0x70, 0x64,
+	0x61, 0x74, 0x65, 0x43, 0x56, 0x4a, 0x6f, 0x62, 0x4b, 0x69, 0x6e, 0x64, 0x73, 0x52, 0x65, 0x73,
 	0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x0e, 0x0a, 0x02, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28,
 	0x09, 0x52, 0x02, 0x69, 0x64, 0x22, 0x26, 0x0a, 0x14, 0x47, 0x65, 0x74, 0x43, 0x56, 0x4a, 0x6f,
 	0x62, 0x4b, 0x69, 0x6e, 0x64, 0x73, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x0e, 0x0a,
@@ -4034,12 +4034,12 @@ var file_cv_cv_proto_rawDesc = []byte{
 	0x0a, 0x02, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x02, 0x69, 0x64, 0x22, 0x1a,
 	0x0a, 0x18, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x43, 0x56, 0x4a, 0x6f, 0x62, 0x4b, 0x69, 0x6e,
 	0x64, 0x73, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22, 0x58, 0x0a, 0x14, 0x55, 0x70,
-	0x73, 0x65, 0x72, 0x74, 0x4a, 0x6f, 0x62, 0x4b, 0x69, 0x6e, 0x64, 0x52, 0x65, 0x71, 0x75, 0x65,
+	0x64, 0x61, 0x74, 0x65, 0x4a, 0x6f, 0x62, 0x4b, 0x69, 0x6e, 0x64, 0x52, 0x65, 0x71, 0x75, 0x65,
 	0x73, 0x74, 0x12, 0x2c, 0x0a, 0x02, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x1c,
 	0x2e, 0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66,
 	0x2e, 0x53, 0x74, 0x72, 0x69, 0x6e, 0x67, 0x56, 0x61, 0x6c, 0x75, 0x65, 0x52, 0x02, 0x69, 0x64,
 	0x12, 0x12, 0x0a, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04,
-	0x6e, 0x61, 0x6d, 0x65, 0x22, 0x27, 0x0a, 0x15, 0x55, 0x70, 0x73, 0x65, 0x72, 0x74, 0x4a, 0x6f,
+	0x6e, 0x61, 0x6d, 0x65, 0x22, 0x27, 0x0a, 0x15, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x4a, 0x6f,
 	0x62, 0x4b, 0x69, 0x6e, 0x64, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x0e, 0x0a,
 	0x02, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x02, 0x69, 0x64, 0x22, 0x14, 0x0a,
 	0x12, 0x47, 0x65, 0x74, 0x4a, 0x6f, 0x62, 0x4b, 0x69, 0x6e, 0x64, 0x73, 0x52, 0x65, 0x71, 0x75,
@@ -4052,12 +4052,12 @@ var file_cv_cv_proto_rawDesc = []byte{
 	0x64, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x0e, 0x0a, 0x02, 0x69, 0x64, 0x18, 0x01,
 	0x20, 0x01, 0x28, 0x09, 0x52, 0x02, 0x69, 0x64, 0x22, 0x17, 0x0a, 0x15, 0x44, 0x65, 0x6c, 0x65,
 	0x74, 0x65, 0x4a, 0x6f, 0x62, 0x4b, 0x69, 0x6e, 0x64, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73,
-	0x65, 0x22, 0x50, 0x0a, 0x17, 0x55, 0x70, 0x73, 0x65, 0x72, 0x74, 0x43, 0x56, 0x4a, 0x6f, 0x62,
+	0x65, 0x22, 0x50, 0x0a, 0x17, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x43, 0x56, 0x4a, 0x6f, 0x62,
 	0x54, 0x79, 0x70, 0x65, 0x73, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x13, 0x0a, 0x05,
 	0x63, 0x76, 0x5f, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x63, 0x76, 0x49,
 	0x64, 0x12, 0x20, 0x0a, 0x0b, 0x6a, 0x6f, 0x62, 0x54, 0x79, 0x70, 0x65, 0x73, 0x49, 0x44, 0x73,
 	0x18, 0x05, 0x20, 0x03, 0x28, 0x09, 0x52, 0x0b, 0x6a, 0x6f, 0x62, 0x54, 0x79, 0x70, 0x65, 0x73,
-	0x49, 0x44, 0x73, 0x22, 0x1a, 0x0a, 0x18, 0x55, 0x70, 0x73, 0x65, 0x72, 0x74, 0x43, 0x56, 0x4a,
+	0x49, 0x44, 0x73, 0x22, 0x1a, 0x0a, 0x18, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x43, 0x56, 0x4a,
 	0x6f, 0x62, 0x54, 0x79, 0x70, 0x65, 0x73, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x22,
 	0x26, 0x0a, 0x14, 0x47, 0x65, 0x74, 0x43, 0x56, 0x4a, 0x6f, 0x62, 0x54, 0x79, 0x70, 0x65, 0x73,
 	0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x0e, 0x0a, 0x02, 0x69, 0x64, 0x18, 0x01, 0x20,
@@ -4071,13 +4071,13 @@ var file_cv_cv_proto_rawDesc = []byte{
 	0x73, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x0e, 0x0a, 0x02, 0x69, 0x64, 0x18, 0x01,
 	0x20, 0x01, 0x28, 0x09, 0x52, 0x02, 0x69, 0x64, 0x22, 0x1a, 0x0a, 0x18, 0x44, 0x65, 0x6c, 0x65,
 	0x74, 0x65, 0x43, 0x56, 0x4a, 0x6f, 0x62, 0x54, 0x79, 0x70, 0x65, 0x73, 0x52, 0x65, 0x73, 0x70,
-	0x6f, 0x6e, 0x73, 0x65, 0x22, 0x58, 0x0a, 0x14, 0x55, 0x70, 0x73, 0x65, 0x72, 0x74, 0x4a, 0x6f,
+	0x6f, 0x6e, 0x73, 0x65, 0x22, 0x58, 0x0a, 0x14, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x4a, 0x6f,
 	0x62, 0x54, 0x79, 0x70, 0x65, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x2c, 0x0a, 0x02,
 	0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x1c, 0x2e, 0x67, 0x6f, 0x6f, 0x67, 0x6c,
 	0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2e, 0x53, 0x74, 0x72, 0x69, 0x6e,
 	0x67, 0x56, 0x61, 0x6c, 0x75, 0x65, 0x52, 0x02, 0x69, 0x64, 0x12, 0x12, 0x0a, 0x04, 0x6e, 0x61,
 	0x6d, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x22, 0x27,
-	0x0a, 0x15, 0x55, 0x70, 0x73, 0x65, 0x72, 0x74, 0x4a, 0x6f, 0x62, 0x54, 0x79, 0x70, 0x65, 0x52,
+	0x0a, 0x15, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x4a, 0x6f, 0x62, 0x54, 0x79, 0x70, 0x65, 0x52,
 	0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x0e, 0x0a, 0x02, 0x69, 0x64, 0x18, 0x01, 0x20,
 	0x01, 0x28, 0x09, 0x52, 0x02, 0x69, 0x64, 0x22, 0x14, 0x0a, 0x12, 0x47, 0x65, 0x74, 0x4a, 0x6f,
 	0x62, 0x54, 0x79, 0x70, 0x65, 0x73, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x22, 0x4b, 0x0a,
@@ -4172,11 +4172,11 @@ var file_cv_cv_proto_rawDesc = []byte{
 	0x65, 0x12, 0x0e, 0x0a, 0x02, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x02, 0x69,
 	0x64, 0x12, 0x12, 0x0a, 0x04, 0x6e, 0x61, 0x6d, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52,
 	0x04, 0x6e, 0x61, 0x6d, 0x65, 0x32, 0xae, 0x18, 0x0a, 0x0c, 0x50, 0x65, 0x72, 0x73, 0x6f, 0x6e,
-	0x61, 0x41, 0x70, 0x70, 0x43, 0x56, 0x12, 0x51, 0x0a, 0x08, 0x55, 0x70, 0x73, 0x65, 0x72, 0x74,
+	0x61, 0x41, 0x70, 0x70, 0x43, 0x56, 0x12, 0x51, 0x0a, 0x08, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65,
 	0x43, 0x56, 0x12, 0x21, 0x2e, 0x70, 0x65, 0x72, 0x73, 0x6f, 0x6e, 0x61, 0x61, 0x70, 0x70, 0x61,
-	0x70, 0x69, 0x2e, 0x63, 0x76, 0x2e, 0x55, 0x70, 0x73, 0x65, 0x72, 0x74, 0x43, 0x56, 0x52, 0x65,
+	0x70, 0x69, 0x2e, 0x63, 0x76, 0x2e, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x43, 0x56, 0x52, 0x65,
 	0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x22, 0x2e, 0x70, 0x65, 0x72, 0x73, 0x6f, 0x6e, 0x61, 0x61,
-	0x70, 0x70, 0x61, 0x70, 0x69, 0x2e, 0x63, 0x76, 0x2e, 0x55, 0x70, 0x73, 0x65, 0x72, 0x74, 0x43,
+	0x70, 0x70, 0x61, 0x70, 0x69, 0x2e, 0x63, 0x76, 0x2e, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x43,
 	0x56, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x48, 0x0a, 0x05, 0x47, 0x65, 0x74,
 	0x43, 0x56, 0x12, 0x1e, 0x2e, 0x70, 0x65, 0x72, 0x73, 0x6f, 0x6e, 0x61, 0x61, 0x70, 0x70, 0x61,
 	0x70, 0x69, 0x2e, 0x63, 0x76, 0x2e, 0x47, 0x65, 0x74, 0x43, 0x56, 0x52, 0x65, 0x71, 0x75, 0x65,
@@ -4192,13 +4192,13 @@ var file_cv_cv_proto_rawDesc = []byte{
 	0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x43, 0x56, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a,
 	0x22, 0x2e, 0x70, 0x65, 0x72, 0x73, 0x6f, 0x6e, 0x61, 0x61, 0x70, 0x70, 0x61, 0x70, 0x69, 0x2e,
 	0x63, 0x76, 0x2e, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x43, 0x56, 0x52, 0x65, 0x73, 0x70, 0x6f,
-	0x6e, 0x73, 0x65, 0x12, 0x75, 0x0a, 0x14, 0x55, 0x70, 0x73, 0x65, 0x72, 0x74, 0x53, 0x74, 0x6f,
+	0x6e, 0x73, 0x65, 0x12, 0x75, 0x0a, 0x14, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x53, 0x74, 0x6f,
 	0x72, 0x69, 0x65, 0x73, 0x45, 0x70, 0x69, 0x73, 0x6f, 0x64, 0x65, 0x12, 0x2d, 0x2e, 0x70, 0x65,
 	0x72, 0x73, 0x6f, 0x6e, 0x61, 0x61, 0x70, 0x70, 0x61, 0x70, 0x69, 0x2e, 0x63, 0x76, 0x2e, 0x55,
-	0x70, 0x73, 0x65, 0x72, 0x74, 0x53, 0x74, 0x6f, 0x72, 0x69, 0x65, 0x73, 0x45, 0x70, 0x69, 0x73,
+	0x70, 0x64, 0x61, 0x74, 0x65, 0x53, 0x74, 0x6f, 0x72, 0x69, 0x65, 0x73, 0x45, 0x70, 0x69, 0x73,
 	0x6f, 0x64, 0x65, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x2e, 0x2e, 0x70, 0x65, 0x72,
 	0x73, 0x6f, 0x6e, 0x61, 0x61, 0x70, 0x70, 0x61, 0x70, 0x69, 0x2e, 0x63, 0x76, 0x2e, 0x55, 0x70,
-	0x73, 0x65, 0x72, 0x74, 0x53, 0x74, 0x6f, 0x72, 0x69, 0x65, 0x73, 0x45, 0x70, 0x69, 0x73, 0x6f,
+	0x64, 0x61, 0x74, 0x65, 0x53, 0x74, 0x6f, 0x72, 0x69, 0x65, 0x73, 0x45, 0x70, 0x69, 0x73, 0x6f,
 	0x64, 0x65, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x6f, 0x0a, 0x12, 0x47, 0x65,
 	0x74, 0x53, 0x74, 0x6f, 0x72, 0x69, 0x65, 0x73, 0x45, 0x70, 0x69, 0x73, 0x6f, 0x64, 0x65, 0x73,
 	0x12, 0x2b, 0x2e, 0x70, 0x65, 0x72, 0x73, 0x6f, 0x6e, 0x61, 0x61, 0x70, 0x70, 0x61, 0x70, 0x69,
@@ -4214,12 +4214,12 @@ var file_cv_cv_proto_rawDesc = []byte{
 	0x73, 0x74, 0x1a, 0x2e, 0x2e, 0x70, 0x65, 0x72, 0x73, 0x6f, 0x6e, 0x61, 0x61, 0x70, 0x70, 0x61,
 	0x70, 0x69, 0x2e, 0x63, 0x76, 0x2e, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x53, 0x74, 0x6f, 0x72,
 	0x69, 0x65, 0x73, 0x45, 0x70, 0x69, 0x73, 0x6f, 0x64, 0x65, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e,
-	0x73, 0x65, 0x12, 0x5a, 0x0a, 0x0b, 0x55, 0x70, 0x73, 0x65, 0x72, 0x74, 0x53, 0x74, 0x6f, 0x72,
+	0x73, 0x65, 0x12, 0x5a, 0x0a, 0x0b, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x53, 0x74, 0x6f, 0x72,
 	0x79, 0x12, 0x24, 0x2e, 0x70, 0x65, 0x72, 0x73, 0x6f, 0x6e, 0x61, 0x61, 0x70, 0x70, 0x61, 0x70,
-	0x69, 0x2e, 0x63, 0x76, 0x2e, 0x55, 0x70, 0x73, 0x65, 0x72, 0x74, 0x53, 0x74, 0x6f, 0x72, 0x79,
+	0x69, 0x2e, 0x63, 0x76, 0x2e, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x53, 0x74, 0x6f, 0x72, 0x79,
 	0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x25, 0x2e, 0x70, 0x65, 0x72, 0x73, 0x6f, 0x6e,
-	0x61, 0x61, 0x70, 0x70, 0x61, 0x70, 0x69, 0x2e, 0x63, 0x76, 0x2e, 0x55, 0x70, 0x73, 0x65, 0x72,
-	0x74, 0x53, 0x74, 0x6f, 0x72, 0x79, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x57,
+	0x61, 0x61, 0x70, 0x70, 0x61, 0x70, 0x69, 0x2e, 0x63, 0x76, 0x2e, 0x55, 0x70, 0x64, 0x61, 0x74,
+	0x65, 0x53, 0x74, 0x6f, 0x72, 0x79, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x57,
 	0x0a, 0x0a, 0x47, 0x65, 0x74, 0x53, 0x74, 0x6f, 0x72, 0x69, 0x65, 0x73, 0x12, 0x23, 0x2e, 0x70,
 	0x65, 0x72, 0x73, 0x6f, 0x6e, 0x61, 0x61, 0x70, 0x70, 0x61, 0x70, 0x69, 0x2e, 0x63, 0x76, 0x2e,
 	0x47, 0x65, 0x74, 0x53, 0x74, 0x6f, 0x72, 0x69, 0x65, 0x73, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73,
@@ -4231,13 +4231,13 @@ var file_cv_cv_proto_rawDesc = []byte{
 	0x53, 0x74, 0x6f, 0x72, 0x79, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x25, 0x2e, 0x70,
 	0x65, 0x72, 0x73, 0x6f, 0x6e, 0x61, 0x61, 0x70, 0x70, 0x61, 0x70, 0x69, 0x2e, 0x63, 0x76, 0x2e,
 	0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x53, 0x74, 0x6f, 0x72, 0x79, 0x52, 0x65, 0x73, 0x70, 0x6f,
-	0x6e, 0x73, 0x65, 0x12, 0x72, 0x0a, 0x13, 0x55, 0x70, 0x73, 0x65, 0x72, 0x74, 0x43, 0x75, 0x73,
+	0x6e, 0x73, 0x65, 0x12, 0x72, 0x0a, 0x13, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x43, 0x75, 0x73,
 	0x74, 0x6f, 0x6d, 0x53, 0x65, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x12, 0x2c, 0x2e, 0x70, 0x65, 0x72,
 	0x73, 0x6f, 0x6e, 0x61, 0x61, 0x70, 0x70, 0x61, 0x70, 0x69, 0x2e, 0x63, 0x76, 0x2e, 0x55, 0x70,
-	0x73, 0x65, 0x72, 0x74, 0x43, 0x75, 0x73, 0x74, 0x6f, 0x6d, 0x53, 0x65, 0x63, 0x74, 0x69, 0x6f,
+	0x64, 0x61, 0x74, 0x65, 0x43, 0x75, 0x73, 0x74, 0x6f, 0x6d, 0x53, 0x65, 0x63, 0x74, 0x69, 0x6f,
 	0x6e, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x2d, 0x2e, 0x70, 0x65, 0x72, 0x73, 0x6f,
-	0x6e, 0x61, 0x61, 0x70, 0x70, 0x61, 0x70, 0x69, 0x2e, 0x63, 0x76, 0x2e, 0x55, 0x70, 0x73, 0x65,
-	0x72, 0x74, 0x43, 0x75, 0x73, 0x74, 0x6f, 0x6d, 0x53, 0x65, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x52,
+	0x6e, 0x61, 0x61, 0x70, 0x70, 0x61, 0x70, 0x69, 0x2e, 0x63, 0x76, 0x2e, 0x55, 0x70, 0x64, 0x61,
+	0x74, 0x65, 0x43, 0x75, 0x73, 0x74, 0x6f, 0x6d, 0x53, 0x65, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x52,
 	0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x6c, 0x0a, 0x11, 0x47, 0x65, 0x74, 0x43, 0x75,
 	0x73, 0x74, 0x6f, 0x6d, 0x53, 0x65, 0x63, 0x74, 0x69, 0x6f, 0x6e, 0x73, 0x12, 0x2a, 0x2e, 0x70,
 	0x65, 0x72, 0x73, 0x6f, 0x6e, 0x61, 0x61, 0x70, 0x70, 0x61, 0x70, 0x69, 0x2e, 0x63, 0x76, 0x2e,
@@ -4252,12 +4252,12 @@ var file_cv_cv_proto_rawDesc = []byte{
 	0x69, 0x6f, 0x6e, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x2d, 0x2e, 0x70, 0x65, 0x72,
 	0x73, 0x6f, 0x6e, 0x61, 0x61, 0x70, 0x70, 0x61, 0x70, 0x69, 0x2e, 0x63, 0x76, 0x2e, 0x44, 0x65,
 	0x6c, 0x65, 0x74, 0x65, 0x43, 0x75, 0x73, 0x74, 0x6f, 0x6d, 0x53, 0x65, 0x63, 0x74, 0x69, 0x6f,
-	0x6e, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x66, 0x0a, 0x0f, 0x55, 0x70, 0x73,
-	0x65, 0x72, 0x74, 0x45, 0x64, 0x75, 0x63, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x12, 0x28, 0x2e, 0x70,
+	0x6e, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x66, 0x0a, 0x0f, 0x55, 0x70, 0x64,
+	0x61, 0x74, 0x65, 0x45, 0x64, 0x75, 0x63, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x12, 0x28, 0x2e, 0x70,
 	0x65, 0x72, 0x73, 0x6f, 0x6e, 0x61, 0x61, 0x70, 0x70, 0x61, 0x70, 0x69, 0x2e, 0x63, 0x76, 0x2e,
-	0x55, 0x70, 0x73, 0x65, 0x72, 0x74, 0x45, 0x64, 0x75, 0x63, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x52,
+	0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x45, 0x64, 0x75, 0x63, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x52,
 	0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x29, 0x2e, 0x70, 0x65, 0x72, 0x73, 0x6f, 0x6e, 0x61,
-	0x61, 0x70, 0x70, 0x61, 0x70, 0x69, 0x2e, 0x63, 0x76, 0x2e, 0x55, 0x70, 0x73, 0x65, 0x72, 0x74,
+	0x61, 0x70, 0x70, 0x61, 0x70, 0x69, 0x2e, 0x63, 0x76, 0x2e, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65,
 	0x45, 0x64, 0x75, 0x63, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73,
 	0x65, 0x12, 0x60, 0x0a, 0x0d, 0x47, 0x65, 0x74, 0x45, 0x64, 0x75, 0x63, 0x61, 0x74, 0x69, 0x6f,
 	0x6e, 0x73, 0x12, 0x26, 0x2e, 0x70, 0x65, 0x72, 0x73, 0x6f, 0x6e, 0x61, 0x61, 0x70, 0x70, 0x61,
@@ -4272,12 +4272,12 @@ var file_cv_cv_proto_rawDesc = []byte{
 	0x1a, 0x29, 0x2e, 0x70, 0x65, 0x72, 0x73, 0x6f, 0x6e, 0x61, 0x61, 0x70, 0x70, 0x61, 0x70, 0x69,
 	0x2e, 0x63, 0x76, 0x2e, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x45, 0x64, 0x75, 0x63, 0x61, 0x74,
 	0x69, 0x6f, 0x6e, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x69, 0x0a, 0x10, 0x55,
-	0x70, 0x73, 0x65, 0x72, 0x74, 0x45, 0x78, 0x70, 0x65, 0x72, 0x69, 0x65, 0x6e, 0x63, 0x65, 0x12,
+	0x70, 0x64, 0x61, 0x74, 0x65, 0x45, 0x78, 0x70, 0x65, 0x72, 0x69, 0x65, 0x6e, 0x63, 0x65, 0x12,
 	0x29, 0x2e, 0x70, 0x65, 0x72, 0x73, 0x6f, 0x6e, 0x61, 0x61, 0x70, 0x70, 0x61, 0x70, 0x69, 0x2e,
-	0x63, 0x76, 0x2e, 0x55, 0x70, 0x73, 0x65, 0x72, 0x74, 0x45, 0x78, 0x70, 0x65, 0x72, 0x69, 0x65,
+	0x63, 0x76, 0x2e, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x45, 0x78, 0x70, 0x65, 0x72, 0x69, 0x65,
 	0x6e, 0x63, 0x65, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x2a, 0x2e, 0x70, 0x65, 0x72,
 	0x73, 0x6f, 0x6e, 0x61, 0x61, 0x70, 0x70, 0x61, 0x70, 0x69, 0x2e, 0x63, 0x76, 0x2e, 0x55, 0x70,
-	0x73, 0x65, 0x72, 0x74, 0x45, 0x78, 0x70, 0x65, 0x72, 0x69, 0x65, 0x6e, 0x63, 0x65, 0x52, 0x65,
+	0x64, 0x61, 0x74, 0x65, 0x45, 0x78, 0x70, 0x65, 0x72, 0x69, 0x65, 0x6e, 0x63, 0x65, 0x52, 0x65,
 	0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x63, 0x0a, 0x0e, 0x47, 0x65, 0x74, 0x45, 0x78, 0x70,
 	0x65, 0x72, 0x69, 0x65, 0x6e, 0x63, 0x65, 0x73, 0x12, 0x27, 0x2e, 0x70, 0x65, 0x72, 0x73, 0x6f,
 	0x6e, 0x61, 0x61, 0x70, 0x70, 0x61, 0x70, 0x69, 0x2e, 0x63, 0x76, 0x2e, 0x47, 0x65, 0x74, 0x45,
@@ -4291,12 +4291,12 @@ var file_cv_cv_proto_rawDesc = []byte{
 	0x6e, 0x63, 0x65, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x2a, 0x2e, 0x70, 0x65, 0x72,
 	0x73, 0x6f, 0x6e, 0x61, 0x61, 0x70, 0x70, 0x61, 0x70, 0x69, 0x2e, 0x63, 0x76, 0x2e, 0x44, 0x65,
 	0x6c, 0x65, 0x74, 0x65, 0x45, 0x78, 0x70, 0x65, 0x72, 0x69, 0x65, 0x6e, 0x63, 0x65, 0x52, 0x65,
-	0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x69, 0x0a, 0x10, 0x55, 0x70, 0x73, 0x65, 0x72, 0x74,
+	0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x69, 0x0a, 0x10, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65,
 	0x43, 0x56, 0x4a, 0x6f, 0x62, 0x4b, 0x69, 0x6e, 0x64, 0x73, 0x12, 0x29, 0x2e, 0x70, 0x65, 0x72,
 	0x73, 0x6f, 0x6e, 0x61, 0x61, 0x70, 0x70, 0x61, 0x70, 0x69, 0x2e, 0x63, 0x76, 0x2e, 0x55, 0x70,
-	0x73, 0x65, 0x72, 0x74, 0x43, 0x56, 0x4a, 0x6f, 0x62, 0x4b, 0x69, 0x6e, 0x64, 0x73, 0x52, 0x65,
+	0x64, 0x61, 0x74, 0x65, 0x43, 0x56, 0x4a, 0x6f, 0x62, 0x4b, 0x69, 0x6e, 0x64, 0x73, 0x52, 0x65,
 	0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x2a, 0x2e, 0x70, 0x65, 0x72, 0x73, 0x6f, 0x6e, 0x61, 0x61,
-	0x70, 0x70, 0x61, 0x70, 0x69, 0x2e, 0x63, 0x76, 0x2e, 0x55, 0x70, 0x73, 0x65, 0x72, 0x74, 0x43,
+	0x70, 0x70, 0x61, 0x70, 0x69, 0x2e, 0x63, 0x76, 0x2e, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x43,
 	0x56, 0x4a, 0x6f, 0x62, 0x4b, 0x69, 0x6e, 0x64, 0x73, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73,
 	0x65, 0x12, 0x60, 0x0a, 0x0d, 0x47, 0x65, 0x74, 0x43, 0x56, 0x4a, 0x6f, 0x62, 0x4b, 0x69, 0x6e,
 	0x64, 0x73, 0x12, 0x26, 0x2e, 0x70, 0x65, 0x72, 0x73, 0x6f, 0x6e, 0x61, 0x61, 0x70, 0x70, 0x61,
@@ -4311,12 +4311,12 @@ var file_cv_cv_proto_rawDesc = []byte{
 	0x73, 0x74, 0x1a, 0x2a, 0x2e, 0x70, 0x65, 0x72, 0x73, 0x6f, 0x6e, 0x61, 0x61, 0x70, 0x70, 0x61,
 	0x70, 0x69, 0x2e, 0x63, 0x76, 0x2e, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x43, 0x56, 0x4a, 0x6f,
 	0x62, 0x4b, 0x69, 0x6e, 0x64, 0x73, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x60,
-	0x0a, 0x0d, 0x55, 0x70, 0x73, 0x65, 0x72, 0x74, 0x4a, 0x6f, 0x62, 0x4b, 0x69, 0x6e, 0x64, 0x12,
+	0x0a, 0x0d, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x4a, 0x6f, 0x62, 0x4b, 0x69, 0x6e, 0x64, 0x12,
 	0x26, 0x2e, 0x70, 0x65, 0x72, 0x73, 0x6f, 0x6e, 0x61, 0x61, 0x70, 0x70, 0x61, 0x70, 0x69, 0x2e,
-	0x63, 0x76, 0x2e, 0x55, 0x70, 0x73, 0x65, 0x72, 0x74, 0x4a, 0x6f, 0x62, 0x4b, 0x69, 0x6e, 0x64,
+	0x63, 0x76, 0x2e, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x4a, 0x6f, 0x62, 0x4b, 0x69, 0x6e, 0x64,
 	0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x27, 0x2e, 0x70, 0x65, 0x72, 0x73, 0x6f, 0x6e,
-	0x61, 0x61, 0x70, 0x70, 0x61, 0x70, 0x69, 0x2e, 0x63, 0x76, 0x2e, 0x55, 0x70, 0x73, 0x65, 0x72,
-	0x74, 0x4a, 0x6f, 0x62, 0x4b, 0x69, 0x6e, 0x64, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65,
+	0x61, 0x61, 0x70, 0x70, 0x61, 0x70, 0x69, 0x2e, 0x63, 0x76, 0x2e, 0x55, 0x70, 0x64, 0x61, 0x74,
+	0x65, 0x4a, 0x6f, 0x62, 0x4b, 0x69, 0x6e, 0x64, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65,
 	0x12, 0x5a, 0x0a, 0x0b, 0x47, 0x65, 0x74, 0x4a, 0x6f, 0x62, 0x4b, 0x69, 0x6e, 0x64, 0x73, 0x12,
 	0x24, 0x2e, 0x70, 0x65, 0x72, 0x73, 0x6f, 0x6e, 0x61, 0x61, 0x70, 0x70, 0x61, 0x70, 0x69, 0x2e,
 	0x63, 0x76, 0x2e, 0x47, 0x65, 0x74, 0x4a, 0x6f, 0x62, 0x4b, 0x69, 0x6e, 0x64, 0x73, 0x52, 0x65,
@@ -4329,12 +4329,12 @@ var file_cv_cv_proto_rawDesc = []byte{
 	0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x27, 0x2e, 0x70, 0x65, 0x72, 0x73, 0x6f, 0x6e, 0x61, 0x61,
 	0x70, 0x70, 0x61, 0x70, 0x69, 0x2e, 0x63, 0x76, 0x2e, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x4a,
 	0x6f, 0x62, 0x4b, 0x69, 0x6e, 0x64, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x69,
-	0x0a, 0x10, 0x55, 0x70, 0x73, 0x65, 0x72, 0x74, 0x43, 0x56, 0x4a, 0x6f, 0x62, 0x54, 0x79, 0x70,
+	0x0a, 0x10, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x43, 0x56, 0x4a, 0x6f, 0x62, 0x54, 0x79, 0x70,
 	0x65, 0x73, 0x12, 0x29, 0x2e, 0x70, 0x65, 0x72, 0x73, 0x6f, 0x6e, 0x61, 0x61, 0x70, 0x70, 0x61,
-	0x70, 0x69, 0x2e, 0x63, 0x76, 0x2e, 0x55, 0x70, 0x73, 0x65, 0x72, 0x74, 0x43, 0x56, 0x4a, 0x6f,
+	0x70, 0x69, 0x2e, 0x63, 0x76, 0x2e, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x43, 0x56, 0x4a, 0x6f,
 	0x62, 0x54, 0x79, 0x70, 0x65, 0x73, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x2a, 0x2e,
 	0x70, 0x65, 0x72, 0x73, 0x6f, 0x6e, 0x61, 0x61, 0x70, 0x70, 0x61, 0x70, 0x69, 0x2e, 0x63, 0x76,
-	0x2e, 0x55, 0x70, 0x73, 0x65, 0x72, 0x74, 0x43, 0x56, 0x4a, 0x6f, 0x62, 0x54, 0x79, 0x70, 0x65,
+	0x2e, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x43, 0x56, 0x4a, 0x6f, 0x62, 0x54, 0x79, 0x70, 0x65,
 	0x73, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x60, 0x0a, 0x0d, 0x47, 0x65, 0x74,
 	0x43, 0x56, 0x4a, 0x6f, 0x62, 0x54, 0x79, 0x70, 0x65, 0x73, 0x12, 0x26, 0x2e, 0x70, 0x65, 0x72,
 	0x73, 0x6f, 0x6e, 0x61, 0x61, 0x70, 0x70, 0x61, 0x70, 0x69, 0x2e, 0x63, 0x76, 0x2e, 0x47, 0x65,
@@ -4348,12 +4348,12 @@ var file_cv_cv_proto_rawDesc = []byte{
 	0x70, 0x65, 0x73, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x2a, 0x2e, 0x70, 0x65, 0x72,
 	0x73, 0x6f, 0x6e, 0x61, 0x61, 0x70, 0x70, 0x61, 0x70, 0x69, 0x2e, 0x63, 0x76, 0x2e, 0x44, 0x65,
 	0x6c, 0x65, 0x74, 0x65, 0x43, 0x56, 0x4a, 0x6f, 0x62, 0x54, 0x79, 0x70, 0x65, 0x73, 0x52, 0x65,
-	0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x60, 0x0a, 0x0d, 0x55, 0x70, 0x73, 0x65, 0x72, 0x74,
+	0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x60, 0x0a, 0x0d, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65,
 	0x4a, 0x6f, 0x62, 0x54, 0x79, 0x70, 0x65, 0x12, 0x26, 0x2e, 0x70, 0x65, 0x72, 0x73, 0x6f, 0x6e,
-	0x61, 0x61, 0x70, 0x70, 0x61, 0x70, 0x69, 0x2e, 0x63, 0x76, 0x2e, 0x55, 0x70, 0x73, 0x65, 0x72,
-	0x74, 0x4a, 0x6f, 0x62, 0x54, 0x79, 0x70, 0x65, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a,
+	0x61, 0x61, 0x70, 0x70, 0x61, 0x70, 0x69, 0x2e, 0x63, 0x76, 0x2e, 0x55, 0x70, 0x64, 0x61, 0x74,
+	0x65, 0x4a, 0x6f, 0x62, 0x54, 0x79, 0x70, 0x65, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a,
 	0x27, 0x2e, 0x70, 0x65, 0x72, 0x73, 0x6f, 0x6e, 0x61, 0x61, 0x70, 0x70, 0x61, 0x70, 0x69, 0x2e,
-	0x63, 0x76, 0x2e, 0x55, 0x70, 0x73, 0x65, 0x72, 0x74, 0x4a, 0x6f, 0x62, 0x54, 0x79, 0x70, 0x65,
+	0x63, 0x76, 0x2e, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x4a, 0x6f, 0x62, 0x54, 0x79, 0x70, 0x65,
 	0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x5a, 0x0a, 0x0b, 0x47, 0x65, 0x74, 0x4a,
 	0x6f, 0x62, 0x54, 0x79, 0x70, 0x65, 0x73, 0x12, 0x24, 0x2e, 0x70, 0x65, 0x72, 0x73, 0x6f, 0x6e,
 	0x61, 0x61, 0x70, 0x70, 0x61, 0x70, 0x69, 0x2e, 0x63, 0x76, 0x2e, 0x47, 0x65, 0x74, 0x4a, 0x6f,
@@ -4385,64 +4385,64 @@ func file_cv_cv_proto_rawDescGZIP() []byte {
 
 var file_cv_cv_proto_msgTypes = make([]protoimpl.MessageInfo, 73)
 var file_cv_cv_proto_goTypes = []interface{}{
-	(*UpsertCVRequest)(nil),              // 0: personaappapi.cv.UpsertCVRequest
-	(*UpsertCVResponse)(nil),             // 1: personaappapi.cv.UpsertCVResponse
+	(*UpdateCVRequest)(nil),              // 0: personaappapi.cv.UpdateCVRequest
+	(*UpdateCVResponse)(nil),             // 1: personaappapi.cv.UpdateCVResponse
 	(*GetCVsRequest)(nil),                // 2: personaappapi.cv.GetCVsRequest
 	(*GetCVsResponse)(nil),               // 3: personaappapi.cv.GetCVsResponse
 	(*GetCVRequest)(nil),                 // 4: personaappapi.cv.GetCVRequest
 	(*GetCVResponse)(nil),                // 5: personaappapi.cv.GetCVResponse
 	(*DeleteCVRequest)(nil),              // 6: personaappapi.cv.DeleteCVRequest
 	(*DeleteCVResponse)(nil),             // 7: personaappapi.cv.DeleteCVResponse
-	(*UpsertStoriesEpisodeRequest)(nil),  // 8: personaappapi.cv.UpsertStoriesEpisodeRequest
-	(*UpsertStoriesEpisodeResponse)(nil), // 9: personaappapi.cv.UpsertStoriesEpisodeResponse
+	(*UpdateStoriesEpisodeRequest)(nil),  // 8: personaappapi.cv.UpdateStoriesEpisodeRequest
+	(*UpdateStoriesEpisodeResponse)(nil), // 9: personaappapi.cv.UpdateStoriesEpisodeResponse
 	(*GetStoriesEpisodesRequest)(nil),    // 10: personaappapi.cv.GetStoriesEpisodesRequest
 	(*GetStoriesEpisodesResponse)(nil),   // 11: personaappapi.cv.GetStoriesEpisodesResponse
 	(*DeleteStoriesEpisodeRequest)(nil),  // 12: personaappapi.cv.DeleteStoriesEpisodeRequest
 	(*DeleteStoriesEpisodeResponse)(nil), // 13: personaappapi.cv.DeleteStoriesEpisodeResponse
-	(*UpsertStoryRequest)(nil),           // 14: personaappapi.cv.UpsertStoryRequest
-	(*UpsertStoryResponse)(nil),          // 15: personaappapi.cv.UpsertStoryResponse
+	(*UpdateStoryRequest)(nil),           // 14: personaappapi.cv.UpdateStoryRequest
+	(*UpdateStoryResponse)(nil),          // 15: personaappapi.cv.UpdateStoryResponse
 	(*GetStoriesRequest)(nil),            // 16: personaappapi.cv.GetStoriesRequest
 	(*GetStoriesResponse)(nil),           // 17: personaappapi.cv.GetStoriesResponse
 	(*DeleteStoryRequest)(nil),           // 18: personaappapi.cv.DeleteStoryRequest
 	(*DeleteStoryResponse)(nil),          // 19: personaappapi.cv.DeleteStoryResponse
-	(*UpsertCustomSectionRequest)(nil),   // 20: personaappapi.cv.UpsertCustomSectionRequest
-	(*UpsertCustomSectionResponse)(nil),  // 21: personaappapi.cv.UpsertCustomSectionResponse
+	(*UpdateCustomSectionRequest)(nil),   // 20: personaappapi.cv.UpdateCustomSectionRequest
+	(*UpdateCustomSectionResponse)(nil),  // 21: personaappapi.cv.UpdateCustomSectionResponse
 	(*GetCustomSectionsRequest)(nil),     // 22: personaappapi.cv.GetCustomSectionsRequest
 	(*GetCustomSectionsResponse)(nil),    // 23: personaappapi.cv.GetCustomSectionsResponse
 	(*DeleteCustomSectionRequest)(nil),   // 24: personaappapi.cv.DeleteCustomSectionRequest
 	(*DeleteCustomSectionResponse)(nil),  // 25: personaappapi.cv.DeleteCustomSectionResponse
-	(*UpsertEducationRequest)(nil),       // 26: personaappapi.cv.UpsertEducationRequest
-	(*UpsertEducationResponse)(nil),      // 27: personaappapi.cv.UpsertEducationResponse
+	(*UpdateEducationRequest)(nil),       // 26: personaappapi.cv.UpdateEducationRequest
+	(*UpdateEducationResponse)(nil),      // 27: personaappapi.cv.UpdateEducationResponse
 	(*GetEducationsRequest)(nil),         // 28: personaappapi.cv.GetEducationsRequest
 	(*GetEducationsResponse)(nil),        // 29: personaappapi.cv.GetEducationsResponse
 	(*DeleteEducationRequest)(nil),       // 30: personaappapi.cv.DeleteEducationRequest
 	(*DeleteEducationResponse)(nil),      // 31: personaappapi.cv.DeleteEducationResponse
-	(*UpsertExperienceRequest)(nil),      // 32: personaappapi.cv.UpsertExperienceRequest
-	(*UpsertExperienceResponse)(nil),     // 33: personaappapi.cv.UpsertExperienceResponse
+	(*UpdateExperienceRequest)(nil),      // 32: personaappapi.cv.UpdateExperienceRequest
+	(*UpdateExperienceResponse)(nil),     // 33: personaappapi.cv.UpdateExperienceResponse
 	(*GetExperiencesRequest)(nil),        // 34: personaappapi.cv.GetExperiencesRequest
 	(*GetExperiencesResponse)(nil),       // 35: personaappapi.cv.GetExperiencesResponse
 	(*DeleteExperienceRequest)(nil),      // 36: personaappapi.cv.DeleteExperienceRequest
 	(*DeleteExperienceResponse)(nil),     // 37: personaappapi.cv.DeleteExperienceResponse
-	(*UpsertCVJobKindsRequest)(nil),      // 38: personaappapi.cv.UpsertCVJobKindsRequest
-	(*UpsertCVJobKindsResponse)(nil),     // 39: personaappapi.cv.UpsertCVJobKindsResponse
+	(*UpdateCVJobKindsRequest)(nil),      // 38: personaappapi.cv.UpdateCVJobKindsRequest
+	(*UpdateCVJobKindsResponse)(nil),     // 39: personaappapi.cv.UpdateCVJobKindsResponse
 	(*GetCVJobKindsRequest)(nil),         // 40: personaappapi.cv.GetCVJobKindsRequest
 	(*GetCVJobKindsResponse)(nil),        // 41: personaappapi.cv.GetCVJobKindsResponse
 	(*DeleteCVJobKindsRequest)(nil),      // 42: personaappapi.cv.DeleteCVJobKindsRequest
 	(*DeleteCVJobKindsResponse)(nil),     // 43: personaappapi.cv.DeleteCVJobKindsResponse
-	(*UpsertJobKindRequest)(nil),         // 44: personaappapi.cv.UpsertJobKindRequest
-	(*UpsertJobKindResponse)(nil),        // 45: personaappapi.cv.UpsertJobKindResponse
+	(*UpdateJobKindRequest)(nil),         // 44: personaappapi.cv.UpdateJobKindRequest
+	(*UpdateJobKindResponse)(nil),        // 45: personaappapi.cv.UpdateJobKindResponse
 	(*GetJobKindsRequest)(nil),           // 46: personaappapi.cv.GetJobKindsRequest
 	(*GetJobKindsResponse)(nil),          // 47: personaappapi.cv.GetJobKindsResponse
 	(*DeleteJobKindRequest)(nil),         // 48: personaappapi.cv.DeleteJobKindRequest
 	(*DeleteJobKindResponse)(nil),        // 49: personaappapi.cv.DeleteJobKindResponse
-	(*UpsertCVJobTypesRequest)(nil),      // 50: personaappapi.cv.UpsertCVJobTypesRequest
-	(*UpsertCVJobTypesResponse)(nil),     // 51: personaappapi.cv.UpsertCVJobTypesResponse
+	(*UpdateCVJobTypesRequest)(nil),      // 50: personaappapi.cv.UpdateCVJobTypesRequest
+	(*UpdateCVJobTypesResponse)(nil),     // 51: personaappapi.cv.UpdateCVJobTypesResponse
 	(*GetCVJobTypesRequest)(nil),         // 52: personaappapi.cv.GetCVJobTypesRequest
 	(*GetCVJobTypesResponse)(nil),        // 53: personaappapi.cv.GetCVJobTypesResponse
 	(*DeleteCVJobTypesRequest)(nil),      // 54: personaappapi.cv.DeleteCVJobTypesRequest
 	(*DeleteCVJobTypesResponse)(nil),     // 55: personaappapi.cv.DeleteCVJobTypesResponse
-	(*UpsertJobTypeRequest)(nil),         // 56: personaappapi.cv.UpsertJobTypeRequest
-	(*UpsertJobTypeResponse)(nil),        // 57: personaappapi.cv.UpsertJobTypeResponse
+	(*UpdateJobTypeRequest)(nil),         // 56: personaappapi.cv.UpdateJobTypeRequest
+	(*UpdateJobTypeResponse)(nil),        // 57: personaappapi.cv.UpdateJobTypeResponse
 	(*GetJobTypesRequest)(nil),           // 58: personaappapi.cv.GetJobTypesRequest
 	(*GetJobTypesResponse)(nil),          // 59: personaappapi.cv.GetJobTypesResponse
 	(*DeleteJobTypeRequest)(nil),         // 60: personaappapi.cv.DeleteJobTypeRequest
@@ -4462,93 +4462,93 @@ var file_cv_cv_proto_goTypes = []interface{}{
 	(*timestamp.Timestamp)(nil),          // 74: google.protobuf.Timestamp
 }
 var file_cv_cv_proto_depIdxs = []int32{
-	73, // 0: personaappapi.cv.UpsertCVRequest.id:type_name -> google.protobuf.StringValue
+	73, // 0: personaappapi.cv.UpdateCVRequest.id:type_name -> google.protobuf.StringValue
 	63, // 1: personaappapi.cv.GetCVsResponse.cv_short:type_name -> personaappapi.cv.CVShort
 	62, // 2: personaappapi.cv.GetCVResponse.cv:type_name -> personaappapi.cv.CV
-	73, // 3: personaappapi.cv.UpsertStoriesEpisodeRequest.id:type_name -> google.protobuf.StringValue
+	73, // 3: personaappapi.cv.UpdateStoriesEpisodeRequest.id:type_name -> google.protobuf.StringValue
 	64, // 4: personaappapi.cv.GetStoriesEpisodesResponse.story_episode:type_name -> personaappapi.cv.StoryEpisode
-	73, // 5: personaappapi.cv.UpsertStoryRequest.id:type_name -> google.protobuf.StringValue
+	73, // 5: personaappapi.cv.UpdateStoryRequest.id:type_name -> google.protobuf.StringValue
 	65, // 6: personaappapi.cv.GetStoriesResponse.cv_custom_story:type_name -> personaappapi.cv.CVCustomStory
-	73, // 7: personaappapi.cv.UpsertCustomSectionRequest.id:type_name -> google.protobuf.StringValue
+	73, // 7: personaappapi.cv.UpdateCustomSectionRequest.id:type_name -> google.protobuf.StringValue
 	66, // 8: personaappapi.cv.GetCustomSectionsResponse.cv_custom_section:type_name -> personaappapi.cv.CVCustomSection
-	73, // 9: personaappapi.cv.UpsertEducationRequest.id:type_name -> google.protobuf.StringValue
-	74, // 10: personaappapi.cv.UpsertEducationRequest.date_from:type_name -> google.protobuf.Timestamp
-	74, // 11: personaappapi.cv.UpsertEducationRequest.date_till:type_name -> google.protobuf.Timestamp
+	73, // 9: personaappapi.cv.UpdateEducationRequest.id:type_name -> google.protobuf.StringValue
+	74, // 10: personaappapi.cv.UpdateEducationRequest.date_from:type_name -> google.protobuf.Timestamp
+	74, // 11: personaappapi.cv.UpdateEducationRequest.date_till:type_name -> google.protobuf.Timestamp
 	67, // 12: personaappapi.cv.GetEducationsResponse.cv_education:type_name -> personaappapi.cv.CVEducation
-	73, // 13: personaappapi.cv.UpsertExperienceRequest.id:type_name -> google.protobuf.StringValue
-	74, // 14: personaappapi.cv.UpsertExperienceRequest.date_from:type_name -> google.protobuf.Timestamp
-	74, // 15: personaappapi.cv.UpsertExperienceRequest.date_till:type_name -> google.protobuf.Timestamp
+	73, // 13: personaappapi.cv.UpdateExperienceRequest.id:type_name -> google.protobuf.StringValue
+	74, // 14: personaappapi.cv.UpdateExperienceRequest.date_from:type_name -> google.protobuf.Timestamp
+	74, // 15: personaappapi.cv.UpdateExperienceRequest.date_till:type_name -> google.protobuf.Timestamp
 	68, // 16: personaappapi.cv.GetExperiencesResponse.cv_experience:type_name -> personaappapi.cv.CVExperience
 	69, // 17: personaappapi.cv.GetCVJobKindsResponse.cv_job_kind:type_name -> personaappapi.cv.CVJobKind
-	73, // 18: personaappapi.cv.UpsertJobKindRequest.id:type_name -> google.protobuf.StringValue
+	73, // 18: personaappapi.cv.UpdateJobKindRequest.id:type_name -> google.protobuf.StringValue
 	70, // 19: personaappapi.cv.GetJobKindsResponse.job_kind:type_name -> personaappapi.cv.JobKind
 	71, // 20: personaappapi.cv.GetCVJobTypesResponse.cv_job_type:type_name -> personaappapi.cv.CVJobType
-	73, // 21: personaappapi.cv.UpsertJobTypeRequest.id:type_name -> google.protobuf.StringValue
+	73, // 21: personaappapi.cv.UpdateJobTypeRequest.id:type_name -> google.protobuf.StringValue
 	72, // 22: personaappapi.cv.GetJobTypesResponse.job_type:type_name -> personaappapi.cv.JobType
 	74, // 23: personaappapi.cv.CVEducation.date_from:type_name -> google.protobuf.Timestamp
 	74, // 24: personaappapi.cv.CVEducation.date_till:type_name -> google.protobuf.Timestamp
 	74, // 25: personaappapi.cv.CVExperience.date_from:type_name -> google.protobuf.Timestamp
 	74, // 26: personaappapi.cv.CVExperience.date_till:type_name -> google.protobuf.Timestamp
-	0,  // 27: personaappapi.cv.PersonaAppCV.UpsertCV:input_type -> personaappapi.cv.UpsertCVRequest
+	0,  // 27: personaappapi.cv.PersonaAppCV.UpdateCV:input_type -> personaappapi.cv.UpdateCVRequest
 	4,  // 28: personaappapi.cv.PersonaAppCV.GetCV:input_type -> personaappapi.cv.GetCVRequest
 	2,  // 29: personaappapi.cv.PersonaAppCV.GetCVs:input_type -> personaappapi.cv.GetCVsRequest
 	6,  // 30: personaappapi.cv.PersonaAppCV.DeleteCV:input_type -> personaappapi.cv.DeleteCVRequest
-	8,  // 31: personaappapi.cv.PersonaAppCV.UpsertStoriesEpisode:input_type -> personaappapi.cv.UpsertStoriesEpisodeRequest
+	8,  // 31: personaappapi.cv.PersonaAppCV.UpdateStoriesEpisode:input_type -> personaappapi.cv.UpdateStoriesEpisodeRequest
 	10, // 32: personaappapi.cv.PersonaAppCV.GetStoriesEpisodes:input_type -> personaappapi.cv.GetStoriesEpisodesRequest
 	12, // 33: personaappapi.cv.PersonaAppCV.DeleteStoriesEpisode:input_type -> personaappapi.cv.DeleteStoriesEpisodeRequest
-	14, // 34: personaappapi.cv.PersonaAppCV.UpsertStory:input_type -> personaappapi.cv.UpsertStoryRequest
+	14, // 34: personaappapi.cv.PersonaAppCV.UpdateStory:input_type -> personaappapi.cv.UpdateStoryRequest
 	16, // 35: personaappapi.cv.PersonaAppCV.GetStories:input_type -> personaappapi.cv.GetStoriesRequest
 	18, // 36: personaappapi.cv.PersonaAppCV.DeleteStory:input_type -> personaappapi.cv.DeleteStoryRequest
-	20, // 37: personaappapi.cv.PersonaAppCV.UpsertCustomSection:input_type -> personaappapi.cv.UpsertCustomSectionRequest
+	20, // 37: personaappapi.cv.PersonaAppCV.UpdateCustomSection:input_type -> personaappapi.cv.UpdateCustomSectionRequest
 	22, // 38: personaappapi.cv.PersonaAppCV.GetCustomSections:input_type -> personaappapi.cv.GetCustomSectionsRequest
 	24, // 39: personaappapi.cv.PersonaAppCV.DeleteCustomSection:input_type -> personaappapi.cv.DeleteCustomSectionRequest
-	26, // 40: personaappapi.cv.PersonaAppCV.UpsertEducation:input_type -> personaappapi.cv.UpsertEducationRequest
+	26, // 40: personaappapi.cv.PersonaAppCV.UpdateEducation:input_type -> personaappapi.cv.UpdateEducationRequest
 	28, // 41: personaappapi.cv.PersonaAppCV.GetEducations:input_type -> personaappapi.cv.GetEducationsRequest
 	30, // 42: personaappapi.cv.PersonaAppCV.DeleteEducation:input_type -> personaappapi.cv.DeleteEducationRequest
-	32, // 43: personaappapi.cv.PersonaAppCV.UpsertExperience:input_type -> personaappapi.cv.UpsertExperienceRequest
+	32, // 43: personaappapi.cv.PersonaAppCV.UpdateExperience:input_type -> personaappapi.cv.UpdateExperienceRequest
 	34, // 44: personaappapi.cv.PersonaAppCV.GetExperiences:input_type -> personaappapi.cv.GetExperiencesRequest
 	36, // 45: personaappapi.cv.PersonaAppCV.DeleteExperience:input_type -> personaappapi.cv.DeleteExperienceRequest
-	38, // 46: personaappapi.cv.PersonaAppCV.UpsertCVJobKinds:input_type -> personaappapi.cv.UpsertCVJobKindsRequest
+	38, // 46: personaappapi.cv.PersonaAppCV.UpdateCVJobKinds:input_type -> personaappapi.cv.UpdateCVJobKindsRequest
 	40, // 47: personaappapi.cv.PersonaAppCV.GetCVJobKinds:input_type -> personaappapi.cv.GetCVJobKindsRequest
 	42, // 48: personaappapi.cv.PersonaAppCV.DeleteCVJobKinds:input_type -> personaappapi.cv.DeleteCVJobKindsRequest
-	44, // 49: personaappapi.cv.PersonaAppCV.UpsertJobKind:input_type -> personaappapi.cv.UpsertJobKindRequest
+	44, // 49: personaappapi.cv.PersonaAppCV.UpdateJobKind:input_type -> personaappapi.cv.UpdateJobKindRequest
 	46, // 50: personaappapi.cv.PersonaAppCV.GetJobKinds:input_type -> personaappapi.cv.GetJobKindsRequest
 	48, // 51: personaappapi.cv.PersonaAppCV.DeleteJobKind:input_type -> personaappapi.cv.DeleteJobKindRequest
-	50, // 52: personaappapi.cv.PersonaAppCV.UpsertCVJobTypes:input_type -> personaappapi.cv.UpsertCVJobTypesRequest
+	50, // 52: personaappapi.cv.PersonaAppCV.UpdateCVJobTypes:input_type -> personaappapi.cv.UpdateCVJobTypesRequest
 	52, // 53: personaappapi.cv.PersonaAppCV.GetCVJobTypes:input_type -> personaappapi.cv.GetCVJobTypesRequest
 	54, // 54: personaappapi.cv.PersonaAppCV.DeleteCVJobTypes:input_type -> personaappapi.cv.DeleteCVJobTypesRequest
-	56, // 55: personaappapi.cv.PersonaAppCV.UpsertJobType:input_type -> personaappapi.cv.UpsertJobTypeRequest
+	56, // 55: personaappapi.cv.PersonaAppCV.UpdateJobType:input_type -> personaappapi.cv.UpdateJobTypeRequest
 	58, // 56: personaappapi.cv.PersonaAppCV.GetJobTypes:input_type -> personaappapi.cv.GetJobTypesRequest
 	60, // 57: personaappapi.cv.PersonaAppCV.DeleteJobType:input_type -> personaappapi.cv.DeleteJobTypeRequest
-	1,  // 58: personaappapi.cv.PersonaAppCV.UpsertCV:output_type -> personaappapi.cv.UpsertCVResponse
+	1,  // 58: personaappapi.cv.PersonaAppCV.UpdateCV:output_type -> personaappapi.cv.UpdateCVResponse
 	5,  // 59: personaappapi.cv.PersonaAppCV.GetCV:output_type -> personaappapi.cv.GetCVResponse
 	3,  // 60: personaappapi.cv.PersonaAppCV.GetCVs:output_type -> personaappapi.cv.GetCVsResponse
 	7,  // 61: personaappapi.cv.PersonaAppCV.DeleteCV:output_type -> personaappapi.cv.DeleteCVResponse
-	9,  // 62: personaappapi.cv.PersonaAppCV.UpsertStoriesEpisode:output_type -> personaappapi.cv.UpsertStoriesEpisodeResponse
+	9,  // 62: personaappapi.cv.PersonaAppCV.UpdateStoriesEpisode:output_type -> personaappapi.cv.UpdateStoriesEpisodeResponse
 	11, // 63: personaappapi.cv.PersonaAppCV.GetStoriesEpisodes:output_type -> personaappapi.cv.GetStoriesEpisodesResponse
 	13, // 64: personaappapi.cv.PersonaAppCV.DeleteStoriesEpisode:output_type -> personaappapi.cv.DeleteStoriesEpisodeResponse
-	15, // 65: personaappapi.cv.PersonaAppCV.UpsertStory:output_type -> personaappapi.cv.UpsertStoryResponse
+	15, // 65: personaappapi.cv.PersonaAppCV.UpdateStory:output_type -> personaappapi.cv.UpdateStoryResponse
 	17, // 66: personaappapi.cv.PersonaAppCV.GetStories:output_type -> personaappapi.cv.GetStoriesResponse
 	19, // 67: personaappapi.cv.PersonaAppCV.DeleteStory:output_type -> personaappapi.cv.DeleteStoryResponse
-	21, // 68: personaappapi.cv.PersonaAppCV.UpsertCustomSection:output_type -> personaappapi.cv.UpsertCustomSectionResponse
+	21, // 68: personaappapi.cv.PersonaAppCV.UpdateCustomSection:output_type -> personaappapi.cv.UpdateCustomSectionResponse
 	23, // 69: personaappapi.cv.PersonaAppCV.GetCustomSections:output_type -> personaappapi.cv.GetCustomSectionsResponse
 	25, // 70: personaappapi.cv.PersonaAppCV.DeleteCustomSection:output_type -> personaappapi.cv.DeleteCustomSectionResponse
-	27, // 71: personaappapi.cv.PersonaAppCV.UpsertEducation:output_type -> personaappapi.cv.UpsertEducationResponse
+	27, // 71: personaappapi.cv.PersonaAppCV.UpdateEducation:output_type -> personaappapi.cv.UpdateEducationResponse
 	29, // 72: personaappapi.cv.PersonaAppCV.GetEducations:output_type -> personaappapi.cv.GetEducationsResponse
 	31, // 73: personaappapi.cv.PersonaAppCV.DeleteEducation:output_type -> personaappapi.cv.DeleteEducationResponse
-	33, // 74: personaappapi.cv.PersonaAppCV.UpsertExperience:output_type -> personaappapi.cv.UpsertExperienceResponse
+	33, // 74: personaappapi.cv.PersonaAppCV.UpdateExperience:output_type -> personaappapi.cv.UpdateExperienceResponse
 	35, // 75: personaappapi.cv.PersonaAppCV.GetExperiences:output_type -> personaappapi.cv.GetExperiencesResponse
 	37, // 76: personaappapi.cv.PersonaAppCV.DeleteExperience:output_type -> personaappapi.cv.DeleteExperienceResponse
-	39, // 77: personaappapi.cv.PersonaAppCV.UpsertCVJobKinds:output_type -> personaappapi.cv.UpsertCVJobKindsResponse
+	39, // 77: personaappapi.cv.PersonaAppCV.UpdateCVJobKinds:output_type -> personaappapi.cv.UpdateCVJobKindsResponse
 	41, // 78: personaappapi.cv.PersonaAppCV.GetCVJobKinds:output_type -> personaappapi.cv.GetCVJobKindsResponse
 	43, // 79: personaappapi.cv.PersonaAppCV.DeleteCVJobKinds:output_type -> personaappapi.cv.DeleteCVJobKindsResponse
-	45, // 80: personaappapi.cv.PersonaAppCV.UpsertJobKind:output_type -> personaappapi.cv.UpsertJobKindResponse
+	45, // 80: personaappapi.cv.PersonaAppCV.UpdateJobKind:output_type -> personaappapi.cv.UpdateJobKindResponse
 	47, // 81: personaappapi.cv.PersonaAppCV.GetJobKinds:output_type -> personaappapi.cv.GetJobKindsResponse
 	49, // 82: personaappapi.cv.PersonaAppCV.DeleteJobKind:output_type -> personaappapi.cv.DeleteJobKindResponse
-	51, // 83: personaappapi.cv.PersonaAppCV.UpsertCVJobTypes:output_type -> personaappapi.cv.UpsertCVJobTypesResponse
+	51, // 83: personaappapi.cv.PersonaAppCV.UpdateCVJobTypes:output_type -> personaappapi.cv.UpdateCVJobTypesResponse
 	53, // 84: personaappapi.cv.PersonaAppCV.GetCVJobTypes:output_type -> personaappapi.cv.GetCVJobTypesResponse
 	55, // 85: personaappapi.cv.PersonaAppCV.DeleteCVJobTypes:output_type -> personaappapi.cv.DeleteCVJobTypesResponse
-	57, // 86: personaappapi.cv.PersonaAppCV.UpsertJobType:output_type -> personaappapi.cv.UpsertJobTypeResponse
+	57, // 86: personaappapi.cv.PersonaAppCV.UpdateJobType:output_type -> personaappapi.cv.UpdateJobTypeResponse
 	59, // 87: personaappapi.cv.PersonaAppCV.GetJobTypes:output_type -> personaappapi.cv.GetJobTypesResponse
 	61, // 88: personaappapi.cv.PersonaAppCV.DeleteJobType:output_type -> personaappapi.cv.DeleteJobTypeResponse
 	58, // [58:89] is the sub-list for method output_type
@@ -4565,7 +4565,7 @@ func file_cv_cv_proto_init() {
 	}
 	if !protoimpl.UnsafeEnabled {
 		file_cv_cv_proto_msgTypes[0].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*UpsertCVRequest); i {
+			switch v := v.(*UpdateCVRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -4577,7 +4577,7 @@ func file_cv_cv_proto_init() {
 			}
 		}
 		file_cv_cv_proto_msgTypes[1].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*UpsertCVResponse); i {
+			switch v := v.(*UpdateCVResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -4661,7 +4661,7 @@ func file_cv_cv_proto_init() {
 			}
 		}
 		file_cv_cv_proto_msgTypes[8].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*UpsertStoriesEpisodeRequest); i {
+			switch v := v.(*UpdateStoriesEpisodeRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -4673,7 +4673,7 @@ func file_cv_cv_proto_init() {
 			}
 		}
 		file_cv_cv_proto_msgTypes[9].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*UpsertStoriesEpisodeResponse); i {
+			switch v := v.(*UpdateStoriesEpisodeResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -4733,7 +4733,7 @@ func file_cv_cv_proto_init() {
 			}
 		}
 		file_cv_cv_proto_msgTypes[14].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*UpsertStoryRequest); i {
+			switch v := v.(*UpdateStoryRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -4745,7 +4745,7 @@ func file_cv_cv_proto_init() {
 			}
 		}
 		file_cv_cv_proto_msgTypes[15].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*UpsertStoryResponse); i {
+			switch v := v.(*UpdateStoryResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -4805,7 +4805,7 @@ func file_cv_cv_proto_init() {
 			}
 		}
 		file_cv_cv_proto_msgTypes[20].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*UpsertCustomSectionRequest); i {
+			switch v := v.(*UpdateCustomSectionRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -4817,7 +4817,7 @@ func file_cv_cv_proto_init() {
 			}
 		}
 		file_cv_cv_proto_msgTypes[21].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*UpsertCustomSectionResponse); i {
+			switch v := v.(*UpdateCustomSectionResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -4877,7 +4877,7 @@ func file_cv_cv_proto_init() {
 			}
 		}
 		file_cv_cv_proto_msgTypes[26].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*UpsertEducationRequest); i {
+			switch v := v.(*UpdateEducationRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -4889,7 +4889,7 @@ func file_cv_cv_proto_init() {
 			}
 		}
 		file_cv_cv_proto_msgTypes[27].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*UpsertEducationResponse); i {
+			switch v := v.(*UpdateEducationResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -4949,7 +4949,7 @@ func file_cv_cv_proto_init() {
 			}
 		}
 		file_cv_cv_proto_msgTypes[32].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*UpsertExperienceRequest); i {
+			switch v := v.(*UpdateExperienceRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -4961,7 +4961,7 @@ func file_cv_cv_proto_init() {
 			}
 		}
 		file_cv_cv_proto_msgTypes[33].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*UpsertExperienceResponse); i {
+			switch v := v.(*UpdateExperienceResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -5021,7 +5021,7 @@ func file_cv_cv_proto_init() {
 			}
 		}
 		file_cv_cv_proto_msgTypes[38].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*UpsertCVJobKindsRequest); i {
+			switch v := v.(*UpdateCVJobKindsRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -5033,7 +5033,7 @@ func file_cv_cv_proto_init() {
 			}
 		}
 		file_cv_cv_proto_msgTypes[39].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*UpsertCVJobKindsResponse); i {
+			switch v := v.(*UpdateCVJobKindsResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -5093,7 +5093,7 @@ func file_cv_cv_proto_init() {
 			}
 		}
 		file_cv_cv_proto_msgTypes[44].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*UpsertJobKindRequest); i {
+			switch v := v.(*UpdateJobKindRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -5105,7 +5105,7 @@ func file_cv_cv_proto_init() {
 			}
 		}
 		file_cv_cv_proto_msgTypes[45].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*UpsertJobKindResponse); i {
+			switch v := v.(*UpdateJobKindResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -5165,7 +5165,7 @@ func file_cv_cv_proto_init() {
 			}
 		}
 		file_cv_cv_proto_msgTypes[50].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*UpsertCVJobTypesRequest); i {
+			switch v := v.(*UpdateCVJobTypesRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -5177,7 +5177,7 @@ func file_cv_cv_proto_init() {
 			}
 		}
 		file_cv_cv_proto_msgTypes[51].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*UpsertCVJobTypesResponse); i {
+			switch v := v.(*UpdateCVJobTypesResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -5237,7 +5237,7 @@ func file_cv_cv_proto_init() {
 			}
 		}
 		file_cv_cv_proto_msgTypes[56].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*UpsertJobTypeRequest); i {
+			switch v := v.(*UpdateJobTypeRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -5249,7 +5249,7 @@ func file_cv_cv_proto_init() {
 			}
 		}
 		file_cv_cv_proto_msgTypes[57].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*UpsertJobTypeResponse); i {
+			switch v := v.(*UpdateJobTypeResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -5473,35 +5473,35 @@ const _ = grpc.SupportPackageIsVersion6
 //
 // For semantics around ctx use and closing/ending streaming RPCs, please refer to https://godoc.org/google.golang.org/grpc#ClientConn.NewStream.
 type PersonaAppCVClient interface {
-	UpsertCV(ctx context.Context, in *UpsertCVRequest, opts ...grpc.CallOption) (*UpsertCVResponse, error)
+	UpdateCV(ctx context.Context, in *UpdateCVRequest, opts ...grpc.CallOption) (*UpdateCVResponse, error)
 	GetCV(ctx context.Context, in *GetCVRequest, opts ...grpc.CallOption) (*GetCVResponse, error)
 	GetCVs(ctx context.Context, in *GetCVsRequest, opts ...grpc.CallOption) (*GetCVsResponse, error)
 	DeleteCV(ctx context.Context, in *DeleteCVRequest, opts ...grpc.CallOption) (*DeleteCVResponse, error)
-	UpsertStoriesEpisode(ctx context.Context, in *UpsertStoriesEpisodeRequest, opts ...grpc.CallOption) (*UpsertStoriesEpisodeResponse, error)
+	UpdateStoriesEpisode(ctx context.Context, in *UpdateStoriesEpisodeRequest, opts ...grpc.CallOption) (*UpdateStoriesEpisodeResponse, error)
 	GetStoriesEpisodes(ctx context.Context, in *GetStoriesEpisodesRequest, opts ...grpc.CallOption) (*GetStoriesEpisodesResponse, error)
 	DeleteStoriesEpisode(ctx context.Context, in *DeleteStoriesEpisodeRequest, opts ...grpc.CallOption) (*DeleteStoriesEpisodeResponse, error)
-	UpsertStory(ctx context.Context, in *UpsertStoryRequest, opts ...grpc.CallOption) (*UpsertStoryResponse, error)
+	UpdateStory(ctx context.Context, in *UpdateStoryRequest, opts ...grpc.CallOption) (*UpdateStoryResponse, error)
 	GetStories(ctx context.Context, in *GetStoriesRequest, opts ...grpc.CallOption) (*GetStoriesResponse, error)
 	DeleteStory(ctx context.Context, in *DeleteStoryRequest, opts ...grpc.CallOption) (*DeleteStoryResponse, error)
-	UpsertCustomSection(ctx context.Context, in *UpsertCustomSectionRequest, opts ...grpc.CallOption) (*UpsertCustomSectionResponse, error)
+	UpdateCustomSection(ctx context.Context, in *UpdateCustomSectionRequest, opts ...grpc.CallOption) (*UpdateCustomSectionResponse, error)
 	GetCustomSections(ctx context.Context, in *GetCustomSectionsRequest, opts ...grpc.CallOption) (*GetCustomSectionsResponse, error)
 	DeleteCustomSection(ctx context.Context, in *DeleteCustomSectionRequest, opts ...grpc.CallOption) (*DeleteCustomSectionResponse, error)
-	UpsertEducation(ctx context.Context, in *UpsertEducationRequest, opts ...grpc.CallOption) (*UpsertEducationResponse, error)
+	UpdateEducation(ctx context.Context, in *UpdateEducationRequest, opts ...grpc.CallOption) (*UpdateEducationResponse, error)
 	GetEducations(ctx context.Context, in *GetEducationsRequest, opts ...grpc.CallOption) (*GetEducationsResponse, error)
 	DeleteEducation(ctx context.Context, in *DeleteEducationRequest, opts ...grpc.CallOption) (*DeleteEducationResponse, error)
-	UpsertExperience(ctx context.Context, in *UpsertExperienceRequest, opts ...grpc.CallOption) (*UpsertExperienceResponse, error)
+	UpdateExperience(ctx context.Context, in *UpdateExperienceRequest, opts ...grpc.CallOption) (*UpdateExperienceResponse, error)
 	GetExperiences(ctx context.Context, in *GetExperiencesRequest, opts ...grpc.CallOption) (*GetExperiencesResponse, error)
 	DeleteExperience(ctx context.Context, in *DeleteExperienceRequest, opts ...grpc.CallOption) (*DeleteExperienceResponse, error)
-	UpsertCVJobKinds(ctx context.Context, in *UpsertCVJobKindsRequest, opts ...grpc.CallOption) (*UpsertCVJobKindsResponse, error)
+	UpdateCVJobKinds(ctx context.Context, in *UpdateCVJobKindsRequest, opts ...grpc.CallOption) (*UpdateCVJobKindsResponse, error)
 	GetCVJobKinds(ctx context.Context, in *GetCVJobKindsRequest, opts ...grpc.CallOption) (*GetCVJobKindsResponse, error)
 	DeleteCVJobKinds(ctx context.Context, in *DeleteCVJobKindsRequest, opts ...grpc.CallOption) (*DeleteCVJobKindsResponse, error)
-	UpsertJobKind(ctx context.Context, in *UpsertJobKindRequest, opts ...grpc.CallOption) (*UpsertJobKindResponse, error)
+	UpdateJobKind(ctx context.Context, in *UpdateJobKindRequest, opts ...grpc.CallOption) (*UpdateJobKindResponse, error)
 	GetJobKinds(ctx context.Context, in *GetJobKindsRequest, opts ...grpc.CallOption) (*GetJobKindsResponse, error)
 	DeleteJobKind(ctx context.Context, in *DeleteJobKindRequest, opts ...grpc.CallOption) (*DeleteJobKindResponse, error)
-	UpsertCVJobTypes(ctx context.Context, in *UpsertCVJobTypesRequest, opts ...grpc.CallOption) (*UpsertCVJobTypesResponse, error)
+	UpdateCVJobTypes(ctx context.Context, in *UpdateCVJobTypesRequest, opts ...grpc.CallOption) (*UpdateCVJobTypesResponse, error)
 	GetCVJobTypes(ctx context.Context, in *GetCVJobTypesRequest, opts ...grpc.CallOption) (*GetCVJobTypesResponse, error)
 	DeleteCVJobTypes(ctx context.Context, in *DeleteCVJobTypesRequest, opts ...grpc.CallOption) (*DeleteCVJobTypesResponse, error)
-	UpsertJobType(ctx context.Context, in *UpsertJobTypeRequest, opts ...grpc.CallOption) (*UpsertJobTypeResponse, error)
+	UpdateJobType(ctx context.Context, in *UpdateJobTypeRequest, opts ...grpc.CallOption) (*UpdateJobTypeResponse, error)
 	GetJobTypes(ctx context.Context, in *GetJobTypesRequest, opts ...grpc.CallOption) (*GetJobTypesResponse, error)
 	DeleteJobType(ctx context.Context, in *DeleteJobTypeRequest, opts ...grpc.CallOption) (*DeleteJobTypeResponse, error)
 }
@@ -5514,9 +5514,9 @@ func NewPersonaAppCVClient(cc grpc.ClientConnInterface) PersonaAppCVClient {
 	return &personaAppCVClient{cc}
 }
 
-func (c *personaAppCVClient) UpsertCV(ctx context.Context, in *UpsertCVRequest, opts ...grpc.CallOption) (*UpsertCVResponse, error) {
-	out := new(UpsertCVResponse)
-	err := c.cc.Invoke(ctx, "/personaappapi.cv.PersonaAppCV/UpsertCV", in, out, opts...)
+func (c *personaAppCVClient) UpdateCV(ctx context.Context, in *UpdateCVRequest, opts ...grpc.CallOption) (*UpdateCVResponse, error) {
+	out := new(UpdateCVResponse)
+	err := c.cc.Invoke(ctx, "/personaappapi.cv.PersonaAppCV/UpdateCV", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -5550,9 +5550,9 @@ func (c *personaAppCVClient) DeleteCV(ctx context.Context, in *DeleteCVRequest, 
 	return out, nil
 }
 
-func (c *personaAppCVClient) UpsertStoriesEpisode(ctx context.Context, in *UpsertStoriesEpisodeRequest, opts ...grpc.CallOption) (*UpsertStoriesEpisodeResponse, error) {
-	out := new(UpsertStoriesEpisodeResponse)
-	err := c.cc.Invoke(ctx, "/personaappapi.cv.PersonaAppCV/UpsertStoriesEpisode", in, out, opts...)
+func (c *personaAppCVClient) UpdateStoriesEpisode(ctx context.Context, in *UpdateStoriesEpisodeRequest, opts ...grpc.CallOption) (*UpdateStoriesEpisodeResponse, error) {
+	out := new(UpdateStoriesEpisodeResponse)
+	err := c.cc.Invoke(ctx, "/personaappapi.cv.PersonaAppCV/UpdateStoriesEpisode", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -5577,9 +5577,9 @@ func (c *personaAppCVClient) DeleteStoriesEpisode(ctx context.Context, in *Delet
 	return out, nil
 }
 
-func (c *personaAppCVClient) UpsertStory(ctx context.Context, in *UpsertStoryRequest, opts ...grpc.CallOption) (*UpsertStoryResponse, error) {
-	out := new(UpsertStoryResponse)
-	err := c.cc.Invoke(ctx, "/personaappapi.cv.PersonaAppCV/UpsertStory", in, out, opts...)
+func (c *personaAppCVClient) UpdateStory(ctx context.Context, in *UpdateStoryRequest, opts ...grpc.CallOption) (*UpdateStoryResponse, error) {
+	out := new(UpdateStoryResponse)
+	err := c.cc.Invoke(ctx, "/personaappapi.cv.PersonaAppCV/UpdateStory", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -5604,9 +5604,9 @@ func (c *personaAppCVClient) DeleteStory(ctx context.Context, in *DeleteStoryReq
 	return out, nil
 }
 
-func (c *personaAppCVClient) UpsertCustomSection(ctx context.Context, in *UpsertCustomSectionRequest, opts ...grpc.CallOption) (*UpsertCustomSectionResponse, error) {
-	out := new(UpsertCustomSectionResponse)
-	err := c.cc.Invoke(ctx, "/personaappapi.cv.PersonaAppCV/UpsertCustomSection", in, out, opts...)
+func (c *personaAppCVClient) UpdateCustomSection(ctx context.Context, in *UpdateCustomSectionRequest, opts ...grpc.CallOption) (*UpdateCustomSectionResponse, error) {
+	out := new(UpdateCustomSectionResponse)
+	err := c.cc.Invoke(ctx, "/personaappapi.cv.PersonaAppCV/UpdateCustomSection", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -5631,9 +5631,9 @@ func (c *personaAppCVClient) DeleteCustomSection(ctx context.Context, in *Delete
 	return out, nil
 }
 
-func (c *personaAppCVClient) UpsertEducation(ctx context.Context, in *UpsertEducationRequest, opts ...grpc.CallOption) (*UpsertEducationResponse, error) {
-	out := new(UpsertEducationResponse)
-	err := c.cc.Invoke(ctx, "/personaappapi.cv.PersonaAppCV/UpsertEducation", in, out, opts...)
+func (c *personaAppCVClient) UpdateEducation(ctx context.Context, in *UpdateEducationRequest, opts ...grpc.CallOption) (*UpdateEducationResponse, error) {
+	out := new(UpdateEducationResponse)
+	err := c.cc.Invoke(ctx, "/personaappapi.cv.PersonaAppCV/UpdateEducation", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -5658,9 +5658,9 @@ func (c *personaAppCVClient) DeleteEducation(ctx context.Context, in *DeleteEduc
 	return out, nil
 }
 
-func (c *personaAppCVClient) UpsertExperience(ctx context.Context, in *UpsertExperienceRequest, opts ...grpc.CallOption) (*UpsertExperienceResponse, error) {
-	out := new(UpsertExperienceResponse)
-	err := c.cc.Invoke(ctx, "/personaappapi.cv.PersonaAppCV/UpsertExperience", in, out, opts...)
+func (c *personaAppCVClient) UpdateExperience(ctx context.Context, in *UpdateExperienceRequest, opts ...grpc.CallOption) (*UpdateExperienceResponse, error) {
+	out := new(UpdateExperienceResponse)
+	err := c.cc.Invoke(ctx, "/personaappapi.cv.PersonaAppCV/UpdateExperience", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -5685,9 +5685,9 @@ func (c *personaAppCVClient) DeleteExperience(ctx context.Context, in *DeleteExp
 	return out, nil
 }
 
-func (c *personaAppCVClient) UpsertCVJobKinds(ctx context.Context, in *UpsertCVJobKindsRequest, opts ...grpc.CallOption) (*UpsertCVJobKindsResponse, error) {
-	out := new(UpsertCVJobKindsResponse)
-	err := c.cc.Invoke(ctx, "/personaappapi.cv.PersonaAppCV/UpsertCVJobKinds", in, out, opts...)
+func (c *personaAppCVClient) UpdateCVJobKinds(ctx context.Context, in *UpdateCVJobKindsRequest, opts ...grpc.CallOption) (*UpdateCVJobKindsResponse, error) {
+	out := new(UpdateCVJobKindsResponse)
+	err := c.cc.Invoke(ctx, "/personaappapi.cv.PersonaAppCV/UpdateCVJobKinds", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -5712,9 +5712,9 @@ func (c *personaAppCVClient) DeleteCVJobKinds(ctx context.Context, in *DeleteCVJ
 	return out, nil
 }
 
-func (c *personaAppCVClient) UpsertJobKind(ctx context.Context, in *UpsertJobKindRequest, opts ...grpc.CallOption) (*UpsertJobKindResponse, error) {
-	out := new(UpsertJobKindResponse)
-	err := c.cc.Invoke(ctx, "/personaappapi.cv.PersonaAppCV/UpsertJobKind", in, out, opts...)
+func (c *personaAppCVClient) UpdateJobKind(ctx context.Context, in *UpdateJobKindRequest, opts ...grpc.CallOption) (*UpdateJobKindResponse, error) {
+	out := new(UpdateJobKindResponse)
+	err := c.cc.Invoke(ctx, "/personaappapi.cv.PersonaAppCV/UpdateJobKind", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -5739,9 +5739,9 @@ func (c *personaAppCVClient) DeleteJobKind(ctx context.Context, in *DeleteJobKin
 	return out, nil
 }
 
-func (c *personaAppCVClient) UpsertCVJobTypes(ctx context.Context, in *UpsertCVJobTypesRequest, opts ...grpc.CallOption) (*UpsertCVJobTypesResponse, error) {
-	out := new(UpsertCVJobTypesResponse)
-	err := c.cc.Invoke(ctx, "/personaappapi.cv.PersonaAppCV/UpsertCVJobTypes", in, out, opts...)
+func (c *personaAppCVClient) UpdateCVJobTypes(ctx context.Context, in *UpdateCVJobTypesRequest, opts ...grpc.CallOption) (*UpdateCVJobTypesResponse, error) {
+	out := new(UpdateCVJobTypesResponse)
+	err := c.cc.Invoke(ctx, "/personaappapi.cv.PersonaAppCV/UpdateCVJobTypes", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -5766,9 +5766,9 @@ func (c *personaAppCVClient) DeleteCVJobTypes(ctx context.Context, in *DeleteCVJ
 	return out, nil
 }
 
-func (c *personaAppCVClient) UpsertJobType(ctx context.Context, in *UpsertJobTypeRequest, opts ...grpc.CallOption) (*UpsertJobTypeResponse, error) {
-	out := new(UpsertJobTypeResponse)
-	err := c.cc.Invoke(ctx, "/personaappapi.cv.PersonaAppCV/UpsertJobType", in, out, opts...)
+func (c *personaAppCVClient) UpdateJobType(ctx context.Context, in *UpdateJobTypeRequest, opts ...grpc.CallOption) (*UpdateJobTypeResponse, error) {
+	out := new(UpdateJobTypeResponse)
+	err := c.cc.Invoke(ctx, "/personaappapi.cv.PersonaAppCV/UpdateJobType", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -5795,35 +5795,35 @@ func (c *personaAppCVClient) DeleteJobType(ctx context.Context, in *DeleteJobTyp
 
 // PersonaAppCVServer is the server API for PersonaAppCV service.
 type PersonaAppCVServer interface {
-	UpsertCV(context.Context, *UpsertCVRequest) (*UpsertCVResponse, error)
+	UpdateCV(context.Context, *UpdateCVRequest) (*UpdateCVResponse, error)
 	GetCV(context.Context, *GetCVRequest) (*GetCVResponse, error)
 	GetCVs(context.Context, *GetCVsRequest) (*GetCVsResponse, error)
 	DeleteCV(context.Context, *DeleteCVRequest) (*DeleteCVResponse, error)
-	UpsertStoriesEpisode(context.Context, *UpsertStoriesEpisodeRequest) (*UpsertStoriesEpisodeResponse, error)
+	UpdateStoriesEpisode(context.Context, *UpdateStoriesEpisodeRequest) (*UpdateStoriesEpisodeResponse, error)
 	GetStoriesEpisodes(context.Context, *GetStoriesEpisodesRequest) (*GetStoriesEpisodesResponse, error)
 	DeleteStoriesEpisode(context.Context, *DeleteStoriesEpisodeRequest) (*DeleteStoriesEpisodeResponse, error)
-	UpsertStory(context.Context, *UpsertStoryRequest) (*UpsertStoryResponse, error)
+	UpdateStory(context.Context, *UpdateStoryRequest) (*UpdateStoryResponse, error)
 	GetStories(context.Context, *GetStoriesRequest) (*GetStoriesResponse, error)
 	DeleteStory(context.Context, *DeleteStoryRequest) (*DeleteStoryResponse, error)
-	UpsertCustomSection(context.Context, *UpsertCustomSectionRequest) (*UpsertCustomSectionResponse, error)
+	UpdateCustomSection(context.Context, *UpdateCustomSectionRequest) (*UpdateCustomSectionResponse, error)
 	GetCustomSections(context.Context, *GetCustomSectionsRequest) (*GetCustomSectionsResponse, error)
 	DeleteCustomSection(context.Context, *DeleteCustomSectionRequest) (*DeleteCustomSectionResponse, error)
-	UpsertEducation(context.Context, *UpsertEducationRequest) (*UpsertEducationResponse, error)
+	UpdateEducation(context.Context, *UpdateEducationRequest) (*UpdateEducationResponse, error)
 	GetEducations(context.Context, *GetEducationsRequest) (*GetEducationsResponse, error)
 	DeleteEducation(context.Context, *DeleteEducationRequest) (*DeleteEducationResponse, error)
-	UpsertExperience(context.Context, *UpsertExperienceRequest) (*UpsertExperienceResponse, error)
+	UpdateExperience(context.Context, *UpdateExperienceRequest) (*UpdateExperienceResponse, error)
 	GetExperiences(context.Context, *GetExperiencesRequest) (*GetExperiencesResponse, error)
 	DeleteExperience(context.Context, *DeleteExperienceRequest) (*DeleteExperienceResponse, error)
-	UpsertCVJobKinds(context.Context, *UpsertCVJobKindsRequest) (*UpsertCVJobKindsResponse, error)
+	UpdateCVJobKinds(context.Context, *UpdateCVJobKindsRequest) (*UpdateCVJobKindsResponse, error)
 	GetCVJobKinds(context.Context, *GetCVJobKindsRequest) (*GetCVJobKindsResponse, error)
 	DeleteCVJobKinds(context.Context, *DeleteCVJobKindsRequest) (*DeleteCVJobKindsResponse, error)
-	UpsertJobKind(context.Context, *UpsertJobKindRequest) (*UpsertJobKindResponse, error)
+	UpdateJobKind(context.Context, *UpdateJobKindRequest) (*UpdateJobKindResponse, error)
 	GetJobKinds(context.Context, *GetJobKindsRequest) (*GetJobKindsResponse, error)
 	DeleteJobKind(context.Context, *DeleteJobKindRequest) (*DeleteJobKindResponse, error)
-	UpsertCVJobTypes(context.Context, *UpsertCVJobTypesRequest) (*UpsertCVJobTypesResponse, error)
+	UpdateCVJobTypes(context.Context, *UpdateCVJobTypesRequest) (*UpdateCVJobTypesResponse, error)
 	GetCVJobTypes(context.Context, *GetCVJobTypesRequest) (*GetCVJobTypesResponse, error)
 	DeleteCVJobTypes(context.Context, *DeleteCVJobTypesRequest) (*DeleteCVJobTypesResponse, error)
-	UpsertJobType(context.Context, *UpsertJobTypeRequest) (*UpsertJobTypeResponse, error)
+	UpdateJobType(context.Context, *UpdateJobTypeRequest) (*UpdateJobTypeResponse, error)
 	GetJobTypes(context.Context, *GetJobTypesRequest) (*GetJobTypesResponse, error)
 	DeleteJobType(context.Context, *DeleteJobTypeRequest) (*DeleteJobTypeResponse, error)
 }
@@ -5832,8 +5832,8 @@ type PersonaAppCVServer interface {
 type UnimplementedPersonaAppCVServer struct {
 }
 
-func (*UnimplementedPersonaAppCVServer) UpsertCV(context.Context, *UpsertCVRequest) (*UpsertCVResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpsertCV not implemented")
+func (*UnimplementedPersonaAppCVServer) UpdateCV(context.Context, *UpdateCVRequest) (*UpdateCVResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateCV not implemented")
 }
 func (*UnimplementedPersonaAppCVServer) GetCV(context.Context, *GetCVRequest) (*GetCVResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetCV not implemented")
@@ -5844,8 +5844,8 @@ func (*UnimplementedPersonaAppCVServer) GetCVs(context.Context, *GetCVsRequest) 
 func (*UnimplementedPersonaAppCVServer) DeleteCV(context.Context, *DeleteCVRequest) (*DeleteCVResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteCV not implemented")
 }
-func (*UnimplementedPersonaAppCVServer) UpsertStoriesEpisode(context.Context, *UpsertStoriesEpisodeRequest) (*UpsertStoriesEpisodeResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpsertStoriesEpisode not implemented")
+func (*UnimplementedPersonaAppCVServer) UpdateStoriesEpisode(context.Context, *UpdateStoriesEpisodeRequest) (*UpdateStoriesEpisodeResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateStoriesEpisode not implemented")
 }
 func (*UnimplementedPersonaAppCVServer) GetStoriesEpisodes(context.Context, *GetStoriesEpisodesRequest) (*GetStoriesEpisodesResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetStoriesEpisodes not implemented")
@@ -5853,8 +5853,8 @@ func (*UnimplementedPersonaAppCVServer) GetStoriesEpisodes(context.Context, *Get
 func (*UnimplementedPersonaAppCVServer) DeleteStoriesEpisode(context.Context, *DeleteStoriesEpisodeRequest) (*DeleteStoriesEpisodeResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteStoriesEpisode not implemented")
 }
-func (*UnimplementedPersonaAppCVServer) UpsertStory(context.Context, *UpsertStoryRequest) (*UpsertStoryResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpsertStory not implemented")
+func (*UnimplementedPersonaAppCVServer) UpdateStory(context.Context, *UpdateStoryRequest) (*UpdateStoryResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateStory not implemented")
 }
 func (*UnimplementedPersonaAppCVServer) GetStories(context.Context, *GetStoriesRequest) (*GetStoriesResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetStories not implemented")
@@ -5862,8 +5862,8 @@ func (*UnimplementedPersonaAppCVServer) GetStories(context.Context, *GetStoriesR
 func (*UnimplementedPersonaAppCVServer) DeleteStory(context.Context, *DeleteStoryRequest) (*DeleteStoryResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteStory not implemented")
 }
-func (*UnimplementedPersonaAppCVServer) UpsertCustomSection(context.Context, *UpsertCustomSectionRequest) (*UpsertCustomSectionResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpsertCustomSection not implemented")
+func (*UnimplementedPersonaAppCVServer) UpdateCustomSection(context.Context, *UpdateCustomSectionRequest) (*UpdateCustomSectionResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateCustomSection not implemented")
 }
 func (*UnimplementedPersonaAppCVServer) GetCustomSections(context.Context, *GetCustomSectionsRequest) (*GetCustomSectionsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetCustomSections not implemented")
@@ -5871,8 +5871,8 @@ func (*UnimplementedPersonaAppCVServer) GetCustomSections(context.Context, *GetC
 func (*UnimplementedPersonaAppCVServer) DeleteCustomSection(context.Context, *DeleteCustomSectionRequest) (*DeleteCustomSectionResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteCustomSection not implemented")
 }
-func (*UnimplementedPersonaAppCVServer) UpsertEducation(context.Context, *UpsertEducationRequest) (*UpsertEducationResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpsertEducation not implemented")
+func (*UnimplementedPersonaAppCVServer) UpdateEducation(context.Context, *UpdateEducationRequest) (*UpdateEducationResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateEducation not implemented")
 }
 func (*UnimplementedPersonaAppCVServer) GetEducations(context.Context, *GetEducationsRequest) (*GetEducationsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetEducations not implemented")
@@ -5880,8 +5880,8 @@ func (*UnimplementedPersonaAppCVServer) GetEducations(context.Context, *GetEduca
 func (*UnimplementedPersonaAppCVServer) DeleteEducation(context.Context, *DeleteEducationRequest) (*DeleteEducationResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteEducation not implemented")
 }
-func (*UnimplementedPersonaAppCVServer) UpsertExperience(context.Context, *UpsertExperienceRequest) (*UpsertExperienceResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpsertExperience not implemented")
+func (*UnimplementedPersonaAppCVServer) UpdateExperience(context.Context, *UpdateExperienceRequest) (*UpdateExperienceResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateExperience not implemented")
 }
 func (*UnimplementedPersonaAppCVServer) GetExperiences(context.Context, *GetExperiencesRequest) (*GetExperiencesResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetExperiences not implemented")
@@ -5889,8 +5889,8 @@ func (*UnimplementedPersonaAppCVServer) GetExperiences(context.Context, *GetExpe
 func (*UnimplementedPersonaAppCVServer) DeleteExperience(context.Context, *DeleteExperienceRequest) (*DeleteExperienceResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteExperience not implemented")
 }
-func (*UnimplementedPersonaAppCVServer) UpsertCVJobKinds(context.Context, *UpsertCVJobKindsRequest) (*UpsertCVJobKindsResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpsertCVJobKinds not implemented")
+func (*UnimplementedPersonaAppCVServer) UpdateCVJobKinds(context.Context, *UpdateCVJobKindsRequest) (*UpdateCVJobKindsResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateCVJobKinds not implemented")
 }
 func (*UnimplementedPersonaAppCVServer) GetCVJobKinds(context.Context, *GetCVJobKindsRequest) (*GetCVJobKindsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetCVJobKinds not implemented")
@@ -5898,8 +5898,8 @@ func (*UnimplementedPersonaAppCVServer) GetCVJobKinds(context.Context, *GetCVJob
 func (*UnimplementedPersonaAppCVServer) DeleteCVJobKinds(context.Context, *DeleteCVJobKindsRequest) (*DeleteCVJobKindsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteCVJobKinds not implemented")
 }
-func (*UnimplementedPersonaAppCVServer) UpsertJobKind(context.Context, *UpsertJobKindRequest) (*UpsertJobKindResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpsertJobKind not implemented")
+func (*UnimplementedPersonaAppCVServer) UpdateJobKind(context.Context, *UpdateJobKindRequest) (*UpdateJobKindResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateJobKind not implemented")
 }
 func (*UnimplementedPersonaAppCVServer) GetJobKinds(context.Context, *GetJobKindsRequest) (*GetJobKindsResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetJobKinds not implemented")
@@ -5907,8 +5907,8 @@ func (*UnimplementedPersonaAppCVServer) GetJobKinds(context.Context, *GetJobKind
 func (*UnimplementedPersonaAppCVServer) DeleteJobKind(context.Context, *DeleteJobKindRequest) (*DeleteJobKindResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteJobKind not implemented")
 }
-func (*UnimplementedPersonaAppCVServer) UpsertCVJobTypes(context.Context, *UpsertCVJobTypesRequest) (*UpsertCVJobTypesResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpsertCVJobTypes not implemented")
+func (*UnimplementedPersonaAppCVServer) UpdateCVJobTypes(context.Context, *UpdateCVJobTypesRequest) (*UpdateCVJobTypesResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateCVJobTypes not implemented")
 }
 func (*UnimplementedPersonaAppCVServer) GetCVJobTypes(context.Context, *GetCVJobTypesRequest) (*GetCVJobTypesResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetCVJobTypes not implemented")
@@ -5916,8 +5916,8 @@ func (*UnimplementedPersonaAppCVServer) GetCVJobTypes(context.Context, *GetCVJob
 func (*UnimplementedPersonaAppCVServer) DeleteCVJobTypes(context.Context, *DeleteCVJobTypesRequest) (*DeleteCVJobTypesResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteCVJobTypes not implemented")
 }
-func (*UnimplementedPersonaAppCVServer) UpsertJobType(context.Context, *UpsertJobTypeRequest) (*UpsertJobTypeResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpsertJobType not implemented")
+func (*UnimplementedPersonaAppCVServer) UpdateJobType(context.Context, *UpdateJobTypeRequest) (*UpdateJobTypeResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateJobType not implemented")
 }
 func (*UnimplementedPersonaAppCVServer) GetJobTypes(context.Context, *GetJobTypesRequest) (*GetJobTypesResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetJobTypes not implemented")
@@ -5930,20 +5930,20 @@ func RegisterPersonaAppCVServer(s *grpc.Server, srv PersonaAppCVServer) {
 	s.RegisterService(&_PersonaAppCV_serviceDesc, srv)
 }
 
-func _PersonaAppCV_UpsertCV_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpsertCVRequest)
+func _PersonaAppCV_UpdateCV_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateCVRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(PersonaAppCVServer).UpsertCV(ctx, in)
+		return srv.(PersonaAppCVServer).UpdateCV(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/personaappapi.cv.PersonaAppCV/UpsertCV",
+		FullMethod: "/personaappapi.cv.PersonaAppCV/UpdateCV",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PersonaAppCVServer).UpsertCV(ctx, req.(*UpsertCVRequest))
+		return srv.(PersonaAppCVServer).UpdateCV(ctx, req.(*UpdateCVRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -6002,20 +6002,20 @@ func _PersonaAppCV_DeleteCV_Handler(srv interface{}, ctx context.Context, dec fu
 	return interceptor(ctx, in, info, handler)
 }
 
-func _PersonaAppCV_UpsertStoriesEpisode_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpsertStoriesEpisodeRequest)
+func _PersonaAppCV_UpdateStoriesEpisode_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateStoriesEpisodeRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(PersonaAppCVServer).UpsertStoriesEpisode(ctx, in)
+		return srv.(PersonaAppCVServer).UpdateStoriesEpisode(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/personaappapi.cv.PersonaAppCV/UpsertStoriesEpisode",
+		FullMethod: "/personaappapi.cv.PersonaAppCV/UpdateStoriesEpisode",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PersonaAppCVServer).UpsertStoriesEpisode(ctx, req.(*UpsertStoriesEpisodeRequest))
+		return srv.(PersonaAppCVServer).UpdateStoriesEpisode(ctx, req.(*UpdateStoriesEpisodeRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -6056,20 +6056,20 @@ func _PersonaAppCV_DeleteStoriesEpisode_Handler(srv interface{}, ctx context.Con
 	return interceptor(ctx, in, info, handler)
 }
 
-func _PersonaAppCV_UpsertStory_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpsertStoryRequest)
+func _PersonaAppCV_UpdateStory_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateStoryRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(PersonaAppCVServer).UpsertStory(ctx, in)
+		return srv.(PersonaAppCVServer).UpdateStory(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/personaappapi.cv.PersonaAppCV/UpsertStory",
+		FullMethod: "/personaappapi.cv.PersonaAppCV/UpdateStory",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PersonaAppCVServer).UpsertStory(ctx, req.(*UpsertStoryRequest))
+		return srv.(PersonaAppCVServer).UpdateStory(ctx, req.(*UpdateStoryRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -6110,20 +6110,20 @@ func _PersonaAppCV_DeleteStory_Handler(srv interface{}, ctx context.Context, dec
 	return interceptor(ctx, in, info, handler)
 }
 
-func _PersonaAppCV_UpsertCustomSection_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpsertCustomSectionRequest)
+func _PersonaAppCV_UpdateCustomSection_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateCustomSectionRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(PersonaAppCVServer).UpsertCustomSection(ctx, in)
+		return srv.(PersonaAppCVServer).UpdateCustomSection(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/personaappapi.cv.PersonaAppCV/UpsertCustomSection",
+		FullMethod: "/personaappapi.cv.PersonaAppCV/UpdateCustomSection",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PersonaAppCVServer).UpsertCustomSection(ctx, req.(*UpsertCustomSectionRequest))
+		return srv.(PersonaAppCVServer).UpdateCustomSection(ctx, req.(*UpdateCustomSectionRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -6164,20 +6164,20 @@ func _PersonaAppCV_DeleteCustomSection_Handler(srv interface{}, ctx context.Cont
 	return interceptor(ctx, in, info, handler)
 }
 
-func _PersonaAppCV_UpsertEducation_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpsertEducationRequest)
+func _PersonaAppCV_UpdateEducation_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateEducationRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(PersonaAppCVServer).UpsertEducation(ctx, in)
+		return srv.(PersonaAppCVServer).UpdateEducation(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/personaappapi.cv.PersonaAppCV/UpsertEducation",
+		FullMethod: "/personaappapi.cv.PersonaAppCV/UpdateEducation",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PersonaAppCVServer).UpsertEducation(ctx, req.(*UpsertEducationRequest))
+		return srv.(PersonaAppCVServer).UpdateEducation(ctx, req.(*UpdateEducationRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -6218,20 +6218,20 @@ func _PersonaAppCV_DeleteEducation_Handler(srv interface{}, ctx context.Context,
 	return interceptor(ctx, in, info, handler)
 }
 
-func _PersonaAppCV_UpsertExperience_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpsertExperienceRequest)
+func _PersonaAppCV_UpdateExperience_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateExperienceRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(PersonaAppCVServer).UpsertExperience(ctx, in)
+		return srv.(PersonaAppCVServer).UpdateExperience(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/personaappapi.cv.PersonaAppCV/UpsertExperience",
+		FullMethod: "/personaappapi.cv.PersonaAppCV/UpdateExperience",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PersonaAppCVServer).UpsertExperience(ctx, req.(*UpsertExperienceRequest))
+		return srv.(PersonaAppCVServer).UpdateExperience(ctx, req.(*UpdateExperienceRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -6272,20 +6272,20 @@ func _PersonaAppCV_DeleteExperience_Handler(srv interface{}, ctx context.Context
 	return interceptor(ctx, in, info, handler)
 }
 
-func _PersonaAppCV_UpsertCVJobKinds_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpsertCVJobKindsRequest)
+func _PersonaAppCV_UpdateCVJobKinds_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateCVJobKindsRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(PersonaAppCVServer).UpsertCVJobKinds(ctx, in)
+		return srv.(PersonaAppCVServer).UpdateCVJobKinds(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/personaappapi.cv.PersonaAppCV/UpsertCVJobKinds",
+		FullMethod: "/personaappapi.cv.PersonaAppCV/UpdateCVJobKinds",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PersonaAppCVServer).UpsertCVJobKinds(ctx, req.(*UpsertCVJobKindsRequest))
+		return srv.(PersonaAppCVServer).UpdateCVJobKinds(ctx, req.(*UpdateCVJobKindsRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -6326,20 +6326,20 @@ func _PersonaAppCV_DeleteCVJobKinds_Handler(srv interface{}, ctx context.Context
 	return interceptor(ctx, in, info, handler)
 }
 
-func _PersonaAppCV_UpsertJobKind_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpsertJobKindRequest)
+func _PersonaAppCV_UpdateJobKind_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateJobKindRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(PersonaAppCVServer).UpsertJobKind(ctx, in)
+		return srv.(PersonaAppCVServer).UpdateJobKind(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/personaappapi.cv.PersonaAppCV/UpsertJobKind",
+		FullMethod: "/personaappapi.cv.PersonaAppCV/UpdateJobKind",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PersonaAppCVServer).UpsertJobKind(ctx, req.(*UpsertJobKindRequest))
+		return srv.(PersonaAppCVServer).UpdateJobKind(ctx, req.(*UpdateJobKindRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -6380,20 +6380,20 @@ func _PersonaAppCV_DeleteJobKind_Handler(srv interface{}, ctx context.Context, d
 	return interceptor(ctx, in, info, handler)
 }
 
-func _PersonaAppCV_UpsertCVJobTypes_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpsertCVJobTypesRequest)
+func _PersonaAppCV_UpdateCVJobTypes_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateCVJobTypesRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(PersonaAppCVServer).UpsertCVJobTypes(ctx, in)
+		return srv.(PersonaAppCVServer).UpdateCVJobTypes(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/personaappapi.cv.PersonaAppCV/UpsertCVJobTypes",
+		FullMethod: "/personaappapi.cv.PersonaAppCV/UpdateCVJobTypes",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PersonaAppCVServer).UpsertCVJobTypes(ctx, req.(*UpsertCVJobTypesRequest))
+		return srv.(PersonaAppCVServer).UpdateCVJobTypes(ctx, req.(*UpdateCVJobTypesRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -6434,20 +6434,20 @@ func _PersonaAppCV_DeleteCVJobTypes_Handler(srv interface{}, ctx context.Context
 	return interceptor(ctx, in, info, handler)
 }
 
-func _PersonaAppCV_UpsertJobType_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpsertJobTypeRequest)
+func _PersonaAppCV_UpdateJobType_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateJobTypeRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(PersonaAppCVServer).UpsertJobType(ctx, in)
+		return srv.(PersonaAppCVServer).UpdateJobType(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/personaappapi.cv.PersonaAppCV/UpsertJobType",
+		FullMethod: "/personaappapi.cv.PersonaAppCV/UpdateJobType",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PersonaAppCVServer).UpsertJobType(ctx, req.(*UpsertJobTypeRequest))
+		return srv.(PersonaAppCVServer).UpdateJobType(ctx, req.(*UpdateJobTypeRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -6493,8 +6493,8 @@ var _PersonaAppCV_serviceDesc = grpc.ServiceDesc{
 	HandlerType: (*PersonaAppCVServer)(nil),
 	Methods: []grpc.MethodDesc{
 		{
-			MethodName: "UpsertCV",
-			Handler:    _PersonaAppCV_UpsertCV_Handler,
+			MethodName: "UpdateCV",
+			Handler:    _PersonaAppCV_UpdateCV_Handler,
 		},
 		{
 			MethodName: "GetCV",
@@ -6509,8 +6509,8 @@ var _PersonaAppCV_serviceDesc = grpc.ServiceDesc{
 			Handler:    _PersonaAppCV_DeleteCV_Handler,
 		},
 		{
-			MethodName: "UpsertStoriesEpisode",
-			Handler:    _PersonaAppCV_UpsertStoriesEpisode_Handler,
+			MethodName: "UpdateStoriesEpisode",
+			Handler:    _PersonaAppCV_UpdateStoriesEpisode_Handler,
 		},
 		{
 			MethodName: "GetStoriesEpisodes",
@@ -6521,8 +6521,8 @@ var _PersonaAppCV_serviceDesc = grpc.ServiceDesc{
 			Handler:    _PersonaAppCV_DeleteStoriesEpisode_Handler,
 		},
 		{
-			MethodName: "UpsertStory",
-			Handler:    _PersonaAppCV_UpsertStory_Handler,
+			MethodName: "UpdateStory",
+			Handler:    _PersonaAppCV_UpdateStory_Handler,
 		},
 		{
 			MethodName: "GetStories",
@@ -6533,8 +6533,8 @@ var _PersonaAppCV_serviceDesc = grpc.ServiceDesc{
 			Handler:    _PersonaAppCV_DeleteStory_Handler,
 		},
 		{
-			MethodName: "UpsertCustomSection",
-			Handler:    _PersonaAppCV_UpsertCustomSection_Handler,
+			MethodName: "UpdateCustomSection",
+			Handler:    _PersonaAppCV_UpdateCustomSection_Handler,
 		},
 		{
 			MethodName: "GetCustomSections",
@@ -6545,8 +6545,8 @@ var _PersonaAppCV_serviceDesc = grpc.ServiceDesc{
 			Handler:    _PersonaAppCV_DeleteCustomSection_Handler,
 		},
 		{
-			MethodName: "UpsertEducation",
-			Handler:    _PersonaAppCV_UpsertEducation_Handler,
+			MethodName: "UpdateEducation",
+			Handler:    _PersonaAppCV_UpdateEducation_Handler,
 		},
 		{
 			MethodName: "GetEducations",
@@ -6557,8 +6557,8 @@ var _PersonaAppCV_serviceDesc = grpc.ServiceDesc{
 			Handler:    _PersonaAppCV_DeleteEducation_Handler,
 		},
 		{
-			MethodName: "UpsertExperience",
-			Handler:    _PersonaAppCV_UpsertExperience_Handler,
+			MethodName: "UpdateExperience",
+			Handler:    _PersonaAppCV_UpdateExperience_Handler,
 		},
 		{
 			MethodName: "GetExperiences",
@@ -6569,8 +6569,8 @@ var _PersonaAppCV_serviceDesc = grpc.ServiceDesc{
 			Handler:    _PersonaAppCV_DeleteExperience_Handler,
 		},
 		{
-			MethodName: "UpsertCVJobKinds",
-			Handler:    _PersonaAppCV_UpsertCVJobKinds_Handler,
+			MethodName: "UpdateCVJobKinds",
+			Handler:    _PersonaAppCV_UpdateCVJobKinds_Handler,
 		},
 		{
 			MethodName: "GetCVJobKinds",
@@ -6581,8 +6581,8 @@ var _PersonaAppCV_serviceDesc = grpc.ServiceDesc{
 			Handler:    _PersonaAppCV_DeleteCVJobKinds_Handler,
 		},
 		{
-			MethodName: "UpsertJobKind",
-			Handler:    _PersonaAppCV_UpsertJobKind_Handler,
+			MethodName: "UpdateJobKind",
+			Handler:    _PersonaAppCV_UpdateJobKind_Handler,
 		},
 		{
 			MethodName: "GetJobKinds",
@@ -6593,8 +6593,8 @@ var _PersonaAppCV_serviceDesc = grpc.ServiceDesc{
 			Handler:    _PersonaAppCV_DeleteJobKind_Handler,
 		},
 		{
-			MethodName: "UpsertCVJobTypes",
-			Handler:    _PersonaAppCV_UpsertCVJobTypes_Handler,
+			MethodName: "UpdateCVJobTypes",
+			Handler:    _PersonaAppCV_UpdateCVJobTypes_Handler,
 		},
 		{
 			MethodName: "GetCVJobTypes",
@@ -6605,8 +6605,8 @@ var _PersonaAppCV_serviceDesc = grpc.ServiceDesc{
 			Handler:    _PersonaAppCV_DeleteCVJobTypes_Handler,
 		},
 		{
-			MethodName: "UpsertJobType",
-			Handler:    _PersonaAppCV_UpsertJobType_Handler,
+			MethodName: "UpdateJobType",
+			Handler:    _PersonaAppCV_UpdateJobType_Handler,
 		},
 		{
 			MethodName: "GetJobTypes",

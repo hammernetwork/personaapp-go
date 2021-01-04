@@ -93,10 +93,10 @@ func (s *Server) GetVacancyCategoriesList(
 	return &vacancyapi.GetVacancyCategoriesListResponse{VacancyCategories: svcs}, nil
 }
 
-func (s *Server) UpsertVacancyCategory(
+func (s *Server) UpdateVacancyCategory(
 	ctx context.Context,
-	req *vacancyapi.UpsertVacancyCategoryRequest,
-) (*vacancyapi.UpsertVacancyCategoryResponse, error) {
+	req *vacancyapi.UpdateVacancyCategoryRequest,
+) (*vacancyapi.UpdateVacancyCategoryResponse, error) {
 	claims, err := s.getAuthClaims(ctx)
 	if err != nil || !s.isAdminAccountType(claims) {
 		return nil, status.Error(codes.Unauthenticated, "unauthorized")
@@ -111,7 +111,7 @@ func (s *Server) UpsertVacancyCategory(
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
-	return &vacancyapi.UpsertVacancyCategoryResponse{
+	return &vacancyapi.UpdateVacancyCategoryResponse{
 		Id: string(categoryID),
 	}, nil
 }
@@ -338,10 +338,10 @@ func (s *Server) GetVacanciesList(
 	}, nil
 }
 
-func (s *Server) UpsertVacancy(
+func (s *Server) UpdateVacancy(
 	ctx context.Context,
-	req *vacancyapi.UpsertVacancyRequest,
-) (*vacancyapi.UpsertVacancyResponse, error) {
+	req *vacancyapi.UpdateVacancyRequest,
+) (*vacancyapi.UpdateVacancyResponse, error) {
 	claims, err := s.getAuthClaims(ctx)
 	if err != nil || !s.isAdminAccountType(claims) || !s.isCompanyAccountType(claims) {
 		return nil, status.Error(codes.Unauthenticated, "unauthorized")
@@ -385,7 +385,7 @@ func (s *Server) UpsertVacancy(
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
-	return &vacancyapi.UpsertVacancyResponse{
+	return &vacancyapi.UpdateVacancyResponse{
 		Id: string(vacancyID),
 	}, nil
 }

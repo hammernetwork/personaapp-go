@@ -50,10 +50,10 @@ func (s *Server) GetCities(
 	}, nil
 }
 
-func (s *Server) UpsertCity(
+func (s *Server) UpdateCity(
 	ctx context.Context,
-	req *cityapi.UpsertCityRequest,
-) (*cityapi.UpsertCityResponse, error) {
+	req *cityapi.UpdateCityRequest,
+) (*cityapi.UpdateCityResponse, error) {
 	claims, err := s.getAuthClaims(ctx)
 	if err != nil || !s.isAdminAccountType(claims) {
 		return nil, status.Error(codes.Unauthenticated, "unauthorized")
@@ -69,7 +69,7 @@ func (s *Server) UpsertCity(
 		return nil, status.Error(codes.Internal, err.Error())
 	}
 
-	return &cityapi.UpsertCityResponse{
+	return &cityapi.UpdateCityResponse{
 		Id: string(cityID),
 	}, nil
 }

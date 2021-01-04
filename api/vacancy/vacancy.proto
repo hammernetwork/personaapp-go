@@ -8,41 +8,41 @@ option java_package = "online.personaapp";
 option java_outer_classname = "GrpcVacancy";
 
 service PersonaAppVacancy {
-    // Vacancy categories
-    rpc GetVacancyCategory (GetVacancyCategoryRequest) returns (GetVacancyCategoryResponse);
-    rpc UpsertVacancyCategory (UpsertVacancyCategoryRequest) returns (UpsertVacancyCategoryResponse);
-    rpc DeleteVacancyCategory (DeleteVacancyCategoryRequest) returns (DeleteVacancyCategoryResponse);
-    rpc GetVacancyCategoriesList (GetVacancyCategoriesListRequest) returns (GetVacancyCategoriesListResponse);
-    // Vacancy
-    rpc UpsertVacancy (UpsertVacancyRequest) returns (UpsertVacancyResponse);
-    rpc GetVacanciesList (GetVacanciesListRequest) returns (GetVacanciesListResponse);
-    rpc GetVacancyDetails (GetVacancyDetailsRequest) returns (GetVacancyDetailsResponse);
-    rpc DeleteVacancy (DeleteVacancyRequest) returns (DeleteVacancyResponse);
+  // Vacancy categories
+  rpc GetVacancyCategory (GetVacancyCategoryRequest) returns (GetVacancyCategoryResponse);
+  rpc UpdateVacancyCategory (UpdateVacancyCategoryRequest) returns (UpdateVacancyCategoryResponse);
+  rpc DeleteVacancyCategory (DeleteVacancyCategoryRequest) returns (DeleteVacancyCategoryResponse);
+  rpc GetVacancyCategoriesList (GetVacancyCategoriesListRequest) returns (GetVacancyCategoriesListResponse);
+  // Vacancy
+  rpc UpdateVacancy (UpdateVacancyRequest) returns (UpdateVacancyResponse);
+  rpc GetVacanciesList (GetVacanciesListRequest) returns (GetVacanciesListResponse);
+  rpc GetVacancyDetails (GetVacancyDetailsRequest) returns (GetVacancyDetailsResponse);
+  rpc DeleteVacancy (DeleteVacancyRequest) returns (DeleteVacancyResponse);
 }
 
 // Get vacancy category
 message GetVacancyCategoryRequest {
-    string id = 1;
+  string id = 1;
 }
 
 message GetVacancyCategoryResponse {
-    VacancyCategory category = 1;
+  VacancyCategory category = 1;
 }
 
-// Upsert vacancy category
-message UpsertVacancyCategoryRequest {
-    google.protobuf.StringValue id = 1;
-    string title = 2;
-    string icon_url = 3;
+// Update vacancy category
+message UpdateVacancyCategoryRequest {
+  google.protobuf.StringValue id = 1;
+  string title = 2;
+  string icon_url = 3;
 }
 
-message UpsertVacancyCategoryResponse {
-    string id = 1;
+message UpdateVacancyCategoryResponse {
+  string id = 1;
 }
 
 // Delete vacancy
 message DeleteVacancyCategoryRequest {
-    string id = 1;
+  string id = 1;
 }
 
 message DeleteVacancyCategoryResponse {
@@ -50,116 +50,116 @@ message DeleteVacancyCategoryResponse {
 
 // Get Vacancies filters list
 message GetVacancyCategoriesListRequest {
-    google.protobuf.Int32Value rating = 1;
+  google.protobuf.Int32Value rating = 1;
 }
 
 message GetVacancyCategoriesListResponse {
-    map<string, VacancyCategory> vacancy_categories = 1;
+  map<string, VacancyCategory> vacancy_categories = 1;
 }
 
-// Upsert vacancy
-message UpsertVacancyRequest {
-    message VacancyLocation {
-        float latitude = 1;
-        float longitude = 2;
-    }
+// Update vacancy
+message UpdateVacancyRequest {
+  message VacancyLocation {
+    float latitude = 1;
+    float longitude = 2;
+  }
 
-    message VacancyDescription {
-        string description = 1;
-        uint32 work_months_experience = 2;
-        string work_schedule = 3;
-        VacancyType type = 4;
-        string address = 5;
-        int32 country_code = 6;
-    }
+  message VacancyDescription {
+    string description = 1;
+    uint32 work_months_experience = 2;
+    string work_schedule = 3;
+    VacancyType type = 4;
+    string address = 5;
+    int32 country_code = 6;
+  }
 
-    message Vacancy {
-        google.protobuf.StringValue id = 1;
-        string title = 2;
-        string phone = 3;
-        int32 min_salary = 4;
-        int32 max_salary = 5;
-        string company_id = 6;
-        Currency currency = 7;
-    }
+  message Vacancy {
+    google.protobuf.StringValue id = 1;
+    string title = 2;
+    string phone = 3;
+    int32 min_salary = 4;
+    int32 max_salary = 5;
+    string company_id = 6;
+    Currency currency = 7;
+  }
 
-    Vacancy vacancy = 1;
-    repeated string imageURLs = 2;
-    VacancyLocation location = 3;
-    VacancyDescription description = 4;
-    repeated string cityIDs = 5;
-    repeated string categoryIDs = 6;
+  Vacancy vacancy = 1;
+  repeated string imageURLs = 2;
+  VacancyLocation location = 3;
+  VacancyDescription description = 4;
+  repeated string cityIDs = 5;
+  repeated string categoryIDs = 6;
 }
 
-message UpsertVacancyResponse {
-    string id = 1;
+message UpdateVacancyResponse {
+  string id = 1;
 }
 
 // Get Vacancies List
 message GetVacanciesListRequest {
-    map<string, Empty> categories_ids = 1;
-    google.protobuf.StringValue cursor = 2;
-    google.protobuf.Int32Value count = 3;
+  map<string, Empty> categories_ids = 1;
+  google.protobuf.StringValue cursor = 2;
+  google.protobuf.Int32Value count = 3;
 }
 
 message GetVacanciesListResponse {
-    message VacancyDetails {
-        Vacancy vacancy = 1;
-        repeated string image_urls = 2;
-    }
+  message VacancyDetails {
+    Vacancy vacancy = 1;
+    repeated string image_urls = 2;
+  }
 
-    repeated string vacancies_ids = 1;
-    map<string, VacancyDetails> vacancies = 2;
-    map<string, Company> companies = 3;
-    map<string, VacancyCategoryShort> categories = 4;
-    google.protobuf.StringValue cursor = 5;
+  repeated string vacancies_ids = 1;
+  map<string, VacancyDetails> vacancies = 2;
+  map<string, Company> companies = 3;
+  map<string, VacancyCategoryShort> categories = 4;
+  google.protobuf.StringValue cursor = 5;
 }
 
 // Get Vacancy Details
 message GetVacancyDetailsRequest {
-    string vacancy_id = 1;
+  string vacancy_id = 1;
 }
 
 message GetVacancyDetailsResponse {
-    message CompanyDescription {
-        string description = 1;
-    }
+  message CompanyDescription {
+    string description = 1;
+  }
 
-    message VacancyLocation {
-        float latitude = 1;
-        float longitude = 2;
-    }
+  message VacancyLocation {
+    float latitude = 1;
+    float longitude = 2;
+  }
 
-    message VacancyDescription {
-        string description = 1;
-        uint32 work_months_experience = 2;
-        string work_schedule = 3;
-        VacancyType type = 4;
-        string address = 5;
-        int32 country_code = 6;
-    }
+  message VacancyDescription {
+    string description = 1;
+    uint32 work_months_experience = 2;
+    string work_schedule = 3;
+    VacancyType type = 4;
+    string address = 5;
+    int32 country_code = 6;
+  }
 
-    message VacancyCompany {
-        Company company = 1;
-        CompanyDescription description = 2;
-    }
+  message VacancyCompany {
+    Company company = 1;
+    CompanyDescription description = 2;
+  }
 
-    message VacancyImage {
-        repeated string image_urls = 1;
-    }
+  message VacancyImage {
+    repeated string image_urls = 1;
+  }
 
-    Vacancy vacancy = 1;
-    VacancyImage image = 2;
-    VacancyLocation location = 3;
-    VacancyDescription description = 4;
-    VacancyCompany company = 5;
-    City city = 6;
-    map<string, VacancyCategoryShort> categories = 7;
+  Vacancy vacancy = 1;
+  VacancyImage image = 2;
+  VacancyLocation location = 3;
+  VacancyDescription description = 4;
+  VacancyCompany company = 5;
+  City city = 6;
+  map<string, VacancyCategoryShort> categories = 7;
 }
 
 // Delete Vacancy
 message DeleteVacancyRequest {
-    string id = 1;
+  string id = 1;
 }
 
 message DeleteVacancyResponse {
@@ -167,50 +167,50 @@ message DeleteVacancyResponse {
 
 // Entity
 enum VacancyType {
-    VACANCY_TYPE_UNKNOWN = 0;
-    VACANCY_TYPE_REMOTE = 1;
-    VACANCY_TYPE_NORMAL = 2;
+  VACANCY_TYPE_UNKNOWN = 0;
+  VACANCY_TYPE_REMOTE = 1;
+  VACANCY_TYPE_NORMAL = 2;
 }
 
 message Empty {
 }
 
 enum Currency {
-    CURRENCY_UNKNOWN = 0;
-    CURRENCY_UAH = 1;
+  CURRENCY_UNKNOWN = 0;
+  CURRENCY_UAH = 1;
 }
 
 message Company {
-    string id = 1;
-    string title = 2;
-    string logo_url = 3;
+  string id = 1;
+  string title = 2;
+  string logo_url = 3;
 }
 
 message VacancyCategory {
-    string id = 1;
-    string title = 2;
-    string icon_url = 3;
-    int32 rating = 4;
+  string id = 1;
+  string title = 2;
+  string icon_url = 3;
+  int32 rating = 4;
 }
 
 message Vacancy {
-    string id = 1;
-    string title = 2;
-    string phone = 3;
-    int32 min_salary = 4;
-    int32 max_salary = 5;
-    string company_id = 6;
-    Currency currency = 7;
-    repeated string categories_ids = 8;
+  string id = 1;
+  string title = 2;
+  string phone = 3;
+  int32 min_salary = 4;
+  int32 max_salary = 5;
+  string company_id = 6;
+  Currency currency = 7;
+  repeated string categories_ids = 8;
 }
 
 message VacancyCategoryShort {
-    string title = 1;
+  string title = 1;
 }
 
 message City {
-    string id = 1;
-    string name = 2;
-    int32 country_code = 3;
-    int32 rating = 4;
+  string id = 1;
+  string name = 2;
+  int32 country_code = 3;
+  int32 rating = 4;
 }

@@ -221,8 +221,8 @@ func (x *GetVacancyCategoryResponse) GetCategory() *VacancyCategory {
 	return nil
 }
 
-// Upsert vacancy category
-type UpsertVacancyCategoryRequest struct {
+// Update vacancy category
+type UpdateVacancyCategoryRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -232,8 +232,8 @@ type UpsertVacancyCategoryRequest struct {
 	IconUrl string                `protobuf:"bytes,3,opt,name=icon_url,json=iconUrl,proto3" json:"icon_url,omitempty"`
 }
 
-func (x *UpsertVacancyCategoryRequest) Reset() {
-	*x = UpsertVacancyCategoryRequest{}
+func (x *UpdateVacancyCategoryRequest) Reset() {
+	*x = UpdateVacancyCategoryRequest{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_vacancy_vacancy_proto_msgTypes[2]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -241,13 +241,13 @@ func (x *UpsertVacancyCategoryRequest) Reset() {
 	}
 }
 
-func (x *UpsertVacancyCategoryRequest) String() string {
+func (x *UpdateVacancyCategoryRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*UpsertVacancyCategoryRequest) ProtoMessage() {}
+func (*UpdateVacancyCategoryRequest) ProtoMessage() {}
 
-func (x *UpsertVacancyCategoryRequest) ProtoReflect() protoreflect.Message {
+func (x *UpdateVacancyCategoryRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_vacancy_vacancy_proto_msgTypes[2]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -259,33 +259,33 @@ func (x *UpsertVacancyCategoryRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use UpsertVacancyCategoryRequest.ProtoReflect.Descriptor instead.
-func (*UpsertVacancyCategoryRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use UpdateVacancyCategoryRequest.ProtoReflect.Descriptor instead.
+func (*UpdateVacancyCategoryRequest) Descriptor() ([]byte, []int) {
 	return file_vacancy_vacancy_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *UpsertVacancyCategoryRequest) GetId() *wrappers.StringValue {
+func (x *UpdateVacancyCategoryRequest) GetId() *wrappers.StringValue {
 	if x != nil {
 		return x.Id
 	}
 	return nil
 }
 
-func (x *UpsertVacancyCategoryRequest) GetTitle() string {
+func (x *UpdateVacancyCategoryRequest) GetTitle() string {
 	if x != nil {
 		return x.Title
 	}
 	return ""
 }
 
-func (x *UpsertVacancyCategoryRequest) GetIconUrl() string {
+func (x *UpdateVacancyCategoryRequest) GetIconUrl() string {
 	if x != nil {
 		return x.IconUrl
 	}
 	return ""
 }
 
-type UpsertVacancyCategoryResponse struct {
+type UpdateVacancyCategoryResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -293,8 +293,8 @@ type UpsertVacancyCategoryResponse struct {
 	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
 }
 
-func (x *UpsertVacancyCategoryResponse) Reset() {
-	*x = UpsertVacancyCategoryResponse{}
+func (x *UpdateVacancyCategoryResponse) Reset() {
+	*x = UpdateVacancyCategoryResponse{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_vacancy_vacancy_proto_msgTypes[3]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -302,13 +302,13 @@ func (x *UpsertVacancyCategoryResponse) Reset() {
 	}
 }
 
-func (x *UpsertVacancyCategoryResponse) String() string {
+func (x *UpdateVacancyCategoryResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*UpsertVacancyCategoryResponse) ProtoMessage() {}
+func (*UpdateVacancyCategoryResponse) ProtoMessage() {}
 
-func (x *UpsertVacancyCategoryResponse) ProtoReflect() protoreflect.Message {
+func (x *UpdateVacancyCategoryResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_vacancy_vacancy_proto_msgTypes[3]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -320,12 +320,12 @@ func (x *UpsertVacancyCategoryResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use UpsertVacancyCategoryResponse.ProtoReflect.Descriptor instead.
-func (*UpsertVacancyCategoryResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use UpdateVacancyCategoryResponse.ProtoReflect.Descriptor instead.
+func (*UpdateVacancyCategoryResponse) Descriptor() ([]byte, []int) {
 	return file_vacancy_vacancy_proto_rawDescGZIP(), []int{3}
 }
 
-func (x *UpsertVacancyCategoryResponse) GetId() string {
+func (x *UpdateVacancyCategoryResponse) GetId() string {
 	if x != nil {
 		return x.Id
 	}
@@ -513,22 +513,22 @@ func (x *GetVacancyCategoriesListResponse) GetVacancyCategories() map[string]*Va
 	return nil
 }
 
-// Upsert vacancy
-type UpsertVacancyRequest struct {
+// Update vacancy
+type UpdateVacancyRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
 
-	Vacancy     *UpsertVacancyRequest_Vacancy            `protobuf:"bytes,1,opt,name=vacancy,proto3" json:"vacancy,omitempty"`
+	Vacancy     *UpdateVacancyRequest_Vacancy            `protobuf:"bytes,1,opt,name=vacancy,proto3" json:"vacancy,omitempty"`
 	ImageURLs   []string                                 `protobuf:"bytes,2,rep,name=imageURLs,proto3" json:"imageURLs,omitempty"`
-	Location    *UpsertVacancyRequest_VacancyLocation    `protobuf:"bytes,3,opt,name=location,proto3" json:"location,omitempty"`
-	Description *UpsertVacancyRequest_VacancyDescription `protobuf:"bytes,4,opt,name=description,proto3" json:"description,omitempty"`
+	Location    *UpdateVacancyRequest_VacancyLocation    `protobuf:"bytes,3,opt,name=location,proto3" json:"location,omitempty"`
+	Description *UpdateVacancyRequest_VacancyDescription `protobuf:"bytes,4,opt,name=description,proto3" json:"description,omitempty"`
 	CityIDs     []string                                 `protobuf:"bytes,5,rep,name=cityIDs,proto3" json:"cityIDs,omitempty"`
 	CategoryIDs []string                                 `protobuf:"bytes,6,rep,name=categoryIDs,proto3" json:"categoryIDs,omitempty"`
 }
 
-func (x *UpsertVacancyRequest) Reset() {
-	*x = UpsertVacancyRequest{}
+func (x *UpdateVacancyRequest) Reset() {
+	*x = UpdateVacancyRequest{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_vacancy_vacancy_proto_msgTypes[8]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -536,13 +536,13 @@ func (x *UpsertVacancyRequest) Reset() {
 	}
 }
 
-func (x *UpsertVacancyRequest) String() string {
+func (x *UpdateVacancyRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*UpsertVacancyRequest) ProtoMessage() {}
+func (*UpdateVacancyRequest) ProtoMessage() {}
 
-func (x *UpsertVacancyRequest) ProtoReflect() protoreflect.Message {
+func (x *UpdateVacancyRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_vacancy_vacancy_proto_msgTypes[8]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -554,54 +554,54 @@ func (x *UpsertVacancyRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use UpsertVacancyRequest.ProtoReflect.Descriptor instead.
-func (*UpsertVacancyRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use UpdateVacancyRequest.ProtoReflect.Descriptor instead.
+func (*UpdateVacancyRequest) Descriptor() ([]byte, []int) {
 	return file_vacancy_vacancy_proto_rawDescGZIP(), []int{8}
 }
 
-func (x *UpsertVacancyRequest) GetVacancy() *UpsertVacancyRequest_Vacancy {
+func (x *UpdateVacancyRequest) GetVacancy() *UpdateVacancyRequest_Vacancy {
 	if x != nil {
 		return x.Vacancy
 	}
 	return nil
 }
 
-func (x *UpsertVacancyRequest) GetImageURLs() []string {
+func (x *UpdateVacancyRequest) GetImageURLs() []string {
 	if x != nil {
 		return x.ImageURLs
 	}
 	return nil
 }
 
-func (x *UpsertVacancyRequest) GetLocation() *UpsertVacancyRequest_VacancyLocation {
+func (x *UpdateVacancyRequest) GetLocation() *UpdateVacancyRequest_VacancyLocation {
 	if x != nil {
 		return x.Location
 	}
 	return nil
 }
 
-func (x *UpsertVacancyRequest) GetDescription() *UpsertVacancyRequest_VacancyDescription {
+func (x *UpdateVacancyRequest) GetDescription() *UpdateVacancyRequest_VacancyDescription {
 	if x != nil {
 		return x.Description
 	}
 	return nil
 }
 
-func (x *UpsertVacancyRequest) GetCityIDs() []string {
+func (x *UpdateVacancyRequest) GetCityIDs() []string {
 	if x != nil {
 		return x.CityIDs
 	}
 	return nil
 }
 
-func (x *UpsertVacancyRequest) GetCategoryIDs() []string {
+func (x *UpdateVacancyRequest) GetCategoryIDs() []string {
 	if x != nil {
 		return x.CategoryIDs
 	}
 	return nil
 }
 
-type UpsertVacancyResponse struct {
+type UpdateVacancyResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -609,8 +609,8 @@ type UpsertVacancyResponse struct {
 	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
 }
 
-func (x *UpsertVacancyResponse) Reset() {
-	*x = UpsertVacancyResponse{}
+func (x *UpdateVacancyResponse) Reset() {
+	*x = UpdateVacancyResponse{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_vacancy_vacancy_proto_msgTypes[9]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -618,13 +618,13 @@ func (x *UpsertVacancyResponse) Reset() {
 	}
 }
 
-func (x *UpsertVacancyResponse) String() string {
+func (x *UpdateVacancyResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*UpsertVacancyResponse) ProtoMessage() {}
+func (*UpdateVacancyResponse) ProtoMessage() {}
 
-func (x *UpsertVacancyResponse) ProtoReflect() protoreflect.Message {
+func (x *UpdateVacancyResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_vacancy_vacancy_proto_msgTypes[9]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -636,12 +636,12 @@ func (x *UpsertVacancyResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use UpsertVacancyResponse.ProtoReflect.Descriptor instead.
-func (*UpsertVacancyResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use UpdateVacancyResponse.ProtoReflect.Descriptor instead.
+func (*UpdateVacancyResponse) Descriptor() ([]byte, []int) {
 	return file_vacancy_vacancy_proto_rawDescGZIP(), []int{9}
 }
 
-func (x *UpsertVacancyResponse) GetId() string {
+func (x *UpdateVacancyResponse) GetId() string {
 	if x != nil {
 		return x.Id
 	}
@@ -1413,7 +1413,7 @@ func (x *City) GetRating() int32 {
 	return 0
 }
 
-type UpsertVacancyRequest_VacancyLocation struct {
+type UpdateVacancyRequest_VacancyLocation struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -1422,8 +1422,8 @@ type UpsertVacancyRequest_VacancyLocation struct {
 	Longitude float32 `protobuf:"fixed32,2,opt,name=longitude,proto3" json:"longitude,omitempty"`
 }
 
-func (x *UpsertVacancyRequest_VacancyLocation) Reset() {
-	*x = UpsertVacancyRequest_VacancyLocation{}
+func (x *UpdateVacancyRequest_VacancyLocation) Reset() {
+	*x = UpdateVacancyRequest_VacancyLocation{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_vacancy_vacancy_proto_msgTypes[23]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -1431,13 +1431,13 @@ func (x *UpsertVacancyRequest_VacancyLocation) Reset() {
 	}
 }
 
-func (x *UpsertVacancyRequest_VacancyLocation) String() string {
+func (x *UpdateVacancyRequest_VacancyLocation) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*UpsertVacancyRequest_VacancyLocation) ProtoMessage() {}
+func (*UpdateVacancyRequest_VacancyLocation) ProtoMessage() {}
 
-func (x *UpsertVacancyRequest_VacancyLocation) ProtoReflect() protoreflect.Message {
+func (x *UpdateVacancyRequest_VacancyLocation) ProtoReflect() protoreflect.Message {
 	mi := &file_vacancy_vacancy_proto_msgTypes[23]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -1449,26 +1449,26 @@ func (x *UpsertVacancyRequest_VacancyLocation) ProtoReflect() protoreflect.Messa
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use UpsertVacancyRequest_VacancyLocation.ProtoReflect.Descriptor instead.
-func (*UpsertVacancyRequest_VacancyLocation) Descriptor() ([]byte, []int) {
+// Deprecated: Use UpdateVacancyRequest_VacancyLocation.ProtoReflect.Descriptor instead.
+func (*UpdateVacancyRequest_VacancyLocation) Descriptor() ([]byte, []int) {
 	return file_vacancy_vacancy_proto_rawDescGZIP(), []int{8, 0}
 }
 
-func (x *UpsertVacancyRequest_VacancyLocation) GetLatitude() float32 {
+func (x *UpdateVacancyRequest_VacancyLocation) GetLatitude() float32 {
 	if x != nil {
 		return x.Latitude
 	}
 	return 0
 }
 
-func (x *UpsertVacancyRequest_VacancyLocation) GetLongitude() float32 {
+func (x *UpdateVacancyRequest_VacancyLocation) GetLongitude() float32 {
 	if x != nil {
 		return x.Longitude
 	}
 	return 0
 }
 
-type UpsertVacancyRequest_VacancyDescription struct {
+type UpdateVacancyRequest_VacancyDescription struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -1481,8 +1481,8 @@ type UpsertVacancyRequest_VacancyDescription struct {
 	CountryCode          int32       `protobuf:"varint,6,opt,name=country_code,json=countryCode,proto3" json:"country_code,omitempty"`
 }
 
-func (x *UpsertVacancyRequest_VacancyDescription) Reset() {
-	*x = UpsertVacancyRequest_VacancyDescription{}
+func (x *UpdateVacancyRequest_VacancyDescription) Reset() {
+	*x = UpdateVacancyRequest_VacancyDescription{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_vacancy_vacancy_proto_msgTypes[24]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -1490,13 +1490,13 @@ func (x *UpsertVacancyRequest_VacancyDescription) Reset() {
 	}
 }
 
-func (x *UpsertVacancyRequest_VacancyDescription) String() string {
+func (x *UpdateVacancyRequest_VacancyDescription) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*UpsertVacancyRequest_VacancyDescription) ProtoMessage() {}
+func (*UpdateVacancyRequest_VacancyDescription) ProtoMessage() {}
 
-func (x *UpsertVacancyRequest_VacancyDescription) ProtoReflect() protoreflect.Message {
+func (x *UpdateVacancyRequest_VacancyDescription) ProtoReflect() protoreflect.Message {
 	mi := &file_vacancy_vacancy_proto_msgTypes[24]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -1508,54 +1508,54 @@ func (x *UpsertVacancyRequest_VacancyDescription) ProtoReflect() protoreflect.Me
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use UpsertVacancyRequest_VacancyDescription.ProtoReflect.Descriptor instead.
-func (*UpsertVacancyRequest_VacancyDescription) Descriptor() ([]byte, []int) {
+// Deprecated: Use UpdateVacancyRequest_VacancyDescription.ProtoReflect.Descriptor instead.
+func (*UpdateVacancyRequest_VacancyDescription) Descriptor() ([]byte, []int) {
 	return file_vacancy_vacancy_proto_rawDescGZIP(), []int{8, 1}
 }
 
-func (x *UpsertVacancyRequest_VacancyDescription) GetDescription() string {
+func (x *UpdateVacancyRequest_VacancyDescription) GetDescription() string {
 	if x != nil {
 		return x.Description
 	}
 	return ""
 }
 
-func (x *UpsertVacancyRequest_VacancyDescription) GetWorkMonthsExperience() uint32 {
+func (x *UpdateVacancyRequest_VacancyDescription) GetWorkMonthsExperience() uint32 {
 	if x != nil {
 		return x.WorkMonthsExperience
 	}
 	return 0
 }
 
-func (x *UpsertVacancyRequest_VacancyDescription) GetWorkSchedule() string {
+func (x *UpdateVacancyRequest_VacancyDescription) GetWorkSchedule() string {
 	if x != nil {
 		return x.WorkSchedule
 	}
 	return ""
 }
 
-func (x *UpsertVacancyRequest_VacancyDescription) GetType() VacancyType {
+func (x *UpdateVacancyRequest_VacancyDescription) GetType() VacancyType {
 	if x != nil {
 		return x.Type
 	}
 	return VacancyType_VACANCY_TYPE_UNKNOWN
 }
 
-func (x *UpsertVacancyRequest_VacancyDescription) GetAddress() string {
+func (x *UpdateVacancyRequest_VacancyDescription) GetAddress() string {
 	if x != nil {
 		return x.Address
 	}
 	return ""
 }
 
-func (x *UpsertVacancyRequest_VacancyDescription) GetCountryCode() int32 {
+func (x *UpdateVacancyRequest_VacancyDescription) GetCountryCode() int32 {
 	if x != nil {
 		return x.CountryCode
 	}
 	return 0
 }
 
-type UpsertVacancyRequest_Vacancy struct {
+type UpdateVacancyRequest_Vacancy struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -1569,8 +1569,8 @@ type UpsertVacancyRequest_Vacancy struct {
 	Currency  Currency              `protobuf:"varint,7,opt,name=currency,proto3,enum=personaappapi.vacancy.Currency" json:"currency,omitempty"`
 }
 
-func (x *UpsertVacancyRequest_Vacancy) Reset() {
-	*x = UpsertVacancyRequest_Vacancy{}
+func (x *UpdateVacancyRequest_Vacancy) Reset() {
+	*x = UpdateVacancyRequest_Vacancy{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_vacancy_vacancy_proto_msgTypes[25]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -1578,13 +1578,13 @@ func (x *UpsertVacancyRequest_Vacancy) Reset() {
 	}
 }
 
-func (x *UpsertVacancyRequest_Vacancy) String() string {
+func (x *UpdateVacancyRequest_Vacancy) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*UpsertVacancyRequest_Vacancy) ProtoMessage() {}
+func (*UpdateVacancyRequest_Vacancy) ProtoMessage() {}
 
-func (x *UpsertVacancyRequest_Vacancy) ProtoReflect() protoreflect.Message {
+func (x *UpdateVacancyRequest_Vacancy) ProtoReflect() protoreflect.Message {
 	mi := &file_vacancy_vacancy_proto_msgTypes[25]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -1596,54 +1596,54 @@ func (x *UpsertVacancyRequest_Vacancy) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use UpsertVacancyRequest_Vacancy.ProtoReflect.Descriptor instead.
-func (*UpsertVacancyRequest_Vacancy) Descriptor() ([]byte, []int) {
+// Deprecated: Use UpdateVacancyRequest_Vacancy.ProtoReflect.Descriptor instead.
+func (*UpdateVacancyRequest_Vacancy) Descriptor() ([]byte, []int) {
 	return file_vacancy_vacancy_proto_rawDescGZIP(), []int{8, 2}
 }
 
-func (x *UpsertVacancyRequest_Vacancy) GetId() *wrappers.StringValue {
+func (x *UpdateVacancyRequest_Vacancy) GetId() *wrappers.StringValue {
 	if x != nil {
 		return x.Id
 	}
 	return nil
 }
 
-func (x *UpsertVacancyRequest_Vacancy) GetTitle() string {
+func (x *UpdateVacancyRequest_Vacancy) GetTitle() string {
 	if x != nil {
 		return x.Title
 	}
 	return ""
 }
 
-func (x *UpsertVacancyRequest_Vacancy) GetPhone() string {
+func (x *UpdateVacancyRequest_Vacancy) GetPhone() string {
 	if x != nil {
 		return x.Phone
 	}
 	return ""
 }
 
-func (x *UpsertVacancyRequest_Vacancy) GetMinSalary() int32 {
+func (x *UpdateVacancyRequest_Vacancy) GetMinSalary() int32 {
 	if x != nil {
 		return x.MinSalary
 	}
 	return 0
 }
 
-func (x *UpsertVacancyRequest_Vacancy) GetMaxSalary() int32 {
+func (x *UpdateVacancyRequest_Vacancy) GetMaxSalary() int32 {
 	if x != nil {
 		return x.MaxSalary
 	}
 	return 0
 }
 
-func (x *UpsertVacancyRequest_Vacancy) GetCompanyId() string {
+func (x *UpdateVacancyRequest_Vacancy) GetCompanyId() string {
 	if x != nil {
 		return x.CompanyId
 	}
 	return ""
 }
 
-func (x *UpsertVacancyRequest_Vacancy) GetCurrency() Currency {
+func (x *UpdateVacancyRequest_Vacancy) GetCurrency() Currency {
 	if x != nil {
 		return x.Currency
 	}
@@ -2013,7 +2013,7 @@ var file_vacancy_vacancy_proto_rawDesc = []byte{
 	0x72, 0x73, 0x6f, 0x6e, 0x61, 0x61, 0x70, 0x70, 0x61, 0x70, 0x69, 0x2e, 0x76, 0x61, 0x63, 0x61,
 	0x6e, 0x63, 0x79, 0x2e, 0x56, 0x61, 0x63, 0x61, 0x6e, 0x63, 0x79, 0x43, 0x61, 0x74, 0x65, 0x67,
 	0x6f, 0x72, 0x79, 0x52, 0x08, 0x63, 0x61, 0x74, 0x65, 0x67, 0x6f, 0x72, 0x79, 0x22, 0x7d, 0x0a,
-	0x1c, 0x55, 0x70, 0x73, 0x65, 0x72, 0x74, 0x56, 0x61, 0x63, 0x61, 0x6e, 0x63, 0x79, 0x43, 0x61,
+	0x1c, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x56, 0x61, 0x63, 0x61, 0x6e, 0x63, 0x79, 0x43, 0x61,
 	0x74, 0x65, 0x67, 0x6f, 0x72, 0x79, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x2c, 0x0a,
 	0x02, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x1c, 0x2e, 0x67, 0x6f, 0x6f, 0x67,
 	0x6c, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2e, 0x53, 0x74, 0x72, 0x69,
@@ -2021,7 +2021,7 @@ var file_vacancy_vacancy_proto_rawDesc = []byte{
 	0x69, 0x74, 0x6c, 0x65, 0x18, 0x02, 0x20, 0x01, 0x28, 0x09, 0x52, 0x05, 0x74, 0x69, 0x74, 0x6c,
 	0x65, 0x12, 0x19, 0x0a, 0x08, 0x69, 0x63, 0x6f, 0x6e, 0x5f, 0x75, 0x72, 0x6c, 0x18, 0x03, 0x20,
 	0x01, 0x28, 0x09, 0x52, 0x07, 0x69, 0x63, 0x6f, 0x6e, 0x55, 0x72, 0x6c, 0x22, 0x2f, 0x0a, 0x1d,
-	0x55, 0x70, 0x73, 0x65, 0x72, 0x74, 0x56, 0x61, 0x63, 0x61, 0x6e, 0x63, 0x79, 0x43, 0x61, 0x74,
+	0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x56, 0x61, 0x63, 0x61, 0x6e, 0x63, 0x79, 0x43, 0x61, 0x74,
 	0x65, 0x67, 0x6f, 0x72, 0x79, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x0e, 0x0a,
 	0x02, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09, 0x52, 0x02, 0x69, 0x64, 0x22, 0x2e, 0x0a,
 	0x1c, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x56, 0x61, 0x63, 0x61, 0x6e, 0x63, 0x79, 0x43, 0x61,
@@ -2051,24 +2051,24 @@ var file_vacancy_vacancy_proto_rawDesc = []byte{
 	0x02, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x26, 0x2e, 0x70, 0x65, 0x72, 0x73, 0x6f, 0x6e, 0x61, 0x61,
 	0x70, 0x70, 0x61, 0x70, 0x69, 0x2e, 0x76, 0x61, 0x63, 0x61, 0x6e, 0x63, 0x79, 0x2e, 0x56, 0x61,
 	0x63, 0x61, 0x6e, 0x63, 0x79, 0x43, 0x61, 0x74, 0x65, 0x67, 0x6f, 0x72, 0x79, 0x52, 0x05, 0x76,
-	0x61, 0x6c, 0x75, 0x65, 0x3a, 0x02, 0x38, 0x01, 0x22, 0xd0, 0x07, 0x0a, 0x14, 0x55, 0x70, 0x73,
-	0x65, 0x72, 0x74, 0x56, 0x61, 0x63, 0x61, 0x6e, 0x63, 0x79, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73,
+	0x61, 0x6c, 0x75, 0x65, 0x3a, 0x02, 0x38, 0x01, 0x22, 0xd0, 0x07, 0x0a, 0x14, 0x55, 0x70, 0x64,
+	0x61, 0x74, 0x65, 0x56, 0x61, 0x63, 0x61, 0x6e, 0x63, 0x79, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73,
 	0x74, 0x12, 0x4d, 0x0a, 0x07, 0x76, 0x61, 0x63, 0x61, 0x6e, 0x63, 0x79, 0x18, 0x01, 0x20, 0x01,
 	0x28, 0x0b, 0x32, 0x33, 0x2e, 0x70, 0x65, 0x72, 0x73, 0x6f, 0x6e, 0x61, 0x61, 0x70, 0x70, 0x61,
-	0x70, 0x69, 0x2e, 0x76, 0x61, 0x63, 0x61, 0x6e, 0x63, 0x79, 0x2e, 0x55, 0x70, 0x73, 0x65, 0x72,
-	0x74, 0x56, 0x61, 0x63, 0x61, 0x6e, 0x63, 0x79, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x2e,
+	0x70, 0x69, 0x2e, 0x76, 0x61, 0x63, 0x61, 0x6e, 0x63, 0x79, 0x2e, 0x55, 0x70, 0x64, 0x61, 0x74,
+	0x65, 0x56, 0x61, 0x63, 0x61, 0x6e, 0x63, 0x79, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x2e,
 	0x56, 0x61, 0x63, 0x61, 0x6e, 0x63, 0x79, 0x52, 0x07, 0x76, 0x61, 0x63, 0x61, 0x6e, 0x63, 0x79,
 	0x12, 0x1c, 0x0a, 0x09, 0x69, 0x6d, 0x61, 0x67, 0x65, 0x55, 0x52, 0x4c, 0x73, 0x18, 0x02, 0x20,
 	0x03, 0x28, 0x09, 0x52, 0x09, 0x69, 0x6d, 0x61, 0x67, 0x65, 0x55, 0x52, 0x4c, 0x73, 0x12, 0x57,
 	0x0a, 0x08, 0x6c, 0x6f, 0x63, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x18, 0x03, 0x20, 0x01, 0x28, 0x0b,
 	0x32, 0x3b, 0x2e, 0x70, 0x65, 0x72, 0x73, 0x6f, 0x6e, 0x61, 0x61, 0x70, 0x70, 0x61, 0x70, 0x69,
-	0x2e, 0x76, 0x61, 0x63, 0x61, 0x6e, 0x63, 0x79, 0x2e, 0x55, 0x70, 0x73, 0x65, 0x72, 0x74, 0x56,
+	0x2e, 0x76, 0x61, 0x63, 0x61, 0x6e, 0x63, 0x79, 0x2e, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x56,
 	0x61, 0x63, 0x61, 0x6e, 0x63, 0x79, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x2e, 0x56, 0x61,
 	0x63, 0x61, 0x6e, 0x63, 0x79, 0x4c, 0x6f, 0x63, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x52, 0x08, 0x6c,
 	0x6f, 0x63, 0x61, 0x74, 0x69, 0x6f, 0x6e, 0x12, 0x60, 0x0a, 0x0b, 0x64, 0x65, 0x73, 0x63, 0x72,
 	0x69, 0x70, 0x74, 0x69, 0x6f, 0x6e, 0x18, 0x04, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x3e, 0x2e, 0x70,
 	0x65, 0x72, 0x73, 0x6f, 0x6e, 0x61, 0x61, 0x70, 0x70, 0x61, 0x70, 0x69, 0x2e, 0x76, 0x61, 0x63,
-	0x61, 0x6e, 0x63, 0x79, 0x2e, 0x55, 0x70, 0x73, 0x65, 0x72, 0x74, 0x56, 0x61, 0x63, 0x61, 0x6e,
+	0x61, 0x6e, 0x63, 0x79, 0x2e, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x56, 0x61, 0x63, 0x61, 0x6e,
 	0x63, 0x79, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x2e, 0x56, 0x61, 0x63, 0x61, 0x6e, 0x63,
 	0x79, 0x44, 0x65, 0x73, 0x63, 0x72, 0x69, 0x70, 0x74, 0x69, 0x6f, 0x6e, 0x52, 0x0b, 0x64, 0x65,
 	0x73, 0x63, 0x72, 0x69, 0x70, 0x74, 0x69, 0x6f, 0x6e, 0x12, 0x18, 0x0a, 0x07, 0x63, 0x69, 0x74,
@@ -2113,7 +2113,7 @@ var file_vacancy_vacancy_proto_rawDesc = []byte{
 	0x32, 0x1f, 0x2e, 0x70, 0x65, 0x72, 0x73, 0x6f, 0x6e, 0x61, 0x61, 0x70, 0x70, 0x61, 0x70, 0x69,
 	0x2e, 0x76, 0x61, 0x63, 0x61, 0x6e, 0x63, 0x79, 0x2e, 0x43, 0x75, 0x72, 0x72, 0x65, 0x6e, 0x63,
 	0x79, 0x52, 0x08, 0x63, 0x75, 0x72, 0x72, 0x65, 0x6e, 0x63, 0x79, 0x22, 0x27, 0x0a, 0x15, 0x55,
-	0x70, 0x73, 0x65, 0x72, 0x74, 0x56, 0x61, 0x63, 0x61, 0x6e, 0x63, 0x79, 0x52, 0x65, 0x73, 0x70,
+	0x70, 0x64, 0x61, 0x74, 0x65, 0x56, 0x61, 0x63, 0x61, 0x6e, 0x63, 0x79, 0x52, 0x65, 0x73, 0x70,
 	0x6f, 0x6e, 0x73, 0x65, 0x12, 0x0e, 0x0a, 0x02, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09,
 	0x52, 0x02, 0x69, 0x64, 0x22, 0xcc, 0x02, 0x0a, 0x17, 0x47, 0x65, 0x74, 0x56, 0x61, 0x63, 0x61,
 	0x6e, 0x63, 0x69, 0x65, 0x73, 0x4c, 0x69, 0x73, 0x74, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74,
@@ -2336,14 +2336,14 @@ var file_vacancy_vacancy_proto_rawDesc = []byte{
 	0x1a, 0x31, 0x2e, 0x70, 0x65, 0x72, 0x73, 0x6f, 0x6e, 0x61, 0x61, 0x70, 0x70, 0x61, 0x70, 0x69,
 	0x2e, 0x76, 0x61, 0x63, 0x61, 0x6e, 0x63, 0x79, 0x2e, 0x47, 0x65, 0x74, 0x56, 0x61, 0x63, 0x61,
 	0x6e, 0x63, 0x79, 0x43, 0x61, 0x74, 0x65, 0x67, 0x6f, 0x72, 0x79, 0x52, 0x65, 0x73, 0x70, 0x6f,
-	0x6e, 0x73, 0x65, 0x12, 0x82, 0x01, 0x0a, 0x15, 0x55, 0x70, 0x73, 0x65, 0x72, 0x74, 0x56, 0x61,
+	0x6e, 0x73, 0x65, 0x12, 0x82, 0x01, 0x0a, 0x15, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x56, 0x61,
 	0x63, 0x61, 0x6e, 0x63, 0x79, 0x43, 0x61, 0x74, 0x65, 0x67, 0x6f, 0x72, 0x79, 0x12, 0x33, 0x2e,
 	0x70, 0x65, 0x72, 0x73, 0x6f, 0x6e, 0x61, 0x61, 0x70, 0x70, 0x61, 0x70, 0x69, 0x2e, 0x76, 0x61,
-	0x63, 0x61, 0x6e, 0x63, 0x79, 0x2e, 0x55, 0x70, 0x73, 0x65, 0x72, 0x74, 0x56, 0x61, 0x63, 0x61,
+	0x63, 0x61, 0x6e, 0x63, 0x79, 0x2e, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x56, 0x61, 0x63, 0x61,
 	0x6e, 0x63, 0x79, 0x43, 0x61, 0x74, 0x65, 0x67, 0x6f, 0x72, 0x79, 0x52, 0x65, 0x71, 0x75, 0x65,
 	0x73, 0x74, 0x1a, 0x34, 0x2e, 0x70, 0x65, 0x72, 0x73, 0x6f, 0x6e, 0x61, 0x61, 0x70, 0x70, 0x61,
-	0x70, 0x69, 0x2e, 0x76, 0x61, 0x63, 0x61, 0x6e, 0x63, 0x79, 0x2e, 0x55, 0x70, 0x73, 0x65, 0x72,
-	0x74, 0x56, 0x61, 0x63, 0x61, 0x6e, 0x63, 0x79, 0x43, 0x61, 0x74, 0x65, 0x67, 0x6f, 0x72, 0x79,
+	0x70, 0x69, 0x2e, 0x76, 0x61, 0x63, 0x61, 0x6e, 0x63, 0x79, 0x2e, 0x55, 0x70, 0x64, 0x61, 0x74,
+	0x65, 0x56, 0x61, 0x63, 0x61, 0x6e, 0x63, 0x79, 0x43, 0x61, 0x74, 0x65, 0x67, 0x6f, 0x72, 0x79,
 	0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x82, 0x01, 0x0a, 0x15, 0x44, 0x65, 0x6c,
 	0x65, 0x74, 0x65, 0x56, 0x61, 0x63, 0x61, 0x6e, 0x63, 0x79, 0x43, 0x61, 0x74, 0x65, 0x67, 0x6f,
 	0x72, 0x79, 0x12, 0x33, 0x2e, 0x70, 0x65, 0x72, 0x73, 0x6f, 0x6e, 0x61, 0x61, 0x70, 0x70, 0x61,
@@ -2362,12 +2362,12 @@ var file_vacancy_vacancy_proto_rawDesc = []byte{
 	0x70, 0x69, 0x2e, 0x76, 0x61, 0x63, 0x61, 0x6e, 0x63, 0x79, 0x2e, 0x47, 0x65, 0x74, 0x56, 0x61,
 	0x63, 0x61, 0x6e, 0x63, 0x79, 0x43, 0x61, 0x74, 0x65, 0x67, 0x6f, 0x72, 0x69, 0x65, 0x73, 0x4c,
 	0x69, 0x73, 0x74, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x6a, 0x0a, 0x0d, 0x55,
-	0x70, 0x73, 0x65, 0x72, 0x74, 0x56, 0x61, 0x63, 0x61, 0x6e, 0x63, 0x79, 0x12, 0x2b, 0x2e, 0x70,
+	0x70, 0x64, 0x61, 0x74, 0x65, 0x56, 0x61, 0x63, 0x61, 0x6e, 0x63, 0x79, 0x12, 0x2b, 0x2e, 0x70,
 	0x65, 0x72, 0x73, 0x6f, 0x6e, 0x61, 0x61, 0x70, 0x70, 0x61, 0x70, 0x69, 0x2e, 0x76, 0x61, 0x63,
-	0x61, 0x6e, 0x63, 0x79, 0x2e, 0x55, 0x70, 0x73, 0x65, 0x72, 0x74, 0x56, 0x61, 0x63, 0x61, 0x6e,
+	0x61, 0x6e, 0x63, 0x79, 0x2e, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x56, 0x61, 0x63, 0x61, 0x6e,
 	0x63, 0x79, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x2c, 0x2e, 0x70, 0x65, 0x72, 0x73,
 	0x6f, 0x6e, 0x61, 0x61, 0x70, 0x70, 0x61, 0x70, 0x69, 0x2e, 0x76, 0x61, 0x63, 0x61, 0x6e, 0x63,
-	0x79, 0x2e, 0x55, 0x70, 0x73, 0x65, 0x72, 0x74, 0x56, 0x61, 0x63, 0x61, 0x6e, 0x63, 0x79, 0x52,
+	0x79, 0x2e, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x56, 0x61, 0x63, 0x61, 0x6e, 0x63, 0x79, 0x52,
 	0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65, 0x12, 0x73, 0x0a, 0x10, 0x47, 0x65, 0x74, 0x56, 0x61,
 	0x63, 0x61, 0x6e, 0x63, 0x69, 0x65, 0x73, 0x4c, 0x69, 0x73, 0x74, 0x12, 0x2e, 0x2e, 0x70, 0x65,
 	0x72, 0x73, 0x6f, 0x6e, 0x61, 0x61, 0x70, 0x70, 0x61, 0x70, 0x69, 0x2e, 0x76, 0x61, 0x63, 0x61,
@@ -2414,14 +2414,14 @@ var file_vacancy_vacancy_proto_goTypes = []interface{}{
 	(Currency)(0),                                   // 1: personaappapi.vacancy.Currency
 	(*GetVacancyCategoryRequest)(nil),               // 2: personaappapi.vacancy.GetVacancyCategoryRequest
 	(*GetVacancyCategoryResponse)(nil),              // 3: personaappapi.vacancy.GetVacancyCategoryResponse
-	(*UpsertVacancyCategoryRequest)(nil),            // 4: personaappapi.vacancy.UpsertVacancyCategoryRequest
-	(*UpsertVacancyCategoryResponse)(nil),           // 5: personaappapi.vacancy.UpsertVacancyCategoryResponse
+	(*UpdateVacancyCategoryRequest)(nil),            // 4: personaappapi.vacancy.UpdateVacancyCategoryRequest
+	(*UpdateVacancyCategoryResponse)(nil),           // 5: personaappapi.vacancy.UpdateVacancyCategoryResponse
 	(*DeleteVacancyCategoryRequest)(nil),            // 6: personaappapi.vacancy.DeleteVacancyCategoryRequest
 	(*DeleteVacancyCategoryResponse)(nil),           // 7: personaappapi.vacancy.DeleteVacancyCategoryResponse
 	(*GetVacancyCategoriesListRequest)(nil),         // 8: personaappapi.vacancy.GetVacancyCategoriesListRequest
 	(*GetVacancyCategoriesListResponse)(nil),        // 9: personaappapi.vacancy.GetVacancyCategoriesListResponse
-	(*UpsertVacancyRequest)(nil),                    // 10: personaappapi.vacancy.UpsertVacancyRequest
-	(*UpsertVacancyResponse)(nil),                   // 11: personaappapi.vacancy.UpsertVacancyResponse
+	(*UpdateVacancyRequest)(nil),                    // 10: personaappapi.vacancy.UpdateVacancyRequest
+	(*UpdateVacancyResponse)(nil),                   // 11: personaappapi.vacancy.UpdateVacancyResponse
 	(*GetVacanciesListRequest)(nil),                 // 12: personaappapi.vacancy.GetVacanciesListRequest
 	(*GetVacanciesListResponse)(nil),                // 13: personaappapi.vacancy.GetVacanciesListResponse
 	(*GetVacancyDetailsRequest)(nil),                // 14: personaappapi.vacancy.GetVacancyDetailsRequest
@@ -2435,9 +2435,9 @@ var file_vacancy_vacancy_proto_goTypes = []interface{}{
 	(*VacancyCategoryShort)(nil),                    // 22: personaappapi.vacancy.VacancyCategoryShort
 	(*City)(nil),                                    // 23: personaappapi.vacancy.City
 	nil,                                             // 24: personaappapi.vacancy.GetVacancyCategoriesListResponse.VacancyCategoriesEntry
-	(*UpsertVacancyRequest_VacancyLocation)(nil),    // 25: personaappapi.vacancy.UpsertVacancyRequest.VacancyLocation
-	(*UpsertVacancyRequest_VacancyDescription)(nil), // 26: personaappapi.vacancy.UpsertVacancyRequest.VacancyDescription
-	(*UpsertVacancyRequest_Vacancy)(nil),            // 27: personaappapi.vacancy.UpsertVacancyRequest.Vacancy
+	(*UpdateVacancyRequest_VacancyLocation)(nil),    // 25: personaappapi.vacancy.UpdateVacancyRequest.VacancyLocation
+	(*UpdateVacancyRequest_VacancyDescription)(nil), // 26: personaappapi.vacancy.UpdateVacancyRequest.VacancyDescription
+	(*UpdateVacancyRequest_Vacancy)(nil),            // 27: personaappapi.vacancy.UpdateVacancyRequest.Vacancy
 	nil,                                             // 28: personaappapi.vacancy.GetVacanciesListRequest.CategoriesIdsEntry
 	(*GetVacanciesListResponse_VacancyDetails)(nil), // 29: personaappapi.vacancy.GetVacanciesListResponse.VacancyDetails
 	nil, // 30: personaappapi.vacancy.GetVacanciesListResponse.VacanciesEntry
@@ -2454,12 +2454,12 @@ var file_vacancy_vacancy_proto_goTypes = []interface{}{
 }
 var file_vacancy_vacancy_proto_depIdxs = []int32{
 	20, // 0: personaappapi.vacancy.GetVacancyCategoryResponse.category:type_name -> personaappapi.vacancy.VacancyCategory
-	39, // 1: personaappapi.vacancy.UpsertVacancyCategoryRequest.id:type_name -> google.protobuf.StringValue
+	39, // 1: personaappapi.vacancy.UpdateVacancyCategoryRequest.id:type_name -> google.protobuf.StringValue
 	40, // 2: personaappapi.vacancy.GetVacancyCategoriesListRequest.rating:type_name -> google.protobuf.Int32Value
 	24, // 3: personaappapi.vacancy.GetVacancyCategoriesListResponse.vacancy_categories:type_name -> personaappapi.vacancy.GetVacancyCategoriesListResponse.VacancyCategoriesEntry
-	27, // 4: personaappapi.vacancy.UpsertVacancyRequest.vacancy:type_name -> personaappapi.vacancy.UpsertVacancyRequest.Vacancy
-	25, // 5: personaappapi.vacancy.UpsertVacancyRequest.location:type_name -> personaappapi.vacancy.UpsertVacancyRequest.VacancyLocation
-	26, // 6: personaappapi.vacancy.UpsertVacancyRequest.description:type_name -> personaappapi.vacancy.UpsertVacancyRequest.VacancyDescription
+	27, // 4: personaappapi.vacancy.UpdateVacancyRequest.vacancy:type_name -> personaappapi.vacancy.UpdateVacancyRequest.Vacancy
+	25, // 5: personaappapi.vacancy.UpdateVacancyRequest.location:type_name -> personaappapi.vacancy.UpdateVacancyRequest.VacancyLocation
+	26, // 6: personaappapi.vacancy.UpdateVacancyRequest.description:type_name -> personaappapi.vacancy.UpdateVacancyRequest.VacancyDescription
 	28, // 7: personaappapi.vacancy.GetVacanciesListRequest.categories_ids:type_name -> personaappapi.vacancy.GetVacanciesListRequest.CategoriesIdsEntry
 	39, // 8: personaappapi.vacancy.GetVacanciesListRequest.cursor:type_name -> google.protobuf.StringValue
 	40, // 9: personaappapi.vacancy.GetVacanciesListRequest.count:type_name -> google.protobuf.Int32Value
@@ -2476,9 +2476,9 @@ var file_vacancy_vacancy_proto_depIdxs = []int32{
 	38, // 20: personaappapi.vacancy.GetVacancyDetailsResponse.categories:type_name -> personaappapi.vacancy.GetVacancyDetailsResponse.CategoriesEntry
 	1,  // 21: personaappapi.vacancy.Vacancy.currency:type_name -> personaappapi.vacancy.Currency
 	20, // 22: personaappapi.vacancy.GetVacancyCategoriesListResponse.VacancyCategoriesEntry.value:type_name -> personaappapi.vacancy.VacancyCategory
-	0,  // 23: personaappapi.vacancy.UpsertVacancyRequest.VacancyDescription.type:type_name -> personaappapi.vacancy.VacancyType
-	39, // 24: personaappapi.vacancy.UpsertVacancyRequest.Vacancy.id:type_name -> google.protobuf.StringValue
-	1,  // 25: personaappapi.vacancy.UpsertVacancyRequest.Vacancy.currency:type_name -> personaappapi.vacancy.Currency
+	0,  // 23: personaappapi.vacancy.UpdateVacancyRequest.VacancyDescription.type:type_name -> personaappapi.vacancy.VacancyType
+	39, // 24: personaappapi.vacancy.UpdateVacancyRequest.Vacancy.id:type_name -> google.protobuf.StringValue
+	1,  // 25: personaappapi.vacancy.UpdateVacancyRequest.Vacancy.currency:type_name -> personaappapi.vacancy.Currency
 	18, // 26: personaappapi.vacancy.GetVacanciesListRequest.CategoriesIdsEntry.value:type_name -> personaappapi.vacancy.Empty
 	21, // 27: personaappapi.vacancy.GetVacanciesListResponse.VacancyDetails.vacancy:type_name -> personaappapi.vacancy.Vacancy
 	29, // 28: personaappapi.vacancy.GetVacanciesListResponse.VacanciesEntry.value:type_name -> personaappapi.vacancy.GetVacanciesListResponse.VacancyDetails
@@ -2489,18 +2489,18 @@ var file_vacancy_vacancy_proto_depIdxs = []int32{
 	33, // 33: personaappapi.vacancy.GetVacancyDetailsResponse.VacancyCompany.description:type_name -> personaappapi.vacancy.GetVacancyDetailsResponse.CompanyDescription
 	22, // 34: personaappapi.vacancy.GetVacancyDetailsResponse.CategoriesEntry.value:type_name -> personaappapi.vacancy.VacancyCategoryShort
 	2,  // 35: personaappapi.vacancy.PersonaAppVacancy.GetVacancyCategory:input_type -> personaappapi.vacancy.GetVacancyCategoryRequest
-	4,  // 36: personaappapi.vacancy.PersonaAppVacancy.UpsertVacancyCategory:input_type -> personaappapi.vacancy.UpsertVacancyCategoryRequest
+	4,  // 36: personaappapi.vacancy.PersonaAppVacancy.UpdateVacancyCategory:input_type -> personaappapi.vacancy.UpdateVacancyCategoryRequest
 	6,  // 37: personaappapi.vacancy.PersonaAppVacancy.DeleteVacancyCategory:input_type -> personaappapi.vacancy.DeleteVacancyCategoryRequest
 	8,  // 38: personaappapi.vacancy.PersonaAppVacancy.GetVacancyCategoriesList:input_type -> personaappapi.vacancy.GetVacancyCategoriesListRequest
-	10, // 39: personaappapi.vacancy.PersonaAppVacancy.UpsertVacancy:input_type -> personaappapi.vacancy.UpsertVacancyRequest
+	10, // 39: personaappapi.vacancy.PersonaAppVacancy.UpdateVacancy:input_type -> personaappapi.vacancy.UpdateVacancyRequest
 	12, // 40: personaappapi.vacancy.PersonaAppVacancy.GetVacanciesList:input_type -> personaappapi.vacancy.GetVacanciesListRequest
 	14, // 41: personaappapi.vacancy.PersonaAppVacancy.GetVacancyDetails:input_type -> personaappapi.vacancy.GetVacancyDetailsRequest
 	16, // 42: personaappapi.vacancy.PersonaAppVacancy.DeleteVacancy:input_type -> personaappapi.vacancy.DeleteVacancyRequest
 	3,  // 43: personaappapi.vacancy.PersonaAppVacancy.GetVacancyCategory:output_type -> personaappapi.vacancy.GetVacancyCategoryResponse
-	5,  // 44: personaappapi.vacancy.PersonaAppVacancy.UpsertVacancyCategory:output_type -> personaappapi.vacancy.UpsertVacancyCategoryResponse
+	5,  // 44: personaappapi.vacancy.PersonaAppVacancy.UpdateVacancyCategory:output_type -> personaappapi.vacancy.UpdateVacancyCategoryResponse
 	7,  // 45: personaappapi.vacancy.PersonaAppVacancy.DeleteVacancyCategory:output_type -> personaappapi.vacancy.DeleteVacancyCategoryResponse
 	9,  // 46: personaappapi.vacancy.PersonaAppVacancy.GetVacancyCategoriesList:output_type -> personaappapi.vacancy.GetVacancyCategoriesListResponse
-	11, // 47: personaappapi.vacancy.PersonaAppVacancy.UpsertVacancy:output_type -> personaappapi.vacancy.UpsertVacancyResponse
+	11, // 47: personaappapi.vacancy.PersonaAppVacancy.UpdateVacancy:output_type -> personaappapi.vacancy.UpdateVacancyResponse
 	13, // 48: personaappapi.vacancy.PersonaAppVacancy.GetVacanciesList:output_type -> personaappapi.vacancy.GetVacanciesListResponse
 	15, // 49: personaappapi.vacancy.PersonaAppVacancy.GetVacancyDetails:output_type -> personaappapi.vacancy.GetVacancyDetailsResponse
 	17, // 50: personaappapi.vacancy.PersonaAppVacancy.DeleteVacancy:output_type -> personaappapi.vacancy.DeleteVacancyResponse
@@ -2542,7 +2542,7 @@ func file_vacancy_vacancy_proto_init() {
 			}
 		}
 		file_vacancy_vacancy_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*UpsertVacancyCategoryRequest); i {
+			switch v := v.(*UpdateVacancyCategoryRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -2554,7 +2554,7 @@ func file_vacancy_vacancy_proto_init() {
 			}
 		}
 		file_vacancy_vacancy_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*UpsertVacancyCategoryResponse); i {
+			switch v := v.(*UpdateVacancyCategoryResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -2614,7 +2614,7 @@ func file_vacancy_vacancy_proto_init() {
 			}
 		}
 		file_vacancy_vacancy_proto_msgTypes[8].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*UpsertVacancyRequest); i {
+			switch v := v.(*UpdateVacancyRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -2626,7 +2626,7 @@ func file_vacancy_vacancy_proto_init() {
 			}
 		}
 		file_vacancy_vacancy_proto_msgTypes[9].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*UpsertVacancyResponse); i {
+			switch v := v.(*UpdateVacancyResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -2782,7 +2782,7 @@ func file_vacancy_vacancy_proto_init() {
 			}
 		}
 		file_vacancy_vacancy_proto_msgTypes[23].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*UpsertVacancyRequest_VacancyLocation); i {
+			switch v := v.(*UpdateVacancyRequest_VacancyLocation); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -2794,7 +2794,7 @@ func file_vacancy_vacancy_proto_init() {
 			}
 		}
 		file_vacancy_vacancy_proto_msgTypes[24].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*UpsertVacancyRequest_VacancyDescription); i {
+			switch v := v.(*UpdateVacancyRequest_VacancyDescription); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -2806,7 +2806,7 @@ func file_vacancy_vacancy_proto_init() {
 			}
 		}
 		file_vacancy_vacancy_proto_msgTypes[25].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*UpsertVacancyRequest_Vacancy); i {
+			switch v := v.(*UpdateVacancyRequest_Vacancy); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -2925,11 +2925,11 @@ const _ = grpc.SupportPackageIsVersion6
 type PersonaAppVacancyClient interface {
 	// Vacancy categories
 	GetVacancyCategory(ctx context.Context, in *GetVacancyCategoryRequest, opts ...grpc.CallOption) (*GetVacancyCategoryResponse, error)
-	UpsertVacancyCategory(ctx context.Context, in *UpsertVacancyCategoryRequest, opts ...grpc.CallOption) (*UpsertVacancyCategoryResponse, error)
+	UpdateVacancyCategory(ctx context.Context, in *UpdateVacancyCategoryRequest, opts ...grpc.CallOption) (*UpdateVacancyCategoryResponse, error)
 	DeleteVacancyCategory(ctx context.Context, in *DeleteVacancyCategoryRequest, opts ...grpc.CallOption) (*DeleteVacancyCategoryResponse, error)
 	GetVacancyCategoriesList(ctx context.Context, in *GetVacancyCategoriesListRequest, opts ...grpc.CallOption) (*GetVacancyCategoriesListResponse, error)
 	// Vacancy
-	UpsertVacancy(ctx context.Context, in *UpsertVacancyRequest, opts ...grpc.CallOption) (*UpsertVacancyResponse, error)
+	UpdateVacancy(ctx context.Context, in *UpdateVacancyRequest, opts ...grpc.CallOption) (*UpdateVacancyResponse, error)
 	GetVacanciesList(ctx context.Context, in *GetVacanciesListRequest, opts ...grpc.CallOption) (*GetVacanciesListResponse, error)
 	GetVacancyDetails(ctx context.Context, in *GetVacancyDetailsRequest, opts ...grpc.CallOption) (*GetVacancyDetailsResponse, error)
 	DeleteVacancy(ctx context.Context, in *DeleteVacancyRequest, opts ...grpc.CallOption) (*DeleteVacancyResponse, error)
@@ -2952,9 +2952,9 @@ func (c *personaAppVacancyClient) GetVacancyCategory(ctx context.Context, in *Ge
 	return out, nil
 }
 
-func (c *personaAppVacancyClient) UpsertVacancyCategory(ctx context.Context, in *UpsertVacancyCategoryRequest, opts ...grpc.CallOption) (*UpsertVacancyCategoryResponse, error) {
-	out := new(UpsertVacancyCategoryResponse)
-	err := c.cc.Invoke(ctx, "/personaappapi.vacancy.PersonaAppVacancy/UpsertVacancyCategory", in, out, opts...)
+func (c *personaAppVacancyClient) UpdateVacancyCategory(ctx context.Context, in *UpdateVacancyCategoryRequest, opts ...grpc.CallOption) (*UpdateVacancyCategoryResponse, error) {
+	out := new(UpdateVacancyCategoryResponse)
+	err := c.cc.Invoke(ctx, "/personaappapi.vacancy.PersonaAppVacancy/UpdateVacancyCategory", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -2979,9 +2979,9 @@ func (c *personaAppVacancyClient) GetVacancyCategoriesList(ctx context.Context, 
 	return out, nil
 }
 
-func (c *personaAppVacancyClient) UpsertVacancy(ctx context.Context, in *UpsertVacancyRequest, opts ...grpc.CallOption) (*UpsertVacancyResponse, error) {
-	out := new(UpsertVacancyResponse)
-	err := c.cc.Invoke(ctx, "/personaappapi.vacancy.PersonaAppVacancy/UpsertVacancy", in, out, opts...)
+func (c *personaAppVacancyClient) UpdateVacancy(ctx context.Context, in *UpdateVacancyRequest, opts ...grpc.CallOption) (*UpdateVacancyResponse, error) {
+	out := new(UpdateVacancyResponse)
+	err := c.cc.Invoke(ctx, "/personaappapi.vacancy.PersonaAppVacancy/UpdateVacancy", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -3019,11 +3019,11 @@ func (c *personaAppVacancyClient) DeleteVacancy(ctx context.Context, in *DeleteV
 type PersonaAppVacancyServer interface {
 	// Vacancy categories
 	GetVacancyCategory(context.Context, *GetVacancyCategoryRequest) (*GetVacancyCategoryResponse, error)
-	UpsertVacancyCategory(context.Context, *UpsertVacancyCategoryRequest) (*UpsertVacancyCategoryResponse, error)
+	UpdateVacancyCategory(context.Context, *UpdateVacancyCategoryRequest) (*UpdateVacancyCategoryResponse, error)
 	DeleteVacancyCategory(context.Context, *DeleteVacancyCategoryRequest) (*DeleteVacancyCategoryResponse, error)
 	GetVacancyCategoriesList(context.Context, *GetVacancyCategoriesListRequest) (*GetVacancyCategoriesListResponse, error)
 	// Vacancy
-	UpsertVacancy(context.Context, *UpsertVacancyRequest) (*UpsertVacancyResponse, error)
+	UpdateVacancy(context.Context, *UpdateVacancyRequest) (*UpdateVacancyResponse, error)
 	GetVacanciesList(context.Context, *GetVacanciesListRequest) (*GetVacanciesListResponse, error)
 	GetVacancyDetails(context.Context, *GetVacancyDetailsRequest) (*GetVacancyDetailsResponse, error)
 	DeleteVacancy(context.Context, *DeleteVacancyRequest) (*DeleteVacancyResponse, error)
@@ -3036,8 +3036,8 @@ type UnimplementedPersonaAppVacancyServer struct {
 func (*UnimplementedPersonaAppVacancyServer) GetVacancyCategory(context.Context, *GetVacancyCategoryRequest) (*GetVacancyCategoryResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetVacancyCategory not implemented")
 }
-func (*UnimplementedPersonaAppVacancyServer) UpsertVacancyCategory(context.Context, *UpsertVacancyCategoryRequest) (*UpsertVacancyCategoryResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpsertVacancyCategory not implemented")
+func (*UnimplementedPersonaAppVacancyServer) UpdateVacancyCategory(context.Context, *UpdateVacancyCategoryRequest) (*UpdateVacancyCategoryResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateVacancyCategory not implemented")
 }
 func (*UnimplementedPersonaAppVacancyServer) DeleteVacancyCategory(context.Context, *DeleteVacancyCategoryRequest) (*DeleteVacancyCategoryResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteVacancyCategory not implemented")
@@ -3045,8 +3045,8 @@ func (*UnimplementedPersonaAppVacancyServer) DeleteVacancyCategory(context.Conte
 func (*UnimplementedPersonaAppVacancyServer) GetVacancyCategoriesList(context.Context, *GetVacancyCategoriesListRequest) (*GetVacancyCategoriesListResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetVacancyCategoriesList not implemented")
 }
-func (*UnimplementedPersonaAppVacancyServer) UpsertVacancy(context.Context, *UpsertVacancyRequest) (*UpsertVacancyResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpsertVacancy not implemented")
+func (*UnimplementedPersonaAppVacancyServer) UpdateVacancy(context.Context, *UpdateVacancyRequest) (*UpdateVacancyResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateVacancy not implemented")
 }
 func (*UnimplementedPersonaAppVacancyServer) GetVacanciesList(context.Context, *GetVacanciesListRequest) (*GetVacanciesListResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetVacanciesList not implemented")
@@ -3080,20 +3080,20 @@ func _PersonaAppVacancy_GetVacancyCategory_Handler(srv interface{}, ctx context.
 	return interceptor(ctx, in, info, handler)
 }
 
-func _PersonaAppVacancy_UpsertVacancyCategory_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpsertVacancyCategoryRequest)
+func _PersonaAppVacancy_UpdateVacancyCategory_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateVacancyCategoryRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(PersonaAppVacancyServer).UpsertVacancyCategory(ctx, in)
+		return srv.(PersonaAppVacancyServer).UpdateVacancyCategory(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/personaappapi.vacancy.PersonaAppVacancy/UpsertVacancyCategory",
+		FullMethod: "/personaappapi.vacancy.PersonaAppVacancy/UpdateVacancyCategory",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PersonaAppVacancyServer).UpsertVacancyCategory(ctx, req.(*UpsertVacancyCategoryRequest))
+		return srv.(PersonaAppVacancyServer).UpdateVacancyCategory(ctx, req.(*UpdateVacancyCategoryRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -3134,20 +3134,20 @@ func _PersonaAppVacancy_GetVacancyCategoriesList_Handler(srv interface{}, ctx co
 	return interceptor(ctx, in, info, handler)
 }
 
-func _PersonaAppVacancy_UpsertVacancy_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpsertVacancyRequest)
+func _PersonaAppVacancy_UpdateVacancy_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateVacancyRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(PersonaAppVacancyServer).UpsertVacancy(ctx, in)
+		return srv.(PersonaAppVacancyServer).UpdateVacancy(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/personaappapi.vacancy.PersonaAppVacancy/UpsertVacancy",
+		FullMethod: "/personaappapi.vacancy.PersonaAppVacancy/UpdateVacancy",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PersonaAppVacancyServer).UpsertVacancy(ctx, req.(*UpsertVacancyRequest))
+		return srv.(PersonaAppVacancyServer).UpdateVacancy(ctx, req.(*UpdateVacancyRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -3215,8 +3215,8 @@ var _PersonaAppVacancy_serviceDesc = grpc.ServiceDesc{
 			Handler:    _PersonaAppVacancy_GetVacancyCategory_Handler,
 		},
 		{
-			MethodName: "UpsertVacancyCategory",
-			Handler:    _PersonaAppVacancy_UpsertVacancyCategory_Handler,
+			MethodName: "UpdateVacancyCategory",
+			Handler:    _PersonaAppVacancy_UpdateVacancyCategory_Handler,
 		},
 		{
 			MethodName: "DeleteVacancyCategory",
@@ -3227,8 +3227,8 @@ var _PersonaAppVacancy_serviceDesc = grpc.ServiceDesc{
 			Handler:    _PersonaAppVacancy_GetVacancyCategoriesList_Handler,
 		},
 		{
-			MethodName: "UpsertVacancy",
-			Handler:    _PersonaAppVacancy_UpsertVacancy_Handler,
+			MethodName: "UpdateVacancy",
+			Handler:    _PersonaAppVacancy_UpdateVacancy_Handler,
 		},
 		{
 			MethodName: "GetVacanciesList",
