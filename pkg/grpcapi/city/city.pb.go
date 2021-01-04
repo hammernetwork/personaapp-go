@@ -133,8 +133,8 @@ func (x *GetCitiesResponse) GetCities() []*City {
 	return nil
 }
 
-// Upsert city
-type UpsertCityRequest struct {
+// Update city
+type UpdateCityRequest struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -145,8 +145,8 @@ type UpsertCityRequest struct {
 	Rating      int32                 `protobuf:"varint,4,opt,name=rating,proto3" json:"rating,omitempty"`
 }
 
-func (x *UpsertCityRequest) Reset() {
-	*x = UpsertCityRequest{}
+func (x *UpdateCityRequest) Reset() {
+	*x = UpdateCityRequest{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_city_city_proto_msgTypes[2]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -154,13 +154,13 @@ func (x *UpsertCityRequest) Reset() {
 	}
 }
 
-func (x *UpsertCityRequest) String() string {
+func (x *UpdateCityRequest) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*UpsertCityRequest) ProtoMessage() {}
+func (*UpdateCityRequest) ProtoMessage() {}
 
-func (x *UpsertCityRequest) ProtoReflect() protoreflect.Message {
+func (x *UpdateCityRequest) ProtoReflect() protoreflect.Message {
 	mi := &file_city_city_proto_msgTypes[2]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -172,40 +172,40 @@ func (x *UpsertCityRequest) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use UpsertCityRequest.ProtoReflect.Descriptor instead.
-func (*UpsertCityRequest) Descriptor() ([]byte, []int) {
+// Deprecated: Use UpdateCityRequest.ProtoReflect.Descriptor instead.
+func (*UpdateCityRequest) Descriptor() ([]byte, []int) {
 	return file_city_city_proto_rawDescGZIP(), []int{2}
 }
 
-func (x *UpsertCityRequest) GetId() *wrappers.StringValue {
+func (x *UpdateCityRequest) GetId() *wrappers.StringValue {
 	if x != nil {
 		return x.Id
 	}
 	return nil
 }
 
-func (x *UpsertCityRequest) GetName() string {
+func (x *UpdateCityRequest) GetName() string {
 	if x != nil {
 		return x.Name
 	}
 	return ""
 }
 
-func (x *UpsertCityRequest) GetCountryCode() int32 {
+func (x *UpdateCityRequest) GetCountryCode() int32 {
 	if x != nil {
 		return x.CountryCode
 	}
 	return 0
 }
 
-func (x *UpsertCityRequest) GetRating() int32 {
+func (x *UpdateCityRequest) GetRating() int32 {
 	if x != nil {
 		return x.Rating
 	}
 	return 0
 }
 
-type UpsertCityResponse struct {
+type UpdateCityResponse struct {
 	state         protoimpl.MessageState
 	sizeCache     protoimpl.SizeCache
 	unknownFields protoimpl.UnknownFields
@@ -213,8 +213,8 @@ type UpsertCityResponse struct {
 	Id string `protobuf:"bytes,1,opt,name=id,proto3" json:"id,omitempty"`
 }
 
-func (x *UpsertCityResponse) Reset() {
-	*x = UpsertCityResponse{}
+func (x *UpdateCityResponse) Reset() {
+	*x = UpdateCityResponse{}
 	if protoimpl.UnsafeEnabled {
 		mi := &file_city_city_proto_msgTypes[3]
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -222,13 +222,13 @@ func (x *UpsertCityResponse) Reset() {
 	}
 }
 
-func (x *UpsertCityResponse) String() string {
+func (x *UpdateCityResponse) String() string {
 	return protoimpl.X.MessageStringOf(x)
 }
 
-func (*UpsertCityResponse) ProtoMessage() {}
+func (*UpdateCityResponse) ProtoMessage() {}
 
-func (x *UpsertCityResponse) ProtoReflect() protoreflect.Message {
+func (x *UpdateCityResponse) ProtoReflect() protoreflect.Message {
 	mi := &file_city_city_proto_msgTypes[3]
 	if protoimpl.UnsafeEnabled && x != nil {
 		ms := protoimpl.X.MessageStateOf(protoimpl.Pointer(x))
@@ -240,12 +240,12 @@ func (x *UpsertCityResponse) ProtoReflect() protoreflect.Message {
 	return mi.MessageOf(x)
 }
 
-// Deprecated: Use UpsertCityResponse.ProtoReflect.Descriptor instead.
-func (*UpsertCityResponse) Descriptor() ([]byte, []int) {
+// Deprecated: Use UpdateCityResponse.ProtoReflect.Descriptor instead.
+func (*UpdateCityResponse) Descriptor() ([]byte, []int) {
 	return file_city_city_proto_rawDescGZIP(), []int{3}
 }
 
-func (x *UpsertCityResponse) GetId() string {
+func (x *UpdateCityResponse) GetId() string {
 	if x != nil {
 		return x.Id
 	}
@@ -429,7 +429,7 @@ var file_city_city_proto_rawDesc = []byte{
 	0x69, 0x65, 0x73, 0x18, 0x01, 0x20, 0x03, 0x28, 0x0b, 0x32, 0x18, 0x2e, 0x70, 0x65, 0x72, 0x73,
 	0x6f, 0x6e, 0x61, 0x61, 0x70, 0x70, 0x61, 0x70, 0x69, 0x2e, 0x63, 0x69, 0x74, 0x79, 0x2e, 0x43,
 	0x69, 0x74, 0x79, 0x52, 0x06, 0x63, 0x69, 0x74, 0x69, 0x65, 0x73, 0x22, 0x90, 0x01, 0x0a, 0x11,
-	0x55, 0x70, 0x73, 0x65, 0x72, 0x74, 0x43, 0x69, 0x74, 0x79, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73,
+	0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x43, 0x69, 0x74, 0x79, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73,
 	0x74, 0x12, 0x2c, 0x0a, 0x02, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x0b, 0x32, 0x1c, 0x2e,
 	0x67, 0x6f, 0x6f, 0x67, 0x6c, 0x65, 0x2e, 0x70, 0x72, 0x6f, 0x74, 0x6f, 0x62, 0x75, 0x66, 0x2e,
 	0x53, 0x74, 0x72, 0x69, 0x6e, 0x67, 0x56, 0x61, 0x6c, 0x75, 0x65, 0x52, 0x02, 0x69, 0x64, 0x12,
@@ -438,7 +438,7 @@ var file_city_city_proto_rawDesc = []byte{
 	0x6f, 0x64, 0x65, 0x18, 0x03, 0x20, 0x01, 0x28, 0x05, 0x52, 0x0b, 0x63, 0x6f, 0x75, 0x6e, 0x74,
 	0x72, 0x79, 0x43, 0x6f, 0x64, 0x65, 0x12, 0x16, 0x0a, 0x06, 0x72, 0x61, 0x74, 0x69, 0x6e, 0x67,
 	0x18, 0x04, 0x20, 0x01, 0x28, 0x05, 0x52, 0x06, 0x72, 0x61, 0x74, 0x69, 0x6e, 0x67, 0x22, 0x24,
-	0x0a, 0x12, 0x55, 0x70, 0x73, 0x65, 0x72, 0x74, 0x43, 0x69, 0x74, 0x79, 0x52, 0x65, 0x73, 0x70,
+	0x0a, 0x12, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x43, 0x69, 0x74, 0x79, 0x52, 0x65, 0x73, 0x70,
 	0x6f, 0x6e, 0x73, 0x65, 0x12, 0x0e, 0x0a, 0x02, 0x69, 0x64, 0x18, 0x01, 0x20, 0x01, 0x28, 0x09,
 	0x52, 0x02, 0x69, 0x64, 0x22, 0x23, 0x0a, 0x11, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x43, 0x69,
 	0x74, 0x79, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x12, 0x0e, 0x0a, 0x02, 0x69, 0x64, 0x18,
@@ -457,12 +457,12 @@ var file_city_city_proto_rawDesc = []byte{
 	0x69, 0x74, 0x69, 0x65, 0x73, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x25, 0x2e, 0x70,
 	0x65, 0x72, 0x73, 0x6f, 0x6e, 0x61, 0x61, 0x70, 0x70, 0x61, 0x70, 0x69, 0x2e, 0x63, 0x69, 0x74,
 	0x79, 0x2e, 0x47, 0x65, 0x74, 0x43, 0x69, 0x74, 0x69, 0x65, 0x73, 0x52, 0x65, 0x73, 0x70, 0x6f,
-	0x6e, 0x73, 0x65, 0x12, 0x5b, 0x0a, 0x0a, 0x55, 0x70, 0x73, 0x65, 0x72, 0x74, 0x43, 0x69, 0x74,
+	0x6e, 0x73, 0x65, 0x12, 0x5b, 0x0a, 0x0a, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x43, 0x69, 0x74,
 	0x79, 0x12, 0x25, 0x2e, 0x70, 0x65, 0x72, 0x73, 0x6f, 0x6e, 0x61, 0x61, 0x70, 0x70, 0x61, 0x70,
-	0x69, 0x2e, 0x63, 0x69, 0x74, 0x79, 0x2e, 0x55, 0x70, 0x73, 0x65, 0x72, 0x74, 0x43, 0x69, 0x74,
+	0x69, 0x2e, 0x63, 0x69, 0x74, 0x79, 0x2e, 0x55, 0x70, 0x64, 0x61, 0x74, 0x65, 0x43, 0x69, 0x74,
 	0x79, 0x52, 0x65, 0x71, 0x75, 0x65, 0x73, 0x74, 0x1a, 0x26, 0x2e, 0x70, 0x65, 0x72, 0x73, 0x6f,
 	0x6e, 0x61, 0x61, 0x70, 0x70, 0x61, 0x70, 0x69, 0x2e, 0x63, 0x69, 0x74, 0x79, 0x2e, 0x55, 0x70,
-	0x73, 0x65, 0x72, 0x74, 0x43, 0x69, 0x74, 0x79, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65,
+	0x64, 0x61, 0x74, 0x65, 0x43, 0x69, 0x74, 0x79, 0x52, 0x65, 0x73, 0x70, 0x6f, 0x6e, 0x73, 0x65,
 	0x12, 0x5b, 0x0a, 0x0a, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x43, 0x69, 0x74, 0x79, 0x12, 0x25,
 	0x2e, 0x70, 0x65, 0x72, 0x73, 0x6f, 0x6e, 0x61, 0x61, 0x70, 0x70, 0x61, 0x70, 0x69, 0x2e, 0x63,
 	0x69, 0x74, 0x79, 0x2e, 0x44, 0x65, 0x6c, 0x65, 0x74, 0x65, 0x43, 0x69, 0x74, 0x79, 0x52, 0x65,
@@ -490,8 +490,8 @@ var file_city_city_proto_msgTypes = make([]protoimpl.MessageInfo, 7)
 var file_city_city_proto_goTypes = []interface{}{
 	(*GetCitiesRequest)(nil),     // 0: personaappapi.city.GetCitiesRequest
 	(*GetCitiesResponse)(nil),    // 1: personaappapi.city.GetCitiesResponse
-	(*UpsertCityRequest)(nil),    // 2: personaappapi.city.UpsertCityRequest
-	(*UpsertCityResponse)(nil),   // 3: personaappapi.city.UpsertCityResponse
+	(*UpdateCityRequest)(nil),    // 2: personaappapi.city.UpdateCityRequest
+	(*UpdateCityResponse)(nil),   // 3: personaappapi.city.UpdateCityResponse
 	(*DeleteCityRequest)(nil),    // 4: personaappapi.city.DeleteCityRequest
 	(*DeleteCityResponse)(nil),   // 5: personaappapi.city.DeleteCityResponse
 	(*City)(nil),                 // 6: personaappapi.city.City
@@ -502,12 +502,12 @@ var file_city_city_proto_depIdxs = []int32{
 	7, // 0: personaappapi.city.GetCitiesRequest.rating:type_name -> google.protobuf.Int32Value
 	8, // 1: personaappapi.city.GetCitiesRequest.filter:type_name -> google.protobuf.StringValue
 	6, // 2: personaappapi.city.GetCitiesResponse.cities:type_name -> personaappapi.city.City
-	8, // 3: personaappapi.city.UpsertCityRequest.id:type_name -> google.protobuf.StringValue
+	8, // 3: personaappapi.city.UpdateCityRequest.id:type_name -> google.protobuf.StringValue
 	0, // 4: personaappapi.city.PersonaAppCity.GetCities:input_type -> personaappapi.city.GetCitiesRequest
-	2, // 5: personaappapi.city.PersonaAppCity.UpsertCity:input_type -> personaappapi.city.UpsertCityRequest
+	2, // 5: personaappapi.city.PersonaAppCity.UpdateCity:input_type -> personaappapi.city.UpdateCityRequest
 	4, // 6: personaappapi.city.PersonaAppCity.DeleteCity:input_type -> personaappapi.city.DeleteCityRequest
 	1, // 7: personaappapi.city.PersonaAppCity.GetCities:output_type -> personaappapi.city.GetCitiesResponse
-	3, // 8: personaappapi.city.PersonaAppCity.UpsertCity:output_type -> personaappapi.city.UpsertCityResponse
+	3, // 8: personaappapi.city.PersonaAppCity.UpdateCity:output_type -> personaappapi.city.UpdateCityResponse
 	5, // 9: personaappapi.city.PersonaAppCity.DeleteCity:output_type -> personaappapi.city.DeleteCityResponse
 	7, // [7:10] is the sub-list for method output_type
 	4, // [4:7] is the sub-list for method input_type
@@ -547,7 +547,7 @@ func file_city_city_proto_init() {
 			}
 		}
 		file_city_city_proto_msgTypes[2].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*UpsertCityRequest); i {
+			switch v := v.(*UpdateCityRequest); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -559,7 +559,7 @@ func file_city_city_proto_init() {
 			}
 		}
 		file_city_city_proto_msgTypes[3].Exporter = func(v interface{}, i int) interface{} {
-			switch v := v.(*UpsertCityResponse); i {
+			switch v := v.(*UpdateCityResponse); i {
 			case 0:
 				return &v.state
 			case 1:
@@ -641,7 +641,7 @@ const _ = grpc.SupportPackageIsVersion6
 type PersonaAppCityClient interface {
 	// Cities
 	GetCities(ctx context.Context, in *GetCitiesRequest, opts ...grpc.CallOption) (*GetCitiesResponse, error)
-	UpsertCity(ctx context.Context, in *UpsertCityRequest, opts ...grpc.CallOption) (*UpsertCityResponse, error)
+	UpdateCity(ctx context.Context, in *UpdateCityRequest, opts ...grpc.CallOption) (*UpdateCityResponse, error)
 	DeleteCity(ctx context.Context, in *DeleteCityRequest, opts ...grpc.CallOption) (*DeleteCityResponse, error)
 }
 
@@ -662,9 +662,9 @@ func (c *personaAppCityClient) GetCities(ctx context.Context, in *GetCitiesReque
 	return out, nil
 }
 
-func (c *personaAppCityClient) UpsertCity(ctx context.Context, in *UpsertCityRequest, opts ...grpc.CallOption) (*UpsertCityResponse, error) {
-	out := new(UpsertCityResponse)
-	err := c.cc.Invoke(ctx, "/personaappapi.city.PersonaAppCity/UpsertCity", in, out, opts...)
+func (c *personaAppCityClient) UpdateCity(ctx context.Context, in *UpdateCityRequest, opts ...grpc.CallOption) (*UpdateCityResponse, error) {
+	out := new(UpdateCityResponse)
+	err := c.cc.Invoke(ctx, "/personaappapi.city.PersonaAppCity/UpdateCity", in, out, opts...)
 	if err != nil {
 		return nil, err
 	}
@@ -684,7 +684,7 @@ func (c *personaAppCityClient) DeleteCity(ctx context.Context, in *DeleteCityReq
 type PersonaAppCityServer interface {
 	// Cities
 	GetCities(context.Context, *GetCitiesRequest) (*GetCitiesResponse, error)
-	UpsertCity(context.Context, *UpsertCityRequest) (*UpsertCityResponse, error)
+	UpdateCity(context.Context, *UpdateCityRequest) (*UpdateCityResponse, error)
 	DeleteCity(context.Context, *DeleteCityRequest) (*DeleteCityResponse, error)
 }
 
@@ -695,8 +695,8 @@ type UnimplementedPersonaAppCityServer struct {
 func (*UnimplementedPersonaAppCityServer) GetCities(context.Context, *GetCitiesRequest) (*GetCitiesResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method GetCities not implemented")
 }
-func (*UnimplementedPersonaAppCityServer) UpsertCity(context.Context, *UpsertCityRequest) (*UpsertCityResponse, error) {
-	return nil, status.Errorf(codes.Unimplemented, "method UpsertCity not implemented")
+func (*UnimplementedPersonaAppCityServer) UpdateCity(context.Context, *UpdateCityRequest) (*UpdateCityResponse, error) {
+	return nil, status.Errorf(codes.Unimplemented, "method UpdateCity not implemented")
 }
 func (*UnimplementedPersonaAppCityServer) DeleteCity(context.Context, *DeleteCityRequest) (*DeleteCityResponse, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method DeleteCity not implemented")
@@ -724,20 +724,20 @@ func _PersonaAppCity_GetCities_Handler(srv interface{}, ctx context.Context, dec
 	return interceptor(ctx, in, info, handler)
 }
 
-func _PersonaAppCity_UpsertCity_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
-	in := new(UpsertCityRequest)
+func _PersonaAppCity_UpdateCity_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
+	in := new(UpdateCityRequest)
 	if err := dec(in); err != nil {
 		return nil, err
 	}
 	if interceptor == nil {
-		return srv.(PersonaAppCityServer).UpsertCity(ctx, in)
+		return srv.(PersonaAppCityServer).UpdateCity(ctx, in)
 	}
 	info := &grpc.UnaryServerInfo{
 		Server:     srv,
-		FullMethod: "/personaappapi.city.PersonaAppCity/UpsertCity",
+		FullMethod: "/personaappapi.city.PersonaAppCity/UpdateCity",
 	}
 	handler := func(ctx context.Context, req interface{}) (interface{}, error) {
-		return srv.(PersonaAppCityServer).UpsertCity(ctx, req.(*UpsertCityRequest))
+		return srv.(PersonaAppCityServer).UpdateCity(ctx, req.(*UpdateCityRequest))
 	}
 	return interceptor(ctx, in, info, handler)
 }
@@ -769,8 +769,8 @@ var _PersonaAppCity_serviceDesc = grpc.ServiceDesc{
 			Handler:    _PersonaAppCity_GetCities_Handler,
 		},
 		{
-			MethodName: "UpsertCity",
-			Handler:    _PersonaAppCity_UpsertCity_Handler,
+			MethodName: "UpdateCity",
+			Handler:    _PersonaAppCity_UpdateCity_Handler,
 		},
 		{
 			MethodName: "DeleteCity",
